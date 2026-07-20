@@ -1,0 +1,182 @@
+{
+  "name": "Card",
+  "category": "Surfaces",
+  "status": "stable",
+  "library": "Material Components Web (MDC) 14.0.0 — Cartrack-themed",
+  "source": "component-specs/cards.md",
+  "description": "A card groups related content and actions about a single subject — a vehicle summary, a KPI, an alert. Cards make a dashboard scannable by giving each thing its own contained surface.",
+  "keyRule": "Use a card to collect everything about one entity. If you're listing many comparable records, a data table is usually clearer than a wall of cards.",
+  "variants": [
+    {
+      "name": "Elevated",
+      "whenToUse": "Default — a subtle shadow lifts the card off the page."
+    },
+    {
+      "name": "Outlined",
+      "whenToUse": "Flatter surfaces / dense dashboards where shadows add noise."
+    },
+    {
+      "name": "With media",
+      "whenToUse": "When an image/map adds context (vehicle photo, location)."
+    },
+    {
+      "name": "Actionable (whole-card)",
+      "whenToUse": "The entire card navigates to detail."
+    }
+  ],
+  "anatomy": [
+    {
+      "name": "Container",
+      "description": "the elevated/outlined surface (4px radius)."
+    },
+    {
+      "name": "Media",
+      "description": "optional image/map thumbnail."
+    },
+    {
+      "name": "Header",
+      "description": "title, subtitle, optional avatar and overflow ⋮."
+    },
+    {
+      "name": "Content",
+      "description": "supporting text, KPIs, or a small table."
+    },
+    {
+      "name": "Actions",
+      "description": "a row of buttons (usually text/outlined)."
+    }
+  ],
+  "behaviors": [
+    {
+      "name": "Actions",
+      "description": "Keep card actions low-emphasis (text/outlined); reserve the contained button for the page's primary action."
+    },
+    {
+      "name": "Whole-card click",
+      "description": "If the card is clickable, show hover/focus and don't bury separate interactive controls that compete with the card click."
+    },
+    {
+      "name": "Density",
+      "description": "On dashboards, prefer compact cards in a grid; align heights for a tidy grid."
+    }
+  ],
+  "states": [
+    {
+      "state": "Resting",
+      "treatment": "Elevation 1 (or outline)."
+    },
+    {
+      "state": "Hover (actionable)",
+      "treatment": "Raised elevation / overlay."
+    },
+    {
+      "state": "Focus (actionable)",
+      "treatment": "Visible focus ring."
+    }
+  ],
+  "specs": [
+    {
+      "property": "Corner radius",
+      "value": "4px"
+    },
+    {
+      "property": "Elevation",
+      "value": "1 (resting); raises on hover if actionable"
+    },
+    {
+      "property": "Content padding",
+      "value": "16px"
+    },
+    {
+      "property": "Title / subtitle",
+      "value": "Roboto 16px/500 · 14px/400 on-surface-medium"
+    }
+  ],
+  "tokens": [
+    "semantic.radius.card",
+    "semantic.spacing.md",
+    "semantic.spacing.sm",
+    "semantic.color.text.secondary",
+    "semantic.typography.scale.titleMedium",
+    "semantic.typography.scale.body2"
+  ],
+  "props": [
+    {
+      "name": "title",
+      "type": "string",
+      "required": true,
+      "description": "Card title, rendered as a heading."
+    },
+    {
+      "name": "subtitle",
+      "type": "string",
+      "required": false,
+      "description": "Optional subtitle line under the title (e.g. \"Jane Cooper · Active\")."
+    },
+    {
+      "name": "content",
+      "type": "React.ReactNode",
+      "required": false,
+      "description": "Supporting text, KPIs, or a small table — kept to a single subject."
+    },
+    {
+      "name": "media",
+      "type": "React.ReactNode",
+      "required": false,
+      "description": "Optional media/image/map thumbnail region above the header."
+    },
+    {
+      "name": "variant",
+      "type": "'elevated' | 'outlined'",
+      "required": false,
+      "description": "Outlined removes the elevation shadow in favor of a divider border. Elevated is the default."
+    },
+    {
+      "name": "actions",
+      "type": "CardAction[]",
+      "required": false,
+      "description": "Row of low-emphasis actions (usually text buttons)."
+    },
+    {
+      "name": "actionable",
+      "type": "boolean",
+      "required": false,
+      "description": "Makes the whole card a single clickable target that navigates to detail."
+    },
+    {
+      "name": "onClick",
+      "type": "() => void",
+      "required": false,
+      "description": "Handler fired when an actionable card is clicked or activated via keyboard."
+    }
+  ],
+  "doThis": [
+    "Keep one subject per card.",
+    "Use low-emphasis actions inside cards.",
+    "Align cards into a tidy grid on dashboards."
+  ],
+  "dontDoThis": [
+    "Don't replace a comparable-records table with many cards.",
+    "Don't stack multiple contained buttons in a card.",
+    "Don't nest cards within cards."
+  ],
+  "accessibility": [
+    "The card's title is a heading.",
+    "An actionable card is a single link/button with an accessible name, or it exposes its inner controls clearly — not both in a confusing way.",
+    "Focus is visible and order is logical."
+  ],
+  "related": [
+    {
+      "name": "DataTable",
+      "why": "When operators compare many records, use a table"
+    },
+    {
+      "name": "List",
+      "why": "Dense homogeneous content scans better as a list"
+    },
+    {
+      "name": "ExpansionPanel",
+      "why": "Collapsible content that stays in the page flow"
+    }
+  ]
+}

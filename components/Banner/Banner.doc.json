@@ -1,0 +1,162 @@
+{
+  "name": "Banner",
+  "category": "Feedback",
+  "status": "stable",
+  "library": "Material Components Web (MDC) 14.0.0 — Cartrack-themed",
+  "source": "component-specs/banners.md",
+  "description": "A banner is a prominent message with one or two actions, shown at the top of a region. It surfaces something important but non-blocking — vehicles due for service, a sync issue, a new feature — and stays until the operator acts.",
+  "keyRule": "Use a banner for a persistent, moderate-priority message that needs acknowledgement. For transient confirmation use a snackbar; for a blocking decision use a dialog.",
+  "variants": [
+    {
+      "name": "Informational",
+      "whenToUse": "Neutral notice (a new export format, a tip)."
+    },
+    {
+      "name": "Warning",
+      "whenToUse": "Something needs attention soon (service due)."
+    },
+    {
+      "name": "Error",
+      "whenToUse": "A problem affecting the data on screen (sync failed)."
+    },
+    {
+      "name": "Success",
+      "whenToUse": "Confirmation of a longer-running result."
+    }
+  ],
+  "anatomy": [
+    {
+      "name": "Container",
+      "description": "spans the region width, sits at the top."
+    },
+    {
+      "name": "Leading icon",
+      "description": "optional status/identity icon."
+    },
+    {
+      "name": "Message",
+      "description": "the supporting text."
+    },
+    {
+      "name": "Actions",
+      "description": "one or two text buttons (e.g. Dismiss + Review)."
+    }
+  ],
+  "behaviors": [
+    {
+      "name": "Persistence",
+      "description": "A banner stays until dismissed or resolved — unlike a snackbar, it doesn't auto-hide."
+    },
+    {
+      "name": "Placement",
+      "description": "Anchor it at the top of the relevant region (page or section), above the content it concerns."
+    },
+    {
+      "name": "One at a time",
+      "description": "Show a single banner per region; queue or combine rather than stacking several."
+    }
+  ],
+  "states": [
+    {
+      "state": "Visible",
+      "treatment": "Tinted background per severity; message + actions."
+    },
+    {
+      "state": "Action hover/focus",
+      "treatment": "Button state layers; visible focus."
+    },
+    {
+      "state": "Dismissed",
+      "treatment": "Removed; layout reflows."
+    }
+  ],
+  "specs": [
+    {
+      "property": "Padding",
+      "value": "14–16px"
+    },
+    {
+      "property": "Message text",
+      "value": "Roboto 14px / 400"
+    },
+    {
+      "property": "Severity tint",
+      "value": "success/warning/error/info container colours; text meets AA"
+    },
+    {
+      "property": "Actions",
+      "value": "Text buttons, right-aligned"
+    }
+  ],
+  "tokens": [
+    "semantic.color.status.success",
+    "semantic.color.status.warning",
+    "semantic.color.status.error",
+    "semantic.color.status.info",
+    "semantic.typography.scale.body2",
+    "semantic.spacing.md"
+  ],
+  "props": [
+    {
+      "name": "message",
+      "type": "string",
+      "required": true,
+      "description": "The supporting message text."
+    },
+    {
+      "name": "severity",
+      "type": "'info' | 'warning' | 'error' | 'success'",
+      "required": false,
+      "description": "Controls tint and the live-region politeness (error is assertive)."
+    },
+    {
+      "name": "secondaryActionLabel",
+      "type": "string",
+      "required": false,
+      "description": "Secondary (left) text action, e.g. \"Dismiss\"."
+    },
+    {
+      "name": "onSecondaryAction",
+      "type": "() => void",
+      "required": false,
+      "description": "Handler for the secondary action."
+    },
+    {
+      "name": "primaryActionLabel",
+      "type": "string",
+      "required": true,
+      "description": "Primary (right) text action, e.g. \"Review\"."
+    },
+    {
+      "name": "onPrimaryAction",
+      "type": "() => void",
+      "required": false,
+      "description": "Handler for the primary action."
+    }
+  ],
+  "doThis": [
+    "Use for persistent, moderate-priority messages.",
+    "Offer a clear action (Review/Retry/Dismiss).",
+    "Match the tint to severity and keep text legible."
+  ],
+  "dontDoThis": [
+    "Don't use a banner for transient confirmations (use a snackbar).",
+    "Don't stack multiple banners.",
+    "Don't use error styling for non-errors."
+  ],
+  "accessibility": [
+    "Expose the banner via an appropriate live region (assertive for errors, polite for info) so it's announced.",
+    "Actions are real buttons with accessible names.",
+    "Severity is conveyed by icon + text, not colour alone, and tints meet AA contrast."
+  ],
+  "related": [
+    {
+      "name": "Snackbar",
+      "why": "For transient, auto-dismissing feedback"
+    },
+    {
+      "name": "Dialog",
+      "why": "When the operator must decide before continuing"
+    }
+  ]
+}

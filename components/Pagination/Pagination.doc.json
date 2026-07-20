@@ -1,0 +1,174 @@
+{
+  "name": "Pagination",
+  "category": "Data display",
+  "status": "stable",
+  "library": "Material Components Web (MDC) 14.0.0 — Cartrack-themed",
+  "source": "component-specs/pagination.md",
+  "description": "Pagination breaks a large dataset into pages an operator can move through — the standard way to navigate the thousands of vehicles, trips, and alerts in the portal's data tables.",
+  "keyRule": "Desktop tables paginate — they don't infinite-scroll. For large or server-driven data, fetch one page at a time rather than loading everything.",
+  "variants": [
+    {
+      "name": "Table footer (range + prev/next)",
+      "whenToUse": "Default for data tables; compact, shows totals."
+    },
+    {
+      "name": "Numbered pages",
+      "whenToUse": "When operators jump around (page 1, 2, 3…); good for moderate counts."
+    },
+    {
+      "name": "Rows-per-page only",
+      "whenToUse": "When the dataset fits a couple of pages."
+    }
+  ],
+  "anatomy": [
+    {
+      "name": "Rows-per-page",
+      "description": "a select for page size (e.g. 25/50/100)."
+    },
+    {
+      "name": "Range label",
+      "description": "the visible window and total (\"1–100 of 100,000\")."
+    },
+    {
+      "name": "Previous / next",
+      "description": "step one page at a time."
+    },
+    {
+      "name": "Page numbers",
+      "description": "optional direct jumps with the current page highlighted."
+    }
+  ],
+  "behaviors": [
+    {
+      "name": "Server vs client",
+      "description": "For small sets, paginate in the browser; for large/remote data, request each page from the server and show a loading state while fetching."
+    },
+    {
+      "name": "Selection across pages",
+      "description": "When rows are selected, keep the selection as the operator pages (and make it clear how many are selected in total)."
+    },
+    {
+      "name": "Resetting",
+      "description": "Changing filters or page size resets to page one; preserve sort."
+    }
+  ],
+  "states": [
+    {
+      "state": "Page enabled",
+      "treatment": "Default text button."
+    },
+    {
+      "state": "Current page",
+      "treatment": "Primary-tint highlight."
+    },
+    {
+      "state": "Prev/next at bounds",
+      "treatment": "Disabled (38% opacity) at first/last page."
+    }
+  ],
+  "specs": [
+    {
+      "property": "Control height",
+      "value": "~32px"
+    },
+    {
+      "property": "Footer height",
+      "value": "~52px"
+    },
+    {
+      "property": "Text",
+      "value": "Roboto 12–14px, on-surface-medium"
+    },
+    {
+      "property": "Current page",
+      "value": "primary tint (~10%)"
+    }
+  ],
+  "tokens": [
+    "semantic.color.text.secondary",
+    "semantic.color.interactive.primarySelected",
+    "semantic.typography.scale.caption"
+  ],
+  "props": [
+    {
+      "name": "page",
+      "type": "number",
+      "required": true,
+      "description": "Current page, 1-indexed."
+    },
+    {
+      "name": "pageSize",
+      "type": "number",
+      "required": true,
+      "description": "Rows shown per page."
+    },
+    {
+      "name": "totalItems",
+      "type": "number",
+      "required": true,
+      "description": "Total row count across all pages, used to build the range label (\"1–100 of 100,000\")."
+    },
+    {
+      "name": "pageSizeOptions",
+      "type": "number[]",
+      "required": false,
+      "description": "Page-size choices offered in the rows-per-page control (e.g. 25/50/100)."
+    },
+    {
+      "name": "variant",
+      "type": "'table-footer' | 'numbered' | 'rows-per-page-only'",
+      "required": false,
+      "description": "Table footer (range + prev/next), Numbered pages, or Rows-per-page only, per the spec's Variants table."
+    },
+    {
+      "name": "siblingCount",
+      "type": "number",
+      "required": false,
+      "description": "How many page-number buttons to show around the current page (numbered variant)."
+    },
+    {
+      "name": "onPageChange",
+      "type": "(page: number) => void",
+      "required": false,
+      "description": "Called when the operator moves to a different page (previous/next or a numbered jump)."
+    },
+    {
+      "name": "onPageSizeChange",
+      "type": "(size: number) => void",
+      "required": false,
+      "description": "Called when the operator changes rows-per-page; should reset to page one per the Resetting behavior."
+    },
+    {
+      "name": "className",
+      "type": "string",
+      "required": false,
+      "description": "Optional extra class names to compose with the base pgn class."
+    }
+  ],
+  "doThis": [
+    "Show the total and current range.",
+    "Offer sensible page sizes (25/50/100).",
+    "Fetch per page for large data."
+  ],
+  "dontDoThis": [
+    "Don't infinite-scroll a desktop data table.",
+    "Don't lose selection or sort when paging.",
+    "Don't load 100k rows into the browser at once."
+  ],
+  "accessibility": [
+    "Pagination is a labelled navigation region.",
+    "The current page exposes aria-current, and prev/next convey their disabled state.",
+    "Page-size is a labelled select.",
+    "Controls are keyboard operable with visible focus."
+  ],
+  "related": [
+    {
+      "name": "DataTable",
+      "why": "Its host — pagination never appears alone"
+    },
+    {
+      "name": "ProgressIndicator",
+      "why": "Show a linear indicator while a page loads"
+    }
+  ]
+}

@@ -1,0 +1,186 @@
+{
+  "name": "Dialog",
+  "category": "Surfaces",
+  "status": "stable",
+  "library": "Material Components Web (MDC) 14.0.0 — Cartrack-themed",
+  "source": "component-specs/dialogs.md",
+  "description": "A dialog is a modal window for a focused task or decision that interrupts the operator on purpose — confirming a deletion, capturing a few fields, or surfacing something that needs a choice before continuing.",
+  "keyRule": "Use a dialog only when the task genuinely needs to interrupt. For routine detail, prefer a side sheet or a detail page. For transient confirmation, prefer a snackbar.",
+  "variants": [
+    {
+      "name": "Alert / confirmation",
+      "whenToUse": "Confirm a consequential action (delete, discard)."
+    },
+    {
+      "name": "Form dialog",
+      "whenToUse": "Capture a few fields without leaving the page."
+    },
+    {
+      "name": "Full-screen (rare on desktop)",
+      "whenToUse": "A larger task that benefits from focus; usually a page is better."
+    }
+  ],
+  "anatomy": [
+    {
+      "name": "Scrim",
+      "description": "dimmed overlay that blocks the page behind."
+    },
+    {
+      "name": "Container",
+      "description": "the dialog surface (4px radius, high elevation)."
+    },
+    {
+      "name": "Title",
+      "description": "a short, specific question or task name."
+    },
+    {
+      "name": "Content",
+      "description": "supporting text and/or fields."
+    },
+    {
+      "name": "Actions",
+      "description": "confirm + dismiss, right-aligned; confirm last."
+    }
+  ],
+  "behaviors": [
+    {
+      "name": "Modality",
+      "description": "The dialog traps focus and blocks the page; Escape and the scrim dismiss non-destructive dialogs."
+    },
+    {
+      "name": "Action order",
+      "description": "Dismiss on the left, confirm on the right; destructive confirms use the error colour and clear labels (\"Remove\", not \"OK\")."
+    },
+    {
+      "name": "Keep it short",
+      "description": "One decision or a handful of fields; longer tasks belong on a page."
+    }
+  ],
+  "states": [
+    {
+      "state": "Open",
+      "treatment": "Surface over scrim; focus trapped inside."
+    },
+    {
+      "state": "Action hover/focus",
+      "treatment": "Button state layers; visible focus."
+    },
+    {
+      "state": "Closing",
+      "treatment": "Returns focus to the trigger."
+    }
+  ],
+  "specs": [
+    {
+      "property": "Corner radius",
+      "value": "4px"
+    },
+    {
+      "property": "Elevation",
+      "value": "High (overlay)"
+    },
+    {
+      "property": "Title",
+      "value": "Roboto ~20px / 500"
+    },
+    {
+      "property": "Width",
+      "value": "~320–560px; content scrolls if long"
+    },
+    {
+      "property": "Destructive action",
+      "value": "error colour (#F44336)"
+    }
+  ],
+  "tokens": [
+    "semantic.radius.default",
+    "semantic.color.status.error.main",
+    "semantic.typography.scale.h6"
+  ],
+  "props": [
+    {
+      "name": "open",
+      "type": "boolean",
+      "required": true,
+      "description": "Controls whether the dialog is rendered/open."
+    },
+    {
+      "name": "title",
+      "type": "string",
+      "required": true,
+      "description": "Short, specific question or task name (e.g. \"Remove vehicle?\"), not a generic title."
+    },
+    {
+      "name": "content",
+      "type": "React.ReactNode",
+      "required": true,
+      "description": "Supporting text and/or fields."
+    },
+    {
+      "name": "confirmLabel",
+      "type": "string",
+      "required": true,
+      "description": "Right-aligned, rendered last. Verb-first label (e.g. \"Remove\"), not \"OK\"."
+    },
+    {
+      "name": "onConfirm",
+      "type": "() => void",
+      "required": false,
+      "description": "Handler for the confirm action."
+    },
+    {
+      "name": "cancelLabel",
+      "type": "string",
+      "required": false,
+      "description": "Left-aligned dismiss action label."
+    },
+    {
+      "name": "onCancel",
+      "type": "() => void",
+      "required": false,
+      "description": "Handler for the cancel/dismiss action."
+    },
+    {
+      "name": "destructive",
+      "type": "boolean",
+      "required": false,
+      "description": "Destructive confirms use the error colour and disable scrim/Escape dismissal so an unsaved destructive action isn't lost silently."
+    },
+    {
+      "name": "onClose",
+      "type": "() => void",
+      "required": false,
+      "description": "Called on Escape / scrim click for non-destructive dialogs. Defaults to onCancel."
+    }
+  ],
+  "doThis": [
+    "Use a specific title that states the decision.",
+    "Label actions with verbs (Remove/Save), not OK.",
+    "Trap focus and return it on close."
+  ],
+  "dontDoThis": [
+    "Don't use a dialog for routine detail — use a side sheet/page.",
+    "Don't stack dialogs.",
+    "Don't let the scrim dismiss a destructive, unsaved action silently."
+  ],
+  "accessibility": [
+    "Use role=dialog with aria-modal and a labelled title.",
+    "Trap focus while open and restore it to the trigger on close.",
+    "Escape closes non-destructive dialogs.",
+    "Action buttons have clear, discernible names."
+  ],
+  "related": [
+    {
+      "name": "SideSheet",
+      "why": "Complex forms that need page context stay in a sheet"
+    },
+    {
+      "name": "Banner",
+      "why": "Non-blocking page-level messages"
+    },
+    {
+      "name": "Snackbar",
+      "why": "Post-action confirmation, no decision needed"
+    }
+  ]
+}

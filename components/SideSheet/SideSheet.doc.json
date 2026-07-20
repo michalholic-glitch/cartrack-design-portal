@@ -1,0 +1,173 @@
+{
+  "name": "SideSheet",
+  "category": "Surfaces",
+  "status": "stable",
+  "library": "Material Components Web (MDC) 14.0.0 — Cartrack-themed",
+  "source": "component-specs/side-sheet.md",
+  "description": "A side sheet is a surface anchored to the right edge that shows contextual detail beside the main content — the selected vehicle's summary next to the list, or a filters panel — without navigating away.",
+  "keyRule": "Use a side sheet to keep context: the operator sees a record's detail while the list stays visible. (Bottom sheets are a mobile pattern and are excluded from this desktop set.)",
+  "variants": [
+    {
+      "name": "Standard (pushes content)",
+      "whenToUse": "Detail beside a list where keeping context matters; content reflows."
+    },
+    {
+      "name": "Modal (over a scrim)",
+      "whenToUse": "When the sheet's task should hold focus (e.g. an editing flow)."
+    },
+    {
+      "name": "Filters panel",
+      "whenToUse": "Hosts the advanced filters for a data table."
+    }
+  ],
+  "anatomy": [
+    {
+      "name": "Container",
+      "description": "the panel docked to the right edge."
+    },
+    {
+      "name": "Header",
+      "description": "the subject/title + close affordance."
+    },
+    {
+      "name": "Content",
+      "description": "detail, tabs, or a form."
+    },
+    {
+      "name": "Optional footer",
+      "description": "actions for the sheet's content."
+    }
+  ],
+  "behaviors": [
+    {
+      "name": "Open with context",
+      "description": "Selecting a record opens the sheet with its detail; the list stays visible and the selection is highlighted."
+    },
+    {
+      "name": "Persistent vs modal",
+      "description": "A standard sheet coexists with the page; a modal sheet dims and blocks until dismissed."
+    },
+    {
+      "name": "Dismiss",
+      "description": "Close via the header control or Escape (modal); the standard sheet can stay docked."
+    }
+  ],
+  "states": [
+    {
+      "state": "Closed",
+      "treatment": "Off-canvas; content full width."
+    },
+    {
+      "state": "Open (standard)",
+      "treatment": "Docked; content reflows to make room."
+    },
+    {
+      "state": "Open (modal)",
+      "treatment": "Over a scrim; focus trapped."
+    }
+  ],
+  "specs": [
+    {
+      "property": "Width",
+      "value": "~320–400px (content-dependent)"
+    },
+    {
+      "property": "Elevation",
+      "value": "Raised (modal) / flush with a divider (standard)"
+    },
+    {
+      "property": "Header title",
+      "value": "Roboto 16–20px / 500"
+    },
+    {
+      "property": "Padding",
+      "value": "16px"
+    }
+  ],
+  "tokens": [
+    "semantic.spacing.md",
+    "semantic.color.border.default",
+    "semantic.typography.scale.h6",
+    "semantic.typography.scale.titleMedium"
+  ],
+  "props": [
+    {
+      "name": "variant",
+      "type": "'standard' | 'modal'",
+      "required": false,
+      "description": "Standard pushes/reflows content and can stay docked; modal sits over a scrim and traps focus."
+    },
+    {
+      "name": "open",
+      "type": "boolean",
+      "required": false,
+      "description": "Whether the sheet is rendered/visible."
+    },
+    {
+      "name": "title",
+      "type": "string",
+      "required": true,
+      "description": "The subject/title shown in the header, e.g. a registration number."
+    },
+    {
+      "name": "subtitle",
+      "type": "string",
+      "required": false,
+      "description": "Optional secondary line, e.g. driver name + status."
+    },
+    {
+      "name": "navItems",
+      "type": "SideSheetNavItem[]",
+      "required": false,
+      "description": "Content nav/list — mirrors mdc-deprecated-list usage in the source markup."
+    },
+    {
+      "name": "children",
+      "type": "React.ReactNode",
+      "required": false,
+      "description": "Arbitrary content/form/tabs, used instead of navItems."
+    },
+    {
+      "name": "footer",
+      "type": "React.ReactNode",
+      "required": false,
+      "description": "Optional footer actions for the sheet's content."
+    },
+    {
+      "name": "onClose",
+      "type": "() => void",
+      "required": false,
+      "description": "Called when the close control or (for modal) the scrim/Escape is activated."
+    }
+  ],
+  "doThis": [
+    "Use it to keep list context while viewing detail.",
+    "Highlight the selected record in the list.",
+    "Give it a clear close control."
+  ],
+  "dontDoThis": [
+    "Don't use a bottom sheet on desktop.",
+    "Don't stuff a full multi-step task into a narrow sheet — use a page.",
+    "Don't block the page with a modal sheet for read-only detail."
+  ],
+  "accessibility": [
+    "A modal side sheet uses role=dialog + aria-modal, traps focus, and restores it on close.",
+    "A standard sheet is a labelled complementary region.",
+    "The close control has an accessible name.",
+    "Escape closes modal sheets."
+  ],
+  "related": [
+    {
+      "name": "Dialog",
+      "why": "Blocking decisions that demand full attention"
+    },
+    {
+      "name": "ExpansionPanel",
+      "why": "Lightweight inline expansion"
+    },
+    {
+      "name": "NavigationDrawer",
+      "why": "Navigation, never content, lives in the drawer"
+    }
+  ]
+}

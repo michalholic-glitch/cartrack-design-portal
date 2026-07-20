@@ -1,0 +1,164 @@
+{
+  "name": "NavigationDrawer",
+  "category": "Navigation",
+  "status": "stable",
+  "library": "Material Components Web (MDC) 14.0.0 — Cartrack-themed",
+  "source": "component-specs/navigation-drawer.md",
+  "description": "The navigation drawer is the portal's primary, persistent navigation — anchored to the left edge and grouped by purpose. It's how operators move between the map, assets, and the domain pillars throughout a session.",
+  "keyRule": "On desktop the drawer is permanent (always visible) — not a temporary overlay. Group items by purpose so the model stays legible; default new features into a pillar, not the top level.",
+  "variants": [
+    {
+      "name": "Permanent",
+      "whenToUse": "Default on desktop — always visible alongside content."
+    },
+    {
+      "name": "Collapsible",
+      "whenToUse": "Can collapse to a rail (icons only) to reclaim width."
+    },
+    {
+      "name": "Grouped",
+      "whenToUse": "Sections by purpose (Quick access / Pillars / Workflow & comms)."
+    }
+  ],
+  "anatomy": [
+    {
+      "name": "Container",
+      "description": "the fixed left panel."
+    },
+    {
+      "name": "Section header",
+      "description": "optional group label (Quick access, Pillars, Workflow)."
+    },
+    {
+      "name": "Item",
+      "description": "a destination with an icon + label."
+    },
+    {
+      "name": "Active indicator",
+      "description": "the selected item's highlighted/pill state."
+    },
+    {
+      "name": "Badge",
+      "description": "optional count on an item (e.g. unread alerts)."
+    }
+  ],
+  "behaviors": [
+    {
+      "name": "Selection",
+      "description": "The current destination shows the active indicator; selecting an item navigates and updates it."
+    },
+    {
+      "name": "Collapse",
+      "description": "Collapsing hides labels and narrows to a rail; tooltips reveal labels on hover."
+    },
+    {
+      "name": "Permissions",
+      "description": "Items the operator can't access are hidden; a pillar with no accessible sub-pages collapses away rather than showing dead ends."
+    }
+  ],
+  "states": [
+    {
+      "state": "Item enabled",
+      "treatment": "Medium-emphasis icon + label."
+    },
+    {
+      "state": "Item hover/focus",
+      "treatment": "4% overlay."
+    },
+    {
+      "state": "Item active",
+      "treatment": "Primary-tint pill, primary-dark label/icon."
+    }
+  ],
+  "specs": [
+    {
+      "property": "Width",
+      "value": "~240–256px (expanded)"
+    },
+    {
+      "property": "Item height",
+      "value": "48px"
+    },
+    {
+      "property": "Item text",
+      "value": "Roboto 14px / 500"
+    },
+    {
+      "property": "Active indicator",
+      "value": "primary tint (~10%); rounded pill"
+    },
+    {
+      "property": "Icon size",
+      "value": "24px, 16px gap to label"
+    }
+  ],
+  "tokens": [
+    "semantic.radius.default",
+    "semantic.color.interactive.primarySelected",
+    "semantic.radius.pill",
+    "semantic.spacing.md",
+    "semantic.typography.scale.subtitle2"
+  ],
+  "props": [
+    {
+      "name": "sections",
+      "type": "NavigationDrawerSection[]",
+      "required": true,
+      "description": "Sections by purpose — the Grouped variant; each section has an optional title and its destination items."
+    },
+    {
+      "name": "activeId",
+      "type": "string",
+      "required": false,
+      "description": "The id of the currently active destination; shows the active indicator and exposes aria-current."
+    },
+    {
+      "name": "collapsed",
+      "type": "boolean",
+      "required": false,
+      "description": "Collapses the drawer to a rail (icons only, labels via tooltip/title) — the Collapsible variant."
+    },
+    {
+      "name": "height",
+      "type": "number | string",
+      "required": false,
+      "description": "Fixed panel height; the drawer is permanent on desktop, not an overlay."
+    },
+    {
+      "name": "className",
+      "type": "string",
+      "required": false,
+      "description": "Optional extra class names to compose with the base mdc-drawer class."
+    }
+  ],
+  "doThis": [
+    "Group items by purpose; keep the top level short.",
+    "Show one clear active destination.",
+    "Hide items the user can't access."
+  ],
+  "dontDoThis": [
+    "Don't make it a flat dump of every feature.",
+    "Don't use brand/codenames as labels — name by job.",
+    "Don't put transient page actions in the drawer."
+  ],
+  "accessibility": [
+    "Use a navigation landmark with a list of links.",
+    "The active item exposes aria-current.",
+    "Items are keyboard reachable with visible focus.",
+    "Collapsed (icon-only) items keep accessible names via tooltip/label."
+  ],
+  "related": [
+    {
+      "name": "NavigationRail",
+      "why": "Collapsed rail for mid-width screens"
+    },
+    {
+      "name": "Tabs",
+      "why": "Content-level navigation inside a page"
+    },
+    {
+      "name": "AppBar",
+      "why": "The bar toggles the drawer via its nav icon"
+    }
+  ]
+}

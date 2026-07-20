@@ -1,0 +1,242 @@
+{
+  "name": "TextField",
+  "category": "Inputs & forms",
+  "status": "stable",
+  "library": "Material Components Web (MDC) 14.0.0 — Cartrack-themed",
+  "source": "component-specs/text-fields.md",
+  "description": "Text fields let operators enter and edit text — a registration number, a driver's name, an odometer reading, a note. They come in filled and outlined styles and always carry a label so the field's purpose stays visible once filled.",
+  "keyRule": "Pick one style and use it consistently across a form. In the Cartrack portal, outlined is the default for forms; filled suits dense, list-like settings.",
+  "variants": [
+    {
+      "name": "Filled",
+      "whenToUse": "Dense, settings-style lists; strong visual grouping."
+    },
+    {
+      "name": "Outlined",
+      "whenToUse": "Default for forms; clear field boundaries."
+    },
+    {
+      "name": "With adornments",
+      "whenToUse": "Search (leading magnifier + trailing clear), password (visibility toggle), units (trailing \"km\")."
+    },
+    {
+      "name": "Select / dropdown field",
+      "whenToUse": "A field that opens a menu to choose one value."
+    },
+    {
+      "name": "Multiline / textarea",
+      "whenToUse": "Longer notes; grows with content."
+    }
+  ],
+  "anatomy": [
+    {
+      "name": "Container",
+      "description": "filled (shaded box, bottom line) or outlined (border box)."
+    },
+    {
+      "name": "Label",
+      "description": "floats above the value; stays visible when filled."
+    },
+    {
+      "name": "Input text",
+      "description": "the value the operator types."
+    },
+    {
+      "name": "Supporting text",
+      "description": "helper or error message below the field."
+    },
+    {
+      "name": "Leading / trailing icon",
+      "description": "optional adornment (search, clear, visibility, unit)."
+    },
+    {
+      "name": "Activation line / border",
+      "description": "turns primary on focus, error on invalid."
+    }
+  ],
+  "behaviors": [
+    {
+      "name": "Label float",
+      "description": "The label sits in the field when empty and floats up on focus or when a value is present, so it never hides the content."
+    },
+    {
+      "name": "Validation",
+      "description": "Validate on blur or submit; show a concise error in the supporting text and turn the field's line/border to the error colour. Keep the label."
+    },
+    {
+      "name": "Read-only & disabled",
+      "description": "Read-only shows a value that can't be edited but can be copied; disabled dims the whole field and removes it from tab order."
+    }
+  ],
+  "states": [
+    {
+      "state": "Enabled",
+      "treatment": "Default container; medium-emphasis label."
+    },
+    {
+      "state": "Hover",
+      "treatment": "Border/line darkens slightly."
+    },
+    {
+      "state": "Focused",
+      "treatment": "Primary 2px border (outlined) or 2px underline (filled); primary label."
+    },
+    {
+      "state": "Error",
+      "treatment": "Error colour border/line, label, and supporting text."
+    },
+    {
+      "state": "Disabled",
+      "treatment": "38% opacity; not focusable."
+    }
+  ],
+  "specs": [
+    {
+      "property": "Height",
+      "value": "~56px (filled), ~56px (outlined) standard"
+    },
+    {
+      "property": "Input text",
+      "value": "Roboto 16px / 400"
+    },
+    {
+      "property": "Label (resting / floated)",
+      "value": "16px → 12px"
+    },
+    {
+      "property": "Supporting text",
+      "value": "12px"
+    },
+    {
+      "property": "Corner radius",
+      "value": "4px"
+    },
+    {
+      "property": "Focus / error colour",
+      "value": "primary-dark (#BB4800) / error (#F44336) — primary-dark keeps the focus line legible on white"
+    }
+  ],
+  "tokens": [
+    "semantic.radius.default",
+    "semantic.color.brand.primary.dark",
+    "semantic.color.status.error.main",
+    "semantic.typography.scale.body1",
+    "semantic.typography.scale.caption"
+  ],
+  "props": [
+    {
+      "name": "variant",
+      "type": "'filled' | 'outlined'",
+      "required": false,
+      "description": "Filled suits dense, settings-style lists; outlined is the Cartrack portal's default for forms."
+    },
+    {
+      "name": "label",
+      "type": "string",
+      "required": true,
+      "description": "Always shown; keeps the field's purpose visible once filled."
+    },
+    {
+      "name": "value",
+      "type": "string",
+      "required": true,
+      "description": "The value the operator has typed."
+    },
+    {
+      "name": "onChange",
+      "type": "(value: string) => void",
+      "required": false,
+      "description": "Called on every input change."
+    },
+    {
+      "name": "helperText",
+      "type": "string",
+      "required": false,
+      "description": "Helper text below the field; replaced by the error message when error is set."
+    },
+    {
+      "name": "error",
+      "type": "string",
+      "required": false,
+      "description": "Concise, specific error text; also flips the field into the error state."
+    },
+    {
+      "name": "disabled",
+      "type": "boolean",
+      "required": false,
+      "description": "Dims the whole field and removes it from tab order."
+    },
+    {
+      "name": "readOnly",
+      "type": "boolean",
+      "required": false,
+      "description": "Shows a value that can't be edited but can be copied."
+    },
+    {
+      "name": "required",
+      "type": "boolean",
+      "required": false,
+      "description": "Sets aria-required."
+    },
+    {
+      "name": "type",
+      "type": "'text' | 'password' | 'search' | 'number'",
+      "required": false,
+      "description": "Underlying input type for single-line fields; ignored when multiline is true."
+    },
+    {
+      "name": "leadingIcon",
+      "type": "string",
+      "required": false,
+      "description": "Leading Material icon ligature, e.g. \"search\"."
+    },
+    {
+      "name": "trailingIcon",
+      "type": "string",
+      "required": false,
+      "description": "Trailing Material icon ligature, e.g. \"clear\" or a unit like \"km\"."
+    },
+    {
+      "name": "multiline",
+      "type": "boolean",
+      "required": false,
+      "description": "Renders a textarea that grows with content instead of a single-line input."
+    },
+    {
+      "name": "rows",
+      "type": "number",
+      "required": false,
+      "description": "Textarea row count when multiline is true."
+    }
+  ],
+  "doThis": [
+    "Always show a label; keep it visible when filled.",
+    "Write specific, helpful error text (\"Enter a value\", not \"Invalid\").",
+    "Use one field style per form.",
+    "Right-size width to the expected content."
+  ],
+  "dontDoThis": [
+    "Don't use placeholder text as the only label.",
+    "Don't mix filled and outlined in the same form.",
+    "Don't rely on colour alone for errors — include text."
+  ],
+  "accessibility": [
+    "Every field has a programmatic <label>; errors are linked via aria-describedby and announced.",
+    "Focus is clearly visible.",
+    "Required and invalid states use aria-required / aria-invalid, not colour alone."
+  ],
+  "related": [
+    {
+      "name": "Picker",
+      "why": "Dates and times pick better than they type"
+    },
+    {
+      "name": "Slider",
+      "why": "Approximate values within a visible range"
+    },
+    {
+      "name": "Menu",
+      "why": "Constrained choices — use a select"
+    }
+  ]
+}

@@ -1,0 +1,159 @@
+{
+  "name": "Stepper",
+  "category": "Navigation",
+  "status": "stable",
+  "library": "Material Components Web (MDC) 14.0.0 — Cartrack-themed",
+  "source": "component-specs/steppers.md",
+  "description": "A stepper guides an operator through a task in ordered steps — onboarding a new vehicle, building a report, running a bulk assignment. It shows progress and what's left to do.",
+  "keyRule": "Use a stepper for a sequence that benefits from being broken up and tracked. For peer views with no order, use tabs instead.",
+  "variants": [
+    {
+      "name": "Horizontal",
+      "whenToUse": "A few steps with short labels; fits across the top."
+    },
+    {
+      "name": "Vertical",
+      "whenToUse": "Steps with more content; content expands under each."
+    },
+    {
+      "name": "Linear",
+      "whenToUse": "Steps must be completed in order."
+    },
+    {
+      "name": "Non-linear",
+      "whenToUse": "Operators may jump between steps freely."
+    }
+  ],
+  "anatomy": [
+    {
+      "name": "Step indicator",
+      "description": "a numbered/checked circle per step."
+    },
+    {
+      "name": "Step label",
+      "description": "the step's name (and optional sub-text)."
+    },
+    {
+      "name": "Connector",
+      "description": "the line linking steps."
+    },
+    {
+      "name": "Step content",
+      "description": "the fields/actions for the active step."
+    },
+    {
+      "name": "Navigation",
+      "description": "Back / Next (and Finish) controls."
+    }
+  ],
+  "behaviors": [
+    {
+      "name": "Progress",
+      "description": "Completed steps show a check; the active step is highlighted; upcoming steps are muted."
+    },
+    {
+      "name": "Validation",
+      "description": "In a linear stepper, a step must be valid before Next; show errors on the step that needs attention."
+    },
+    {
+      "name": "Back/skip",
+      "description": "Allow going back; mark optional steps as skippable where appropriate."
+    }
+  ],
+  "states": [
+    {
+      "state": "Completed",
+      "treatment": "Primary circle with a check."
+    },
+    {
+      "state": "Active",
+      "treatment": "Primary circle with the step number; bold label."
+    },
+    {
+      "state": "Upcoming",
+      "treatment": "Muted circle/label."
+    },
+    {
+      "state": "Error",
+      "treatment": "Error-colour indicator on the affected step."
+    }
+  ],
+  "specs": [
+    {
+      "property": "Indicator",
+      "value": "24px circle; primary when active/done"
+    },
+    {
+      "property": "Label",
+      "value": "Roboto 14px / 500 (active) / 400 (other)"
+    },
+    {
+      "property": "Connector",
+      "value": "1px divider line"
+    }
+  ],
+  "tokens": [
+    "semantic.color.brand.primary.main",
+    "semantic.color.border.default",
+    "semantic.radius.pill",
+    "semantic.typography.scale.subtitle2",
+    "semantic.typography.scale.body2"
+  ],
+  "props": [
+    {
+      "name": "orientation",
+      "type": "'horizontal' | 'vertical'",
+      "required": false,
+      "description": "Horizontal fits a few short-labelled steps across the top; vertical expands content under each step."
+    },
+    {
+      "name": "linear",
+      "type": "boolean",
+      "required": false,
+      "description": "Linear = steps must be completed in order. Non-linear = operators may jump between steps freely."
+    },
+    {
+      "name": "steps",
+      "type": "StepperStep[]",
+      "required": true,
+      "description": "The ordered list of steps with label, optional subLabel, and optional state override."
+    },
+    {
+      "name": "activeStep",
+      "type": "number",
+      "required": true,
+      "description": "Zero-based index of the current step."
+    },
+    {
+      "name": "onStepClick",
+      "type": "(index: number) => void",
+      "required": false,
+      "description": "Called when a reachable step is clicked (non-linear, or a completed/current step in a linear flow)."
+    }
+  ],
+  "doThis": [
+    "Keep steps few and clearly named.",
+    "Validate before advancing in a linear flow.",
+    "Let users go back."
+  ],
+  "dontDoThis": [
+    "Don't use a stepper for unordered, peer views.",
+    "Don't bury errors — surface them on the relevant step.",
+    "Don't create long, dozen-step flows; split the task."
+  ],
+  "accessibility": [
+    "Convey the current step and total (\"Step 2 of 3\") to assistive tech; the active step uses aria-current=\"step\".",
+    "Steps are keyboard reachable (where navigable) with visible focus.",
+    "Errors are announced on their step."
+  ],
+  "related": [
+    {
+      "name": "Tabs",
+      "why": "Non-linear peer sections"
+    },
+    {
+      "name": "ProgressIndicator",
+      "why": "Indeterminate waiting, not step progress"
+    }
+  ]
+}

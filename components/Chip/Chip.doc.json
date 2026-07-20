@@ -1,0 +1,194 @@
+{
+  "name": "Chip",
+  "category": "Inputs & forms",
+  "status": "stable",
+  "library": "Material Components Web (MDC) 14.0.0 — Cartrack-themed",
+  "source": "component-specs/chips.md",
+  "description": "Chips are compact elements that represent an input, a filter, or a choice — a selected driver, an active filter on a vehicle list, a quick action. They pack a lot of interaction into a small footprint.",
+  "keyRule": "Use chips for selections and filters the operator manipulates. For read-only status (Active/Idle/Offline) use a status chip with a consistent colour mapping.",
+  "variants": [
+    {
+      "name": "Input chip",
+      "whenToUse": "Represents a discrete entered value (selected drivers, tags) — usually removable."
+    },
+    {
+      "name": "Filter chip",
+      "whenToUse": "Toggles a filter on a list; shows a selected state."
+    },
+    {
+      "name": "Choice chip",
+      "whenToUse": "Single selection from a small inline set."
+    },
+    {
+      "name": "Action chip",
+      "whenToUse": "Triggers a contextual action."
+    },
+    {
+      "name": "Status chip (read-only)",
+      "whenToUse": "Conveys record status with the consistent colour mapping."
+    }
+  ],
+  "anatomy": [
+    {
+      "name": "Container",
+      "description": "pill-shaped surface; filled or outlined."
+    },
+    {
+      "name": "Label",
+      "description": "the value or option text."
+    },
+    {
+      "name": "Leading icon / avatar",
+      "description": "optional (e.g. a driver avatar)."
+    },
+    {
+      "name": "Trailing action",
+      "description": "optional remove (×) or dropdown affordance."
+    },
+    {
+      "name": "Selected state",
+      "description": "check/tint indicating the chip is on."
+    }
+  ],
+  "behaviors": [
+    {
+      "name": "Selection & removal",
+      "description": "Filter/choice chips toggle on click; input chips can be removed via the trailing × or Backspace when focused."
+    },
+    {
+      "name": "Overflow",
+      "description": "When many chips are present, wrap to multiple lines or provide a \"+N more\" affordance."
+    },
+    {
+      "name": "Status mapping",
+      "description": "Status chips map state to colour consistently (Active=success, Idle=warning, Offline=error) and always keep the text label."
+    }
+  ],
+  "states": [
+    {
+      "state": "Enabled",
+      "treatment": "Filled grey or outlined."
+    },
+    {
+      "state": "Hover/focus",
+      "treatment": "State-layer overlay."
+    },
+    {
+      "state": "Selected",
+      "treatment": "Primary tint + check."
+    },
+    {
+      "state": "Disabled",
+      "treatment": "38% opacity."
+    }
+  ],
+  "specs": [
+    {
+      "property": "Height",
+      "value": "32px"
+    },
+    {
+      "property": "Corner radius",
+      "value": "16px (pill)"
+    },
+    {
+      "property": "Label",
+      "value": "Roboto 14px / 400 (status chip 12px / 500)"
+    },
+    {
+      "property": "Padding",
+      "value": "12px sides; 8px gap to icons"
+    },
+    {
+      "property": "Selected tint",
+      "value": "primary at ~10%"
+    }
+  ],
+  "tokens": [
+    "semantic.radius.chip",
+    "semantic.spacing.sm",
+    "semantic.color.interactive.primarySelected",
+    "semantic.typography.scale.body2",
+    "semantic.typography.scale.labelSmall"
+  ],
+  "props": [
+    {
+      "name": "label",
+      "type": "string",
+      "required": true,
+      "description": "The value or option text. Keep labels short."
+    },
+    {
+      "name": "variant",
+      "type": "'input' | 'filter' | 'choice' | 'action' | 'status'",
+      "required": false,
+      "description": "Chip category per the spec's Variants table."
+    },
+    {
+      "name": "selected",
+      "type": "boolean",
+      "required": false,
+      "description": "Toggled/selected state for filter and choice chips."
+    },
+    {
+      "name": "status",
+      "type": "'success' | 'warning' | 'error'",
+      "required": false,
+      "description": "Status colour mapping — only meaningful when variant=\"status\" (Active=success, Idle=warning, Offline=error)."
+    },
+    {
+      "name": "removable",
+      "type": "boolean",
+      "required": false,
+      "description": "Shows a trailing remove (×) control — typically used on input chips."
+    },
+    {
+      "name": "onRemove",
+      "type": "() => void",
+      "required": false,
+      "description": "Handler for the trailing remove control."
+    },
+    {
+      "name": "onClick",
+      "type": "() => void",
+      "required": false,
+      "description": "Click handler for interactive chip variants."
+    },
+    {
+      "name": "disabled",
+      "type": "boolean",
+      "required": false,
+      "description": "Disables the chip (renders at 38% opacity per spec)."
+    }
+  ],
+  "doThis": [
+    "Use chips for filters/selections the user controls.",
+    "Keep status chips read-only with consistent colours + labels.",
+    "Make removable chips clearly removable."
+  ],
+  "dontDoThis": [
+    "Don't use a chip as a primary button.",
+    "Don't encode status by colour alone.",
+    "Don't cram long text into a chip — keep labels short."
+  ],
+  "accessibility": [
+    "Interactive chips are focusable with clear roles.",
+    "Selected state is exposed (e.g. aria-pressed) and removal is keyboard-operable.",
+    "Status chips include text, never colour alone.",
+    "Targets meet minimum size."
+  ],
+  "related": [
+    {
+      "name": "Button",
+      "why": "Primary commands are buttons, not chips"
+    },
+    {
+      "name": "Badge",
+      "why": "Pure counts with no label"
+    },
+    {
+      "name": "SelectionControl",
+      "why": "Persistent on/off settings"
+    }
+  ]
+}

@@ -1,0 +1,143 @@
+{
+  "name": "Tabs",
+  "category": "Navigation",
+  "status": "stable",
+  "library": "Material Components Web (MDC) 14.0.0 — Cartrack-themed",
+  "source": "component-specs/tabs.md",
+  "description": "Tabs switch between related views of the same subject — a vehicle's Overview, Trips, Maintenance, and Alerts — without leaving the page. They keep peer views one click apart.",
+  "keyRule": "Use tabs for peer views of one record or population. They're not top-level navigation (that's the drawer) and not a wizard (that's a stepper).",
+  "variants": [
+    {
+      "name": "Fixed",
+      "whenToUse": "A small, known set of tabs that fit the width."
+    },
+    {
+      "name": "Scrollable",
+      "whenToUse": "Many tabs that overflow; the bar scrolls."
+    },
+    {
+      "name": "With icon / count",
+      "whenToUse": "Reinforce a tab or show a count (e.g. \"Alerts 3\")."
+    }
+  ],
+  "anatomy": [
+    {
+      "name": "Tab bar",
+      "description": "the row of selectable labels."
+    },
+    {
+      "name": "Tab",
+      "description": "one view label, optionally with an icon or count."
+    },
+    {
+      "name": "Active indicator",
+      "description": "the underline marking the selected tab."
+    },
+    {
+      "name": "Panel",
+      "description": "the content for the active tab."
+    }
+  ],
+  "behaviors": [
+    {
+      "name": "Selection",
+      "description": "Selecting a tab swaps the panel and moves the indicator; one tab is always active."
+    },
+    {
+      "name": "Overflow",
+      "description": "When tabs exceed the width, the bar scrolls rather than wrapping."
+    },
+    {
+      "name": "Deep linking",
+      "description": "The active tab can be reflected in the URL so a view is shareable."
+    }
+  ],
+  "states": [
+    {
+      "state": "Inactive",
+      "treatment": "On-surface-medium label."
+    },
+    {
+      "state": "Active",
+      "treatment": "Primary label + primary underline indicator."
+    },
+    {
+      "state": "Hover/focus",
+      "treatment": "State layer; visible focus."
+    }
+  ],
+  "specs": [
+    {
+      "property": "Tab height",
+      "value": "48px"
+    },
+    {
+      "property": "Label",
+      "value": "Roboto 14px / 500, uppercase"
+    },
+    {
+      "property": "Indicator",
+      "value": "2px primary underline"
+    },
+    {
+      "property": "Min tab width",
+      "value": "~90px; padding 16px sides"
+    }
+  ],
+  "tokens": [
+    "semantic.color.brand.primary.main",
+    "semantic.spacing.md",
+    "semantic.typography.scale.button"
+  ],
+  "props": [
+    {
+      "name": "items",
+      "type": "TabItem[]",
+      "required": true,
+      "description": "The tab list; each item can carry a label, optional icon, and optional count."
+    },
+    {
+      "name": "activeIndex",
+      "type": "number",
+      "required": true,
+      "description": "Index of the currently selected tab; one tab is always active."
+    },
+    {
+      "name": "onChange",
+      "type": "(index: number) => void",
+      "required": false,
+      "description": "Called when a tab is selected."
+    },
+    {
+      "name": "scrollable",
+      "type": "boolean",
+      "required": false,
+      "description": "Fixed = small known set that fits the width. Scrollable = many tabs that overflow; the bar scrolls."
+    }
+  ],
+  "doThis": [
+    "Use tabs for peer views of one subject.",
+    "Keep labels short and parallel.",
+    "Reflect the active tab in the URL."
+  ],
+  "dontDoThis": [
+    "Don't use tabs as primary site navigation.",
+    "Don't use tabs for a sequential, must-complete flow (use a stepper).",
+    "Don't overload with too many tabs — consider a different structure."
+  ],
+  "accessibility": [
+    "Use the tablist/tab/tabpanel pattern; the active tab exposes aria-selected and arrow keys move between tabs.",
+    "Each panel is associated with its tab.",
+    "Focus is visible."
+  ],
+  "related": [
+    {
+      "name": "Stepper",
+      "why": "Ordered flows with completion semantics"
+    },
+    {
+      "name": "NavigationRail",
+      "why": "App-level destination switching"
+    }
+  ]
+}

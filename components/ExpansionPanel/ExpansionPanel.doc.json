@@ -1,0 +1,173 @@
+{
+  "name": "ExpansionPanel",
+  "category": "Surfaces",
+  "status": "stable",
+  "library": "Material Components Web (MDC) 14.0.0 — Cartrack-themed",
+  "source": "component-specs/expansion-panels.md",
+  "description": "Expansion panels (accordions) let operators reveal detail on demand — collapsing a long record or settings page into named sections that open one at a time, so the screen stays manageable.",
+  "keyRule": "Use expansion panels to tame dense detail (vehicle specs, settings groups). For switching between peer views of one record, prefer tabs.",
+  "variants": [
+    {
+      "name": "Single-open",
+      "whenToUse": "Only one section open at a time (guided reading)."
+    },
+    {
+      "name": "Multi-open",
+      "whenToUse": "Several sections open at once (reference scanning)."
+    },
+    {
+      "name": "With summary",
+      "whenToUse": "Show a key value on the collapsed header."
+    }
+  ],
+  "anatomy": [
+    {
+      "name": "Header",
+      "description": "the always-visible section title + expand/collapse affordance."
+    },
+    {
+      "name": "Expand icon",
+      "description": "chevron indicating open/closed."
+    },
+    {
+      "name": "Panel body",
+      "description": "the content revealed when expanded."
+    },
+    {
+      "name": "Summary meta",
+      "description": "optional preview value shown on the collapsed header."
+    }
+  ],
+  "behaviors": [
+    {
+      "name": "Expand/collapse",
+      "description": "Clicking the header toggles the panel; the chevron rotates to reflect state."
+    },
+    {
+      "name": "Single vs multi",
+      "description": "Decide whether opening one closes others; keep it consistent within a group."
+    },
+    {
+      "name": "Deep linking",
+      "description": "A section can open automatically when linked to, so operators land on the right detail."
+    }
+  ],
+  "states": [
+    {
+      "state": "Collapsed",
+      "treatment": "Header only; chevron pointing right/down."
+    },
+    {
+      "state": "Expanded",
+      "treatment": "Body visible; chevron rotated."
+    },
+    {
+      "state": "Header hover/focus",
+      "treatment": "State layer; visible focus."
+    }
+  ],
+  "specs": [
+    {
+      "property": "Header height",
+      "value": "~48px"
+    },
+    {
+      "property": "Header title",
+      "value": "Roboto 14–16px / 500"
+    },
+    {
+      "property": "Body padding",
+      "value": "16px; divider above body"
+    },
+    {
+      "property": "Radius / elevation",
+      "value": "4px; elevation 1"
+    }
+  ],
+  "tokens": [
+    "semantic.radius.default",
+    "semantic.color.border.default",
+    "semantic.spacing.md",
+    "semantic.typography.scale.subtitle2",
+    "semantic.typography.scale.titleMedium"
+  ],
+  "props": [
+    {
+      "name": "title",
+      "type": "string",
+      "required": true,
+      "description": "Section title shown in the always-visible header."
+    },
+    {
+      "name": "summary",
+      "type": "string",
+      "required": false,
+      "description": "Optional preview value shown on the collapsed header (the 'With summary' variant)."
+    },
+    {
+      "name": "children",
+      "type": "React.ReactNode",
+      "required": false,
+      "description": "Panel body content, revealed when expanded."
+    },
+    {
+      "name": "open",
+      "type": "boolean",
+      "required": false,
+      "description": "Controlled open state; when provided the panel no longer manages its own state, letting a parent group implement single-open vs multi-open behavior."
+    },
+    {
+      "name": "defaultOpen",
+      "type": "boolean",
+      "required": false,
+      "description": "Uncontrolled initial open state."
+    },
+    {
+      "name": "onToggle",
+      "type": "(open: boolean) => void",
+      "required": false,
+      "description": "Called with the next open state whenever the header is toggled."
+    },
+    {
+      "name": "disabled",
+      "type": "boolean",
+      "required": false,
+      "description": "Disables the header toggle."
+    },
+    {
+      "name": "className",
+      "type": "string",
+      "required": false,
+      "description": "Optional extra class names to compose with the base accordion class."
+    }
+  ],
+  "doThis": [
+    "Name sections clearly so collapsed headers are scannable.",
+    "Show a summary value where it helps.",
+    "Keep single-vs-multi behavior consistent."
+  ],
+  "dontDoThis": [
+    "Don't nest accordions deeply.",
+    "Don't hide critical, always-needed info behind a collapse.",
+    "Don't use accordions where tabs fit better."
+  ],
+  "accessibility": [
+    "The header is a button exposing aria-expanded and controlling its panel via aria-controls.",
+    "It's keyboard operable with visible focus.",
+    "The chevron is decorative — state is conveyed programmatically."
+  ],
+  "related": [
+    {
+      "name": "SideSheet",
+      "why": "Details that deserve their own surface"
+    },
+    {
+      "name": "Tabs",
+      "why": "Peer views of the same subject"
+    },
+    {
+      "name": "Card",
+      "why": "Independent, always-visible content blocks"
+    }
+  ]
+}

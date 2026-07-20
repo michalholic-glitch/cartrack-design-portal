@@ -1,0 +1,164 @@
+{
+  "name": "Snackbar",
+  "category": "Feedback",
+  "status": "stable",
+  "library": "Material Components Web (MDC) 14.0.0 — Cartrack-themed",
+  "source": "component-specs/snackbars.md",
+  "description": "A snackbar gives brief, low-priority feedback about an action just taken — \"Vehicle saved\", \"Export started\" — usually with a single optional action like Undo. It appears briefly and dismisses on its own.",
+  "keyRule": "Use a snackbar for transient confirmation that doesn't need acknowledgement. For a message that must persist until acted on, use a banner; for a blocking choice, a dialog.",
+  "variants": [
+    {
+      "name": "Message only",
+      "whenToUse": "Simple confirmation (\"Changes saved\")."
+    },
+    {
+      "name": "With action",
+      "whenToUse": "Offer a quick follow-up (Undo, View)."
+    },
+    {
+      "name": "Error toast",
+      "whenToUse": "A brief failure notice; pair persistent errors with a banner instead."
+    }
+  ],
+  "anatomy": [
+    {
+      "name": "Container",
+      "description": "dark surface, low elevation."
+    },
+    {
+      "name": "Message",
+      "description": "one concise line of text."
+    },
+    {
+      "name": "Action",
+      "description": "at most one (e.g. Undo)."
+    },
+    {
+      "name": "Dismiss",
+      "description": "optional close; otherwise auto-hides."
+    }
+  ],
+  "behaviors": [
+    {
+      "name": "Auto-dismiss",
+      "description": "Auto-hides after a few seconds; an action or hover can pause/extend it so it isn't missed."
+    },
+    {
+      "name": "One at a time",
+      "description": "Show a single snackbar; queue subsequent ones rather than stacking."
+    },
+    {
+      "name": "Single action",
+      "description": "At most one action; don't put critical, irreversible choices in a transient surface."
+    }
+  ],
+  "states": [
+    {
+      "state": "Shown",
+      "treatment": "Dark surface, light text, optional action."
+    },
+    {
+      "state": "Action hover/focus",
+      "treatment": "Highlighted action; visible focus."
+    },
+    {
+      "state": "Hidden",
+      "treatment": "Slides/fades out after the timeout."
+    }
+  ],
+  "specs": [
+    {
+      "property": "Background / text",
+      "value": "Dark grey (#323232) / white (passes AA)"
+    },
+    {
+      "property": "Action colour",
+      "value": "primary-light (#FFA863) — light enough to read on the dark surface"
+    },
+    {
+      "property": "Message text",
+      "value": "Roboto 14px"
+    },
+    {
+      "property": "Duration",
+      "value": "~4–6s (longer if there's an action)"
+    },
+    {
+      "property": "Position",
+      "value": "Bottom-left or bottom-center"
+    }
+  ],
+  "tokens": [
+    "semantic.color.brand.primary.light",
+    "semantic.color.surface.inverse",
+    "semantic.color.surface.onInverse",
+    "semantic.typography.scale.body2"
+  ],
+  "props": [
+    {
+      "name": "variant",
+      "type": "'message' | 'action' | 'error'",
+      "required": false,
+      "description": "Message only = simple confirmation. With action = one quick follow-up. Error toast = brief failure notice."
+    },
+    {
+      "name": "open",
+      "type": "boolean",
+      "required": true,
+      "description": "Whether the snackbar is currently shown."
+    },
+    {
+      "name": "message",
+      "type": "string",
+      "required": true,
+      "description": "One concise line of text, e.g. \"Vehicle saved\"."
+    },
+    {
+      "name": "actionLabel",
+      "type": "string",
+      "required": false,
+      "description": "At most one action label, e.g. \"Undo\"."
+    },
+    {
+      "name": "onAction",
+      "type": "() => void",
+      "required": false,
+      "description": "Called when the action button is activated."
+    },
+    {
+      "name": "onClose",
+      "type": "() => void",
+      "required": false,
+      "description": "Called when the snackbar is dismissed (timeout or explicit close)."
+    }
+  ],
+  "doThis": [
+    "Keep the message to one short line.",
+    "Offer at most one action (e.g. Undo).",
+    "Queue snackbars; show one at a time."
+  ],
+  "dontDoThis": [
+    "Don't use a snackbar for errors that need action — use a banner/dialog.",
+    "Don't stack multiple snackbars.",
+    "Don't auto-dismiss something the user must act on."
+  ],
+  "accessibility": [
+    "Announce via a polite live region (assertive only for important messages).",
+    "If there's an action, give enough time or pause on hover/focus so it's reachable.",
+    "The action is a real button with an accessible name."
+  ],
+  "related": [
+    {
+      "name": "Banner",
+      "why": "Persistent messages that must not auto-dismiss"
+    },
+    {
+      "name": "Dialog",
+      "why": "When feedback requires a decision"
+    },
+    {
+      "name": "Tooltip",
+      "why": "Hover hints, not event feedback"
+    }
+  ]
+}

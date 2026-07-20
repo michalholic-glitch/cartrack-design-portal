@@ -1,0 +1,181 @@
+{
+  "name": "AppBar",
+  "category": "Navigation",
+  "status": "stable",
+  "library": "Material Components Web (MDC) 14.0.0 — Cartrack-themed",
+  "source": "component-specs/app-bar.md",
+  "description": "The top app bar is the page header — it names where the operator is and holds page-level actions: global search, notifications, account, and the page's primary action. On desktop it also hosts the action a phone would put in a FAB.",
+  "keyRule": "Keep the top bar light — most navigation belongs in the left drawer/rail. The bar carries the title, global tools, and the one primary action for the page.",
+  "variants": [
+    {
+      "name": "Standard",
+      "whenToUse": "Default page header with title + actions."
+    },
+    {
+      "name": "With primary action",
+      "whenToUse": "Hosts the page's contained primary action (the desktop replacement for a FAB)."
+    },
+    {
+      "name": "Contextual / selection",
+      "whenToUse": "Appears when items are selected; shows count + bulk actions."
+    },
+    {
+      "name": "With search",
+      "whenToUse": "Expands an inline global search field."
+    }
+  ],
+  "anatomy": [
+    {
+      "name": "Leading element",
+      "description": "nav toggle or back arrow."
+    },
+    {
+      "name": "Title",
+      "description": "the current page/section name."
+    },
+    {
+      "name": "Action items",
+      "description": "search, notifications, the primary action, and overflow ⋮."
+    },
+    {
+      "name": "Contextual bar",
+      "description": "a variant that replaces the title with a selection count + bulk actions."
+    }
+  ],
+  "behaviors": [
+    {
+      "name": "Scroll",
+      "description": "The bar stays fixed while content scrolls beneath it; it may gain a subtle shadow once content scrolls under it."
+    },
+    {
+      "name": "Contextual switch",
+      "description": "Entering a selection mode swaps the standard bar for the contextual bar and back when selection clears."
+    },
+    {
+      "name": "Responsive",
+      "description": "On narrower widths, secondary actions collapse into the overflow menu; the title truncates before the actions do."
+    }
+  ],
+  "states": [
+    {
+      "state": "Action icon — Hover/focus",
+      "treatment": "4% overlay circle."
+    },
+    {
+      "state": "Bar — Scrolled",
+      "treatment": "Elevation shadow appears."
+    },
+    {
+      "state": "Bar — Contextual",
+      "treatment": "Primary-tint background; count + bulk actions."
+    }
+  ],
+  "specs": [
+    {
+      "property": "Height",
+      "value": "56–64px"
+    },
+    {
+      "property": "Title",
+      "value": "Roboto ~20px / 500"
+    },
+    {
+      "property": "Side padding",
+      "value": "16px"
+    },
+    {
+      "property": "Background",
+      "value": "Often primary; if filled with orange, use dark text/icons or primary-dark — white on #F47735 fails AA. A white bar with dark text is the safer default for dense data screens."
+    }
+  ],
+  "tokens": [
+    "semantic.color.brand.primary.main",
+    "semantic.color.brand.primary.dark",
+    "semantic.color.brand.primary.onPrimary",
+    "semantic.color.surface.paper",
+    "semantic.color.text.primary",
+    "semantic.spacing.md",
+    "semantic.typography.scale.h6"
+  ],
+  "props": [
+    {
+      "name": "title",
+      "type": "string",
+      "required": true,
+      "description": "Current page/section name shown as the title."
+    },
+    {
+      "name": "actions",
+      "type": "AppBarAction[]",
+      "required": false,
+      "description": "Standard header actions (search, notifications, overflow, etc)."
+    },
+    {
+      "name": "showNavigationIcon",
+      "type": "boolean",
+      "required": false,
+      "description": "Shows the nav toggle / back arrow leading element."
+    },
+    {
+      "name": "onNavigationIconClick",
+      "type": "() => void",
+      "required": false,
+      "description": "Handler for the leading nav icon."
+    },
+    {
+      "name": "contextual",
+      "type": "boolean",
+      "required": false,
+      "description": "Switches to the contextual / selection bar variant."
+    },
+    {
+      "name": "selectedCount",
+      "type": "number",
+      "required": false,
+      "description": "Number of selected items, shown in the contextual bar."
+    },
+    {
+      "name": "contextualActions",
+      "type": "AppBarAction[]",
+      "required": false,
+      "description": "Bulk actions shown only while contextual is true."
+    },
+    {
+      "name": "onCloseContextual",
+      "type": "() => void",
+      "required": false,
+      "description": "Called when the contextual bar's close control clears selection."
+    }
+  ],
+  "doThis": [
+    "Show the current location as the title.",
+    "Host one primary action here per page.",
+    "Switch to the contextual bar during selection.",
+    "Prefer a white bar + dark content for legibility."
+  ],
+  "dontDoThis": [
+    "Don't crowd the bar with primary navigation — that's the drawer's job.",
+    "Don't place a FAB on desktop; use the bar's primary action.",
+    "Don't ship an orange bar with white text without checking contrast."
+  ],
+  "accessibility": [
+    "Use a banner / header landmark; the title is a heading.",
+    "Icon actions carry aria-labels and visible focus.",
+    "The contextual bar announces the selection count.",
+    "Contrast of text/icons on the bar background must meet AA."
+  ],
+  "related": [
+    {
+      "name": "Menu",
+      "why": "Overflow (⋮) page actions live in a Menu"
+    },
+    {
+      "name": "NavigationDrawer",
+      "why": "Primary navigation belongs in the drawer, not the bar"
+    },
+    {
+      "name": "Tabs",
+      "why": "Section navigation below the bar"
+    }
+  ]
+}

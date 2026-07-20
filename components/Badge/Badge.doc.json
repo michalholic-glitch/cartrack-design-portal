@@ -1,0 +1,146 @@
+{
+  "name": "Badge",
+  "category": "Data display",
+  "status": "stable",
+  "library": "Material Components Web (MDC) 14.0.0 — Cartrack-themed",
+  "source": "component-specs/badges.md",
+  "description": "A badge is a small indicator placed on another element to show a count or status — the number of unread alerts on the notifications bell, or a dot marking a vehicle that needs attention.",
+  "keyRule": "Use a badge to draw attention to a count or new state on an icon or item. Keep it glanceable — for detailed status use a status chip instead.",
+  "variants": [
+    {
+      "name": "Numeric",
+      "whenToUse": "Show a count (unread alerts, pending tasks)."
+    },
+    {
+      "name": "Dot",
+      "whenToUse": "Indicate \"new\"/attention without a number."
+    },
+    {
+      "name": "Capped",
+      "whenToUse": "Large counts shown as \"99+\"."
+    }
+  ],
+  "anatomy": [
+    {
+      "name": "Host",
+      "description": "the icon/element the badge sits on."
+    },
+    {
+      "name": "Badge",
+      "description": "the small count or dot indicator (usually top-right)."
+    },
+    {
+      "name": "Content",
+      "description": "a number, capped value (\"99+\"), or empty dot."
+    }
+  ],
+  "behaviors": [
+    {
+      "name": "Capping",
+      "description": "Cap large counts (e.g. 99+) so the badge stays small and readable."
+    },
+    {
+      "name": "Zero",
+      "description": "Hide the badge at zero unless \"0\" is meaningful."
+    },
+    {
+      "name": "Live updates",
+      "description": "When the count changes, update it promptly and announce it to assistive tech."
+    }
+  ],
+  "states": [
+    {
+      "state": "Visible",
+      "treatment": "Error-colour pill/dot on the host."
+    },
+    {
+      "state": "Empty (dot)",
+      "treatment": "Small filled dot, no number."
+    },
+    {
+      "state": "Hidden",
+      "treatment": "Removed at zero/none."
+    }
+  ],
+  "specs": [
+    {
+      "property": "Numeric badge",
+      "value": "~16–18px tall pill"
+    },
+    {
+      "property": "Dot",
+      "value": "~8px"
+    },
+    {
+      "property": "Colour",
+      "value": "error (#F44336) with white text (passes AA)"
+    },
+    {
+      "property": "Text",
+      "value": "Roboto ~11–12px / 500"
+    }
+  ],
+  "tokens": [
+    "semantic.color.status.error.main",
+    "semantic.color.status.error.onStatus",
+    "semantic.spacing.sm",
+    "semantic.typography.scale.labelSmall"
+  ],
+  "props": [
+    {
+      "name": "children",
+      "type": "React.ReactNode",
+      "required": true,
+      "description": "The host element (icon/button) the badge is anchored to."
+    },
+    {
+      "name": "hostLabel",
+      "type": "string",
+      "required": true,
+      "description": "Accessible label for the host, e.g. \"Notifications\"."
+    },
+    {
+      "name": "count",
+      "type": "number",
+      "required": false,
+      "description": "Numeric count; capped and rendered as \"99+\" above 99."
+    },
+    {
+      "name": "dot",
+      "type": "boolean",
+      "required": false,
+      "description": "Renders a dot badge (no number) instead of a numeric pill."
+    },
+    {
+      "name": "showZero",
+      "type": "boolean",
+      "required": false,
+      "description": "Show the badge even when count is 0. Default false — badge hides at zero."
+    }
+  ],
+  "doThis": [
+    "Cap large counts (99+).",
+    "Use a dot when a number isn't needed.",
+    "Announce count changes."
+  ],
+  "dontDoThis": [
+    "Don't put long text in a badge.",
+    "Don't show \"0\" unless it matters.",
+    "Don't rely on the badge alone to convey critical detail."
+  ],
+  "accessibility": [
+    "The host's accessible name includes the badge meaning (e.g. \"Notifications, 4 unread\").",
+    "Changes are announced via a live region.",
+    "The dot/number is not the only signal of an important state."
+  ],
+  "related": [
+    {
+      "name": "Chip",
+      "why": "When the label needs words, not just a count"
+    },
+    {
+      "name": "Tooltip",
+      "why": "Icon-only targets with a badge still need a tooltip"
+    }
+  ]
+}

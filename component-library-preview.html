@@ -1,0 +1,1753 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cartrack — MD2 Component Library (AI-optimized)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  /* ===== Cartrack brand tokens (Material 2 styling) =====
+     Synced to component-repo/tokens/tokens.json on 2026-07-16. Values below are the resolved
+     (literal) form of semantic.color.* / semantic.typography.fontFamily — see that file for the
+     primitive/semantic split and sourcing notes. Two values here were wrong before this sync:
+     --bg (was #FAFAFA, tokens.json's real appBackground is #F9F9F9) and --selected (was using the
+     .12 focus opacity instead of the actual .08 selected opacity). --secondary-dark was missing
+     entirely. el1/el2/el8 (elevation) and --field are outside tokens.json's stated scope
+     (color/spacing/type/radius) and aren't tracked there. */
+  :root{
+    --primary:#F47735;--primary-dark:#BB4800;--primary-light:#FFA863;--on-primary:#FFFFFF;
+    --secondary:#333333;--secondary-dark:#0C0C0C;--secondary-light:#5C5C5C;--on-secondary:#FFFFFF;
+    --success:#4CAF50;--error:#F44336;--warning:#FF9800;--info:#2196F3;
+    --bg:#F9F9F9;--surface:#FFFFFF;--field:#F5F5F5;
+    --on-surface:rgba(0,0,0,.87);--on-surface-med:rgba(0,0,0,.6);--on-surface-dis:rgba(0,0,0,.38);
+    --divider:rgba(0,0,0,.12);--hover:rgba(0,0,0,.04);--selected:rgba(244,119,53,.08);--focus:rgba(244,119,53,.12);
+    --inverse-surface:#323232;--on-inverse:#FFFFFF;
+    --hairline:1px;--stroke-thin:2px;
+    --font:"Roboto","Helvetica","Arial",sans-serif;
+    --el1:0 2px 1px -1px rgba(0,0,0,.2),0 1px 1px 0 rgba(0,0,0,.14),0 1px 3px 0 rgba(0,0,0,.12);
+    --el2:0 3px 3px -2px rgba(0,0,0,.2),0 3px 4px 0 rgba(0,0,0,.14),0 1px 8px 0 rgba(0,0,0,.12);
+    --el8:0 5px 5px -3px rgba(0,0,0,.2),0 8px 10px 1px rgba(0,0,0,.14),0 3px 14px 2px rgba(0,0,0,.12);
+  }
+  *{box-sizing:border-box}
+  html{font-size:14px}
+  body{margin:0;font-family:var(--font);background:var(--bg);color:var(--on-surface);font-size:.875rem;line-height:1.5}
+  code{font-family:ui-monospace,Menlo,monospace;background:#eee;padding:1px 5px;border-radius:3px;font-size:.78rem}
+  .layout{display:grid;grid-template-columns:250px 1fr;min-height:100vh}
+  nav.side{position:sticky;top:0;align-self:start;height:100vh;overflow:auto;background:var(--surface);border-right:1px solid var(--divider);padding:18px 14px}
+  nav.side h1{font-size:1rem;margin:0 0 2px}
+  nav.side .sub{color:var(--on-surface-med);font-size:.72rem;margin-bottom:12px}
+  nav.side input{width:100%;font:inherit;font-size:.85rem;padding:7px 10px;border:1px solid var(--divider);border-radius:4px;margin-bottom:10px}
+  nav.side .grp{color:var(--on-surface-dis);font-size:.66rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;margin:14px 8px 4px}
+  nav.side a{display:block;color:var(--on-surface-med);text-decoration:none;padding:5px 8px;border-radius:4px;font-size:.8rem}
+  nav.side a:hover{background:var(--hover);color:var(--on-surface)}
+  nav.side a.active{background:var(--selected);color:var(--primary-dark);font-weight:500}
+  main{padding:28px 40px 96px;max-width:1120px}
+  header.hero h2{font-size:1.7rem;font-weight:400;margin:0 0 6px}
+  .lede{color:var(--on-surface-med);max-width:780px}
+  .note{margin:14px 0 0;padding:12px 16px;border-left:4px solid var(--primary);background:#fff;border-radius:6px;font-size:.83rem;color:var(--on-surface-med);box-shadow:var(--el1)}
+  section{margin-top:48px;scroll-margin-top:14px;padding-bottom:8px;border-bottom:1px solid var(--divider)}
+  section>h3{font-size:1.25rem;font-weight:500;margin:0 0 4px;padding-bottom:6px;border-bottom:1px solid var(--divider);display:flex;align-items:center;gap:8px}
+  section>h3 .cat{font-size:.62rem;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--on-surface-med);background:var(--field);padding:3px 8px;border-radius:10px}
+  .desc{color:var(--on-surface-med);margin:6px 0 16px;font-size:.85rem;max-width:780px}
+  .block{margin:18px 0}
+  .block h4{font-size:.92rem;font-weight:500;margin:0 0 10px}
+  .demo{display:flex;flex-wrap:wrap;gap:16px;align-items:center;padding:22px;background:var(--surface);border:1px solid var(--divider);border-radius:8px}
+  .demo.col{flex-direction:column;align-items:stretch}
+
+  /* ===== Variant grid (NEW) ===== */
+  .variant-grid{display:flex;flex-wrap:wrap;gap:14px}
+  .variant-item{background:var(--surface);border:1px solid var(--divider);border-radius:8px;overflow:hidden;width:260px;display:flex;flex-direction:column}
+  .variant-demo{padding:20px;min-height:96px;display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:10px;background:repeating-linear-gradient(45deg,#fafafa,#fafafa 10px,#f4f4f4 10px,#f4f4f4 20px)}
+  .variant-label{padding:10px 12px;border-top:1px solid var(--divider);background:#fff}
+  .variant-label b{display:block;font-size:.82rem;margin-bottom:2px}
+  .variant-label span{display:block;font-size:.74rem;color:var(--on-surface-med);line-height:1.4}
+
+  /* ===== Best practices do/don't (NEW) ===== */
+  .bp-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  .bp-col{border-radius:8px;padding:14px 16px;font-size:.82rem}
+  .bp-col.do{background:#E8F5E9;border-left:4px solid var(--success)}
+  .bp-col.dont{background:#FFEBEE;border-left:4px solid var(--error)}
+  .bp-col h5{margin:0 0 8px;font-size:.78rem;text-transform:uppercase;letter-spacing:.04em}
+  .bp-col.do h5{color:#1B5E20}
+  .bp-col.dont h5{color:#B71C1C}
+  .bp-col ul{margin:0;padding-left:18px}
+  .bp-col li{margin-bottom:6px}
+  @media(max-width:700px){.bp-grid{grid-template-columns:1fr}}
+
+  /* ===== Props table (NEW) ===== */
+  table.proptable{width:100%;border-collapse:collapse;font-size:.8rem;background:var(--surface);border:1px solid var(--divider);border-radius:8px;overflow:hidden}
+  table.proptable th{text-align:left;padding:9px 12px;background:var(--field);color:var(--on-surface-med);font-weight:500;border-bottom:1px solid var(--divider)}
+  table.proptable td{padding:9px 12px;border-bottom:1px solid var(--divider);vertical-align:top}
+  table.proptable tr:last-child td{border-bottom:none}
+  table.proptable td:first-child{font-family:ui-monospace,Menlo,monospace;font-size:.76rem;white-space:nowrap;color:var(--primary-dark)}
+  table.proptable td:nth-child(2){font-family:ui-monospace,Menlo,monospace;font-size:.74rem;color:var(--on-surface-med);white-space:nowrap}
+
+  /* ===== Material 2 components (Cartrack-branded) — reused demo classes ===== */
+  .btn{font:500 .875rem var(--font);letter-spacing:.05em;text-transform:uppercase;border-radius:4px;padding:0 16px;height:36px;border:none;cursor:pointer;display:inline-flex;align-items:center;gap:8px}
+  /* AA fix (2026-07-16): was background:var(--primary) — white text on #F47735 is ~2.79:1, fails
+     WCAG AA (tokens.json accessibility.knownIssues). Resting fill is now --primary-dark (~5.2:1),
+     matching this section's own "Darken the orange fill for legible white text" guidance below,
+     which the demo previously contradicted. Hover uses a state-layer (brightness), not a third
+     named color, since tokens.json has no darker-than-.dark swatch. */
+  .btn.contained{background:var(--primary-dark);color:var(--on-primary);box-shadow:var(--el1)}
+  .btn.contained:hover{filter:brightness(.92)}
+  .btn.contained.sec{background:var(--secondary)}
+  .btn.outlined{background:transparent;color:var(--primary-dark);border:1px solid rgba(0,0,0,.23)}
+  .btn.outlined:hover{background:var(--selected)}
+  .btn.text{background:transparent;color:var(--primary-dark);padding:0 8px}
+  .btn.text:hover{background:var(--selected)}
+  .btn[disabled]{background:rgba(0,0,0,.12);color:var(--on-surface-dis);box-shadow:none;border:none;cursor:default}
+  .fab{width:56px;height:56px;border-radius:50%;background:var(--primary);color:#fff;border:none;font-size:1.5rem;box-shadow:var(--el2);cursor:pointer}
+  .fab.mini{width:40px;height:40px;font-size:1.2rem}
+  .fab.ext{width:auto;border-radius:24px;height:48px;padding:0 20px;gap:8px;font-size:.875rem;font-weight:500;text-transform:uppercase}
+  .iconbtn{width:40px;height:40px;border-radius:50%;border:none;background:transparent;color:var(--on-surface-med);font-size:1.1rem;cursor:pointer}
+  .iconbtn:hover{background:var(--hover)}
+  .toggle{display:inline-flex;border:1px solid rgba(0,0,0,.23);border-radius:4px;overflow:hidden}
+  .toggle span{padding:8px 14px;color:var(--on-surface-med);cursor:pointer;font-size:.82rem}
+  .toggle span+span{border-left:1px solid rgba(0,0,0,.23)}
+  .toggle span.on{background:var(--selected);color:var(--primary-dark)}
+
+  .tf{position:relative;min-width:200px}
+  .tf.filled .f{background:var(--field);border:none;border-bottom:1px solid rgba(0,0,0,.42);border-radius:4px 4px 0 0;padding:20px 12px 6px}
+  .tf.filled.focus .f{border-bottom:2px solid var(--primary)}
+  .tf.filled .lbl{position:absolute;top:6px;left:12px;font-size:.7rem;color:var(--on-surface-med)}
+  .tf.filled.focus .lbl{color:var(--primary-dark)}
+  .tf.outlined .f{border:1px solid rgba(0,0,0,.23);border-radius:4px;padding:14px 12px}
+  .tf.outlined.focus .f{border:2px solid var(--primary);padding:13px 11px}
+  .tf.outlined .lbl{position:absolute;top:-7px;left:9px;background:var(--surface);padding:0 4px;font-size:.72rem;color:var(--on-surface-med)}
+  .tf.outlined.focus .lbl{color:var(--primary-dark)}
+  .tf .f{font-size:1rem;color:var(--on-surface)}
+  .tf .sup{font-size:.72rem;color:var(--on-surface-med);margin:4px 12px 0}
+  .tf.err .f{border-color:var(--error)!important}.tf.err .lbl,.tf .sup.err{color:var(--error)}
+  .ph{color:var(--on-surface-dis)}
+
+  .ctl{display:inline-flex;align-items:center;gap:8px;color:var(--on-surface)}
+  .cbox{width:18px;height:18px;border:2px solid var(--on-surface-med);border-radius:2px;position:relative;display:inline-block}
+  .cbox.on{background:var(--primary);border-color:var(--primary)}.cbox.on::after{content:"";position:absolute;left:5px;top:1px;width:5px;height:10px;border:solid #fff;border-width:0 2px 2px 0;transform:rotate(45deg)}
+  .radio{width:18px;height:18px;border:2px solid var(--on-surface-med);border-radius:50%;position:relative;display:inline-block}
+  .radio.on{border-color:var(--primary)}.radio.on::after{content:"";position:absolute;inset:3px;border-radius:50%;background:var(--primary)}
+  .sw{width:34px;height:14px;border-radius:7px;background:rgba(0,0,0,.38);position:relative;display:inline-block}
+  .sw .k{position:absolute;top:-3px;left:0;width:20px;height:20px;border-radius:50%;background:#fafafa;box-shadow:var(--el1)}
+  .sw.on{background:var(--primary-light)}.sw.on .k{left:14px;background:var(--primary)}
+  .slider{width:200px;height:var(--stroke-thin);background:rgba(244,119,53,.3);position:relative}.slider .fl{position:absolute;left:0;height:var(--stroke-thin);width:55%;background:var(--primary)}.slider .t{position:absolute;left:55%;top:-6px;width:14px;height:14px;border-radius:50%;background:var(--primary);transform:translateX(-50%)}
+  .chip{display:inline-flex;align-items:center;gap:6px;height:32px;padding:0 12px;border-radius:16px;background:#e0e0e0;color:var(--on-surface);font-size:14px}
+  .chip.out{background:transparent;border:1px solid rgba(0,0,0,.23)}
+  .chip.sel{background:var(--selected);color:var(--primary-dark)}
+
+  .card{background:var(--surface);border-radius:4px;box-shadow:var(--el1);width:280px;overflow:hidden}
+  .card img.media{height:120px;background:linear-gradient(135deg,var(--primary-light),var(--primary));display:block}
+  .card .media{height:80px;background:linear-gradient(135deg,var(--primary-light),var(--primary));display:block}
+  .card .ch{padding:16px}.card .ch .t{font-size:16px;font-weight:500}.card .ch .s{color:var(--on-surface-med);font-size:14px}
+  .card .cc{padding:0 16px 16px;color:var(--on-surface-med);font-size:.86rem}
+  .card .ca{padding:8px;display:flex;gap:4px}
+  .dialog{background:var(--surface);border-radius:4px;box-shadow:var(--el8);width:320px}
+  .dialog .dt{padding:20px 24px 0;font-size:1.25rem;font-weight:500}.dialog .dc{padding:12px 24px 20px;color:var(--on-surface-med)}.dialog .da{padding:8px;display:flex;gap:4px;justify-content:flex-end}
+  .accordion{width:100%;max-width:340px;background:var(--surface);box-shadow:var(--el1);border-radius:4px;overflow:hidden}
+  .accordion .hd{padding:14px 16px;display:flex;justify-content:space-between}.accordion .bd2{padding:0 16px 16px;color:var(--on-surface-med);font-size:.84rem;border-top:1px solid var(--divider);padding-top:12px}
+  .sheet{width:240px;background:var(--surface);box-shadow:var(--el8);border-radius:12px 12px 0 0;padding:8px 0}
+  .backdrop{width:300px;height:140px;border-radius:8px;background:var(--primary);position:relative;overflow:hidden}
+  .backdrop .front{position:absolute;bottom:0;left:0;right:0;height:90px;background:var(--surface);border-radius:16px 16px 0 0;padding:14px}
+
+  /* AA fix (2026-07-16): was background:var(--primary);color:#fff — the exact same white-on-orange
+     failure as .btn.contained/.picker .ph2 (~2.79:1), and it directly contradicts AppBar.doc.json's
+     own guidance ("Prefer a white bar + dark content for legibility" / "Don't ship an orange bar
+     with white text without checking contrast"). Default now matches that stated preference:
+     surface + on-surface. An orange-filled bar is still valid per spec but requires the
+     primary-dark/on-primary treatment already used by the Contextual variant's inline override below. */
+  .appbar{display:flex;align-items:center;gap:16px;background:var(--surface);color:var(--on-surface);padding:0 16px;height:56px;border-radius:4px;box-shadow:var(--el1)}
+  .appbar.bottom{border-radius:4px;justify-content:space-around}
+  .appbar .ti{flex:1;font-size:1.1rem;font-weight:500}
+  .appbar .iconbtn{color:var(--on-surface-med)}
+  .bottomnav{display:flex;background:var(--surface);box-shadow:var(--el2);border-radius:4px;justify-content:space-around;padding:8px 0}
+  .bottomnav .it{display:flex;flex-direction:column;align-items:center;gap:3px;color:var(--on-surface-med);font-size:.7rem}
+  /* AA fix (2026-07-16): orange text (var(--primary)) directly on the light rail/nav surface is the
+     same ~2.79:1 failure as the fill-based bugs above, just inverted (text-on-light instead of
+     text-on-fill). Switched to --primary-dark (~5.2:1), matching the treatment .drawer .it.on already
+     used correctly. */
+  .bottomnav .it.on{color:var(--primary-dark)}
+  .drawer{width:220px;background:var(--surface);box-shadow:var(--el1);border-radius:4px;padding:8px 0}
+  .drawer .it{display:flex;align-items:center;gap:16px;padding:10px 16px;color:var(--on-surface-med);font-size:.86rem;font-weight:500}
+  .drawer .it.on{background:var(--selected);color:var(--primary-dark);border-radius:0 24px 24px 0;margin-right:8px}
+  .rail{width:72px;background:var(--surface);box-shadow:var(--el1);border-radius:4px;padding:10px 0;display:flex;flex-direction:column;align-items:center;gap:14px}
+  .rail .it{display:flex;flex-direction:column;align-items:center;gap:3px;font-size:.62rem;color:var(--on-surface-med)}.rail .it.on{color:var(--primary-dark)}
+  .tabs{display:flex;border-bottom:1px solid var(--divider)}.tabs .t{padding:12px 18px;text-transform:uppercase;font-size:.82rem;font-weight:500;color:var(--on-surface-med);border-bottom:2px solid transparent;cursor:pointer}.tabs .t.on{color:var(--primary-dark);border-bottom-color:var(--primary)}
+  .menu{width:200px;background:var(--surface);box-shadow:var(--el8);border-radius:4px;padding:8px 0}.menu .mi{padding:9px 16px;font-size:.9rem}.menu .mi:hover{background:var(--hover)}
+
+  .table{width:100%;border-collapse:collapse;font-size:.84rem;background:var(--surface)}
+  .table th{text-align:left;padding:14px 16px;color:var(--on-surface-med);font-weight:500;border-bottom:1px solid var(--divider)}
+  .table td{padding:12px 16px;border-bottom:1px solid var(--divider)}
+  .table tr:hover td{background:var(--hover)}
+  .listmd{width:280px;background:var(--surface);box-shadow:var(--el1);border-radius:4px;overflow:hidden}
+  .listmd .li{display:flex;align-items:center;gap:16px;padding:12px 16px;border-bottom:1px solid var(--divider)}.listmd .li:last-child{border:none}
+  .avatar{width:40px;height:40px;border-radius:50%;background:var(--secondary);color:#fff;display:flex;align-items:center;justify-content:center}
+  .imagelist{display:grid;grid-template-columns:repeat(3,1fr);gap:4px;width:220px}.imagelist div{height:60px;background:linear-gradient(135deg,var(--primary-light),var(--primary));border-radius:2px}
+  .badge{position:relative;display:inline-flex}.badge .d{position:absolute;top:-4px;right:-6px;background:var(--error);color:#fff;font-size:12px;font-weight:500;min-width:18px;height:18px;border-radius:9px;display:flex;align-items:center;justify-content:center;padding:0 4px}
+  /* Sync (2026-07-16): background/color now reference --inverse-surface/--on-inverse (Snackbar's
+     literal #323232 became the canonical inverse-surface value semantic.color.surface.inverse points
+     to). Padding corrected to the real MD2 split (4px block / 8px inline = spacing.xs/spacing.sm),
+     matching the reasoning already documented in Tooltip.tsx's token comment. */
+  .tip{background:var(--inverse-surface);color:var(--on-inverse);font-size:.7rem;padding:4px 8px;border-radius:4px}
+  .linear{width:200px;height:4px;background:rgba(244,119,53,.3);overflow:hidden;border-radius:2px}.linear .v{height:100%;width:60%;background:var(--primary)}
+  .spin{width:36px;height:36px;border:4px solid rgba(244,119,53,.25);border-top-color:var(--primary);border-radius:50%;animation:sp 1s linear infinite}@keyframes sp{to{transform:rotate(360deg)}}
+  .picker{width:280px;background:var(--surface);box-shadow:var(--el8);border-radius:4px;overflow:hidden}
+  /* AA fix (2026-07-16): was background:var(--primary);color:#fff — the same white-on-orange
+     failure as .btn.contained above; this section's own "Don't use white text on the orange
+     header" already called it out. */
+  .picker .ph2{background:var(--primary-dark);color:var(--on-primary);padding:16px}.picker .ph2 .d{font-size:1.8rem;font-weight:400}
+  .picker .grid{display:grid;grid-template-columns:repeat(7,1fr);gap:2px;padding:12px}
+  .picker .grid span{height:26px;display:flex;align-items:center;justify-content:center;font-size:.76rem;border-radius:50%}
+  /* AA fix (2026-07-16): same white-on-orange failure as .btn.contained/.picker .ph2, visible on the
+     selected calendar day. */
+  .picker .grid span.on{background:var(--primary-dark);color:var(--on-primary)}
+  .clock{width:160px;height:160px;border-radius:50%;background:var(--field);position:relative;margin:12px auto}
+  .clock .c{position:absolute;top:50%;left:50%;width:2px;height:55px;background:var(--primary);transform-origin:bottom;transform:translate(-50%,-100%) rotate(40deg)}
+  .clock .dot{position:absolute;top:50%;left:50%;width:8px;height:8px;border-radius:50%;background:var(--primary);transform:translate(-50%,-50%)}
+
+  .snackbar{display:inline-flex;align-items:center;gap:16px;background:var(--inverse-surface);color:var(--on-inverse);padding:14px 16px;border-radius:4px;font-size:.86rem}.snackbar a{color:var(--primary-light);text-transform:uppercase;font-weight:500;font-size:.8rem}
+  .banner{display:flex;gap:12px;align-items:center;background:var(--surface);padding:14px 16px;border-bottom:1px solid var(--divider);font-size:.86rem;width:100%}
+  .schip{display:inline-flex;align-items:center;gap:5px;height:24px;padding:0 8px;border-radius:12px;font-size:12px;font-weight:500}
+  .schip.ok{background:#E8F5E9;color:#1B5E20}.schip.warn{background:#FFF3E0;color:#E65100}.schip.err{background:#FFEBEE;color:#B71C1C}
+  .divider{height:var(--hairline);background:var(--divider);width:220px}
+  .crumbs{font-size:.85rem;color:var(--on-surface-med)}.crumbs a{color:var(--on-surface-med);text-decoration:none}.crumbs a:hover{text-decoration:underline;color:var(--primary-dark)}.crumbs .s{margin:0 8px;opacity:.5}
+  .pgn{display:flex;align-items:center;gap:4px}.pgn .lbl{color:var(--on-surface-med);font-size:.8rem;margin-right:12px}.pgn .p{min-width:32px;height:32px;border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:.82rem;color:var(--on-surface);cursor:pointer}.pgn .p:hover{background:var(--hover)}.pgn .p.on{background:var(--selected);color:var(--primary-dark);font-weight:500}
+  .stepper2{display:flex;align-items:center;gap:8px;flex-wrap:wrap}.st{display:flex;align-items:center;gap:8px;color:var(--on-surface-med);font-size:.85rem}.st .n{width:24px;height:24px;border-radius:50%;background:var(--on-surface-dis);color:#fff;display:flex;align-items:center;justify-content:center;font-size:.72rem}.st.on .n{background:var(--primary)}.st.done .n{background:var(--primary)}.st.on{color:var(--on-surface);font-weight:500}.st .bar{width:36px;height:1px;background:var(--divider)}
+
+  .dt-tb{display:flex;align-items:center;gap:8px;padding:8px 12px;background:var(--surface);border-bottom:1px solid var(--divider)}
+  .icb{width:32px;height:32px;border-radius:50%;border:none;background:transparent;color:var(--on-surface-med);cursor:pointer}
+  .cbx{width:16px;height:16px}
+  .editcell{border:1px dashed var(--primary);padding:2px 4px;border-radius:2px}
+  .dt-ft{display:flex;align-items:center;justify-content:flex-end;gap:8px;padding:8px 12px;color:var(--on-surface-med);font-size:.8rem}
+
+  .hidden{display:none!important}
+  @media(max-width:880px){.layout{grid-template-columns:1fr}nav.side{display:none}main{padding:22px 16px 80px}.bp-grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="layout">
+  <nav class="side">
+    <h1>Cartrack · MD2</h1>
+    <div class="sub">AI-optimized component library</div>
+    <input id="q" placeholder="Filter components…">
+    <div class="grp">Actions</div>
+    <a href="#button">Button</a>
+    <a href="#menu">Menu</a>
+    <div class="grp">Inputs &amp; forms</div>
+    <a href="#chip">Chip</a>
+    <a href="#picker">Picker (date/time)</a>
+    <a href="#selection-control">Selection control</a>
+    <a href="#slider">Slider</a>
+    <a href="#text-field">Text field</a>
+    <div class="grp">Navigation</div>
+    <a href="#app-bar">App bar</a>
+    <a href="#breadcrumbs">Breadcrumbs</a>
+    <a href="#navigation-drawer">Navigation drawer</a>
+    <a href="#navigation-rail">Navigation rail</a>
+    <a href="#stepper">Stepper</a>
+    <a href="#tabs">Tabs</a>
+    <div class="grp">Data display</div>
+    <a href="#badge">Badge</a>
+    <a href="#data-table">Data table</a>
+    <a href="#divider">Divider</a>
+    <a href="#image-list">Image list</a>
+    <a href="#list">List</a>
+    <a href="#pagination">Pagination</a>
+    <a href="#progress-indicator">Progress indicator</a>
+    <a href="#tooltip">Tooltip</a>
+    <div class="grp">Feedback</div>
+    <a href="#banner">Banner</a>
+    <a href="#snackbar">Snackbar</a>
+    <div class="grp">Surfaces</div>
+    <a href="#card">Card</a>
+    <a href="#dialog">Dialog</a>
+    <a href="#expansion-panel">Expansion panel</a>
+    <a href="#side-sheet">Side sheet</a>
+  </nav>
+
+  <main>
+    <header class="hero">
+      <h2>Cartrack — MD2 Component Library</h2>
+      <p class="lede">27 components, generated from <code>component-repo/components/*/*.doc.json</code> — the same structured docs an AI agent reads before writing UI. Each section shows every documented variant rendered live, plus the do/don't guidance and prop contract from that component's <code>.doc.json</code>. Source specs: <code>component-specs/</code>. Live MDC markup reference: <code>md2-cartrack-library/</code>.</p>
+    </header>
+<section id="button"><h3>Button</h3>
+  <p class="desc">Buttons let operators trigger actions — saving a vehicle, running a report, confirming a change. Emphasis communicates priority: the one most important action on a view is the contained button; everything else steps down.</p>
+  <div class="note">Use exactly one contained (high-emphasis) button per view. The floating action button (FAB) is excluded — it's a mobile pattern; on desktop the primary action sits in the page toolbar / app bar.</div>
+
+  <div class="block"><h4>Variants</h4>
+    <div class="variant-grid">
+      <div class="variant-item">
+        <div class="variant-demo"><button class="btn contained">Save vehicle</button></div>
+        <div class="variant-label"><b>Contained</b><span>The single primary action on a view (Save, Add, Run).</span></div>
+      </div>
+      <div class="variant-item">
+        <div class="variant-demo"><button class="btn outlined">Cancel</button></div>
+        <div class="variant-label"><b>Outlined</b><span>Important secondary actions, or "Cancel" next to a contained button.</span></div>
+      </div>
+      <div class="variant-item">
+        <div class="variant-demo"><button class="btn text">View report</button></div>
+        <div class="variant-label"><b>Text</b><span>Low-emphasis actions — in toolbars, cards, and dialog dismissals.</span></div>
+      </div>
+      <div class="variant-item">
+        <div class="variant-demo"><span class="toggle"><span class="on">Map</span><span>List</span></span></div>
+        <div class="variant-label"><b>Toggle button(s)</b><span>Switch between exclusive views (Map / List); 2–5 options, not navigation.</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="block"><h4>Best practices</h4>
+    <div class="bp-grid">
+      <div class="bp-col do"><h5>Do</h5><ul>
+        <li>Keep one contained action per view.</li>
+        <li>Use verb-first labels ("Add vehicle", not "New").</li>
+        <li>Pair Cancel (outlined/text) beside the primary.</li>
+        <li>Darken the orange fill for legible white text.</li>
+      </ul></div>
+      <div class="bp-col dont"><h5>Don't</h5><ul>
+        <li>Don't stack multiple contained buttons.</li>
+        <li>Don't use a button for navigation that's really a link.</li>
+        <li>Don't ship white-on-orange for important labels.</li>
+        <li>Don't hard-code colours/sizes — use tokens + these specs.</li>
+      </ul></div>
+    </div>
+  </div>
+
+  <div class="block"><h4>Props</h4>
+    <table class="proptable"><tr><th>Prop</th><th>Type</th><th>Default</th><th>Description</th></tr>
+      <tr><td>label</td><td>string</td><td>—</td><td>Short, verb-first action label (e.g. "Add vehicle"). Rendered uppercase per MD2.</td></tr>
+      <tr><td>variant</td><td>'contained' | 'outlined' | 'text'</td><td>—</td><td>Contained = single primary action per view. Outlined = important secondary actions. Text = low-emphasis actions.</td></tr>
+      <tr><td>leadingIcon</td><td>string</td><td>—</td><td>Optional leading icon (material-icons ligature name). Keep the label even with an icon.</td></tr>
+      <tr><td>disabled</td><td>boolean</td><td>—</td><td>Disables the button; not clickable.</td></tr>
+      <tr><td>loading</td><td>boolean</td><td>—</td><td>Disables the button and shows a spinner in place of the label for async actions.</td></tr>
+      <tr><td>onClick</td><td>() =&gt; void</td><td>—</td><td>Click handler.</td></tr>
+      <tr><td>type</td><td>'button' | 'submit'</td><td>—</td><td>Native button type attribute.</td></tr>
+    </table>
+  </div>
+</section>
+<section id="menu"><h3>Menu</h3>
+  <p class="desc">Menus show a temporary list of choices on a surface — overflow actions behind a ⋮ button, row actions in a data table, or a list of options from a control. They appear on demand and dismiss on selection or outside click.</p>
+  <div class="note">Use a menu for secondary or overflow actions. Don't hide a view's primary action in a menu — promote it to a button in the toolbar.</div>
+
+  <div class="block"><h4>Variants</h4>
+    <div class="variant-grid">
+      <div class="variant-item">
+        <div class="variant-demo"><span class="iconbtn">⋮</span><div class="menu"><div class="mi">Edit</div><div class="mi">Duplicate</div><div class="mi">Export</div><div class="mi" style="color:var(--error)">Delete</div></div></div>
+        <div class="variant-label"><b>Overflow menu</b><span>Secondary actions behind a ⋮ in toolbars, cards, and table rows.</span></div>
+      </div>
+      <div class="variant-item">
+        <div class="variant-demo"><span class="tf outlined"><span class="lbl">Status</span><div class="f">Active ▾</div></span><div class="menu"><div class="mi">Active</div><div class="mi">Idle</div><div class="mi">Offline</div></div></div>
+        <div class="variant-label"><b>Dropdown (exposed) menu</b><span>A field that opens a list to choose one value (see also Select on the Text fields page).</span></div>
+      </div>
+      <div class="variant-item">
+        <div class="variant-demo"><div class="menu"><div class="mi">Edit</div><div class="mi">Duplicate</div><div class="mi">Export</div><div class="mi" style="color:var(--error)">Delete</div></div></div>
+        <div class="variant-label"><b>Context menu</b><span>Right-click actions on a desktop row or item.</span></div>
+      </div>
+      <div class="variant-item">
+        <div class="variant-demo"><div class="menu"><div class="mi">Edit</div><div class="mi">Duplicate</div><div class="mi">Export ›</div><div class="mi" style="color:var(--error)">Delete</div></div></div>
+        <div class="variant-label"><b>Cascading submenu</b><span>Grouped choices that expand to a second level (use sparingly).</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="block"><h4>Best practices</h4>
+    <div class="bp-grid">
+      <div class="bp-col do"><h5>Do</h5><ul>
+        <li>Group destructive actions and set them apart with a divider.</li>
+        <li>Keep labels short and verb-first.</li>
+        <li>Use a menu for overflow, not for a view's primary action.</li>
+      </ul></div>
+      <div class="bp-col dont"><h5>Don't</h5><ul>
+        <li>Don't bury frequently-used actions in an overflow menu.</li>
+        <li>Don't nest more than one submenu level.</li>
+        <li>Don't use a menu where a few options fit better as visible buttons or tabs.</li>
+      </ul></div>
+    </div>
+  </div>
+
+  <div class="block"><h4>Props</h4>
+    <table class="proptable"><tr><th>Prop</th><th>Type</th><th>Default</th><th>Description</th></tr>
+      <tr><td>items</td><td>MenuItemData[]</td><td>—</td><td>Choices and dividers shown on the menu surface; each choice may carry a leading icon and trailing shortcut/meta.</td></tr>
+      <tr><td>open</td><td>boolean</td><td>—</td><td>Whether the menu surface is open.</td></tr>
+      <tr><td>onClose</td><td>() =&gt; void</td><td>—</td><td>Called on selection, Escape, or an outside click, per the Open &amp; dismiss behavior.</td></tr>
+      <tr><td>variant</td><td>'overflow' | 'dropdown' | 'context' | 'cascading'</td><td>—</td><td>Which trigger pattern opened this menu (overflow menu, dropdown/exposed menu, context menu, or cascading submenu).</td></tr>
+      <tr><td>className</td><td>string</td><td>—</td><td>Optional extra class names to compose with the base mdc-menu class.</td></tr>
+    </table>
+  </div>
+</section>
+<section id="chip"><h3>Chip</h3>
+  <p class="desc">Chips are compact elements that represent an input, a filter, or a choice — a selected driver, an active filter on a vehicle list, a quick action. They pack a lot of interaction into a small footprint.</p>
+  <div class="note">Use chips for selections and filters the operator manipulates. For read-only status (Active/Idle/Offline) use a status chip with a consistent colour mapping.</div>
+
+  <div class="block"><h4>Variants</h4>
+    <div class="variant-grid">
+      <div class="variant-item">
+        <div class="variant-demo"><span class="chip">Jane Cooper ✕</span></div>
+        <div class="variant-label"><b>Input chip</b><span>Represents a discrete entered value (selected drivers, tags) — usually removable.</span></div>
+      </div>
+      <div class="variant-item">
+        <div class="variant-demo"><span class="chip sel">✓ Active filter</span></div>
+        <div class="variant-label"><b>Filter chip</b><span>Toggles a filter on a list; shows a selected state.</span></div>
+      </div>
+      <div class="variant-item">
+        <div class="variant-demo"><span class="chip out">Sedan</span></div>
+        <div class="variant-label"><b>Choice chip</b><span>Single selection from a small inline set.</span></div>
+      </div>
+      <div class="variant-item">
+        <div class="variant-demo"><span class="chip">Track vehicle</span></div>
+        <div class="variant-label"><b>Action chip</b><span>Triggers a contextual action.</span></div>
+      </div>
+      <div class="variant-item">
+        <div class="variant-demo"><span class="schip ok">Active</span> <span class="schip warn">Idle</span> <span class="schip err">Offline</span></div>
+        <div class="variant-label"><b>Status chip (read-only)</b><span>Conveys record status with the consistent colour mapping.</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="block"><h4>Best practices</h4>
+    <div class="bp-grid">
+      <div class="bp-col do"><h5>Do</h5><ul>
+        <li>Use chips for filters/selections the user controls.</li>
+        <li>Keep status chips read-only with consistent colours + labels.</li>
+        <li>Make removable chips clearly removable.</li>
+      </ul></div>
+      <div class="bp-col dont"><h5>Don't</h5><ul>
+        <li>Don't use a chip as a primary button.</li>
+        <li>Don't encode status by colour alone.</li>
+        <li>Don't cram long text into a chip — keep labels short.</li>
+      </ul></div>
+    </div>
+  </div>
+
+  <div class="block"><h4>Props</h4>
+    <table class="proptable"><tr><th>Prop</th><th>Type</th><th>Default</th><th>Description</th></tr>
+      <tr><td>label</td><td>string</td><td>—</td><td>The value or option text. Keep labels short.</td></tr>
+      <tr><td>variant</td><td>'input' | 'filter' | 'choice' | 'action' | 'status'</td><td>—</td><td>Chip category per the spec's Variants table.</td></tr>
+      <tr><td>selected</td><td>boolean</td><td>—</td><td>Toggled/selected state for filter and choice chips.</td></tr>
+      <tr><td>status</td><td>'success' | 'warning' | 'error'</td><td>—</td><td>Status colour mapping — only meaningful when variant="status" (Active=success, Idle=warning, Offline=error).</td></tr>
+      <tr><td>removable</td><td>boolean</td><td>—</td><td>Shows a trailing remove (×) control — typically used on input chips.</td></tr>
+      <tr><td>onRemove</td><td>() =&gt; void</td><td>—</td><td>Handler for the trailing remove control.</td></tr>
+      <tr><td>onClick</td><td>() =&gt; void</td><td>—</td><td>Click handler for interactive chip variants.</td></tr>
+      <tr><td>disabled</td><td>boolean</td><td>—</td><td>Disables the chip (renders at 38% opacity per spec).</td></tr>
+    </table>
+  </div>
+</section>
+<section id="picker"><h3>Picker</h3>
+  <p class="desc">Pickers help operators choose dates and times — a trip window, a report period, a maintenance due date. They pair a typeable field with a calendar or clock surface, and support ranges for from–to selections.</p>
+  <div class="note">Offer both: let operators type a date in the field and pick from the calendar. Use a range picker for any from–to selection (reports, trip history), and always respect the user's locale and time zone.</div>
+
+  <div class="block"><h4>Variants</h4>
+    <div class="variant-grid">
+      <div class="variant-item">
+        <div class="variant-demo"><div class="picker"><div class="ph2"><div style="font-size:.8rem">JUN 2026</div><div class="d">Sat, Jun 20</div></div><div class="grid"><span>S</span><span>M</span><span>T</span><span>W</span><span>T</span><span>F</span><span>S</span><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span><span>7</span><span>8</span><span>9</span><span>10</span><span>11</span><span>12</span><span>13</span><span class="on">20</span></div></div></div>
+        <div class="variant-label"><b>Date picker</b><span>A single date (due date, start date).</span></div>
+      </div>
+      <div class="variant-item">
+        <div class="variant-demo"><span class="tf outlined"><span class="lbl">Date range</span><div class="f">1 Jun – 30 Jun 📅</div></span></div>
+        <div class="variant-label"><b>Date range picker</b><span>A from–to span (report period, trip history).</span></div>
+      </div>
+      <div class="variant-item">
+        <div class="variant-demo"><div class="picker" style="width:220px"><div class="ph2"><div class="d">14:30</div></div><div class="clock"><div class="c"></div><div class="dot"></div></div></div></div>
+        <div class="variant-label"><b>Time picker</b><span>A time of day (schedule, cut-off).</span></div>
+      </div>
+      <div class="variant-item">
+        <div class="variant-demo"><div class="picker"><div class="ph2"><div style="font-size:.8rem">JUN 2026</div><div class="d">Sat, Jun 20</div></div><div class="grid"><span>S</span><span>M</span><span>T</span><span>W</span><span>T</span><span>F</span><span>S</span><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span><span>7</span><span>8</span><span>9</span><span>10</span><span>11</span><span>12</span><span>13</span><span class="on">20</span></div></div> <div class="picker" style="width:220px"><div class="ph2"><div class="d">14:30</div></div><div class="clock"><div class="c"></div><div class="dot"></div></div></div></div>
+        <div class="variant-label"><b>Date-time / date-time range</b><span>When both date and time matter (precise trip windows).</span></div>
+      </div>
+      <div class="variant-item">
+        <div class="variant-demo"><span class="tf outlined"><span class="lbl">Due date</span><div class="f">20 Jun 2026</div></span></div>
+        <div class="variant-label"><b>Field-only</b><span>Keyboard entry without a popup (power users).</span></div>
+      </div>
+      <div class="variant-item">
+        <div class="variant-demo"><div class="picker"><div class="ph2"><div style="font-size:.8rem">JUN 2026</div><div class="d">Sat, Jun 20</div></div><div class="grid"><span>S</span><span>M</span><span>T</span><span>W</span><span>T</span><span>F</span><span>S</span><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span><span>7</span><span>8</span><span>9</span><span>10</span><span>11</span><span>12</span><span>13</span><span class="on">20</span></div></div></div>
+        <div class="variant-label"><b>Static / inline</b><span>Always-open calendar embedded in a panel.</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="block"><h4>Best practices</h4>
+    <div class="bp-grid">
+      <div class="bp-col do"><h5>Do</h5><ul>
+        <li>Allow typing and picking.</li>
+        <li>Offer presets for common ranges.</li>
+        <li>Respect locale &amp; time zone.</li>
+        <li>Disable invalid dates rather than erroring after.</li>
+      </ul></div>
+      <div class="bp-col dont"><h5>Don't</h5><ul>
+        <li>Don't force calendar-only entry for power users.</li>
+        <li>Don't ignore time zones on a global fleet.</li>
+        <li>Don't use white text on the orange header.</li>
+      </ul></div>
+    </div>
+  </div>
+
+  <div class="block"><h4>Props</h4>
+    <table class="proptable"><tr><th>Prop</th><th>Type</th><th>Default</th><th>Description</th></tr>
+      <tr><td>mode</td><td>'date' | 'time' | 'dateRange'</td><td>—</td><td>Which picker shape to render — Date picker, Time picker, or Date range picker per the spec's Variants table. Date-time is composed by pairing a date-mode Picker with a time-mode Picker rather than a fourth mode.</td></tr>
+      <tr><td>value</td><td>Date | [Date | null, Date | null] | null</td><td>—</td><td>Current value: a single Date for date/time mode, or a [start, end] tuple for dateRange mode.</td></tr>
+      <tr><td>onChange</td><td>(value: Date | [Date | null, Date | null] | null) =&gt; void</td><td>—</td><td>Called when the operator types or picks a new value; both input paths stay in sync per the 'Type or pick' behavior.</td></tr>
+      <tr><td>label</td><td>string</td><td>—</td><td>Field label.</td></tr>
+      <tr><td>variant</td><td>'popup' | 'field-only' | 'static'</td><td>—</td><td>Popup (typeable field + calendar/clock trigger, default), Field-only (keyboard entry without a popup, for power users), or Static/inline (always-open calendar embedded in a panel).</td></tr>
+      <tr><td>minDate</td><td>Date</td><td>—</td><td>Earliest selectable date/time; part of the Constraints behavior that disables invalid choices rather than erroring after.</td></tr>
+      <tr><td>maxDate</td><td>Date</td><td>—</td><td>Latest selectable date/time.</td></tr>
+      <tr><td>disabledDates</td><td>Date[]</td><td>—</td><td>Individually disabled dates, e.g. to block a future service date in the past.</td></tr>
+      <tr><td>presets</td><td>PickerPreset[]</td><td>—</td><td>Quick presets for a date range, e.g. "Last 7 days", "This month", to speed up common choices.</td></tr>
+      <tr><td>open</td><td>boolean</td><td>—</td><td>Whether the popup calendar/clock surface is open (popup variant only).</td></tr>
+      <tr><td>onOpenChange</td><td>(open: boolean) =&gt; void</td><td>—</td><td>Called when the popup surface should open or close.</td></tr>
+      <tr><td>className</td><td>string</td><td>—</td><td>Optional extra class names to compose with the base picker/tf classes.</td></tr>
+    </table>
+  </div>
+</section>
+<section id="selection-control"><h3>SelectionControl</h3>
+  <p class="desc">Selection controls capture choices: checkboxes for multi-select, radio buttons for one-of-many, and switches for instant on/off settings. Choosing the right one tells the operator how the choice behaves.</p>
+  <div class="note">Checkbox = select none/some/all and apply on submit. Radio = pick exactly one from a small set. Switch = toggle a setting that takes effect immediately.</div>
+
+  <div class="block"><h4>Variants</h4>
+    <div class="variant-grid">
+      <div class="variant-item">
+        <div class="variant-demo"><span class="ctl"><span class="cbox on"></span> Checkbox</span></div>
+        <div class="variant-label"><b>Checkbox</b><span>Independent multi-select (table row selection, opt-in lists). Header checkbox does select-all + indeterminate.</span></div>
+      </div>
+      <div class="variant-item">
+        <div class="variant-demo"><span class="ctl"><span class="radio on"></span> Radio</span></div>
+        <div class="variant-label"><b>Radio button</b><span>One choice from a short, mutually exclusive set (2–5).</span></div>
+      </div>
+      <div class="variant-item">
+        <div class="variant-demo"><span class="ctl"><span class="sw on"><span class="k"></span></span> Switch on</span></div>
+        <div class="variant-label"><b>Switch</b><span>An immediate on/off setting (e.g. enable notifications).</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="block"><h4>Best practices</h4>
+    <div class="bp-grid">
+      <div class="bp-col do"><h5>Do</h5><ul>
+        <li>Use a switch only for instant-effect settings.</li>
+        <li>Use the indeterminate state for partial group selection.</li>
+        <li>Make the label clickable.</li>
+      </ul></div>
+      <div class="bp-col dont"><h5>Don't</h5><ul>
+        <li>Don't use radios for more than ~5 options — use a select.</li>
+        <li>Don't use a switch where users expect to Save.</li>
+        <li>Don't rely on colour alone to show selection.</li>
+      </ul></div>
+    </div>
+  </div>
+
+  <div class="block"><h4>Props</h4>
+    <table class="proptable"><tr><th>Prop</th><th>Type</th><th>Default</th><th>Description</th></tr>
+      <tr><td>type</td><td>'checkbox' | 'radio' | 'switch'</td><td>—</td><td>Discriminates the three control kinds documented in this spec.</td></tr>
+      <tr><td>label</td><td>string</td><td>—</td><td>What the choice means; the whole label is a click target.</td></tr>
+      <tr><td>checked</td><td>boolean</td><td>—</td><td>Selected state. For switches this maps to aria-checked / mdc-switch--selected.</td></tr>
+      <tr><td>indeterminate</td><td>boolean</td><td>—</td><td>Checkbox-only: shows a dash when some-but-not-all of a group is checked.</td></tr>
+      <tr><td>name</td><td>string</td><td>—</td><td>Required for radio groups so only one is active.</td></tr>
+      <tr><td>id</td><td>string</td><td>—</td><td>Associates the control with its label.</td></tr>
+      <tr><td>disabled</td><td>boolean</td><td>—</td><td>38% opacity, not focusable.</td></tr>
+      <tr><td>onChange</td><td>(checked: boolean) =&gt; void</td><td>—</td><td>Called when the control's selected state changes.</td></tr>
+    </table>
+  </div>
+</section>
+<section id="slider"><h3>Slider</h3>
+  <p class="desc">Sliders let an operator choose a value, or a range, by dragging along a track — useful for soft, approximate settings like a geofence radius or a map's time window. When precision matters, prefer a number field.</p>
+  <div class="note">Use a slider when the exact number is less important than the relative position, or when immediate visual feedback helps. For exact entry (e.g. an odometer), use a text field.</div>
+
+  <div class="block"><h4>Variants</h4>
+    <div class="variant-grid">
+      <div class="variant-item">
+        <div class="variant-demo"><span class="slider"><span class="fl"></span><span class="t"></span></span></div>
+        <div class="variant-label"><b>Continuous</b><span>Any value across the range (e.g. opacity, radius).</span></div>
+      </div>
+      <div class="variant-item">
+        <div class="variant-demo"><span class="slider"><span class="fl"></span><span class="t"></span></span></div>
+        <div class="variant-label"><b>Discrete</b><span>Snaps to steps with tick marks (e.g. 5/10/15 km).</span></div>
+      </div>
+      <div class="variant-item">
+        <div class="variant-demo"><span class="slider"><span class="fl"></span><span class="t"></span></span></div>
+        <div class="variant-label"><b>Range (two thumbs)</b><span>Select a from–to span (e.g. a date/time window).</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="block"><h4>Best practices</h4>
+    <div class="bp-grid">
+      <div class="bp-col do"><h5>Do</h5><ul>
+        <li>Show the current value.</li>
+        <li>Use discrete steps when only certain values are valid.</li>
+        <li>Pair with a field when exact entry is needed.</li>
+      </ul></div>
+      <div class="bp-col dont"><h5>Don't</h5><ul>
+        <li>Don't use a slider for precise or wide-range numeric entry.</li>
+        <li>Don't hide the value.</li>
+        <li>Don't make the thumb hard to grab (keep a generous hit area).</li>
+      </ul></div>
+    </div>
+  </div>
+
+  <div class="block"><h4>Props</h4>
+    <table class="proptable"><tr><th>Prop</th><th>Type</th><th>Default</th><th>Description</th></tr>
+      <tr><td>variant</td><td>'continuous' | 'discrete' | 'range'</td><td>—</td><td>Continuous = any value across the range. Discrete = snaps to steps with tick marks. Range = two thumbs (from–to).</td></tr>
+      <tr><td>label</td><td>string</td><td>—</td><td>Accessible label, e.g. "Radius".</td></tr>
+      <tr><td>value</td><td>number | [number, number]</td><td>—</td><td>Single value for continuous/discrete; [from, to] for range.</td></tr>
+      <tr><td>min</td><td>number</td><td>—</td><td>Range minimum.</td></tr>
+      <tr><td>max</td><td>number</td><td>—</td><td>Range maximum.</td></tr>
+      <tr><td>step</td><td>number</td><td>—</td><td>Step size; only meaningful for the 'discrete' variant.</td></tr>
+      <tr><td>disabled</td><td>boolean</td><td>—</td><td>38% opacity, not interactive.</td></tr>
+      <tr><td>onChange</td><td>(value: number | [number, number]) =&gt; void</td><td>—</td><td>Called as the operator drags the thumb or uses arrow/page keys.</td></tr>
+    </table>
+  </div>
+</section>
+<section id="text-field"><h3>TextField</h3>
+  <p class="desc">Text fields let operators enter and edit text — a registration number, a driver's name, an odometer reading, a note. They come in filled and outlined styles and always carry a label so the field's purpose stays visible once filled.</p>
+  <div class="note">Pick one style and use it consistently across a form. In the Cartrack portal, outlined is the default for forms; filled suits dense, list-like settings.</div>
+
+  <div class="block"><h4>Variants</h4>
+    <div class="variant-grid">
+      <div class="variant-item">
+        <div class="variant-demo"><span class="tf filled"><span class="lbl">Registration</span><div class="f">CA 123-456</div></span></div>
+        <div class="variant-label"><b>Filled</b><span>Dense, settings-style lists; strong visual grouping.</span></div>
+      </div>
+      <div class="variant-item">
+        <div class="variant-demo"><span class="tf outlined"><span class="lbl">Driver</span><div class="f">Jane Cooper</div></span></div>
+        <div class="variant-label"><b>Outlined</b><span>Default for forms; clear field boundaries.</span></div>
+      </div>
+      <div class="variant-item">
+        <div class="variant-demo"><span class="tf outlined"><span class="lbl">Search vehicles</span><div class="f">🔍 CA 123-456 ✕</div></span></div>
+        <div class="variant-label"><b>With adornments</b><span>Search (leading magnifier + trailing clear), password (visibility toggle), units (trailing "km").</span></div>
+      </div>
+      <div class="variant-item">
+        <div class="variant-demo"><span class="tf outlined"><span class="lbl">Status</span><div class="f">Active ▾</div></span></div>
+        <div class="variant-label"><b>Select / dropdown field</b><span>A field that opens a menu to choose one value.</span></div>
+      </div>
+      <div class="variant-item">
+        <div class="variant-demo"><span class="tf outlined"><span class="lbl">Notes</span><div class="f">Vehicle inspected, no issues found. Next service due in 3 months.</div></span></div>
+        <div class="variant-label"><b>Multiline / textarea</b><span>Longer notes; grows with content.</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="block"><h4>Best practices</h4>
+    <div class="bp-grid">
+      <div class="bp-col do"><h5>Do</h5><ul>
+        <li>Always show a label; keep it visible when filled.</li>
+        <li>Write specific, helpful error text ("Enter a value", not "Invalid").</li>
+        <li>Use one field style per form.</li>
+        <li>Right-size width to the expected content.</li>
+      </ul></div>
+      <div class="bp-col dont"><h5>Don't</h5><ul>
+        <li>Don't use placeholder text as the only label.</li>
+        <li>Don't mix filled and outlined in the same form.</li>
+        <li>Don't rely on colour alone for errors — include text.</li>
+      </ul></div>
+    </div>
+  </div>
+
+  <div class="block"><h4>Props</h4>
+    <table class="proptable"><tr><th>Prop</th><th>Type</th><th>Default</th><th>Description</th></tr>
+      <tr><td>variant</td><td>'filled' | 'outlined'</td><td>—</td><td>Filled suits dense, settings-style lists; outlined is the Cartrack portal's default for forms.</td></tr>
+      <tr><td>label</td><td>string</td><td>—</td><td>Always shown; keeps the field's purpose visible once filled.</td></tr>
+      <tr><td>value</td><td>string</td><td>—</td><td>The value the operator has typed.</td></tr>
+      <tr><td>onChange</td><td>(value: string) =&gt; void</td><td>—</td><td>Called on every input change.</td></tr>
+      <tr><td>helperText</td><td>string</td><td>—</td><td>Helper text below the field; replaced by the error message when error is set.</td></tr>
+      <tr><td>error</td><td>string</td><td>—</td><td>Concise, specific error text; also flips the field into the error state.</td></tr>
+      <tr><td>disabled</td><td>boolean</td><td>—</td><td>Dims the whole field and removes it from tab order.</td></tr>
+      <tr><td>readOnly</td><td>boolean</td><td>—</td><td>Shows a value that can't be edited but can be copied.</td></tr>
+      <tr><td>required</td><td>boolean</td><td>—</td><td>Sets aria-required.</td></tr>
+      <tr><td>type</td><td>'text' | 'password' | 'search' | 'number'</td><td>—</td><td>Underlying input type for single-line fields; ignored when multiline is true.</td></tr>
+      <tr><td>leadingIcon</td><td>string</td><td>—</td><td>Leading Material icon ligature, e.g. "search".</td></tr>
+      <tr><td>trailingIcon</td><td>string</td><td>—</td><td>Trailing Material icon ligature, e.g. "clear" or a unit like "km".</td></tr>
+      <tr><td>multiline</td><td>boolean</td><td>—</td><td>Renders a textarea that grows with content instead of a single-line input.</td></tr>
+      <tr><td>rows</td><td>number</td><td>—</td><td>Textarea row count when multiline is true.</td></tr>
+    </table>
+  </div>
+</section>
+<section id="app-bar"><h3>AppBar</h3>
+  <p class="desc">The top app bar is the page header — it names where the operator is and holds page-level actions: global search, notifications, account, and the page's primary action. On desktop it also hosts the action a phone would put in a FAB.</p>
+  <div class="note">Keep the top bar light — most navigation belongs in the left drawer/rail. The bar carries the title, global tools, and the one primary action for the page.</div>
+
+  <div class="block"><h4>Variants</h4>
+    <div class="variant-grid">
+      <div class="variant-item">
+        <div class="variant-demo"><div class="appbar"><span class="iconbtn">☰</span><span class="ti">Vehicles</span><span class="iconbtn">🔍</span><span class="iconbtn">🔔</span><span class="iconbtn">⋮</span></div></div>
+        <div class="variant-label"><b>Standard</b><span>Default page header with title + actions.</span></div>
+      </div>
+      <div class="variant-item">
+        <div class="variant-demo"><div class="appbar"><span class="iconbtn">☰</span><span class="ti">Vehicles</span><button class="btn contained sec">Add vehicle</button><span class="iconbtn">⋮</span></div></div>
+        <div class="variant-label"><b>With primary action</b><span>Hosts the page's contained primary action (the desktop replacement for a FAB).</span></div>
+      </div>
+      <div class="variant-item">
+        <div class="variant-demo"><div class="appbar" style="background:var(--selected);color:var(--primary-dark)"><span class="iconbtn" style="color:var(--primary-dark)">✕</span><span class="ti" style="font-size:.95rem">3 selected</span><span class="iconbtn" style="color:var(--primary-dark)">⤓</span><span class="iconbtn" style="color:var(--primary-dark)">🗑</span></div></div>
+        <div class="variant-label"><b>Contextual / selection</b><span>Appears when items are selected; shows count + bulk actions.</span></div>
+      </div>
+      <div class="variant-item">
+        <div class="variant-demo"><div class="appbar"><span class="iconbtn">☰</span><span class="ti">Vehicles</span><span class="iconbtn">🔍</span><span class="iconbtn">🔔</span><span class="iconbtn">⋮</span></div></div>
+        <div class="variant-label"><b>With search</b><span>Expands an inline global search field.</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="block"><h4>Best practices</h4>
+    <div class="bp-grid">
+      <div class="bp-col do"><h5>Do</h5><ul>
+        <li>Show the current location as the title.</li>
+        <li>Host one primary action here per page.</li>
+        <li>Switch to the contextual bar during selection.</li>
+        <li>Prefer a white bar + dark content for legibility.</li>
+      </ul></div>
+      <div class="bp-col dont"><h5>Don't</h5><ul>
+        <li>Don't crowd the bar with primary navigation — that's the drawer's job.</li>
+        <li>Don't place a FAB on desktop; use the bar's primary action.</li>
+        <li>Don't ship an orange bar with white text without checking contrast.</li>
+      </ul></div>
+    </div>
+  </div>
+
+  <div class="block"><h4>Props</h4>
+    <table class="proptable"><tr><th>Prop</th><th>Type</th><th>Default</th><th>Description</th></tr>
+      <tr><td>title</td><td>string</td><td>—</td><td>Current page/section name shown as the title.</td></tr>
+      <tr><td>actions</td><td>AppBarAction[]</td><td>—</td><td>Standard header actions (search, notifications, overflow, etc).</td></tr>
+      <tr><td>showNavigationIcon</td><td>boolean</td><td>—</td><td>Shows the nav toggle / back arrow leading element.</td></tr>
+      <tr><td>onNavigationIconClick</td><td>() =&gt; void</td><td>—</td><td>Handler for the leading nav icon.</td></tr>
+      <tr><td>contextual</td><td>boolean</td><td>—</td><td>Switches to the contextual / selection bar variant.</td></tr>
+      <tr><td>selectedCount</td><td>number</td><td>—</td><td>Number of selected items, shown in the contextual bar.</td></tr>
+      <tr><td>contextualActions</td><td>AppBarAction[]</td><td>—</td><td>Bulk actions shown only while contextual is true.</td></tr>
+      <tr><td>onCloseContextual</td><td>() =&gt; void</td><td>—</td><td>Called when the contextual bar's close control clears selection.</td></tr>
+    </table>
+  </div>
+</section>
+<section id="breadcrumbs"><h3>Breadcrumbs</h3>
+  <p class="desc">Breadcrumbs show where the operator is within the portal's hierarchy and let them step back up it — from a single vehicle, to the vehicle list, to the fleet. They orient users in deep desktop navigation.</p>
+  <div class="note">Use breadcrumbs when content sits more than one level deep. They complement — not replace — the left navigation drawer.</div>
+
+  <div class="block"><h4>Variants</h4>
+    <div class="variant-grid">
+      <div class="variant-item">
+        <div class="variant-demo"><div class="crumbs"><a href="#">Fleet</a><span class="s">›</span><a href="#">Vehicles</a><span class="s">›</span>CA 123-456</div></div>
+        <div class="variant-label"><b>Standard</b><span>Show the full path for shallow hierarchies.</span></div>
+      </div>
+      <div class="variant-item">
+        <div class="variant-demo"><div class="crumbs"><a href="#">Fleet</a><span class="s">›</span><span class="s">…</span><span class="s">›</span>CA 123-456</div></div>
+        <div class="variant-label"><b>Collapsed</b><span>Hide middle levels behind "…" for deep paths.</span></div>
+      </div>
+      <div class="variant-item">
+        <div class="variant-demo"><div class="crumbs"><a href="#">Fleet</a><span class="s">›</span><a href="#">Vehicles ▾</a><span class="s">›</span>CA 123-456</div></div>
+        <div class="variant-label"><b>With menu crumb</b><span>A crumb opens a menu of sibling pages.</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="block"><h4>Best practices</h4>
+    <div class="bp-grid">
+      <div class="bp-col do"><h5>Do</h5><ul>
+        <li>Make the current page the non-link last crumb.</li>
+        <li>Collapse very deep paths.</li>
+        <li>Mirror the real IA hierarchy.</li>
+      </ul></div>
+      <div class="bp-col dont"><h5>Don't</h5><ul>
+        <li>Don't use breadcrumbs as the primary navigation.</li>
+        <li>Don't show a one-level trail (no value).</li>
+        <li>Don't make the current page a link to itself.</li>
+      </ul></div>
+    </div>
+  </div>
+
+  <div class="block"><h4>Props</h4>
+    <table class="proptable"><tr><th>Prop</th><th>Type</th><th>Default</th><th>Description</th></tr>
+      <tr><td>items</td><td>BreadcrumbItem[]</td><td>—</td><td>Full ancestor path, ending with the current page.</td></tr>
+      <tr><td>separator</td><td>string</td><td>—</td><td>Separator glyph between crumbs (decorative, hidden from assistive tech).</td></tr>
+      <tr><td>maxVisible</td><td>number</td><td>—</td><td>Collapse middle levels behind "…" for deep paths.</td></tr>
+    </table>
+  </div>
+</section>
+<section id="navigation-drawer"><h3>Navigation Drawer</h3>
+  <p class="desc">The navigation drawer is the portal's primary, persistent navigation — anchored to the left edge and grouped by purpose. It's how operators move between the map, assets, and the domain pillars throughout a session.</p>
+  <div class="note">On desktop the drawer is permanent (always visible) — not a temporary overlay. Group items by purpose so the model stays legible; default new features into a pillar, not the top level.</div>
+
+  <div class="block"><h4>Variants</h4>
+    <div class="variant-grid">
+      <div class="variant-item">
+        <div class="variant-demo"><div class="drawer"><div class="it on">🗺 Map</div><div class="it">🚚 Assets</div><div class="it">👤 Drivers</div><div class="it">📊 Reports</div><div class="it">⚙ Settings</div></div></div>
+        <div class="variant-label"><b>Permanent</b><span>Default on desktop — always visible alongside content.</span></div>
+      </div>
+      <div class="variant-item">
+        <div class="variant-demo"><div class="rail"><div class="it on"><span>🗺</span>Map</div><div class="it"><span>🚚</span>Assets</div><div class="it"><span>📊</span>Reports</div></div></div>
+        <div class="variant-label"><b>Collapsible</b><span>Can collapse to a rail (icons only) to reclaim width.</span></div>
+      </div>
+      <div class="variant-item">
+        <div class="variant-demo">
+          <div class="drawer">
+            <div style="font-size:.66rem;text-transform:uppercase;letter-spacing:.08em;color:var(--on-surface-med);padding:8px 16px 4px">Quick access</div>
+            <div class="it on">🗺 Map</div><div class="it">🚚 Assets</div><div class="it">👤 People &amp; Drivers</div>
+            <div style="font-size:.66rem;text-transform:uppercase;letter-spacing:.08em;color:var(--on-surface-med);padding:8px 16px 4px">Pillars</div>
+            <div class="it">🛡 Drive Safer</div><div class="it">🔧 Maintain &amp; Uptime</div>
+          </div>
+        </div>
+        <div class="variant-label"><b>Grouped</b><span>Sections by purpose (Quick access / Pillars / Workflow &amp; comms).</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="block"><h4>Best practices</h4>
+    <div class="bp-grid">
+      <div class="bp-col do"><h5>Do</h5><ul>
+        <li>Group items by purpose; keep the top level short.</li>
+        <li>Show one clear active destination.</li>
+        <li>Hide items the user can't access.</li>
+      </ul></div>
+      <div class="bp-col dont"><h5>Don't</h5><ul>
+        <li>Don't make it a flat dump of every feature.</li>
+        <li>Don't use brand/codenames as labels — name by job.</li>
+        <li>Don't put transient page actions in the drawer.</li>
+      </ul></div>
+    </div>
+  </div>
+
+  <div class="block"><h4>Props</h4>
+    <table class="proptable"><tr><th>Prop</th><th>Type</th><th>Default</th><th>Description</th></tr>
+      <tr><td>sections</td><td>NavigationDrawerSection[]</td><td>—</td><td>Sections by purpose — the Grouped variant; each section has an optional title and its destination items.</td></tr>
+      <tr><td>activeId</td><td>string</td><td>—</td><td>The id of the currently active destination; shows the active indicator and exposes aria-current.</td></tr>
+      <tr><td>collapsed</td><td>boolean</td><td>—</td><td>Collapses the drawer to a rail (icons only, labels via tooltip/title) — the Collapsible variant.</td></tr>
+      <tr><td>height</td><td>number | string</td><td>—</td><td>Fixed panel height; the drawer is permanent on desktop, not an overlay.</td></tr>
+      <tr><td>className</td><td>string</td><td>—</td><td>Optional extra class names to compose with the base mdc-drawer class.</td></tr>
+    </table>
+  </div>
+</section>
+<section id="navigation-rail"><h3>Navigation Rail</h3>
+  <p class="desc">The navigation rail is a compact, icon-first side navigation. It's the collapsed form of the drawer — used on narrower desktop widths or when an operator wants more room for a dense map or table.</p>
+  <div class="note">Use the rail as the space-saving alternative to the drawer, not as a second navigation. The two are the same destinations at different widths.</div>
+
+  <div class="block"><h4>Variants</h4>
+    <div class="variant-grid">
+      <div class="variant-item">
+        <div class="variant-demo"><div class="rail"><div class="it on"><span>🗺</span>Map</div><div class="it"><span>🚚</span>Assets</div><div class="it"><span>👤</span>People</div><div class="it"><span>📊</span>Reports</div></div></div>
+        <div class="variant-label"><b>Labelled</b><span>Icon + short label (recommended for clarity).</span></div>
+      </div>
+      <div class="variant-item">
+        <div class="variant-demo"><div class="rail"><div class="it on"><span>🗺</span></div><div class="it"><span>🚚</span></div><div class="it"><span>👤</span></div><div class="it"><span>📊</span></div></div></div>
+        <div class="variant-label"><b>Icon-only</b><span>Maximum density; labels via tooltip on hover.</span></div>
+      </div>
+      <div class="variant-item">
+        <div class="variant-demo"><div class="rail"><div class="it on"><span>🗺</span>Map</div><div class="it"><span>🚚</span>Assets</div><div class="it"><span>📊</span>Reports</div><button class="iconbtn" title="Expand to drawer">»</button></div></div>
+        <div class="variant-label"><b>Expandable</b><span>Toggles to the full navigation drawer.</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="block"><h4>Best practices</h4>
+    <div class="bp-grid">
+      <div class="bp-col do"><h5>Do</h5><ul>
+        <li>Keep labels even in the compact form where possible.</li>
+        <li>Mirror the drawer's destinations exactly.</li>
+        <li>Provide tooltips for icon-only items.</li>
+      </ul></div>
+      <div class="bp-col dont"><h5>Don't</h5><ul>
+        <li>Don't show different destinations than the drawer.</li>
+        <li>Don't pack more than ~7 items.</li>
+        <li>Don't rely on icon alone without an accessible name.</li>
+      </ul></div>
+    </div>
+  </div>
+
+  <div class="block"><h4>Props</h4>
+    <table class="proptable"><tr><th>Prop</th><th>Type</th><th>Default</th><th>Description</th></tr>
+      <tr><td>items</td><td>NavigationRailItem[]</td><td>—</td><td>The rail's destinations; must mirror the NavigationDrawer's destinations exactly — the rail is the drawer's collapsed form, not a second nav.</td></tr>
+      <tr><td>activeId</td><td>string</td><td>—</td><td>The id of the currently active destination; only one item is active.</td></tr>
+      <tr><td>showLabels</td><td>boolean</td><td>—</td><td>Labelled (icon + short label) vs Icon-only (maximum density, label via tooltip) per the spec's Variants.</td></tr>
+      <tr><td>onExpand</td><td>() =&gt; void</td><td>—</td><td>Renders an expand control that toggles the rail into the full navigation drawer and back (the Expandable variant).</td></tr>
+      <tr><td>className</td><td>string</td><td>—</td><td>Optional extra class names to compose with the base rail class.</td></tr>
+    </table>
+  </div>
+</section>
+<section id="stepper"><h3>Stepper</h3>
+  <p class="desc">A stepper guides an operator through a task in ordered steps — onboarding a new vehicle, building a report, running a bulk assignment. It shows progress and what's left to do.</p>
+  <div class="note">Use a stepper for a sequence that benefits from being broken up and tracked. For peer views with no order, use tabs instead.</div>
+
+  <div class="block"><h4>Variants</h4>
+    <div class="variant-grid">
+      <div class="variant-item">
+        <div class="variant-demo"><div class="stepper2"><span class="st done"><span class="n">✓</span> Details</span><span class="bar"></span><span class="st on"><span class="n">2</span> Assign driver</span><span class="bar"></span><span class="st"><span class="n">3</span> Confirm</span></div></div>
+        <div class="variant-label"><b>Horizontal</b><span>A few steps with short labels; fits across the top.</span></div>
+      </div>
+      <div class="variant-item">
+        <div class="variant-demo"><div class="stepper2" style="flex-direction:column;align-items:flex-start;gap:10px"><span class="st done"><span class="n">✓</span> Details</span><span class="st on"><span class="n">2</span> Assign driver</span><span class="st"><span class="n">3</span> Confirm</span></div></div>
+        <div class="variant-label"><b>Vertical</b><span>Steps with more content; content expands under each.</span></div>
+      </div>
+      <div class="variant-item">
+        <div class="variant-demo"><div class="stepper2"><span class="st done"><span class="n">✓</span> Details</span><span class="bar"></span><span class="st on"><span class="n">2</span> Assign driver</span><span class="bar"></span><span class="st"><span class="n">3</span> Confirm</span></div></div>
+        <div class="variant-label"><b>Linear</b><span>Steps must be completed in order.</span></div>
+      </div>
+      <div class="variant-item">
+        <div class="variant-demo"><div class="stepper2"><span class="st"><span class="n">1</span> Details</span><span class="bar"></span><span class="st"><span class="n">2</span> Assign driver</span><span class="bar"></span><span class="st on"><span class="n">3</span> Confirm</span></div></div>
+        <div class="variant-label"><b>Non-linear</b><span>Operators may jump between steps freely.</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="block"><h4>Best practices</h4>
+    <div class="bp-grid">
+      <div class="bp-col do"><h5>Do</h5><ul>
+        <li>Keep steps few and clearly named.</li>
+        <li>Validate before advancing in a linear flow.</li>
+        <li>Let users go back.</li>
+      </ul></div>
+      <div class="bp-col dont"><h5>Don't</h5><ul>
+        <li>Don't use a stepper for unordered, peer views.</li>
+        <li>Don't bury errors — surface them on the relevant step.</li>
+        <li>Don't create long, dozen-step flows; split the task.</li>
+      </ul></div>
+    </div>
+  </div>
+
+  <div class="block"><h4>Props</h4>
+    <table class="proptable"><tr><th>Prop</th><th>Type</th><th>Default</th><th>Description</th></tr>
+      <tr><td>orientation</td><td>'horizontal' | 'vertical'</td><td>—</td><td>Horizontal fits a few short-labelled steps across the top; vertical expands content under each step.</td></tr>
+      <tr><td>linear</td><td>boolean</td><td>—</td><td>Linear = steps must be completed in order. Non-linear = operators may jump between steps freely.</td></tr>
+      <tr><td>steps</td><td>StepperStep[]</td><td>—</td><td>The ordered list of steps with label, optional subLabel, and optional state override.</td></tr>
+      <tr><td>activeStep</td><td>number</td><td>—</td><td>Zero-based index of the current step.</td></tr>
+      <tr><td>onStepClick</td><td>(index: number) =&gt; void</td><td>—</td><td>Called when a reachable step is clicked (non-linear, or a completed/current step in a linear flow).</td></tr>
+    </table>
+  </div>
+</section>
+<section id="tabs"><h3>Tabs</h3>
+  <p class="desc">Tabs switch between related views of the same subject — a vehicle's Overview, Trips, Maintenance, and Alerts — without leaving the page. They keep peer views one click apart.</p>
+  <div class="note">Use tabs for peer views of one record or population. They're not top-level navigation (that's the drawer) and not a wizard (that's a stepper).</div>
+
+  <div class="block"><h4>Variants</h4>
+    <div class="variant-grid">
+      <div class="variant-item">
+        <div class="variant-demo"><div class="tabs" style="width:100%"><span class="t on">Overview</span><span class="t">Trips</span><span class="t">Maintenance</span><span class="t">Alerts</span></div></div>
+        <div class="variant-label"><b>Fixed</b><span>A small, known set of tabs that fit the width.</span></div>
+      </div>
+      <div class="variant-item">
+        <div class="variant-demo"><div class="tabs" style="width:100%;overflow-x:auto;flex-wrap:nowrap"><span class="t on">Overview</span><span class="t">Trips</span><span class="t">Maintenance</span><span class="t">Alerts</span><span class="t">Documents</span><span class="t">Costs</span><span class="t">History</span></div></div>
+        <div class="variant-label"><b>Scrollable</b><span>Many tabs that overflow; the bar scrolls.</span></div>
+      </div>
+      <div class="variant-item">
+        <div class="variant-demo"><div class="tabs" style="width:100%"><span class="t on">Overview</span><span class="t">Trips</span><span class="t">Maintenance</span><span class="t">Alerts 3</span></div></div>
+        <div class="variant-label"><b>With icon / count</b><span>Reinforce a tab or show a count (e.g. "Alerts 3").</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="block"><h4>Best practices</h4>
+    <div class="bp-grid">
+      <div class="bp-col do"><h5>Do</h5><ul>
+        <li>Use tabs for peer views of one subject.</li>
+        <li>Keep labels short and parallel.</li>
+        <li>Reflect the active tab in the URL.</li>
+      </ul></div>
+      <div class="bp-col dont"><h5>Don't</h5><ul>
+        <li>Don't use tabs as primary site navigation.</li>
+        <li>Don't use tabs for a sequential, must-complete flow (use a stepper).</li>
+        <li>Don't overload with too many tabs — consider a different structure.</li>
+      </ul></div>
+    </div>
+  </div>
+
+  <div class="block"><h4>Props</h4>
+    <table class="proptable"><tr><th>Prop</th><th>Type</th><th>Default</th><th>Description</th></tr>
+      <tr><td>items</td><td>TabItem[]</td><td>—</td><td>The tab list; each item can carry a label, optional icon, and optional count.</td></tr>
+      <tr><td>activeIndex</td><td>number</td><td>—</td><td>Index of the currently selected tab; one tab is always active.</td></tr>
+      <tr><td>onChange</td><td>(index: number) =&gt; void</td><td>—</td><td>Called when a tab is selected.</td></tr>
+      <tr><td>scrollable</td><td>boolean</td><td>—</td><td>Fixed = small known set that fits the width. Scrollable = many tabs that overflow; the bar scrolls.</td></tr>
+    </table>
+  </div>
+</section>
+<section id="badge"><h3>Badge</h3>
+  <p class="desc">A badge is a small indicator placed on another element to show a count or status — the number of unread alerts on the notifications bell, or a dot marking a vehicle that needs attention.</p>
+  <div class="note">Use a badge to draw attention to a count or new state on an icon or item. Keep it glanceable — for detailed status use a status chip instead.</div>
+
+  <div class="block"><h4>Variants</h4>
+    <div class="variant-grid">
+      <div class="variant-item">
+        <div class="variant-demo"><span class="badge"><button class="iconbtn">🔔</button><span class="d">4</span></span></div>
+        <div class="variant-label"><b>Numeric</b><span>Show a count (unread alerts, pending tasks).</span></div>
+      </div>
+      <div class="variant-item">
+        <div class="variant-demo"><span class="badge"><button class="iconbtn">🚚</button><span class="d" style="min-width:8px;height:8px;padding:0"></span></span></div>
+        <div class="variant-label"><b>Dot</b><span>Indicate "new"/attention without a number.</span></div>
+      </div>
+      <div class="variant-item">
+        <div class="variant-demo"><span class="badge"><button class="iconbtn">✉</button><span class="d">99+</span></span></div>
+        <div class="variant-label"><b>Capped</b><span>Large counts shown as "99+".</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="block"><h4>Best practices</h4>
+    <div class="bp-grid">
+      <div class="bp-col do"><h5>Do</h5><ul>
+        <li>Cap large counts (99+).</li>
+        <li>Use a dot when a number isn't needed.</li>
+        <li>Announce count changes.</li>
+      </ul></div>
+      <div class="bp-col dont"><h5>Don't</h5><ul>
+        <li>Don't put long text in a badge.</li>
+        <li>Don't show "0" unless it matters.</li>
+        <li>Don't rely on the badge alone to convey critical detail.</li>
+      </ul></div>
+    </div>
+  </div>
+
+  <div class="block"><h4>Props</h4>
+    <table class="proptable"><tr><th>Prop</th><th>Type</th><th>Default</th><th>Description</th></tr>
+      <tr><td>children</td><td>React.ReactNode</td><td>—</td><td>The host element (icon/button) the badge is anchored to.</td></tr>
+      <tr><td>hostLabel</td><td>string</td><td>—</td><td>Accessible label for the host, e.g. "Notifications".</td></tr>
+      <tr><td>count</td><td>number</td><td>—</td><td>Numeric count; capped and rendered as "99+" above 99.</td></tr>
+      <tr><td>dot</td><td>boolean</td><td>—</td><td>Renders a dot badge (no number) instead of a numeric pill.</td></tr>
+      <tr><td>showZero</td><td>boolean</td><td>—</td><td>Show the badge even when count is 0. Default false — badge hides at zero.</td></tr>
+    </table>
+  </div>
+</section>
+<section id="data-table"><h3>Data Table</h3>
+  <p class="desc">Data tables present sets of records across rows and columns — the primary way operators scan, sort, select, and act on fleet data (vehicles, trips, drivers, alerts). This is the most-used component in the portal, so it carries the most behaviour.</p>
+  <div class="note">When a dataset is large, server-paginated, sortable, or selectable, use the data table — not a basic Table. Reserve the basic table for small, static key/value layouts.</div>
+
+  <div class="block"><h4>Variants</h4>
+    <div class="variant-grid">
+      <div class="variant-item">
+        <div class="variant-demo">
+          <div class="dt" style="max-width:520px">
+            <div class="dt-tb"><span class="ti">Vehicles</span><button class="icb" title="Search">🔍</button><button class="icb" title="Filter">⛃</button><button class="icb" title="More">⋮</button></div>
+            <table><thead><tr><th>Registration</th><th>Driver</th><th>Status</th></tr></thead>
+            <tbody>
+              <tr><td>CA 123-456</td><td>Jane Cooper</td><td><span class="schip ok">Active</span></td></tr>
+              <tr><td>CA 789-012</td><td>Frank Kim</td><td><span class="schip warn">Idle</span></td></tr>
+            </tbody></table>
+          </div>
+        </div>
+        <div class="variant-label"><b>With toolbar</b><span>Almost always — gives the table a title plus search/filter/export entry points.</span></div>
+      </div>
+      <div class="variant-item">
+        <div class="variant-demo">
+          <div class="dt" style="max-width:520px">
+            <div class="dt-tb ctx"><span class="ti">2 selected</span><button class="icb" title="Export">⤓</button><button class="icb" title="Delete">🗑</button></div>
+            <table><thead><tr><th class="selcol"><span class="cbx ind"></span></th><th>Registration</th><th>Driver</th><th>Status</th></tr></thead>
+            <tbody>
+              <tr class="sel"><td class="selcol"><span class="cbx on"></span></td><td>CA 123-456</td><td>Jane Cooper</td><td><span class="schip ok">Active</span></td></tr>
+              <tr class="sel"><td class="selcol"><span class="cbx on"></span></td><td>CA 789-012</td><td>Frank Kim</td><td><span class="schip warn">Idle</span></td></tr>
+              <tr><td class="selcol"><span class="cbx"></span></td><td>CA 345-678</td><td>Lena Ortiz</td><td><span class="schip err">Offline</span></td></tr>
+            </tbody></table>
+          </div>
+        </div>
+        <div class="variant-label"><b>Selectable (checkboxes)</b><span>When users perform bulk actions (assign, export, delete) on multiple records.</span></div>
+      </div>
+      <div class="variant-item">
+        <div class="variant-demo">
+          <div class="dt" style="max-width:520px">
+            <table><thead><tr><th>Registration</th><th>Driver</th><th>Status</th></tr></thead>
+            <tbody>
+              <tr><td>CA 123-456</td><td>Jane Cooper</td><td><span class="schip ok">Active</span></td></tr>
+              <tr><td>CA 789-012</td><td>Frank Kim</td><td><span class="schip warn">Idle</span></td></tr>
+            </tbody></table>
+            <div class="dt-ft"><span>Rows per page: 100 ▾</span><span>1–100 of 100,000</span><span><button class="icb">‹</button><button class="icb">›</button></span></div>
+          </div>
+        </div>
+        <div class="variant-label"><b>Paginated</b><span>Any dataset beyond a single screen; desktop tables paginate (rows-per-page + range), they don't infinite-scroll.</span></div>
+      </div>
+      <div class="variant-item">
+        <div class="variant-demo">
+          <div class="dt dense" style="max-width:520px">
+            <table><thead><tr><th>Registration</th><th>Driver</th><th>Status</th><th>Last trip</th></tr></thead>
+            <tbody>
+              <tr><td>CA 123-456</td><td>Jane Cooper</td><td><span class="schip ok">Active</span></td><td>2 min ago</td></tr>
+              <tr><td>CA 789-012</td><td>Frank Kim</td><td><span class="schip warn">Idle</span></td><td>1 h ago</td></tr>
+              <tr><td>CA 345-678</td><td>Lena Ortiz</td><td><span class="schip err">Offline</span></td><td>3 d ago</td></tr>
+            </tbody></table>
+          </div>
+        </div>
+        <div class="variant-label"><b>Dense</b><span>High-volume operator screens where maximizing visible rows matters; reduces row height.</span></div>
+      </div>
+      <div class="variant-item">
+        <div class="variant-demo">
+          <div class="dt" style="max-width:520px">
+            <table><thead><tr><th>Registration</th><th>Driver</th><th class="num">Odometer (km)</th></tr></thead>
+            <tbody>
+              <tr><td>CA 123-456</td><td>Jane Cooper</td><td class="num">84,210</td></tr>
+              <tr><td>CA 789-012</td><td>Frank Kim</td><td class="num"><span class="editcell">120,540</span></td></tr>
+            </tbody></table>
+          </div>
+        </div>
+        <div class="variant-label"><b>Inline-editable</b><span>When quick edits (odometer, notes) are common; cells become editable in place.</span></div>
+      </div>
+      <div class="variant-item">
+        <div class="variant-demo">
+          <div class="dt" style="max-width:520px">
+            <table><thead><tr><th style="width:32px"></th><th>Registration</th><th>Driver</th><th>Status</th></tr></thead>
+            <tbody>
+              <tr><td><button class="icb" style="width:28px;height:28px;font-size:.8rem">⌄</button></td><td>CA 123-456</td><td>Jane Cooper</td><td><span class="schip ok">Active</span></td></tr>
+              <tr><td colspan="4" style="padding:0 24px 12px;color:var(--on-surface-med);font-size:.82rem">3 sub-trips today · Depot North → Site 4 → Depot North</td></tr>
+              <tr><td><button class="icb" style="width:28px;height:28px;font-size:.8rem">›</button></td><td>CA 789-012</td><td>Frank Kim</td><td><span class="schip warn">Idle</span></td></tr>
+            </tbody></table>
+          </div>
+        </div>
+        <div class="variant-label"><b>Expandable rows</b><span>When a record has secondary detail (sub-trips, line items) worth revealing without leaving the table.</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="block"><h4>Best practices</h4>
+    <div class="bp-grid">
+      <div class="bp-col do"><h5>Do</h5><ul>
+        <li>Use the data table (not a basic table) for any sortable, selectable, or large dataset.</li>
+        <li>Right-align numeric columns and use tabular figures so digits line up.</li>
+        <li>Switch to the contextual toolbar when rows are selected, showing the count + bulk actions.</li>
+        <li>Map status to the consistent colour chips (Active/Idle/Offline).</li>
+        <li>Paginate; fetch per page for large/server data.</li>
+      </ul></div>
+      <div class="bp-col dont"><h5>Don't</h5><ul>
+        <li>Don't put the primary action inside a row's overflow menu if it's used constantly.</li>
+        <li>Don't sort more than one column at once unless multi-sort is explicitly needed.</li>
+        <li>Don't encode status by colour alone — keep the text label on the chip.</li>
+        <li>Don't infinite-scroll a desktop data table; use pagination.</li>
+        <li>Don't hard-code colours/sizes — use the theme tokens and these specs.</li>
+      </ul></div>
+    </div>
+  </div>
+
+  <div class="block"><h4>Props</h4>
+    <table class="proptable"><tr><th>Prop</th><th>Type</th><th>Default</th><th>Description</th></tr>
+      <tr><td>title</td><td>string</td><td>—</td><td>Table title shown in the toolbar (replaced by the contextual toolbar during selection).</td></tr>
+      <tr><td>columns</td><td>DataTableColumn&lt;Row&gt;[]</td><td>—</td><td>Column definitions: key, header label, numeric alignment, sortability, custom render.</td></tr>
+      <tr><td>rows</td><td>Row[]</td><td>—</td><td>Records to display; each row must have a unique id.</td></tr>
+      <tr><td>selectable</td><td>boolean</td><td>—</td><td>Enables the leading selection checkbox column and the contextual toolbar.</td></tr>
+      <tr><td>selectedIds</td><td>string[]</td><td>—</td><td>Currently selected row ids.</td></tr>
+      <tr><td>onSelectionChange</td><td>(ids: string[]) =&gt; void</td><td>—</td><td>Called when row/select-all checkboxes change selection.</td></tr>
+      <tr><td>bulkActions</td><td>{ label: string; onClick: (selectedIds: string[]) =&gt; void }[]</td><td>—</td><td>Bulk actions shown in the contextual toolbar while rows are selected (e.g. Export, Delete).</td></tr>
+      <tr><td>sortColumn</td><td>string</td><td>—</td><td>Active sort column key.</td></tr>
+      <tr><td>sortDirection</td><td>'asc' | 'desc'</td><td>—</td><td>Direction of the active sort.</td></tr>
+      <tr><td>onSortChange</td><td>(columnKey: string) =&gt; void</td><td>—</td><td>Called when a sortable header is clicked.</td></tr>
+      <tr><td>dense</td><td>boolean</td><td>—</td><td>Reduces row/header height for high-volume operator screens.</td></tr>
+      <tr><td>page</td><td>number</td><td>—</td><td>Current zero-based page index; omit to render an unpaginated table.</td></tr>
+      <tr><td>rowsPerPage</td><td>number</td><td>—</td><td>Rows shown per page.</td></tr>
+      <tr><td>totalRows</td><td>number</td><td>—</td><td>Total record count for the visible-range and next/prev disabled state.</td></tr>
+      <tr><td>onPageChange</td><td>(page: number) =&gt; void</td><td>—</td><td>Called when prev/next pagination controls are used.</td></tr>
+      <tr><td>onRowClick</td><td>(row: Row) =&gt; void</td><td>—</td><td>Handler for clickable rows.</td></tr>
+    </table>
+  </div>
+</section>
+<section id="divider"><h3>Divider</h3>
+  <p class="desc">A divider is a thin line that separates and groups content — between list items, sections of a form, or regions of a dense layout. Used sparingly, it brings order without adding weight.</p>
+  <div class="note">Reach for whitespace and grouping first; add a divider only where a clear boundary helps. Too many lines make a layout feel busy.</div>
+
+  <div class="block"><h4>Variants</h4>
+    <div class="variant-grid">
+      <div class="variant-item">
+        <div class="variant-demo"><div style="display:flex;flex-direction:column;gap:8px;align-items:flex-start"><span>Section one</span><div class="divider"></div><span>Section two</span></div></div>
+        <div class="variant-label"><b>Full-width</b><span>Separate major sections edge to edge.</span></div>
+      </div>
+      <div class="variant-item">
+        <div class="variant-demo"><div style="width:280px;background:var(--surface);box-shadow:var(--el1);border-radius:4px;overflow:hidden"><div style="padding:12px 16px">Vehicle CA 123-456</div><div class="divider" style="margin-left:16px;width:calc(100% - 16px)"></div><div style="padding:12px 16px">Driver: Jane Cooper</div></div></div>
+        <div class="variant-label"><b>Inset</b><span>Between list items, aligned past the leading element.</span></div>
+      </div>
+      <div class="variant-item">
+        <div class="variant-demo"><div style="width:280px;background:var(--surface);box-shadow:var(--el1);border-radius:4px;overflow:hidden"><div style="padding:12px 16px">Vehicle CA 123-456</div><div class="divider" style="margin:0 16px;width:calc(100% - 32px)"></div><div style="padding:12px 16px">Driver: Jane Cooper</div></div></div>
+        <div class="variant-label"><b>Middle</b><span>Indented on both sides for a lighter separation.</span></div>
+      </div>
+      <div class="variant-item">
+        <div class="variant-demo"><div style="display:flex;align-items:center;gap:12px;height:32px"><button class="iconbtn">🔍</button><div class="divider" style="width:1px;height:24px"></div><button class="iconbtn">⋮</button></div></div>
+        <div class="variant-label"><b>Vertical</b><span>Separate inline items in a toolbar.</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="block"><h4>Best practices</h4>
+    <div class="bp-grid">
+      <div class="bp-col do"><h5>Do</h5><ul>
+        <li>Use dividers to mark real group boundaries.</li>
+        <li>Inset to align with the content column.</li>
+        <li>Prefer spacing where it reads clearly without a line.</li>
+      </ul></div>
+      <div class="bp-col dont"><h5>Don't</h5><ul>
+        <li>Don't put a divider between every list row.</li>
+        <li>Don't use heavy or coloured rules for plain separation.</li>
+        <li>Don't rely on a divider to convey meaning by itself.</li>
+      </ul></div>
+    </div>
+  </div>
+
+  <div class="block"><h4>Props</h4>
+    <table class="proptable"><tr><th>Prop</th><th>Type</th><th>Default</th><th>Description</th></tr>
+      <tr><td>variant</td><td>'full-width' | 'inset' | 'middle' | 'vertical'</td><td>—</td><td>Which divider treatment to render; derived from the spec's Variants table (full-width, inset, middle, vertical).</td></tr>
+      <tr><td>className</td><td>string</td><td>—</td><td>Optional extra class names to compose with the base divider class.</td></tr>
+    </table>
+  </div>
+</section>
+<section id="image-list"><h3>Image List</h3>
+  <p class="desc">Image lists arrange images in a grid — vehicle photos, inspection snapshots, document scans, map thumbnails. They make a set of visuals scannable at a glance.</p>
+  <div class="note">Use an image list when the visual is the content. If text matters more than the picture, a list or table with a small thumbnail is usually better.</div>
+
+  <div class="block"><h4>Variants</h4>
+    <div class="variant-grid">
+      <div class="variant-item">
+        <div class="variant-demo"><div class="imagelist"><div></div><div></div><div></div><div></div><div></div><div></div></div></div>
+        <div class="variant-label"><b>Standard</b><span>Equal-size tiles in a uniform grid.</span></div>
+      </div>
+      <div class="variant-item">
+        <div class="variant-demo"><div class="imagelist" style="grid-template-columns:repeat(3,1fr)"><div style="grid-column:span 2;grid-row:span 2;height:148px"></div><div></div><div></div><div></div><div></div></div></div>
+        <div class="variant-label"><b>Quilted / woven</b><span>Emphasize some images with varied tile sizes.</span></div>
+      </div>
+      <div class="variant-item">
+        <div class="variant-demo"><div class="imagelist"><div style="position:relative"><span style="position:absolute;left:4px;right:4px;bottom:4px;background:rgba(0,0,0,.55);color:#fff;font-size:.7rem;padding:2px 6px;border-radius:2px">CA 123-456</span></div><div></div><div></div><div></div><div></div></div></div>
+        <div class="variant-label"><b>With text overlay</b><span>When each image needs a short caption or action.</span></div>
+      </div>
+      <div class="variant-item">
+        <div class="variant-demo"><div class="imagelist" style="grid-template-columns:repeat(3,1fr);align-items:start"><div style="height:100px"></div><div style="height:60px"></div><div style="height:80px"></div><div style="height:60px"></div><div style="height:100px"></div><div style="height:70px"></div></div></div>
+        <div class="variant-label"><b>Masonry</b><span>Images of differing aspect ratios.</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="block"><h4>Best practices</h4>
+    <div class="bp-grid">
+      <div class="bp-col do"><h5>Do</h5><ul>
+        <li>Use when the image is the primary content.</li>
+        <li>Keep gaps consistent.</li>
+        <li>Provide alt text and a larger view.</li>
+      </ul></div>
+      <div class="bp-col dont"><h5>Don't</h5><ul>
+        <li>Don't use an image list for text-heavy records.</li>
+        <li>Don't load hundreds of full-size images at once.</li>
+        <li>Don't put essential info only in an overlay that may be hard to read.</li>
+      </ul></div>
+    </div>
+  </div>
+
+  <div class="block"><h4>Props</h4>
+    <table class="proptable"><tr><th>Prop</th><th>Type</th><th>Default</th><th>Description</th></tr>
+      <tr><td>items</td><td>ImageListItemData[]</td><td>—</td><td>Tiles to render in the grid, each an image with meaningful alt text.</td></tr>
+      <tr><td>cols</td><td>number</td><td>—</td><td>Column count for the standard/uniform grid; responsive column behavior adapts this to container width.</td></tr>
+      <tr><td>maxWidth</td><td>number | string</td><td>—</td><td>Max width of the grid container.</td></tr>
+      <tr><td>className</td><td>string</td><td>—</td><td>Optional extra class names to compose with the base mdc-image-list class.</td></tr>
+    </table>
+  </div>
+</section>
+<section id="list"><h3>List</h3>
+  <p class="desc">Lists present a vertical run of related records — drivers, notifications, recent vehicles. Each row pairs a primary line with optional supporting text, a leading avatar/icon, and trailing actions.</p>
+  <div class="note">Use a list for simple, scannable records. The moment you need columns, sorting, selection, or pagination, switch to a data table.</div>
+
+  <div class="block"><h4>Variants</h4>
+    <div class="variant-grid">
+      <div class="variant-item">
+        <div class="variant-demo"><div class="listmd"><div class="li"><span class="avatar">JC</span><div>Jane Cooper</div></div><div class="li"><span class="avatar" style="background:var(--primary)">FK</span><div>Frank Kim</div></div></div></div>
+        <div class="variant-label"><b>Single-line</b><span>Short records (names, options).</span></div>
+      </div>
+      <div class="variant-item">
+        <div class="variant-demo"><div class="listmd"><div class="li"><span class="avatar">JC</span><div><div>Jane Cooper</div><div style="color:var(--on-surface-med);font-size:.8rem">CA 123-456</div></div></div><div class="li"><span class="avatar" style="background:var(--primary)">FK</span><div><div>Frank Kim</div><div style="color:var(--on-surface-med);font-size:.8rem">CA 789-012</div></div></div></div></div>
+        <div class="variant-label"><b>Two-line</b><span>A title plus one supporting detail (most common).</span></div>
+      </div>
+      <div class="variant-item">
+        <div class="variant-demo"><div class="listmd"><div class="li"><span class="avatar">JC</span><div><div>Jane Cooper</div><div style="color:var(--on-surface-med);font-size:.8rem">CA 123-456 · Active</div><div style="color:var(--on-surface-med);font-size:.8rem">Depot North · last trip 2 min ago</div></div></div></div></div>
+        <div class="variant-label"><b>Three-line</b><span>Title plus two lines of context.</span></div>
+      </div>
+      <div class="variant-item">
+        <div class="variant-demo"><div class="listmd"><div class="li"><span class="cbox on"></span><div><div>Jane Cooper</div><div style="color:var(--on-surface-med);font-size:.8rem">CA 123-456</div></div></div><div class="li"><span class="cbox"></span><div><div>Frank Kim</div><div style="color:var(--on-surface-med);font-size:.8rem">CA 789-012</div></div><span class="sw on" style="margin-left:auto"><span class="k"></span></span></div></div></div>
+        <div class="variant-label"><b>With controls</b><span>Leading checkbox (multi-select) or trailing switch/action.</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="block"><h4>Best practices</h4>
+    <div class="bp-grid">
+      <div class="bp-col do"><h5>Do</h5><ul>
+        <li>Keep the primary line scannable.</li>
+        <li>Use two-line items for record + context.</li>
+        <li>Switch to a data table when columns/sorting appear.</li>
+      </ul></div>
+      <div class="bp-col dont"><h5>Don't</h5><ul>
+        <li>Don't cram tabular data into a list.</li>
+        <li>Don't nest lists deeply.</li>
+        <li>Don't hide the only action in a hover-only control without a focus path.</li>
+      </ul></div>
+    </div>
+  </div>
+
+  <div class="block"><h4>Props</h4>
+    <table class="proptable"><tr><th>Prop</th><th>Type</th><th>Default</th><th>Description</th></tr>
+      <tr><td>items</td><td>ListItemData[]</td><td>—</td><td>The records rendered as list items, each a row target with primary/secondary text, leading and trailing elements.</td></tr>
+      <tr><td>lines</td><td>1 | 2 | 3</td><td>—</td><td>Single-line, two-line, or three-line variant; two-line is the most common and is the default.</td></tr>
+      <tr><td>subheader</td><td>string</td><td>—</td><td>Optional group label rendered above the list (Subheader / divider anatomy).</td></tr>
+      <tr><td>className</td><td>string</td><td>—</td><td>Optional extra class names to compose with the base mdc-deprecated-list class.</td></tr>
+    </table>
+  </div>
+</section>
+<section id="pagination"><h3>Pagination</h3>
+  <p class="desc">Pagination breaks a large dataset into pages an operator can move through — the standard way to navigate the thousands of vehicles, trips, and alerts in the portal's data tables.</p>
+  <div class="note">Desktop tables paginate — they don't infinite-scroll. For large or server-driven data, fetch one page at a time rather than loading everything.</div>
+
+  <div class="block"><h4>Variants</h4>
+    <div class="variant-grid">
+      <div class="variant-item">
+        <div class="variant-demo"><div class="pgn"><span class="lbl">Rows per page: 100 &#9662;</span><span class="lbl">1&ndash;100 of 100,000</span><span class="p">&lsaquo;</span><span class="p">&rsaquo;</span></div></div>
+        <div class="variant-label"><b>Table footer (range + prev/next)</b><span>Default for data tables; compact, shows totals.</span></div>
+      </div>
+      <div class="variant-item">
+        <div class="variant-demo"><div class="pgn"><span class="lbl">1&ndash;100 of 100,000</span><span class="p">&lsaquo;</span><span class="p on">1</span><span class="p">2</span><span class="p">3</span><span class="p">&hellip;</span><span class="p">&rsaquo;</span></div></div>
+        <div class="variant-label"><b>Numbered pages</b><span>When operators jump around (page 1, 2, 3…); good for moderate counts.</span></div>
+      </div>
+      <div class="variant-item">
+        <div class="variant-demo"><div class="pgn"><span class="lbl">Rows per page: 100 &#9662;</span></div></div>
+        <div class="variant-label"><b>Rows-per-page only</b><span>When the dataset fits a couple of pages.</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="block"><h4>Best practices</h4>
+    <div class="bp-grid">
+      <div class="bp-col do"><h5>Do</h5><ul>
+        <li>Show the total and current range.</li>
+        <li>Offer sensible page sizes (25/50/100).</li>
+        <li>Fetch per page for large data.</li>
+      </ul></div>
+      <div class="bp-col dont"><h5>Don't</h5><ul>
+        <li>Don't infinite-scroll a desktop data table.</li>
+        <li>Don't lose selection or sort when paging.</li>
+        <li>Don't load 100k rows into the browser at once.</li>
+      </ul></div>
+    </div>
+  </div>
+
+  <div class="block"><h4>Props</h4>
+    <table class="proptable"><tr><th>Prop</th><th>Type</th><th>Default</th><th>Description</th></tr>
+      <tr><td>page</td><td>number</td><td>—</td><td>Current page, 1-indexed.</td></tr>
+      <tr><td>pageSize</td><td>number</td><td>—</td><td>Rows shown per page.</td></tr>
+      <tr><td>totalItems</td><td>number</td><td>—</td><td>Total row count across all pages, used to build the range label ("1–100 of 100,000").</td></tr>
+      <tr><td>pageSizeOptions</td><td>number[]</td><td>—</td><td>Page-size choices offered in the rows-per-page control (e.g. 25/50/100).</td></tr>
+      <tr><td>variant</td><td>'table-footer' | 'numbered' | 'rows-per-page-only'</td><td>—</td><td>Table footer (range + prev/next), Numbered pages, or Rows-per-page only, per the spec's Variants table.</td></tr>
+      <tr><td>siblingCount</td><td>number</td><td>—</td><td>How many page-number buttons to show around the current page (numbered variant).</td></tr>
+      <tr><td>onPageChange</td><td>(page: number) => void</td><td>—</td><td>Called when the operator moves to a different page (previous/next or a numbered jump).</td></tr>
+      <tr><td>onPageSizeChange</td><td>(size: number) => void</td><td>—</td><td>Called when the operator changes rows-per-page; should reset to page one per the Resetting behavior.</td></tr>
+      <tr><td>className</td><td>string</td><td>—</td><td>Optional extra class names to compose with the base pgn class.</td></tr>
+    </table>
+  </div>
+</section>
+<section id="progress-indicator"><h3>ProgressIndicator</h3>
+  <p class="desc">Progress indicators show that the app is working — loading a report, exporting trips, fetching a page of vehicles. They reassure the operator that something is happening and, when possible, how far along it is.</p>
+  <div class="note">Use determinate progress when you know the percentage; indeterminate when you don't. For content that's loading into a known layout (tables, cards), prefer skeletons over spinners.</div>
+
+  <div class="block"><h4>Variants</h4>
+    <div class="variant-grid">
+      <div class="variant-item">
+        <div class="variant-demo"><span class="linear" style="width:240px"><span class="v" style="width:60%"></span></span></div>
+        <div class="variant-label"><b>Linear determinate</b><span>A known-percentage task with a layout to sit above/below (uploads, exports).</span></div>
+      </div>
+      <div class="variant-item">
+        <div class="variant-demo"><span class="linear" style="width:240px"><span class="v"></span></span></div>
+        <div class="variant-label"><b>Linear indeterminate</b><span>Loading where duration is unknown; spans a region's width.</span></div>
+      </div>
+      <div class="variant-item">
+        <div class="variant-demo"><span class="spin"></span></div>
+        <div class="variant-label"><b>Circular determinate</b><span>A compact known-percentage indicator.</span></div>
+      </div>
+      <div class="variant-item">
+        <div class="variant-demo"><span class="spin"></span></div>
+        <div class="variant-label"><b>Circular indeterminate</b><span>A small inline "working" spinner.</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="block"><h4>Best practices</h4>
+    <div class="bp-grid">
+      <div class="bp-col do"><h5>Do</h5><ul>
+        <li>Use determinate progress when you know the percentage.</li>
+        <li>Prefer skeletons for content loads.</li>
+        <li>Delay spinners on fast operations.</li>
+      </ul></div>
+      <div class="bp-col dont"><h5>Don't</h5><ul>
+        <li>Don't fake a percentage.</li>
+        <li>Don't block the whole screen for a small async action.</li>
+        <li>Don't flash a spinner for sub-second waits.</li>
+      </ul></div>
+    </div>
+  </div>
+
+  <div class="block"><h4>Props</h4>
+    <table class="proptable"><tr><th>Prop</th><th>Type</th><th>Default</th><th>Description</th></tr>
+      <tr><td>type</td><td>'linear' | 'circular'</td><td>—</td><td>Linear spans a region's width; circular is a compact/inline indicator.</td></tr>
+      <tr><td>variant</td><td>'determinate' | 'indeterminate'</td><td>—</td><td>Determinate shows a known percentage; indeterminate animates for unknown duration.</td></tr>
+      <tr><td>value</td><td>number</td><td>—</td><td>0-100. Only used when variant is 'determinate'.</td></tr>
+      <tr><td>label</td><td>string</td><td>—</td><td>Accessible label describing what's loading.</td></tr>
+      <tr><td>size</td><td>number</td><td>—</td><td>Circular size in px. Ignored for linear.</td></tr>
+      <tr><td>maxWidth</td><td>number</td><td>—</td><td>Max width in px for the linear track. Ignored for circular.</td></tr>
+    </table>
+  </div>
+</section>
+<section id="tooltip"><h3>Tooltip</h3>
+  <p class="desc">Tooltips reveal a short text label on hover or focus — naming an icon-only button, or showing a value that's been truncated in a dense table. They're especially valuable on desktop, where hover exists.</p>
+  <div class="note">Use a tooltip for brief, supplementary text — an icon's name, a truncated cell's full value. Never put essential information or actions only in a tooltip.</div>
+
+  <div class="block"><h4>Variants</h4>
+    <div class="variant-grid">
+      <div class="variant-item">
+        <div class="variant-demo"><span class="tip">Track vehicle</span></div>
+        <div class="variant-label"><b>Plain</b><span>A short label naming or clarifying the trigger.</span></div>
+      </div>
+      <div class="variant-item">
+        <div class="variant-demo"><span class="tip">CA 123-456 &middot; Jane Cooper &middot; Active</span></div>
+        <div class="variant-label"><b>Truncation reveal</b><span>Shows the full value when text is clipped in a cell/label.</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="block"><h4>Best practices</h4>
+    <div class="bp-grid">
+      <div class="bp-col do"><h5>Do</h5><ul>
+        <li>Label every icon-only button with a tooltip.</li>
+        <li>Keep text to a few words.</li>
+        <li>Trigger on focus too, not just hover.</li>
+      </ul></div>
+      <div class="bp-col dont"><h5>Don't</h5><ul>
+        <li>Don't put actions or essential info only in a tooltip.</li>
+        <li>Don't write long paragraphs.</li>
+        <li>Don't rely on hover alone (touch/keyboard need an alternative).</li>
+      </ul></div>
+    </div>
+  </div>
+
+  <div class="block"><h4>Props</h4>
+    <table class="proptable"><tr><th>Prop</th><th>Type</th><th>Default</th><th>Description</th></tr>
+      <tr><td>variant</td><td>'plain' | 'truncation'</td><td>—</td><td>Plain = a short label naming/clarifying the trigger. Truncation reveal = shows the full value when text is clipped.</td></tr>
+      <tr><td>label</td><td>string</td><td>—</td><td>Concise text (ideally a few words).</td></tr>
+      <tr><td>children</td><td>React.ReactElement</td><td>—</td><td>The trigger element being described (icon button, truncated text); cloned to receive aria-describedby.</td></tr>
+    </table>
+  </div>
+</section>
+<section id="banner"><h3>Banner</h3>
+  <p class="desc">A banner is a prominent message with one or two actions, shown at the top of a region. It surfaces something important but non-blocking — vehicles due for service, a sync issue, a new feature — and stays until the operator acts.</p>
+  <div class="note">Use a banner for a persistent, moderate-priority message that needs acknowledgement. For transient confirmation use a snackbar; for a blocking decision use a dialog.</div>
+
+  <div class="block"><h4>Variants</h4>
+    <div class="variant-grid">
+      <div class="variant-item">
+        <div class="variant-demo"><div class="banner" style="background:#E3F2FD"><span style="color:#0D47A1">&#8505;</span><span style="flex:1">A new export format is now available.</span><button class="btn text">Dismiss</button><button class="btn text">Review</button></div></div>
+        <div class="variant-label"><b>Informational</b><span>Neutral notice (a new export format, a tip).</span></div>
+      </div>
+      <div class="variant-item">
+        <div class="variant-demo"><div class="banner"><span>&#9888;</span><span style="flex:1">3 vehicles are due for service this week.</span><button class="btn text">Dismiss</button><button class="btn text">Review</button></div></div>
+        <div class="variant-label"><b>Warning</b><span>Something needs attention soon (service due).</span></div>
+      </div>
+      <div class="variant-item">
+        <div class="variant-demo"><div class="banner" style="background:#FFEBEE"><span style="color:var(--error)">&#10005;</span><span style="flex:1">Live positions failed to sync. Some locations may be stale.</span><button class="btn text">Retry</button></div></div>
+        <div class="variant-label"><b>Error</b><span>A problem affecting the data on screen (sync failed).</span></div>
+      </div>
+      <div class="variant-item">
+        <div class="variant-demo"><div class="banner" style="background:#E8F5E9"><span style="color:#1B5E20">&#10003;</span><span style="flex:1">Export completed successfully.</span><button class="btn text">Dismiss</button></div></div>
+        <div class="variant-label"><b>Success</b><span>Confirmation of a longer-running result.</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="block"><h4>Best practices</h4>
+    <div class="bp-grid">
+      <div class="bp-col do"><h5>Do</h5><ul>
+        <li>Use for persistent, moderate-priority messages.</li>
+        <li>Offer a clear action (Review/Retry/Dismiss).</li>
+        <li>Match the tint to severity and keep text legible.</li>
+      </ul></div>
+      <div class="bp-col dont"><h5>Don't</h5><ul>
+        <li>Don't use a banner for transient confirmations (use a snackbar).</li>
+        <li>Don't stack multiple banners.</li>
+        <li>Don't use error styling for non-errors.</li>
+      </ul></div>
+    </div>
+  </div>
+
+  <div class="block"><h4>Props</h4>
+    <table class="proptable"><tr><th>Prop</th><th>Type</th><th>Default</th><th>Description</th></tr>
+      <tr><td>message</td><td>string</td><td>—</td><td>The supporting message text.</td></tr>
+      <tr><td>severity</td><td>'info' | 'warning' | 'error' | 'success'</td><td>—</td><td>Controls tint and the live-region politeness (error is assertive).</td></tr>
+      <tr><td>secondaryActionLabel</td><td>string</td><td>—</td><td>Secondary (left) text action, e.g. "Dismiss".</td></tr>
+      <tr><td>onSecondaryAction</td><td>() => void</td><td>—</td><td>Handler for the secondary action.</td></tr>
+      <tr><td>primaryActionLabel</td><td>string</td><td>—</td><td>Primary (right) text action, e.g. "Review".</td></tr>
+      <tr><td>onPrimaryAction</td><td>() => void</td><td>—</td><td>Handler for the primary action.</td></tr>
+    </table>
+  </div>
+</section>
+<section id="snackbar"><h3>Snackbar</h3>
+  <p class="desc">A snackbar gives brief, low-priority feedback about an action just taken — "Vehicle saved", "Export started" — usually with a single optional action like Undo. It appears briefly and dismisses on its own.</p>
+  <div class="note">Use a snackbar for transient confirmation that doesn't need acknowledgement. For a message that must persist until acted on, use a banner; for a blocking choice, a dialog.</div>
+
+  <div class="block"><h4>Variants</h4>
+    <div class="variant-grid">
+      <div class="variant-item">
+        <div class="variant-demo"><span class="snackbar">Changes saved</span></div>
+        <div class="variant-label"><b>Message only</b><span>Simple confirmation ("Changes saved").</span></div>
+      </div>
+      <div class="variant-item">
+        <div class="variant-demo"><span class="snackbar">Vehicle saved <a href="#">Undo</a></span></div>
+        <div class="variant-label"><b>With action</b><span>Offer a quick follow-up (Undo, View).</span></div>
+      </div>
+      <div class="variant-item">
+        <div class="variant-demo"><span class="snackbar">Export failed <a href="#">Retry</a></span></div>
+        <div class="variant-label"><b>Error toast</b><span>A brief failure notice; pair persistent errors with a banner instead.</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="block"><h4>Best practices</h4>
+    <div class="bp-grid">
+      <div class="bp-col do"><h5>Do</h5><ul>
+        <li>Keep the message to one short line.</li>
+        <li>Offer at most one action (e.g. Undo).</li>
+        <li>Queue snackbars; show one at a time.</li>
+      </ul></div>
+      <div class="bp-col dont"><h5>Don't</h5><ul>
+        <li>Don't use a snackbar for errors that need action — use a banner/dialog.</li>
+        <li>Don't stack multiple snackbars.</li>
+        <li>Don't auto-dismiss something the user must act on.</li>
+      </ul></div>
+    </div>
+  </div>
+
+  <div class="block"><h4>Props</h4>
+    <table class="proptable"><tr><th>Prop</th><th>Type</th><th>Default</th><th>Description</th></tr>
+      <tr><td>variant</td><td>'message' | 'action' | 'error'</td><td>—</td><td>Message only = simple confirmation. With action = one quick follow-up. Error toast = brief failure notice.</td></tr>
+      <tr><td>open</td><td>boolean</td><td>—</td><td>Whether the snackbar is currently shown.</td></tr>
+      <tr><td>message</td><td>string</td><td>—</td><td>One concise line of text, e.g. "Vehicle saved".</td></tr>
+      <tr><td>actionLabel</td><td>string</td><td>—</td><td>At most one action label, e.g. "Undo".</td></tr>
+      <tr><td>onAction</td><td>() => void</td><td>—</td><td>Called when the action button is activated.</td></tr>
+      <tr><td>onClose</td><td>() => void</td><td>—</td><td>Called when the snackbar is dismissed (timeout or explicit close).</td></tr>
+    </table>
+  </div>
+</section>
+<section id="card"><h3>Card</h3>
+  <p class="desc">A card groups related content and actions about a single subject — a vehicle summary, a KPI, an alert. Cards make a dashboard scannable by giving each thing its own contained surface.</p>
+  <div class="note">Use a card to collect everything about one entity. If you're listing many comparable records, a data table is usually clearer than a wall of cards.</div>
+
+  <div class="block"><h4>Variants</h4>
+    <div class="variant-grid">
+      <div class="variant-item">
+        <div class="variant-demo"><div class="card"><div class="ch"><div class="t">CA 123-456</div><div class="s">Jane Cooper &middot; Active</div></div><div class="cc">14 trips &middot; 512 km this week.</div><div class="ca"><button class="btn text">Details</button><button class="btn text">Track</button></div></div></div>
+        <div class="variant-label"><b>Elevated</b><span>Default — a subtle shadow lifts the card off the page.</span></div>
+      </div>
+      <div class="variant-item">
+        <div class="variant-demo"><div class="card" style="box-shadow:none;border:1px solid var(--divider)"><div class="ch"><div class="t">CA 123-456</div><div class="s">Jane Cooper &middot; Active</div></div><div class="cc">14 trips &middot; 512 km this week.</div><div class="ca"><button class="btn text">Details</button><button class="btn text">Track</button></div></div></div>
+        <div class="variant-label"><b>Outlined</b><span>Flatter surfaces / dense dashboards where shadows add noise.</span></div>
+      </div>
+      <div class="variant-item">
+        <div class="variant-demo"><div class="card"><div class="media"></div><div class="ch"><div class="t">CA 123-456</div><div class="s">Jane Cooper</div></div><div class="cc">14 trips &middot; 512 km this week.</div><div class="ca"><button class="btn text">Details</button><button class="btn text">Track</button></div></div></div>
+        <div class="variant-label"><b>With media</b><span>When an image/map adds context (vehicle photo, location).</span></div>
+      </div>
+      <div class="variant-item">
+        <div class="variant-demo"><div class="card" tabindex="0" role="button" style="cursor:pointer"><div class="media"></div><div class="ch"><div class="t">CA 123-456</div><div class="s">Jane Cooper &middot; Active</div></div><div class="cc">14 trips &middot; 512 km this week.</div></div></div>
+        <div class="variant-label"><b>Actionable (whole-card)</b><span>The entire card navigates to detail.</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="block"><h4>Best practices</h4>
+    <div class="bp-grid">
+      <div class="bp-col do"><h5>Do</h5><ul>
+        <li>Keep one subject per card.</li>
+        <li>Use low-emphasis actions inside cards.</li>
+        <li>Align cards into a tidy grid on dashboards.</li>
+      </ul></div>
+      <div class="bp-col dont"><h5>Don't</h5><ul>
+        <li>Don't replace a comparable-records table with many cards.</li>
+        <li>Don't stack multiple contained buttons in a card.</li>
+        <li>Don't nest cards within cards.</li>
+      </ul></div>
+    </div>
+  </div>
+
+  <div class="block"><h4>Props</h4>
+    <table class="proptable"><tr><th>Prop</th><th>Type</th><th>Default</th><th>Description</th></tr>
+      <tr><td>title</td><td>string</td><td>—</td><td>Card title, rendered as a heading.</td></tr>
+      <tr><td>subtitle</td><td>string</td><td>—</td><td>Optional subtitle line under the title (e.g. "Jane Cooper · Active").</td></tr>
+      <tr><td>content</td><td>React.ReactNode</td><td>—</td><td>Supporting text, KPIs, or a small table — kept to a single subject.</td></tr>
+      <tr><td>media</td><td>React.ReactNode</td><td>—</td><td>Optional media/image/map thumbnail region above the header.</td></tr>
+      <tr><td>variant</td><td>'elevated' | 'outlined'</td><td>—</td><td>Outlined removes the elevation shadow in favor of a divider border. Elevated is the default.</td></tr>
+      <tr><td>actions</td><td>CardAction[]</td><td>—</td><td>Row of low-emphasis actions (usually text buttons).</td></tr>
+      <tr><td>actionable</td><td>boolean</td><td>—</td><td>Makes the whole card a single clickable target that navigates to detail.</td></tr>
+      <tr><td>onClick</td><td>() => void</td><td>—</td><td>Handler fired when an actionable card is clicked or activated via keyboard.</td></tr>
+    </table>
+  </div>
+</section>
+<section id="dialog"><h3>Dialog</h3>
+  <p class="desc">A dialog is a modal window for a focused task or decision that interrupts the operator on purpose — confirming a deletion, capturing a few fields, or surfacing something that needs a choice before continuing.</p>
+  <div class="note">Use a dialog only when the task genuinely needs to interrupt. For routine detail, prefer a side sheet or a detail page. For transient confirmation, prefer a snackbar.</div>
+
+  <div class="block"><h4>Variants</h4>
+    <div class="variant-grid">
+      <div class="variant-item">
+        <div class="variant-demo"><div class="dialog"><div class="dt">Remove vehicle?</div><div class="dc">This removes CA 123-456 from the active fleet. This action can't be undone.</div><div class="da"><button class="btn text">Cancel</button><button class="btn text" style="color:var(--error)">Remove</button></div></div></div>
+        <div class="variant-label"><b>Alert / confirmation</b><span>Confirm a consequential action (delete, discard).</span></div>
+      </div>
+      <div class="variant-item">
+        <div class="variant-demo"><div class="dialog" style="width:360px"><div class="dt">Add note</div><div class="dc"><span class="tf outlined"><span class="lbl">Note</span><div class="f">Enter details&hellip;</div></span></div><div class="da"><button class="btn text">Cancel</button><button class="btn text">Save</button></div></div></div>
+        <div class="variant-label"><b>Form dialog</b><span>Capture a few fields without leaving the page.</span></div>
+      </div>
+      <div class="variant-item">
+        <div class="variant-demo"><div class="dialog" style="width:480px"><div class="dt">Configure export</div><div class="dc">A larger task that benefits from focus; usually a page is better.</div><div class="da"><button class="btn text">Cancel</button><button class="btn text">Continue</button></div></div></div>
+        <div class="variant-label"><b>Full-screen (rare on desktop)</b><span>A larger task that benefits from focus; usually a page is better.</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="block"><h4>Best practices</h4>
+    <div class="bp-grid">
+      <div class="bp-col do"><h5>Do</h5><ul>
+        <li>Use a specific title that states the decision.</li>
+        <li>Label actions with verbs (Remove/Save), not OK.</li>
+        <li>Trap focus and return it on close.</li>
+      </ul></div>
+      <div class="bp-col dont"><h5>Don't</h5><ul>
+        <li>Don't use a dialog for routine detail — use a side sheet/page.</li>
+        <li>Don't stack dialogs.</li>
+        <li>Don't let the scrim dismiss a destructive, unsaved action silently.</li>
+      </ul></div>
+    </div>
+  </div>
+
+  <div class="block"><h4>Props</h4>
+    <table class="proptable"><tr><th>Prop</th><th>Type</th><th>Default</th><th>Description</th></tr>
+      <tr><td>open</td><td>boolean</td><td>—</td><td>Controls whether the dialog is rendered/open.</td></tr>
+      <tr><td>title</td><td>string</td><td>—</td><td>Short, specific question or task name (e.g. "Remove vehicle?"), not a generic title.</td></tr>
+      <tr><td>content</td><td>React.ReactNode</td><td>—</td><td>Supporting text and/or fields.</td></tr>
+      <tr><td>confirmLabel</td><td>string</td><td>—</td><td>Right-aligned, rendered last. Verb-first label (e.g. "Remove"), not "OK".</td></tr>
+      <tr><td>onConfirm</td><td>() => void</td><td>—</td><td>Handler for the confirm action.</td></tr>
+      <tr><td>cancelLabel</td><td>string</td><td>—</td><td>Left-aligned dismiss action label.</td></tr>
+      <tr><td>onCancel</td><td>() => void</td><td>—</td><td>Handler for the cancel/dismiss action.</td></tr>
+      <tr><td>destructive</td><td>boolean</td><td>—</td><td>Destructive confirms use the error colour and disable scrim/Escape dismissal so an unsaved destructive action isn't lost silently.</td></tr>
+      <tr><td>onClose</td><td>() => void</td><td>—</td><td>Called on Escape / scrim click for non-destructive dialogs. Defaults to onCancel.</td></tr>
+    </table>
+  </div>
+</section>
+<section id="expansion-panel"><h3>ExpansionPanel</h3>
+  <p class="desc">Expansion panels (accordions) let operators reveal detail on demand — collapsing a long record or settings page into named sections that open one at a time, so the screen stays manageable.</p>
+  <div class="note">Use expansion panels to tame dense detail (vehicle specs, settings groups). For switching between peer views of one record, prefer tabs.</div>
+
+  <div class="block"><h4>Variants</h4>
+    <div class="variant-grid">
+      <div class="variant-item">
+        <div class="variant-demo">
+          <div class="accordion"><div class="hd"><span style="font-weight:500">Vehicle details</span><span>&#8994;</span></div><div class="bd2">Make, model, VIN, year, fuel type, and registration.</div></div>
+          <div class="accordion" style="margin-top:8px"><div class="hd"><span>Maintenance history</span><span>&#8250;</span></div></div>
+        </div>
+        <div class="variant-label"><b>Single-open</b><span>Only one section open at a time (guided reading).</span></div>
+      </div>
+      <div class="variant-item">
+        <div class="variant-demo">
+          <div class="accordion"><div class="hd"><span style="font-weight:500">Vehicle details</span><span>&#8994;</span></div><div class="bd2">Make, model, VIN, year, fuel type, and registration.</div></div>
+          <div class="accordion" style="margin-top:8px"><div class="hd"><span style="font-weight:500">Maintenance history</span><span>&#8994;</span></div><div class="bd2">Last service 2,400 km ago; next due in 600 km.</div></div>
+        </div>
+        <div class="variant-label"><b>Multi-open</b><span>Several sections open at once (reference scanning).</span></div>
+      </div>
+      <div class="variant-item">
+        <div class="variant-demo">
+          <div class="accordion"><div class="hd"><span>Maintenance history</span><span style="display:flex;gap:8px;align-items:center"><span style="color:var(--on-surface-med);font-size:.8rem">Next due in 600&nbsp;km</span><span>&#8250;</span></span></div></div>
+        </div>
+        <div class="variant-label"><b>With summary</b><span>Show a key value on the collapsed header.</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="block"><h4>Best practices</h4>
+    <div class="bp-grid">
+      <div class="bp-col do"><h5>Do</h5><ul>
+        <li>Name sections clearly so collapsed headers are scannable.</li>
+        <li>Show a summary value where it helps.</li>
+        <li>Keep single-vs-multi behavior consistent.</li>
+      </ul></div>
+      <div class="bp-col dont"><h5>Don't</h5><ul>
+        <li>Don't nest accordions deeply.</li>
+        <li>Don't hide critical, always-needed info behind a collapse.</li>
+        <li>Don't use accordions where tabs fit better.</li>
+      </ul></div>
+    </div>
+  </div>
+
+  <div class="block"><h4>Props</h4>
+    <table class="proptable"><tr><th>Prop</th><th>Type</th><th>Default</th><th>Description</th></tr>
+      <tr><td>title</td><td>string</td><td>—</td><td>Section title shown in the always-visible header.</td></tr>
+      <tr><td>summary</td><td>string</td><td>—</td><td>Optional preview value shown on the collapsed header (the 'With summary' variant).</td></tr>
+      <tr><td>children</td><td>React.ReactNode</td><td>—</td><td>Panel body content, revealed when expanded.</td></tr>
+      <tr><td>open</td><td>boolean</td><td>—</td><td>Controlled open state; when provided the panel no longer manages its own state, letting a parent group implement single-open vs multi-open behavior.</td></tr>
+      <tr><td>defaultOpen</td><td>boolean</td><td>—</td><td>Uncontrolled initial open state.</td></tr>
+      <tr><td>onToggle</td><td>(open: boolean) => void</td><td>—</td><td>Called with the next open state whenever the header is toggled.</td></tr>
+      <tr><td>disabled</td><td>boolean</td><td>—</td><td>Disables the header toggle.</td></tr>
+      <tr><td>className</td><td>string</td><td>—</td><td>Optional extra class names to compose with the base accordion class.</td></tr>
+    </table>
+  </div>
+</section>
+<section id="side-sheet"><h3>SideSheet</h3>
+  <p class="desc">A side sheet is a surface anchored to the right edge that shows contextual detail beside the main content — the selected vehicle's summary next to the list, or a filters panel — without navigating away.</p>
+  <div class="note">Use a side sheet to keep context: the operator sees a record's detail while the list stays visible. (Bottom sheets are a mobile pattern and are excluded from this desktop set.)</div>
+
+  <div class="block"><h4>Variants</h4>
+    <div class="variant-grid">
+      <div class="variant-item">
+        <div class="variant-demo"><div class="sheet" style="width:260px;border-radius:0"><div style="padding:0 16px 8px;font-weight:500">CA 123-456</div><div class="listmd" style="box-shadow:none;border-radius:0"><div class="li">Overview</div><div class="li">Recent trips</div><div class="li">Maintenance</div><div class="li">Alerts</div></div></div></div>
+        <div class="variant-label"><b>Standard (pushes content)</b><span>Detail beside a list where keeping context matters; content reflows.</span></div>
+      </div>
+      <div class="variant-item">
+        <div class="variant-demo">
+          <div style="display:flex;width:100%;min-height:160px;background:rgba(0,0,0,.32);border-radius:8px">
+            <div style="flex:1;padding:16px;color:var(--on-surface-med)">List content&hellip;</div>
+            <div class="sheet" style="width:220px;border-radius:0;box-shadow:var(--el8)"><div style="padding:0 16px 8px;font-weight:500">CA 123-456</div><div class="listmd" style="box-shadow:none;border-radius:0"><div class="li">Overview</div><div class="li">Recent trips</div><div class="li">Maintenance</div></div></div>
+          </div>
+        </div>
+        <div class="variant-label"><b>Modal (over a scrim)</b><span>When the sheet's task should hold focus (e.g. an editing flow).</span></div>
+      </div>
+      <div class="variant-item">
+        <div class="variant-demo"><div class="sheet" style="width:240px;border-radius:0"><div style="padding:0 16px 8px;font-weight:500">Filters</div><div class="listmd" style="box-shadow:none;border-radius:0"><div class="li">Status</div><div class="li">Driver</div><div class="li">Date range</div></div></div></div>
+        <div class="variant-label"><b>Filters panel</b><span>Hosts the advanced filters for a data table.</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="block"><h4>Best practices</h4>
+    <div class="bp-grid">
+      <div class="bp-col do"><h5>Do</h5><ul>
+        <li>Use it to keep list context while viewing detail.</li>
+        <li>Highlight the selected record in the list.</li>
+        <li>Give it a clear close control.</li>
+      </ul></div>
+      <div class="bp-col dont"><h5>Don't</h5><ul>
+        <li>Don't use a bottom sheet on desktop.</li>
+        <li>Don't stuff a full multi-step task into a narrow sheet — use a page.</li>
+        <li>Don't block the page with a modal sheet for read-only detail.</li>
+      </ul></div>
+    </div>
+  </div>
+
+  <div class="block"><h4>Props</h4>
+    <table class="proptable"><tr><th>Prop</th><th>Type</th><th>Default</th><th>Description</th></tr>
+      <tr><td>variant</td><td>'standard' | 'modal'</td><td>—</td><td>Standard pushes/reflows content and can stay docked; modal sits over a scrim and traps focus.</td></tr>
+      <tr><td>open</td><td>boolean</td><td>—</td><td>Whether the sheet is rendered/visible.</td></tr>
+      <tr><td>title</td><td>string</td><td>—</td><td>The subject/title shown in the header, e.g. a registration number.</td></tr>
+      <tr><td>subtitle</td><td>string</td><td>—</td><td>Optional secondary line, e.g. driver name + status.</td></tr>
+      <tr><td>navItems</td><td>SideSheetNavItem[]</td><td>—</td><td>Content nav/list — mirrors mdc-deprecated-list usage in the source markup.</td></tr>
+      <tr><td>children</td><td>React.ReactNode</td><td>—</td><td>Arbitrary content/form/tabs, used instead of navItems.</td></tr>
+      <tr><td>footer</td><td>React.ReactNode</td><td>—</td><td>Optional footer actions for the sheet's content.</td></tr>
+      <tr><td>onClose</td><td>() => void</td><td>—</td><td>Called when the close control or (for modal) the scrim/Escape is activated.</td></tr>
+    </table>
+  </div>
+</section>
+
+    <p class="note" style="margin-top:44px">Generated from <code>component-repo/components/*.doc.json</code> — the single source of truth for props, variants, and best practices. Update the <code>.doc.json</code> file to change what's shown here; this page has no content of its own.</p>
+  </main>
+</div>
+<script>
+  const q = document.getElementById('q');
+  q.addEventListener('input', () => {
+    const t = q.value.trim().toLowerCase();
+    document.querySelectorAll('main section').forEach(s => {
+      const h = s.querySelector('h3');
+      const hit = !t || (h && h.textContent.toLowerCase().includes(t));
+      s.classList.toggle('hidden', !hit);
+    });
+  });
+
+  // highlight active nav link on scroll
+  const links = Array.from(document.querySelectorAll('nav.side a'));
+  const sections = Array.from(document.querySelectorAll('main section'));
+  const setActive = () => {
+    let current = sections[0];
+    for (const s of sections) {
+      if (s.getBoundingClientRect().top - 80 <= 0) current = s;
+    }
+    links.forEach(l => l.classList.toggle('active', current && l.getAttribute('href') === '#' + current.id));
+  };
+  document.addEventListener('scroll', setActive);
+  setActive();
+</script>
+</body>
+</html>

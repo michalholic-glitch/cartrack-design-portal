@@ -1,0 +1,17 @@
+# macOS
+.DS_Store
+._*
+
+# Editor / OS cruft
+.vscode/
+.idea/
+*.swp
+
+# Python (build_portal.py)
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# Vercel
+.vercel

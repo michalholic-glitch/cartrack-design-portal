@@ -1,0 +1,149 @@
+{
+  "name": "NavigationRail",
+  "category": "Navigation",
+  "status": "stable",
+  "library": "Material Components Web (MDC) 14.0.0 — Cartrack-themed",
+  "source": "component-specs/navigation-rail.md",
+  "description": "The navigation rail is a compact, icon-first side navigation. It's the collapsed form of the drawer — used on narrower desktop widths or when an operator wants more room for a dense map or table.",
+  "keyRule": "Use the rail as the space-saving alternative to the drawer, not as a second navigation. The two are the same destinations at different widths.",
+  "variants": [
+    {
+      "name": "Labelled",
+      "whenToUse": "Icon + short label (recommended for clarity)."
+    },
+    {
+      "name": "Icon-only",
+      "whenToUse": "Maximum density; labels via tooltip on hover."
+    },
+    {
+      "name": "Expandable",
+      "whenToUse": "Toggles to the full navigation drawer."
+    }
+  ],
+  "anatomy": [
+    {
+      "name": "Container",
+      "description": "the fixed narrow strip (~72–80px)."
+    },
+    {
+      "name": "Item",
+      "description": "an icon with a short label beneath it."
+    },
+    {
+      "name": "Active indicator",
+      "description": "highlight on the selected item."
+    },
+    {
+      "name": "Menu / expand control",
+      "description": "optional toggle back to the full drawer."
+    }
+  ],
+  "behaviors": [
+    {
+      "name": "Selection",
+      "description": "Selecting an item navigates and moves the active indicator; only one is active."
+    },
+    {
+      "name": "Expand",
+      "description": "An optional control expands the rail into the full drawer and back."
+    },
+    {
+      "name": "Tooltips",
+      "description": "Icon-only items reveal their label on hover/focus so meaning isn't lost."
+    }
+  ],
+  "states": [
+    {
+      "state": "Item enabled",
+      "treatment": "Medium-emphasis icon + label."
+    },
+    {
+      "state": "Item hover/focus",
+      "treatment": "4% overlay."
+    },
+    {
+      "state": "Item active",
+      "treatment": "Primary icon/label (+ indicator)."
+    }
+  ],
+  "specs": [
+    {
+      "property": "Width",
+      "value": "72–80px"
+    },
+    {
+      "property": "Icon size",
+      "value": "24px"
+    },
+    {
+      "property": "Label",
+      "value": "Roboto ~11–12px / 500"
+    },
+    {
+      "property": "Item target",
+      "value": "≥48px tall"
+    }
+  ],
+  "tokens": [
+    "semantic.color.brand.primary.main",
+    "semantic.spacing.xxl",
+    "semantic.typography.scale.labelSmall"
+  ],
+  "props": [
+    {
+      "name": "items",
+      "type": "NavigationRailItem[]",
+      "required": true,
+      "description": "The rail's destinations; must mirror the NavigationDrawer's destinations exactly — the rail is the drawer's collapsed form, not a second nav."
+    },
+    {
+      "name": "activeId",
+      "type": "string",
+      "required": false,
+      "description": "The id of the currently active destination; only one item is active."
+    },
+    {
+      "name": "showLabels",
+      "type": "boolean",
+      "required": false,
+      "description": "Labelled (icon + short label) vs Icon-only (maximum density, label via tooltip) per the spec's Variants."
+    },
+    {
+      "name": "onExpand",
+      "type": "() => void",
+      "required": false,
+      "description": "Renders an expand control that toggles the rail into the full navigation drawer and back (the Expandable variant)."
+    },
+    {
+      "name": "className",
+      "type": "string",
+      "required": false,
+      "description": "Optional extra class names to compose with the base rail class."
+    }
+  ],
+  "doThis": [
+    "Keep labels even in the compact form where possible.",
+    "Mirror the drawer's destinations exactly.",
+    "Provide tooltips for icon-only items."
+  ],
+  "dontDoThis": [
+    "Don't show different destinations than the drawer.",
+    "Don't pack more than ~7 items.",
+    "Don't rely on icon alone without an accessible name."
+  ],
+  "accessibility": [
+    "A navigation landmark of links; the active item exposes aria-current.",
+    "Every item has an accessible name even when icon-only.",
+    "Keyboard reachable with visible focus."
+  ],
+  "related": [
+    {
+      "name": "NavigationDrawer",
+      "why": "Expanded destinations with labels and grouping"
+    },
+    {
+      "name": "Tabs",
+      "why": "Within-page section switching"
+    }
+  ]
+}

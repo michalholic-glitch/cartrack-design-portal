@@ -1,0 +1,164 @@
+{
+  "name": "List",
+  "category": "Data display",
+  "status": "stable",
+  "library": "Material Components Web (MDC) 14.0.0 — Cartrack-themed",
+  "source": "component-specs/lists.md",
+  "description": "Lists present a vertical run of related records — drivers, notifications, recent vehicles. Each row pairs a primary line with optional supporting text, a leading avatar/icon, and trailing actions.",
+  "keyRule": "Use a list for simple, scannable records. The moment you need columns, sorting, selection, or pagination, switch to a data table.",
+  "variants": [
+    {
+      "name": "Single-line",
+      "whenToUse": "Short records (names, options)."
+    },
+    {
+      "name": "Two-line",
+      "whenToUse": "A title plus one supporting detail (most common)."
+    },
+    {
+      "name": "Three-line",
+      "whenToUse": "Title plus two lines of context."
+    },
+    {
+      "name": "With controls",
+      "whenToUse": "Leading checkbox (multi-select) or trailing switch/action."
+    }
+  ],
+  "anatomy": [
+    {
+      "name": "List container",
+      "description": "holds the items; may be divided or grouped."
+    },
+    {
+      "name": "List item",
+      "description": "one record (a row target)."
+    },
+    {
+      "name": "Leading element",
+      "description": "avatar, icon, or checkbox."
+    },
+    {
+      "name": "Primary & secondary text",
+      "description": "the title and supporting line."
+    },
+    {
+      "name": "Trailing element",
+      "description": "a meta value, action, or overflow ⋮."
+    },
+    {
+      "name": "Subheader / divider",
+      "description": "optional group label or separator."
+    }
+  ],
+  "behaviors": [
+    {
+      "name": "Activation",
+      "description": "A clickable row navigates or opens detail; show hover and focus so it reads as interactive."
+    },
+    {
+      "name": "Selection",
+      "description": "For multi-select, use leading checkboxes (and consider whether a data table is the better tool)."
+    },
+    {
+      "name": "Grouping",
+      "description": "Use subheaders + dividers to group long lists; avoid deep nesting."
+    }
+  ],
+  "states": [
+    {
+      "state": "Enabled",
+      "treatment": "Default row."
+    },
+    {
+      "state": "Hover/focus",
+      "treatment": "4% overlay."
+    },
+    {
+      "state": "Selected",
+      "treatment": "Primary tint."
+    },
+    {
+      "state": "Disabled",
+      "treatment": "38% opacity."
+    }
+  ],
+  "specs": [
+    {
+      "property": "Row height",
+      "value": "48px (1-line), 64px (2-line), 88px (3-line)"
+    },
+    {
+      "property": "Primary text",
+      "value": "Roboto 14–16px / 400"
+    },
+    {
+      "property": "Secondary text",
+      "value": "14px, on-surface-medium"
+    },
+    {
+      "property": "Side padding",
+      "value": "16px; 16px gap to leading element"
+    }
+  ],
+  "tokens": [
+    "semantic.color.text.primary",
+    "semantic.color.text.secondary",
+    "semantic.spacing.md",
+    "semantic.typography.scale.body2"
+  ],
+  "props": [
+    {
+      "name": "items",
+      "type": "ListItemData[]",
+      "required": true,
+      "description": "The records rendered as list items, each a row target with primary/secondary text, leading and trailing elements."
+    },
+    {
+      "name": "lines",
+      "type": "1 | 2 | 3",
+      "required": false,
+      "description": "Single-line, two-line, or three-line variant; two-line is the most common and is the default."
+    },
+    {
+      "name": "subheader",
+      "type": "string",
+      "required": false,
+      "description": "Optional group label rendered above the list (Subheader / divider anatomy)."
+    },
+    {
+      "name": "className",
+      "type": "string",
+      "required": false,
+      "description": "Optional extra class names to compose with the base mdc-deprecated-list class."
+    }
+  ],
+  "doThis": [
+    "Keep the primary line scannable.",
+    "Use two-line items for record + context.",
+    "Switch to a data table when columns/sorting appear."
+  ],
+  "dontDoThis": [
+    "Don't cram tabular data into a list.",
+    "Don't nest lists deeply.",
+    "Don't hide the only action in a hover-only control without a focus path."
+  ],
+  "accessibility": [
+    "Use real list semantics (ul/li or role=list).",
+    "Interactive rows are links/buttons with accessible names and visible focus.",
+    "Leading checkboxes are labelled by the item text."
+  ],
+  "related": [
+    {
+      "name": "DataTable",
+      "why": "Multi-column comparison and sorting"
+    },
+    {
+      "name": "Menu",
+      "why": "Action lists inside a temporary overlay"
+    },
+    {
+      "name": "ImageList",
+      "why": "Visual/media-led collections"
+    }
+  ]
+}

@@ -1,0 +1,131 @@
+{
+  "name": "Breadcrumbs",
+  "category": "Navigation",
+  "status": "stable",
+  "library": "Material Components Web (MDC) 14.0.0 — Cartrack-themed",
+  "source": "component-specs/breadcrumbs.md",
+  "description": "Breadcrumbs show where the operator is within the portal's hierarchy and let them step back up it — from a single vehicle, to the vehicle list, to the fleet. They orient users in deep desktop navigation.",
+  "keyRule": "Use breadcrumbs when content sits more than one level deep. They complement — not replace — the left navigation drawer.",
+  "variants": [
+    {
+      "name": "Standard",
+      "whenToUse": "Show the full path for shallow hierarchies."
+    },
+    {
+      "name": "Collapsed",
+      "whenToUse": "Hide middle levels behind \"…\" for deep paths."
+    },
+    {
+      "name": "With menu crumb",
+      "whenToUse": "A crumb opens a menu of sibling pages."
+    }
+  ],
+  "anatomy": [
+    {
+      "name": "Crumb link",
+      "description": "an ancestor level (navigates up)."
+    },
+    {
+      "name": "Separator",
+      "description": "a divider glyph between crumbs."
+    },
+    {
+      "name": "Current page",
+      "description": "the last crumb, not a link."
+    },
+    {
+      "name": "Overflow",
+      "description": "optional collapse (\"…\") for very deep paths."
+    }
+  ],
+  "behaviors": [
+    {
+      "name": "Navigation",
+      "description": "Each crumb except the last navigates to that ancestor; the current page is plain text."
+    },
+    {
+      "name": "Truncation",
+      "description": "Long labels truncate with a tooltip; deep paths collapse the middle."
+    }
+  ],
+  "states": [
+    {
+      "state": "Link",
+      "treatment": "On-surface-medium; underlines on hover."
+    },
+    {
+      "state": "Current",
+      "treatment": "On-surface, not a link."
+    },
+    {
+      "state": "Focus",
+      "treatment": "Visible focus on each link."
+    }
+  ],
+  "specs": [
+    {
+      "property": "Text",
+      "value": "Roboto 14px / 400"
+    },
+    {
+      "property": "Separator spacing",
+      "value": "~8px each side"
+    },
+    {
+      "property": "Link colour",
+      "value": "on-surface-medium → primary-dark on hover"
+    }
+  ],
+  "tokens": [
+    "semantic.color.text.secondary",
+    "semantic.color.brand.primary.dark",
+    "semantic.spacing.sm",
+    "semantic.typography.scale.body2"
+  ],
+  "props": [
+    {
+      "name": "items",
+      "type": "BreadcrumbItem[]",
+      "required": true,
+      "description": "Full ancestor path, ending with the current page."
+    },
+    {
+      "name": "separator",
+      "type": "string",
+      "required": false,
+      "description": "Separator glyph between crumbs (decorative, hidden from assistive tech)."
+    },
+    {
+      "name": "maxVisible",
+      "type": "number",
+      "required": false,
+      "description": "Collapse middle levels behind \"…\" for deep paths."
+    }
+  ],
+  "doThis": [
+    "Make the current page the non-link last crumb.",
+    "Collapse very deep paths.",
+    "Mirror the real IA hierarchy."
+  ],
+  "dontDoThis": [
+    "Don't use breadcrumbs as the primary navigation.",
+    "Don't show a one-level trail (no value).",
+    "Don't make the current page a link to itself."
+  ],
+  "accessibility": [
+    "Wrap in a nav labelled \"Breadcrumb\" with an ordered list.",
+    "The current page uses aria-current=\"page\".",
+    "Separators are decorative (hidden from assistive tech).",
+    "Links are keyboard reachable with visible focus."
+  ],
+  "related": [
+    {
+      "name": "AppBar",
+      "why": "Hosts the page title the trail leads to"
+    },
+    {
+      "name": "Tabs",
+      "why": "For switching sibling views at the same level"
+    }
+  ]
+}

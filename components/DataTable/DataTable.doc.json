@@ -1,0 +1,293 @@
+{
+  "name": "DataTable",
+  "category": "Data display",
+  "status": "stable",
+  "library": "Material Components Web (MDC) 14.0.0 — Cartrack-themed",
+  "source": "component-specs/data-table.md",
+  "description": "Data tables present sets of records across rows and columns — the primary way operators scan, sort, select, and act on fleet data (vehicles, trips, drivers, alerts). This is the most-used component in the portal, so it carries the most behaviour.",
+  "keyRule": "When a dataset is large, server-paginated, sortable, or selectable, use the data table — not a basic Table. Reserve the basic table for small, static key/value layouts.",
+  "variants": [
+    {
+      "name": "With toolbar",
+      "whenToUse": "Almost always — gives the table a title plus search/filter/export entry points."
+    },
+    {
+      "name": "Selectable (checkboxes)",
+      "whenToUse": "When users perform bulk actions (assign, export, delete) on multiple records."
+    },
+    {
+      "name": "Paginated",
+      "whenToUse": "Any dataset beyond a single screen; desktop tables paginate (rows-per-page + range), they don't infinite-scroll."
+    },
+    {
+      "name": "Dense",
+      "whenToUse": "High-volume operator screens where maximizing visible rows matters; reduces row height."
+    },
+    {
+      "name": "Inline-editable",
+      "whenToUse": "When quick edits (odometer, notes) are common; cells become editable in place."
+    },
+    {
+      "name": "Expandable rows",
+      "whenToUse": "When a record has secondary detail (sub-trips, line items) worth revealing without leaving the table."
+    }
+  ],
+  "anatomy": [
+    {
+      "name": "Toolbar",
+      "description": "table title + table-level actions (search, filter, more). Becomes the contextual toolbar when rows are selected."
+    },
+    {
+      "name": "Column header",
+      "description": "the label for each column; sortable headers show a direction arrow and an active state."
+    },
+    {
+      "name": "Sort indicator",
+      "description": "arrow showing ascending/descending on the active sort column."
+    },
+    {
+      "name": "Selection column",
+      "description": "optional leading checkboxes; the header checkbox selects/clears all (indeterminate when partial)."
+    },
+    {
+      "name": "Row",
+      "description": "one record; supports hover, selected, and (optionally) clickable states."
+    },
+    {
+      "name": "Cell",
+      "description": "one value; text left-aligned, numbers right-aligned with tabular figures."
+    },
+    {
+      "name": "Pagination footer",
+      "description": "rows-per-page, the visible range, and previous/next controls."
+    },
+    {
+      "name": "Contextual toolbar",
+      "description": "replaces the title bar while rows are selected, showing the count and bulk actions."
+    }
+  ],
+  "behaviors": [
+    {
+      "name": "Sorting",
+      "description": "Clicking a sortable header sorts by that column; clicking again reverses direction. The active column shows a filled label and a direction arrow; only one column sorts at a time (unless multi-sort is explicitly enabled)."
+    },
+    {
+      "name": "Selection",
+      "description": "Row checkboxes select individual records; the header checkbox selects all on the page and shows an indeterminate state when the selection is partial. While anything is selected, the toolbar switches to the contextual toolbar — showing the count and bulk actions (e.g. Export, Delete) — and selected rows take the selected background."
+    },
+    {
+      "name": "Pagination",
+      "description": "The footer shows rows-per-page, the current range, and prev/next. For large/server-driven data, fetch per page rather than loading everything."
+    },
+    {
+      "name": "Filtering & search",
+      "description": "A quick-search and a filter entry point live in the toolbar; applied filters show as removable filter chips above or within the toolbar."
+    },
+    {
+      "name": "Inline editing",
+      "description": "Editable cells show a subtle affordance on hover (dashed underline in the example) and commit on blur/Enter, with validation shown inline."
+    }
+  ],
+  "states": [
+    {
+      "state": "Row — Enabled",
+      "treatment": "Surface background, 1px bottom divider."
+    },
+    {
+      "state": "Row — Hover",
+      "treatment": "4% on-surface overlay."
+    },
+    {
+      "state": "Row — Selected",
+      "treatment": "Primary tint (~10%) background; checkbox checked."
+    },
+    {
+      "state": "Header — Sortable / hover",
+      "treatment": "Arrow fades in at ~50%; cursor pointer."
+    },
+    {
+      "state": "Header — Sorted (active)",
+      "treatment": "Label at full on-surface; arrow fully visible."
+    },
+    {
+      "state": "Checkbox (header) — Indeterminate",
+      "treatment": "Filled with a dash when selection is partial."
+    }
+  ],
+  "specs": [
+    {
+      "property": "Header row height",
+      "value": "56px (standard) / 40px (dense)"
+    },
+    {
+      "property": "Data row height",
+      "value": "52px (standard) / 36px (dense)"
+    },
+    {
+      "property": "Column padding",
+      "value": "16px (first/last 24px)"
+    },
+    {
+      "property": "Toolbar height",
+      "value": "64px"
+    },
+    {
+      "property": "Header label",
+      "value": "Roboto 14px / 500, color on-surface-medium (full on-surface when sorted)"
+    },
+    {
+      "property": "Cell text",
+      "value": "Roboto 14px / 400, color on-surface; numbers right-aligned, tabular figures"
+    },
+    {
+      "property": "Row divider",
+      "value": "1px, divider color (rgba(0,0,0,.12))"
+    },
+    {
+      "property": "Selected background",
+      "value": "primary at ~10% (token --selected)"
+    }
+  ],
+  "tokens": [
+    "semantic.color.text.primary",
+    "semantic.color.text.secondary",
+    "semantic.color.border.default",
+    "semantic.color.interactive.primarySelected",
+    "semantic.spacing.md",
+    "semantic.spacing.lg",
+    "semantic.typography.scale.body2"
+  ],
+  "props": [
+    {
+      "name": "title",
+      "type": "string",
+      "required": true,
+      "description": "Table title shown in the toolbar (replaced by the contextual toolbar during selection)."
+    },
+    {
+      "name": "columns",
+      "type": "DataTableColumn<Row>[]",
+      "required": true,
+      "description": "Column definitions: key, header label, numeric alignment, sortability, custom render."
+    },
+    {
+      "name": "rows",
+      "type": "Row[]",
+      "required": true,
+      "description": "Records to display; each row must have a unique id."
+    },
+    {
+      "name": "selectable",
+      "type": "boolean",
+      "required": false,
+      "description": "Enables the leading selection checkbox column and the contextual toolbar."
+    },
+    {
+      "name": "selectedIds",
+      "type": "string[]",
+      "required": false,
+      "description": "Currently selected row ids."
+    },
+    {
+      "name": "onSelectionChange",
+      "type": "(ids: string[]) => void",
+      "required": false,
+      "description": "Called when row/select-all checkboxes change selection."
+    },
+    {
+      "name": "bulkActions",
+      "type": "{ label: string; onClick: (selectedIds: string[]) => void }[]",
+      "required": false,
+      "description": "Bulk actions shown in the contextual toolbar while rows are selected (e.g. Export, Delete)."
+    },
+    {
+      "name": "sortColumn",
+      "type": "string",
+      "required": false,
+      "description": "Active sort column key."
+    },
+    {
+      "name": "sortDirection",
+      "type": "'asc' | 'desc'",
+      "required": false,
+      "description": "Direction of the active sort."
+    },
+    {
+      "name": "onSortChange",
+      "type": "(columnKey: string) => void",
+      "required": false,
+      "description": "Called when a sortable header is clicked."
+    },
+    {
+      "name": "dense",
+      "type": "boolean",
+      "required": false,
+      "description": "Reduces row/header height for high-volume operator screens."
+    },
+    {
+      "name": "page",
+      "type": "number",
+      "required": false,
+      "description": "Current zero-based page index; omit to render an unpaginated table."
+    },
+    {
+      "name": "rowsPerPage",
+      "type": "number",
+      "required": false,
+      "description": "Rows shown per page."
+    },
+    {
+      "name": "totalRows",
+      "type": "number",
+      "required": false,
+      "description": "Total record count for the visible-range and next/prev disabled state."
+    },
+    {
+      "name": "onPageChange",
+      "type": "(page: number) => void",
+      "required": false,
+      "description": "Called when prev/next pagination controls are used."
+    },
+    {
+      "name": "onRowClick",
+      "type": "(row: Row) => void",
+      "required": false,
+      "description": "Handler for clickable rows."
+    }
+  ],
+  "doThis": [
+    "Use the data table (not a basic table) for any sortable, selectable, or large dataset.",
+    "Right-align numeric columns and use tabular figures so digits line up.",
+    "Switch to the contextual toolbar when rows are selected, showing the count + bulk actions.",
+    "Map status to the consistent colour chips (Active/Idle/Offline).",
+    "Paginate; fetch per page for large/server data."
+  ],
+  "dontDoThis": [
+    "Don't put the primary action inside a row's overflow menu if it's used constantly.",
+    "Don't sort more than one column at once unless multi-sort is explicitly needed.",
+    "Don't encode status by colour alone — keep the text label on the chip.",
+    "Don't infinite-scroll a desktop data table; use pagination.",
+    "Don't hard-code colours/sizes — use the theme tokens and these specs."
+  ],
+  "accessibility": [
+    "Use real <table> semantics with <th> headers; sortable headers expose aria-sort.",
+    "The select-all checkbox announces its indeterminate state.",
+    "Selection changes and the contextual toolbar are announced to assistive tech.",
+    "Rows and controls are keyboard navigable; visible focus is preserved.",
+    "Status is never colour-only — the chip carries a text label."
+  ],
+  "related": [
+    {
+      "name": "Pagination",
+      "why": "Always paired — never an unpaginated long table"
+    },
+    {
+      "name": "List",
+      "why": "Single-column content doesn't need a table"
+    },
+    {
+      "name": "Card",
+      "why": "Summarise aggregates in cards above the table"
+    }
+  ]
+}

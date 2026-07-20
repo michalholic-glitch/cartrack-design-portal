@@ -1,0 +1,172 @@
+{
+  "name": "Menu",
+  "category": "Actions",
+  "status": "stable",
+  "library": "Material Components Web (MDC) 14.0.0 — Cartrack-themed",
+  "source": "component-specs/menus.md",
+  "description": "Menus show a temporary list of choices on a surface — overflow actions behind a ⋮ button, row actions in a data table, or a list of options from a control. They appear on demand and dismiss on selection or outside click.",
+  "keyRule": "Use a menu for secondary or overflow actions. Don't hide a view's primary action in a menu — promote it to a button in the toolbar.",
+  "variants": [
+    {
+      "name": "Overflow menu",
+      "whenToUse": "Secondary actions behind a ⋮ in toolbars, cards, and table rows."
+    },
+    {
+      "name": "Dropdown (exposed) menu",
+      "whenToUse": "A field that opens a list to choose one value (see also Select on the Text fields page)."
+    },
+    {
+      "name": "Context menu",
+      "whenToUse": "Right-click actions on a desktop row or item."
+    },
+    {
+      "name": "Cascading submenu",
+      "whenToUse": "Grouped choices that expand to a second level (use sparingly)."
+    }
+  ],
+  "anatomy": [
+    {
+      "name": "Trigger",
+      "description": "the control that opens the menu (overflow ⋮, a button, or a field)."
+    },
+    {
+      "name": "Surface",
+      "description": "an elevated container holding the items."
+    },
+    {
+      "name": "Menu item",
+      "description": "one choice; may carry a leading icon and a trailing shortcut/meta."
+    },
+    {
+      "name": "Divider",
+      "description": "groups items (e.g. separates destructive actions)."
+    },
+    {
+      "name": "Selected / disabled item",
+      "description": "current choice or unavailable option."
+    }
+  ],
+  "behaviors": [
+    {
+      "name": "Open & dismiss",
+      "description": "Opens at the trigger; closes on selection, Escape, or an outside click. It should never cover its own trigger if avoidable."
+    },
+    {
+      "name": "Selection",
+      "description": "Selecting an item performs the action and closes the menu; a stateful menu marks the current choice."
+    },
+    {
+      "name": "Keyboard",
+      "description": "Arrow keys move focus, Enter activates, Escape closes; typing jumps to a matching item."
+    }
+  ],
+  "states": [
+    {
+      "state": "Item enabled",
+      "treatment": "Default text on surface."
+    },
+    {
+      "state": "Item hover/focus",
+      "treatment": "4% overlay."
+    },
+    {
+      "state": "Item selected",
+      "treatment": "Light primary tint / check."
+    },
+    {
+      "state": "Item disabled",
+      "treatment": "38% black text, not selectable."
+    }
+  ],
+  "specs": [
+    {
+      "property": "Surface radius / elevation",
+      "value": "4px, high elevation (overlay)"
+    },
+    {
+      "property": "Item height",
+      "value": "~36–48px"
+    },
+    {
+      "property": "Item text",
+      "value": "Roboto 14–16px / 400"
+    },
+    {
+      "property": "Item padding",
+      "value": "16px sides"
+    },
+    {
+      "property": "Min width",
+      "value": "~112px; grows to content"
+    }
+  ],
+  "tokens": [
+    "semantic.radius.default",
+    "semantic.color.status.error.main",
+    "semantic.color.surface.paper",
+    "semantic.spacing.md",
+    "semantic.typography.scale.body2"
+  ],
+  "props": [
+    {
+      "name": "items",
+      "type": "MenuItemData[]",
+      "required": true,
+      "description": "Choices and dividers shown on the menu surface; each choice may carry a leading icon and trailing shortcut/meta."
+    },
+    {
+      "name": "open",
+      "type": "boolean",
+      "required": true,
+      "description": "Whether the menu surface is open."
+    },
+    {
+      "name": "onClose",
+      "type": "() => void",
+      "required": false,
+      "description": "Called on selection, Escape, or an outside click, per the Open & dismiss behavior."
+    },
+    {
+      "name": "variant",
+      "type": "'overflow' | 'dropdown' | 'context' | 'cascading'",
+      "required": false,
+      "description": "Which trigger pattern opened this menu (overflow menu, dropdown/exposed menu, context menu, or cascading submenu)."
+    },
+    {
+      "name": "className",
+      "type": "string",
+      "required": false,
+      "description": "Optional extra class names to compose with the base mdc-menu class."
+    }
+  ],
+  "doThis": [
+    "Group destructive actions and set them apart with a divider.",
+    "Keep labels short and verb-first.",
+    "Use a menu for overflow, not for a view's primary action."
+  ],
+  "dontDoThis": [
+    "Don't bury frequently-used actions in an overflow menu.",
+    "Don't nest more than one submenu level.",
+    "Don't use a menu where a few options fit better as visible buttons or tabs."
+  ],
+  "accessibility": [
+    "The trigger exposes aria-haspopup and expanded state.",
+    "The surface uses a menu role with menuitem children.",
+    "Focus moves into the menu on open and returns to the trigger on close.",
+    "Full keyboard support (arrows, Enter, Escape, type-ahead)."
+  ],
+  "related": [
+    {
+      "name": "Dialog",
+      "why": "Choices with consequences that need confirmation"
+    },
+    {
+      "name": "List",
+      "why": "Persistent (non-overlay) option lists"
+    },
+    {
+      "name": "Button",
+      "why": "The visible trigger the menu anchors to"
+    }
+  ]
+}

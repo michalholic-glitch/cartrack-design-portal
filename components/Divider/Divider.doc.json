@@ -1,0 +1,111 @@
+{
+  "name": "Divider",
+  "category": "Data display",
+  "status": "stable",
+  "library": "Material Components Web (MDC) 14.0.0 — Cartrack-themed",
+  "source": "component-specs/dividers.md",
+  "description": "A divider is a thin line that separates and groups content — between list items, sections of a form, or regions of a dense layout. Used sparingly, it brings order without adding weight.",
+  "keyRule": "Reach for whitespace and grouping first; add a divider only where a clear boundary helps. Too many lines make a layout feel busy.",
+  "variants": [
+    {
+      "name": "Full-width",
+      "whenToUse": "Separate major sections edge to edge."
+    },
+    {
+      "name": "Inset",
+      "whenToUse": "Between list items, aligned past the leading element."
+    },
+    {
+      "name": "Middle",
+      "whenToUse": "Indented on both sides for a lighter separation."
+    },
+    {
+      "name": "Vertical",
+      "whenToUse": "Separate inline items in a toolbar."
+    }
+  ],
+  "anatomy": [
+    {
+      "name": "Line",
+      "description": "1px rule in the divider colour."
+    },
+    {
+      "name": "Inset",
+      "description": "optional left/right indentation to align with content (e.g. past an avatar)."
+    }
+  ],
+  "behaviors": [
+    {
+      "name": "Grouping",
+      "description": "Use a divider to mark a real boundary between groups, not between every item — rows already separate visually."
+    },
+    {
+      "name": "Inset alignment",
+      "description": "Inset dividers align with the text column so the eye reads a clean left edge."
+    }
+  ],
+  "states": [
+    {
+      "state": "Default",
+      "treatment": "1px line at the divider colour (rgba(0,0,0,.12))."
+    }
+  ],
+  "specs": [
+    {
+      "property": "Thickness",
+      "value": "1px"
+    },
+    {
+      "property": "Colour",
+      "value": "rgba(0,0,0,.12) (divider token)"
+    },
+    {
+      "property": "Inset",
+      "value": "16px (or aligned to content, e.g. 72px past an avatar)"
+    }
+  ],
+  "tokens": [
+    "semantic.color.border.default",
+    "semantic.spacing.md",
+    "semantic.borderWidth.hairline"
+  ],
+  "props": [
+    {
+      "name": "variant",
+      "type": "'full-width' | 'inset' | 'middle' | 'vertical'",
+      "required": false,
+      "description": "Which divider treatment to render; derived from the spec's Variants table (full-width, inset, middle, vertical)."
+    },
+    {
+      "name": "className",
+      "type": "string",
+      "required": false,
+      "description": "Optional extra class names to compose with the base divider class."
+    }
+  ],
+  "doThis": [
+    "Use dividers to mark real group boundaries.",
+    "Inset to align with the content column.",
+    "Prefer spacing where it reads clearly without a line."
+  ],
+  "dontDoThis": [
+    "Don't put a divider between every list row.",
+    "Don't use heavy or coloured rules for plain separation.",
+    "Don't rely on a divider to convey meaning by itself."
+  ],
+  "accessibility": [
+    "Decorative dividers are hidden from assistive tech.",
+    "A divider that genuinely separates groups can use a separator role.",
+    "Never use a line as the only way to convey structure — pair with headings/labels."
+  ],
+  "related": [
+    {
+      "name": "List",
+      "why": "Use the inset variant between list items"
+    },
+    {
+      "name": "ExpansionPanel",
+      "why": "Prefer structured grouping over long divider runs"
+    }
+  ]
+}

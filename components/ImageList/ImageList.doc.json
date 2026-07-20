@@ -1,0 +1,148 @@
+{
+  "name": "ImageList",
+  "category": "Data display",
+  "status": "stable",
+  "library": "Material Components Web (MDC) 14.0.0 — Cartrack-themed",
+  "source": "component-specs/image-lists.md",
+  "description": "Image lists arrange images in a grid — vehicle photos, inspection snapshots, document scans, map thumbnails. They make a set of visuals scannable at a glance.",
+  "keyRule": "Use an image list when the visual is the content. If text matters more than the picture, a list or table with a small thumbnail is usually better.",
+  "variants": [
+    {
+      "name": "Standard",
+      "whenToUse": "Equal-size tiles in a uniform grid."
+    },
+    {
+      "name": "Quilted / woven",
+      "whenToUse": "Emphasize some images with varied tile sizes."
+    },
+    {
+      "name": "With text overlay",
+      "whenToUse": "When each image needs a short caption or action."
+    },
+    {
+      "name": "Masonry",
+      "whenToUse": "Images of differing aspect ratios."
+    }
+  ],
+  "anatomy": [
+    {
+      "name": "Grid",
+      "description": "the arrangement of tiles (equal or varied sizes)."
+    },
+    {
+      "name": "Image tile",
+      "description": "one image, optionally clickable."
+    },
+    {
+      "name": "Label overlay",
+      "description": "optional caption/title bar on a tile."
+    },
+    {
+      "name": "Action",
+      "description": "optional icon on a tile (e.g. favourite, info)."
+    }
+  ],
+  "behaviors": [
+    {
+      "name": "Activation",
+      "description": "A tile can open a larger view or detail; show hover/focus affordance."
+    },
+    {
+      "name": "Responsive columns",
+      "description": "Column count adapts to width; tiles keep their aspect ratio."
+    },
+    {
+      "name": "Loading",
+      "description": "Show placeholders while images load; lazy-load long grids."
+    }
+  ],
+  "states": [
+    {
+      "state": "Enabled",
+      "treatment": "Image tile."
+    },
+    {
+      "state": "Hover/focus",
+      "treatment": "Overlay/scale affordance."
+    },
+    {
+      "state": "Loading",
+      "treatment": "Placeholder/skeleton tile."
+    }
+  ],
+  "specs": [
+    {
+      "property": "Gap",
+      "value": "4–8px between tiles"
+    },
+    {
+      "property": "Tile radius",
+      "value": "2–4px"
+    },
+    {
+      "property": "Overlay label",
+      "value": "Roboto 12–14px on a scrim"
+    },
+    {
+      "property": "Columns",
+      "value": "Responsive to container width"
+    }
+  ],
+  "tokens": [
+    "semantic.spacing.xs",
+    "semantic.spacing.sm",
+    "semantic.radius.default",
+    "semantic.typography.scale.caption"
+  ],
+  "props": [
+    {
+      "name": "items",
+      "type": "ImageListItemData[]",
+      "required": true,
+      "description": "Tiles to render in the grid, each an image with meaningful alt text."
+    },
+    {
+      "name": "cols",
+      "type": "number",
+      "required": false,
+      "description": "Column count for the standard/uniform grid; responsive column behavior adapts this to container width."
+    },
+    {
+      "name": "maxWidth",
+      "type": "number | string",
+      "required": false,
+      "description": "Max width of the grid container."
+    },
+    {
+      "name": "className",
+      "type": "string",
+      "required": false,
+      "description": "Optional extra class names to compose with the base mdc-image-list class."
+    }
+  ],
+  "doThis": [
+    "Use when the image is the primary content.",
+    "Keep gaps consistent.",
+    "Provide alt text and a larger view."
+  ],
+  "dontDoThis": [
+    "Don't use an image list for text-heavy records.",
+    "Don't load hundreds of full-size images at once.",
+    "Don't put essential info only in an overlay that may be hard to read."
+  ],
+  "accessibility": [
+    "Every image has meaningful alt text.",
+    "Clickable tiles are buttons/links with accessible names and visible focus.",
+    "Overlay text meets contrast against the scrim."
+  ],
+  "related": [
+    {
+      "name": "Card",
+      "why": "Richer per-item content with actions"
+    },
+    {
+      "name": "List",
+      "why": "Text-first collections"
+    }
+  ]
+}
