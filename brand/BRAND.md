@@ -14,17 +14,19 @@ The two systems overlap on some values (primary orange, the Material icon base) 
 
 ```
 brand/
-├── BRAND.md                         # This file — index and scope
-├── logo/Logo.doc.json               # Lockups, clearspace, partner co-branding, correct/incorrect usage
-├── colour/Colour.doc.json           # Palette, gradients, greys, ratio, usage, colour-in-type, combinations
-├── typography/Typography.doc.json   # Montserrat + Roboto pairing, case, tracking, type scale, editorial rules
-├── imagery/Imagery.doc.json         # Art direction: people, vehicles, platform, operations, editing rules
-├── icons/Icons.doc.json             # Material UI Icons base, colour usage, fallback rules
-├── graphic-design/GraphicDesign.doc.json  # Shape language, overlay treatments, logomark watermark, seasonal badges
-├── collaterals/Collaterals.doc.json # Catalogue of applied examples (brochures, digital ads, social)
-├── grid-layouts/GridLayouts.doc.json      # PENDING — see status field, wrong Figma node supplied
-└── video/Video.doc.json             # PENDING — not yet reviewed in detail, thumbnails only
+├── BRAND.md               # This file — index and scope
+├── Logo.doc.json           # Lockups, clearspace, partner co-branding, correct/incorrect usage
+├── Colour.doc.json         # Palette, gradients, greys, ratio, usage, colour-in-type, combinations
+├── Typography.doc.json     # Montserrat + Roboto pairing, case, tracking, type scale, editorial rules
+├── Imagery.doc.json        # Art direction: people, vehicles, platform, operations, editing rules
+├── Icons.doc.json          # Material UI Icons base, colour usage, fallback rules
+├── GraphicDesign.doc.json  # Shape language, overlay treatments, logomark watermark, seasonal badges
+├── Collaterals.doc.json    # Catalogue of applied examples (brochures, digital ads, social)
+├── GridLayouts.doc.json    # PENDING — see status field, wrong Figma node supplied
+└── Video.doc.json          # PENDING — not yet reviewed in detail, thumbnails only
 ```
+
+All files are flat in `brand/` — no per-section subfolders, consistent with this project's existing preference for flat docs over category trees (see the component `.doc.json` files, which only get their own subfolder because each one is paired with a `.tsx` and `index.ts`; a single doc file doesn't need one).
 
 Each `<Section>.doc.json` uses a schema adapted from the component `.doc.json` pattern (`rules`, `doThis`/`dontDoThis`, `relationToProductTokens`), not the prop/variant schema used for components — brand sections don't have props.
 
@@ -32,7 +34,7 @@ Each `<Section>.doc.json` uses a schema adapted from the component `.doc.json` p
 
 | Area | Brand guideline | Product `tokens.json` | Status |
 |---|---|---|---|
-| Primary orange | Orange (main brand colour) | `primitive.color.brand.orange` / `semantic.color.brand.primary` | Aligned conceptually — exact hex not yet cross-checked (see `colour/Colour.doc.json`) |
+| Primary orange | Orange (main brand colour) | `primitive.color.brand.orange` / `semantic.color.brand.primary` | Aligned conceptually — exact hex not yet cross-checked (see `Colour.doc.json`) |
 | Secondary colour | Dedicated Blue, with its own tints/gradients | No brand-secondary blue; only a muted categorical `hue.blue` for data-viz/status | **Gap — undecided**, not yet represented in product tokens |
 | Black | Pure black used in swatches/applications | Product avoids pure black (charcoal primitives, rgba-opacity text tokens) | Likely intentional (marketing vs. UI ergonomics) — not yet written down anywhere until now |
 | Typography | Montserrat (display) + Roboto (body) | `semantic.typography.fontFamily` → Roboto/Helvetica/Arial only, no Montserrat | Likely intentional (marketing-only display face) |

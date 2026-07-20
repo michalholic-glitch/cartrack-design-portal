@@ -16,7 +16,7 @@
     },
     {
       "name": "Overlay elements",
-      "description": "The orange-to-black and blue gradient treatments (see colour/Colour.doc.json → Gradients) applied specifically as photo overlays, plus textured/pattern overlay variants for section backgrounds."
+      "description": "The orange-to-black and blue gradient treatments (see Colour.doc.json → Gradients) applied specifically as photo overlays, plus textured/pattern overlay variants for section backgrounds."
     },
     {
       "name": "Logomark",
@@ -31,7 +31,7 @@
   "dontDoThis": [
     "Don't over-round corners past what the image content supports.",
     "Don't introduce new overlay/gradient directions outside Colour → Gradients.",
-    "Don't confuse the watermark use of the logomark with the identification use documented in logo/Logo.doc.json → Logomark usage — they follow different rules (opacity/scale vs. clearspace/minimum size)."
+    "Don't confuse the watermark use of the logomark with the identification use documented in Logo.doc.json → Logomark usage — they follow different rules (opacity/scale vs. clearspace/minimum size)."
   ],
   "relationToProductTokens": "Loosely relevant to primitive.radius in tokens.json (product uses a 4px MUI default radius). The brand's rounded-corner treatment on photography is a much larger radius applied to imagery/marketing containers, not a UI component radius — don't conflate the two scales.",
   "openQuestions": [

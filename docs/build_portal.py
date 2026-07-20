@@ -206,33 +206,136 @@ zip_kb = round(os.path.getsize(zip_path) / 1024) if zip_path.exists() else 0
 # ================================================================
 # Shell + navigation
 # ================================================================
+def cat_slug(cat):
+    return re.sub(r'[^a-z0-9]+', '-', cat.lower()).strip('-')
+
 def render_nav(active, prefix):
-    def link(href, label, key, cls="navtop"):
+    """Collapsible accordion nav. Long lists (Patterns, Components) live inside
+    <details> groups that are closed at rest; the branch holding the current
+    page is emitted `open` so it works with JS disabled, and a small script
+    (NAV_JS) handles filtering, localStorage persistence and the mobile drawer."""
+    def flat(href, label, key):
         cur = ' aria-current="page"' if key == active else ''
         acls = ' active' if key == active else ''
-        return f'<a href="{prefix}{href}" class="{cls}{acls}"{cur}>{label}</a>'
-    out = ['<div class="sect">Guide</div>',
-           link("index.html", "Home", "home"),
-           link("foundations.html", "Foundations", "foundations"),
-           '<div class="sect">Reference</div>',
-           link("tokens.html", "Design tokens", "tokens"),
-           link("accessibility.html", "Accessibility", "accessibility"),
-           link("patterns/index.html", f"Patterns ({n_patterns})", "patterns")]
+        return f'<a href="{prefix}{href}" class="navtop{acls}"{cur}>{label}</a>'
+    def leaf(href, label, key):
+        cur = ' aria-current="page"' if key == active else ''
+        acls = ' active' if key == active else ''
+        return f'<a href="{prefix}{href}" class="navcomp{acls}" data-leaf{cur}>{label}</a>'
+    def group(gid, label, count, is_open, inner):
+        oa = " open" if is_open else ""
+        ha = " has-active" if is_open else ""
+        return (f'<details class="navgrp{ha}" id="{gid}" data-defopen="{1 if is_open else 0}"{oa}>'
+                f'<summary><span class="chev"></span><span class="navlabel">{label}</span>'
+                f'<span class="navcount">{count}</span></summary>{inner}</details>')
+
+    parts = ['<div class="navfilter"><input type="search" id="navfilter" '
+             'placeholder="Filter components…" aria-label="Filter components" '
+             'oninput="filterNav(this.value)"></div>']
+
+    parts.append(flat("index.html", "Home", "home"))
+
+    parts.append('<div class="sect">Guide</div>')
+    parts.append(flat("foundations.html", "Foundations", "foundations"))
+    parts.append(flat("tokens.html", "Design tokens", "tokens"))
+    parts.append(flat("accessibility.html", "Accessibility", "accessibility"))
+
+    parts.append('<div class="sect">Library</div>')
+
+    # Patterns group
+    pat_open = active == "patterns" or active.startswith("pat:")
+    pinner = leaf("patterns/index.html", "Overview", "patterns")
     for p in patterns:
-        out.append(link(f"patterns/{p['slug']}.html", esc(p["navtitle"]), f"pat:{p['slug']}", cls="navcomp"))
-    out.append(link("components/index.html", f"Components ({n_comps})", "components"))
+        pinner += leaf(f"patterns/{p['slug']}.html", esc(p["navtitle"]), f"pat:{p['slug']}")
+    parts.append(group("grp-patterns", "Patterns", n_patterns, pat_open, pinner))
+
+    # Components group, with a collapsible sub-group per category
+    comp_open = active == "components" or active.startswith("comp:")
+    cinner = leaf("components/index.html", "Overview", "components")
     for cat in sorted(categories):
-        out.append(f'<div class="navcat">{esc(cat)}</div>')
-        for c in sorted(categories[cat], key=lambda x: x["name"]):
+        cat_comps = sorted(categories[cat], key=lambda x: x["name"])
+        cat_active = any(active == f"comp:{slug(c['name'])}" for c in cat_comps)
+        sub_links = ""
+        for c in cat_comps:
             st = c.get("status", "stable")
             badge = "" if st == "stable" else f' <span class="navbadge">{esc(st)}</span>'
             s = slug(c["name"])
-            out.append(link(f"components/{s}.html", f'{esc(c["name"])}{badge}', f"comp:{s}", cls="navcomp"))
-    out += ['<div class="sect">Resources</div>',
-            link("preview.html", "Visual preview", "preview"),
-            link("changelog.html", "What's new", "changelog"),
-            link("downloads.html", "Downloads", "downloads")]
-    return "\n    ".join(out)
+            sub_links += leaf(f"components/{s}.html", f'{esc(c["name"])}{badge}', f"comp:{s}")
+        ha = " has-active" if cat_active else ""
+        oa = " open" if cat_active else ""
+        cinner += (f'<details class="navsub{ha}" id="cat-{cat_slug(cat)}" '
+                   f'data-defopen="{1 if cat_active else 0}"{oa}>'
+                   f'<summary><span class="chev"></span><span class="navlabel">{esc(cat)}</span>'
+                   f'<span class="navcount">{len(cat_comps)}</span></summary>{sub_links}</details>')
+    parts.append(group("grp-components", "Components", n_comps, comp_open, cinner))
+
+    parts.append('<div class="sect">Resources</div>')
+    parts.append(flat("preview.html", "Visual preview", "preview"))
+    parts.append(flat("changelog.html", "What's new", "changelog"))
+    parts.append(flat("downloads.html", "Downloads", "downloads"))
+
+    return "\n    ".join(parts)
+
+NAV_JS = r'''
+(function(){
+  var KEY='dsnav-v2';
+  function load(){ try{return JSON.parse(localStorage.getItem(KEY))||{};}catch(e){return {};} }
+  function save(s){ try{localStorage.setItem(KEY,JSON.stringify(s));}catch(e){} }
+  var store=load();
+  var groups=Array.prototype.slice.call(document.querySelectorAll('nav details'));
+  var act=document.querySelector('nav a.active');
+  function openActiveBranch(){
+    if(!act) return;
+    var p=act.parentElement;
+    while(p && p!==document){ if(p.tagName==='DETAILS') p.open=true; p=p.parentElement; }
+  }
+  // apply persisted open/closed state over the server defaults, then always reveal
+  // the branch holding the current page
+  groups.forEach(function(d){ if(d.id in store) d.open=store[d.id]; });
+  openActiveBranch();
+  // Persist ONLY genuine user interaction. The <details> "toggle" event fires
+  // asynchronously, so it can't distinguish a user click from the programmatic
+  // opens above — a summary click (which also fires on keyboard activation) can.
+  // setTimeout defers the read until after the browser has flipped d.open.
+  groups.forEach(function(d){
+    var sm=d.querySelector(':scope > summary');
+    if(!sm) return;
+    sm.addEventListener('click',function(){ setTimeout(function(){ store[d.id]=d.open; save(store); },0); });
+  });
+
+  window.filterNav=function(q){
+    q=(q||'').trim().toLowerCase();
+    var leaves=document.querySelectorAll('nav a[data-leaf]');
+    if(!q){
+      leaves.forEach(function(a){ a.classList.remove('hidden'); });
+      groups.forEach(function(d){
+        d.classList.remove('hidden');
+        d.open=(d.id in store)?store[d.id]:(d.getAttribute('data-defopen')==='1');
+      });
+      openActiveBranch();
+      return;
+    }
+    leaves.forEach(function(a){ a.classList.toggle('hidden', a.textContent.toLowerCase().indexOf(q)===-1); });
+    groups.forEach(function(d){
+      var vis=d.querySelectorAll('a[data-leaf]:not(.hidden)').length>0;
+      d.classList.toggle('hidden', !vis);
+      d.open=vis;
+    });
+  };
+
+  window.toggleNav=function(){
+    var open=document.body.classList.toggle('navopen');
+    var b=document.querySelector('.navtoggle'); if(b) b.setAttribute('aria-expanded', open?'true':'false');
+  };
+  window.closeNav=function(){
+    document.body.classList.remove('navopen');
+    var b=document.querySelector('.navtoggle'); if(b) b.setAttribute('aria-expanded','false');
+  };
+  // choosing a destination closes the mobile drawer
+  document.querySelectorAll('nav a[href]').forEach(function(a){
+    a.addEventListener('click', window.closeNav);
+  });
+})();'''
 
 def render_shell(active, body, prefix="", page_title="Cartrack AI Design System — Documentation Portal"):
     nav = render_nav(active, prefix)
@@ -269,6 +372,30 @@ def render_shell(active, body, prefix="", page_title="Cartrack AI Design System 
   nav .sect{{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--mute);font-weight:700;padding:18px 24px 6px}}
   nav .navcat{{font-size:11px;color:var(--mute);padding:10px 24px 2px;font-weight:600}}
   nav .navcomp{{padding:3.5px 24px 3.5px 34px;font-size:13px}}
+
+  /* ------- collapsible nav ------- */
+  .navfilter{{padding:2px 16px 14px}}
+  .navfilter input{{width:100%;padding:8px 12px;font-size:13px;border:1px solid var(--line);border-radius:8px;background:#fff;color:var(--ink)}}
+  .navfilter input:focus{{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px #f4713a22}}
+  nav details{{overflow:hidden}}
+  nav details > summary{{list-style:none;display:flex;align-items:center;gap:8px;cursor:pointer;padding:6px 24px;font-size:13.5px;color:var(--ink2);font-weight:600;user-select:none}}
+  nav details > summary::-webkit-details-marker{{display:none}}
+  nav details > summary:hover{{background:#faf5f0;color:var(--accent-d)}}
+  nav .navlabel{{flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}}
+  nav .navcount{{font-size:10.5px;font-weight:700;color:var(--mute);background:#f1eee9;border-radius:999px;padding:1px 8px;min-width:24px;text-align:center}}
+  nav .chev{{flex:none;width:10px;font-size:10px;color:var(--mute);transition:transform .15s}}
+  nav .chev::before{{content:"\\25B8"}}
+  nav details[open] > summary .chev{{transform:rotate(90deg)}}
+  nav details.has-active > summary .navlabel{{color:var(--accent-d)}}
+  nav .navgrp > .navcomp{{padding-left:34px}}
+  nav .navsub > summary{{padding-left:34px;font-weight:500}}
+  nav .navsub > .navcomp{{padding-left:48px}}
+
+  /* ------- mobile top bar + drawer ------- */
+  .topbar{{display:none;align-items:center;gap:12px;padding:12px 18px;border-bottom:1px solid var(--line);background:#fff;position:sticky;top:0;z-index:40}}
+  .navtoggle{{font-size:18px;line-height:1;background:none;border:1px solid var(--line);border-radius:8px;padding:5px 11px;cursor:pointer;color:var(--ink)}}
+  .topbar-title{{font-size:14px;font-weight:700}}
+  .navscrim{{display:none}}
 
   /* ------- main ------- */
   main{{padding:0 0 100px;min-width:0}}
@@ -411,12 +538,20 @@ def render_shell(active, body, prefix="", page_title="Cartrack AI Design System 
   .hidden{{display:none !important}}
 
   @media (max-width:900px){{
-    .layout{{grid-template-columns:1fr}} aside{{position:static;height:auto;border-right:none;border-bottom:1px solid var(--line)}}
+    .topbar{{display:flex}}
+    .layout{{grid-template-columns:1fr}}
+    aside{{position:fixed;top:0;left:0;width:280px;max-width:85vw;height:100vh;z-index:50;transform:translateX(-100%);transition:transform .2s ease}}
+    body.navopen aside{{transform:translateX(0);box-shadow:0 0 40px rgba(0,0,0,.25)}}
+    body.navopen .navscrim{{display:block;position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:45}}
     .dodont,.dl,.paths,.whens{{grid-template-columns:1fr}} .filemap .fr{{grid-template-columns:1fr}} .filemap .fp{{border-right:none}}
   }}
 </style>
 </head>
 <body>
+<div class="topbar">
+  <button class="navtoggle" aria-label="Toggle navigation" aria-expanded="false" onclick="toggleNav()">☰</button>
+  <span class="topbar-title">Cartrack AI Design System</span>
+</div>
 <div class="layout">
 <aside>
   <div class="brand"><a class="brandlink" href="{prefix}index.html"><b>Cartrack AI Design System</b></a><span>Documentation portal · v1</span></div>
@@ -429,6 +564,8 @@ def render_shell(active, body, prefix="", page_title="Cartrack AI Design System 
 {body}
 </main>
 </div>
+<div class="navscrim" onclick="closeNav()"></div>
+<script>{NAV_JS}</script>
 </body>
 </html>'''
 

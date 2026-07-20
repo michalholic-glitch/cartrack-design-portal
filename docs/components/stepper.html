@@ -32,6 +32,30 @@
   nav .navcat{font-size:11px;color:var(--mute);padding:10px 24px 2px;font-weight:600}
   nav .navcomp{padding:3.5px 24px 3.5px 34px;font-size:13px}
 
+  /* ------- collapsible nav ------- */
+  .navfilter{padding:2px 16px 14px}
+  .navfilter input{width:100%;padding:8px 12px;font-size:13px;border:1px solid var(--line);border-radius:8px;background:#fff;color:var(--ink)}
+  .navfilter input:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px #f4713a22}
+  nav details{overflow:hidden}
+  nav details > summary{list-style:none;display:flex;align-items:center;gap:8px;cursor:pointer;padding:6px 24px;font-size:13.5px;color:var(--ink2);font-weight:600;user-select:none}
+  nav details > summary::-webkit-details-marker{display:none}
+  nav details > summary:hover{background:#faf5f0;color:var(--accent-d)}
+  nav .navlabel{flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  nav .navcount{font-size:10.5px;font-weight:700;color:var(--mute);background:#f1eee9;border-radius:999px;padding:1px 8px;min-width:24px;text-align:center}
+  nav .chev{flex:none;width:10px;font-size:10px;color:var(--mute);transition:transform .15s}
+  nav .chev::before{content:"\25B8"}
+  nav details[open] > summary .chev{transform:rotate(90deg)}
+  nav details.has-active > summary .navlabel{color:var(--accent-d)}
+  nav .navgrp > .navcomp{padding-left:34px}
+  nav .navsub > summary{padding-left:34px;font-weight:500}
+  nav .navsub > .navcomp{padding-left:48px}
+
+  /* ------- mobile top bar + drawer ------- */
+  .topbar{display:none;align-items:center;gap:12px;padding:12px 18px;border-bottom:1px solid var(--line);background:#fff;position:sticky;top:0;z-index:40}
+  .navtoggle{font-size:18px;line-height:1;background:none;border:1px solid var(--line);border-radius:8px;padding:5px 11px;cursor:pointer;color:var(--ink)}
+  .topbar-title{font-size:14px;font-weight:700}
+  .navscrim{display:none}
+
   /* ------- main ------- */
   main{padding:0 0 100px;min-width:0}
   .inner{max-width:880px;margin:0 auto;padding:0 40px}
@@ -173,62 +197,33 @@
   .hidden{display:none !important}
 
   @media (max-width:900px){
-    .layout{grid-template-columns:1fr} aside{position:static;height:auto;border-right:none;border-bottom:1px solid var(--line)}
+    .topbar{display:flex}
+    .layout{grid-template-columns:1fr}
+    aside{position:fixed;top:0;left:0;width:280px;max-width:85vw;height:100vh;z-index:50;transform:translateX(-100%);transition:transform .2s ease}
+    body.navopen aside{transform:translateX(0);box-shadow:0 0 40px rgba(0,0,0,.25)}
+    body.navopen .navscrim{display:block;position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:45}
     .dodont,.dl,.paths,.whens{grid-template-columns:1fr} .filemap .fr{grid-template-columns:1fr} .filemap .fp{border-right:none}
   }
 </style>
 </head>
 <body>
+<div class="topbar">
+  <button class="navtoggle" aria-label="Toggle navigation" aria-expanded="false" onclick="toggleNav()">☰</button>
+  <span class="topbar-title">Cartrack AI Design System</span>
+</div>
 <div class="layout">
 <aside>
   <div class="brand"><a class="brandlink" href="../index.html"><b>Cartrack AI Design System</b></a><span>Documentation portal · v1</span></div>
   <nav>
-    <div class="sect">Guide</div>
+    <div class="navfilter"><input type="search" id="navfilter" placeholder="Filter components…" aria-label="Filter components" oninput="filterNav(this.value)"></div>
     <a href="../index.html" class="navtop">Home</a>
+    <div class="sect">Guide</div>
     <a href="../foundations.html" class="navtop">Foundations</a>
-    <div class="sect">Reference</div>
     <a href="../tokens.html" class="navtop">Design tokens</a>
     <a href="../accessibility.html" class="navtop">Accessibility</a>
-    <a href="../patterns/index.html" class="navtop">Patterns (5)</a>
-    <a href="../patterns/detail-page.html" class="navcomp">Detail Page</a>
-    <a href="../patterns/login.html" class="navcomp">Login / Auth Page</a>
-    <a href="../patterns/map-tracking-view.html" class="navcomp">Map / Tracking View</a>
-    <a href="../patterns/settings-page.html" class="navcomp">Settings Page</a>
-    <a href="../patterns/table-page.html" class="navcomp">Table Page</a>
-    <a href="../components/index.html" class="navtop">Components (27)</a>
-    <div class="navcat">Actions</div>
-    <a href="../components/button.html" class="navcomp">Button</a>
-    <a href="../components/menu.html" class="navcomp">Menu</a>
-    <div class="navcat">Data display</div>
-    <a href="../components/badge.html" class="navcomp">Badge</a>
-    <a href="../components/data-table.html" class="navcomp">DataTable</a>
-    <a href="../components/divider.html" class="navcomp">Divider</a>
-    <a href="../components/image-list.html" class="navcomp">ImageList</a>
-    <a href="../components/list.html" class="navcomp">List</a>
-    <a href="../components/pagination.html" class="navcomp">Pagination</a>
-    <a href="../components/progress-indicator.html" class="navcomp">ProgressIndicator</a>
-    <a href="../components/tooltip.html" class="navcomp">Tooltip</a>
-    <div class="navcat">Feedback</div>
-    <a href="../components/banner.html" class="navcomp">Banner</a>
-    <a href="../components/snackbar.html" class="navcomp">Snackbar</a>
-    <div class="navcat">Inputs &amp; forms</div>
-    <a href="../components/chip.html" class="navcomp">Chip</a>
-    <a href="../components/picker.html" class="navcomp">Picker</a>
-    <a href="../components/selection-control.html" class="navcomp">SelectionControl</a>
-    <a href="../components/slider.html" class="navcomp">Slider</a>
-    <a href="../components/text-field.html" class="navcomp">TextField</a>
-    <div class="navcat">Navigation</div>
-    <a href="../components/app-bar.html" class="navcomp">AppBar</a>
-    <a href="../components/breadcrumbs.html" class="navcomp">Breadcrumbs</a>
-    <a href="../components/navigation-drawer.html" class="navcomp">NavigationDrawer</a>
-    <a href="../components/navigation-rail.html" class="navcomp">NavigationRail</a>
-    <a href="../components/stepper.html" class="navcomp active" aria-current="page">Stepper</a>
-    <a href="../components/tabs.html" class="navcomp">Tabs</a>
-    <div class="navcat">Surfaces</div>
-    <a href="../components/card.html" class="navcomp">Card</a>
-    <a href="../components/dialog.html" class="navcomp">Dialog</a>
-    <a href="../components/expansion-panel.html" class="navcomp">ExpansionPanel</a>
-    <a href="../components/side-sheet.html" class="navcomp">SideSheet</a>
+    <div class="sect">Library</div>
+    <details class="navgrp" id="grp-patterns" data-defopen="0"><summary><span class="chev"></span><span class="navlabel">Patterns</span><span class="navcount">5</span></summary><a href="../patterns/index.html" class="navcomp" data-leaf>Overview</a><a href="../patterns/detail-page.html" class="navcomp" data-leaf>Detail Page</a><a href="../patterns/login.html" class="navcomp" data-leaf>Login / Auth Page</a><a href="../patterns/map-tracking-view.html" class="navcomp" data-leaf>Map / Tracking View</a><a href="../patterns/settings-page.html" class="navcomp" data-leaf>Settings Page</a><a href="../patterns/table-page.html" class="navcomp" data-leaf>Table Page</a></details>
+    <details class="navgrp has-active" id="grp-components" data-defopen="1" open><summary><span class="chev"></span><span class="navlabel">Components</span><span class="navcount">27</span></summary><a href="../components/index.html" class="navcomp" data-leaf>Overview</a><details class="navsub" id="cat-actions" data-defopen="0"><summary><span class="chev"></span><span class="navlabel">Actions</span><span class="navcount">2</span></summary><a href="../components/button.html" class="navcomp" data-leaf>Button</a><a href="../components/menu.html" class="navcomp" data-leaf>Menu</a></details><details class="navsub" id="cat-data-display" data-defopen="0"><summary><span class="chev"></span><span class="navlabel">Data display</span><span class="navcount">8</span></summary><a href="../components/badge.html" class="navcomp" data-leaf>Badge</a><a href="../components/data-table.html" class="navcomp" data-leaf>DataTable</a><a href="../components/divider.html" class="navcomp" data-leaf>Divider</a><a href="../components/image-list.html" class="navcomp" data-leaf>ImageList</a><a href="../components/list.html" class="navcomp" data-leaf>List</a><a href="../components/pagination.html" class="navcomp" data-leaf>Pagination</a><a href="../components/progress-indicator.html" class="navcomp" data-leaf>ProgressIndicator</a><a href="../components/tooltip.html" class="navcomp" data-leaf>Tooltip</a></details><details class="navsub" id="cat-feedback" data-defopen="0"><summary><span class="chev"></span><span class="navlabel">Feedback</span><span class="navcount">2</span></summary><a href="../components/banner.html" class="navcomp" data-leaf>Banner</a><a href="../components/snackbar.html" class="navcomp" data-leaf>Snackbar</a></details><details class="navsub" id="cat-inputs-forms" data-defopen="0"><summary><span class="chev"></span><span class="navlabel">Inputs &amp; forms</span><span class="navcount">5</span></summary><a href="../components/chip.html" class="navcomp" data-leaf>Chip</a><a href="../components/picker.html" class="navcomp" data-leaf>Picker</a><a href="../components/selection-control.html" class="navcomp" data-leaf>SelectionControl</a><a href="../components/slider.html" class="navcomp" data-leaf>Slider</a><a href="../components/text-field.html" class="navcomp" data-leaf>TextField</a></details><details class="navsub has-active" id="cat-navigation" data-defopen="1" open><summary><span class="chev"></span><span class="navlabel">Navigation</span><span class="navcount">6</span></summary><a href="../components/app-bar.html" class="navcomp" data-leaf>AppBar</a><a href="../components/breadcrumbs.html" class="navcomp" data-leaf>Breadcrumbs</a><a href="../components/navigation-drawer.html" class="navcomp" data-leaf>NavigationDrawer</a><a href="../components/navigation-rail.html" class="navcomp" data-leaf>NavigationRail</a><a href="../components/stepper.html" class="navcomp active" data-leaf aria-current="page">Stepper</a><a href="../components/tabs.html" class="navcomp" data-leaf>Tabs</a></details><details class="navsub" id="cat-surfaces" data-defopen="0"><summary><span class="chev"></span><span class="navlabel">Surfaces</span><span class="navcount">4</span></summary><a href="../components/card.html" class="navcomp" data-leaf>Card</a><a href="../components/dialog.html" class="navcomp" data-leaf>Dialog</a><a href="../components/expansion-panel.html" class="navcomp" data-leaf>ExpansionPanel</a><a href="../components/side-sheet.html" class="navcomp" data-leaf>SideSheet</a></details></details>
     <div class="sect">Resources</div>
     <a href="../preview.html" class="navtop">Visual preview</a>
     <a href="../changelog.html" class="navtop">What's new</a>
@@ -274,5 +269,66 @@
 </div>
 </main>
 </div>
+<div class="navscrim" onclick="closeNav()"></div>
+<script>
+(function(){
+  var KEY='dsnav-v2';
+  function load(){ try{return JSON.parse(localStorage.getItem(KEY))||{};}catch(e){return {};} }
+  function save(s){ try{localStorage.setItem(KEY,JSON.stringify(s));}catch(e){} }
+  var store=load();
+  var groups=Array.prototype.slice.call(document.querySelectorAll('nav details'));
+  var act=document.querySelector('nav a.active');
+  function openActiveBranch(){
+    if(!act) return;
+    var p=act.parentElement;
+    while(p && p!==document){ if(p.tagName==='DETAILS') p.open=true; p=p.parentElement; }
+  }
+  // apply persisted open/closed state over the server defaults, then always reveal
+  // the branch holding the current page
+  groups.forEach(function(d){ if(d.id in store) d.open=store[d.id]; });
+  openActiveBranch();
+  // Persist ONLY genuine user interaction. The <details> "toggle" event fires
+  // asynchronously, so it can't distinguish a user click from the programmatic
+  // opens above — a summary click (which also fires on keyboard activation) can.
+  // setTimeout defers the read until after the browser has flipped d.open.
+  groups.forEach(function(d){
+    var sm=d.querySelector(':scope > summary');
+    if(!sm) return;
+    sm.addEventListener('click',function(){ setTimeout(function(){ store[d.id]=d.open; save(store); },0); });
+  });
+
+  window.filterNav=function(q){
+    q=(q||'').trim().toLowerCase();
+    var leaves=document.querySelectorAll('nav a[data-leaf]');
+    if(!q){
+      leaves.forEach(function(a){ a.classList.remove('hidden'); });
+      groups.forEach(function(d){
+        d.classList.remove('hidden');
+        d.open=(d.id in store)?store[d.id]:(d.getAttribute('data-defopen')==='1');
+      });
+      openActiveBranch();
+      return;
+    }
+    leaves.forEach(function(a){ a.classList.toggle('hidden', a.textContent.toLowerCase().indexOf(q)===-1); });
+    groups.forEach(function(d){
+      var vis=d.querySelectorAll('a[data-leaf]:not(.hidden)').length>0;
+      d.classList.toggle('hidden', !vis);
+      d.open=vis;
+    });
+  };
+
+  window.toggleNav=function(){
+    var open=document.body.classList.toggle('navopen');
+    var b=document.querySelector('.navtoggle'); if(b) b.setAttribute('aria-expanded', open?'true':'false');
+  };
+  window.closeNav=function(){
+    document.body.classList.remove('navopen');
+    var b=document.querySelector('.navtoggle'); if(b) b.setAttribute('aria-expanded','false');
+  };
+  // choosing a destination closes the mobile drawer
+  document.querySelectorAll('nav a[href]').forEach(function(a){
+    a.addEventListener('click', window.closeNav);
+  });
+})();</script>
 </body>
 </html>
