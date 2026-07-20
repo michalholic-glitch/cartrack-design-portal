@@ -339,6 +339,7 @@ NAV_JS = r'''
 
 def render_shell(active, body, prefix="", page_title="Cartrack AI Design System — Documentation Portal"):
     nav = render_nav(active, prefix)
+    body_cls = "p-home" if active == "home" else ""
     return f'''<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -347,11 +348,20 @@ def render_shell(active, body, prefix="", page_title="Cartrack AI Design System 
 <title>{page_title}</title>
 <style>
   :root{{
-    --ink:#141a24; --ink2:#4a5364; --mute:#7d8593; --bg:#faf9f7; --card:#fff;
-    --accent:#f4713a; --accent-d:#bb4800; --line:#e7e3dd; --good:#1a7f4e; --bad:#b3261e;
+    /* colours sourced from tokens.json (see home-page-visual-redesign-spec §3.1):
+       ink=brand.charcoal.900, accent=brand.orange.500, accent-d=brand.orange.700,
+       line=border.default, chrome=hue.gray.10, route-blue=hue.blue.base */
+    --ink:#0C0C0C; --ink2:#4a5364; --mute:#7d8593; --bg:#ffffff; --chrome:#F9F9F9; --card:#fff;
+    --accent:#F47735; --accent-d:#BB4800; --line:rgba(0,0,0,.12); --good:#1a7f4e; --bad:#b3261e;
+    --route-blue:#5390BC;
+    --r:10px; --r-lg:14px;               /* radius system: standard / feature (pills use 999px) */
     --mono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
     --sans:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    --display:'Montserrat',-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
   }}
+  /* Self-hosted Montserrat (latin subset, variable weight) — no external requests.
+     {prefix} keeps the path correct at every folder depth. */
+  @font-face{{font-family:'Montserrat';font-style:normal;font-weight:100 900;font-display:swap;src:url('{prefix}fonts/montserrat.woff2') format('woff2')}}
   *{{margin:0;padding:0;box-sizing:border-box}}
   html{{scroll-behavior:smooth;scroll-padding-top:24px}}
   body{{font-family:var(--sans);background:var(--bg);color:var(--ink);line-height:1.6}}
@@ -360,7 +370,7 @@ def render_shell(active, body, prefix="", page_title="Cartrack AI Design System 
 
   .layout{{display:grid;grid-template-columns:250px 1fr;min-height:100vh}}
   /* ------- sidebar ------- */
-  aside{{border-right:1px solid var(--line);background:#fff;padding:28px 0;position:sticky;top:0;height:100vh;overflow-y:auto}}
+  aside{{border-right:1px solid var(--line);background:var(--chrome);padding:28px 0;position:sticky;top:0;height:100vh;overflow-y:auto}}
   .brand{{padding:0 24px 20px;border-bottom:1px solid var(--line)}}
   .brand b{{font-size:15px;display:block}}
   .brand span{{font-size:12px;color:var(--mute)}}
@@ -369,13 +379,13 @@ def render_shell(active, body, prefix="", page_title="Cartrack AI Design System 
   nav a{{display:block;padding:6px 24px;font-size:13.5px;color:var(--ink2)}}
   nav a:hover{{background:#faf5f0;text-decoration:none;color:var(--accent-d)}}
   nav a.active{{background:#fdf3ec;color:var(--accent-d);font-weight:600;box-shadow:inset 3px 0 0 var(--accent-d)}}
-  nav .sect{{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--mute);font-weight:700;padding:18px 24px 6px}}
+  nav .sect{{font-family:var(--display);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--mute);font-weight:700;padding:18px 24px 6px}}
   nav .navcat{{font-size:11px;color:var(--mute);padding:10px 24px 2px;font-weight:600}}
   nav .navcomp{{padding:3.5px 24px 3.5px 34px;font-size:13px}}
 
   /* ------- collapsible nav ------- */
   .navfilter{{padding:2px 16px 14px}}
-  .navfilter input{{width:100%;padding:8px 12px;font-size:13px;border:1px solid var(--line);border-radius:8px;background:#fff;color:var(--ink)}}
+  .navfilter input{{width:100%;padding:8px 12px;font-size:13px;border:1px solid var(--line);border-radius:var(--r);background:#fff;color:var(--ink)}}
   .navfilter input:focus{{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px #f4713a22}}
   nav details{{overflow:hidden}}
   nav details > summary{{list-style:none;display:flex;align-items:center;gap:8px;cursor:pointer;padding:6px 24px;font-size:13.5px;color:var(--ink2);font-weight:600;user-select:none}}
@@ -393,7 +403,7 @@ def render_shell(active, body, prefix="", page_title="Cartrack AI Design System 
 
   /* ------- mobile top bar + drawer ------- */
   .topbar{{display:none;align-items:center;gap:12px;padding:12px 18px;border-bottom:1px solid var(--line);background:#fff;position:sticky;top:0;z-index:40}}
-  .navtoggle{{font-size:18px;line-height:1;background:none;border:1px solid var(--line);border-radius:8px;padding:5px 11px;cursor:pointer;color:var(--ink)}}
+  .navtoggle{{font-size:18px;line-height:1;background:none;border:1px solid var(--line);border-radius:var(--r);padding:5px 11px;cursor:pointer;color:var(--ink)}}
   .topbar-title{{font-size:14px;font-weight:700}}
   .navscrim{{display:none}}
 
@@ -402,48 +412,61 @@ def render_shell(active, body, prefix="", page_title="Cartrack AI Design System 
   .inner{{max-width:880px;margin:0 auto;padding:0 40px}}
   .pagetop{{padding-top:48px}}
   .backlink{{display:inline-block;margin-bottom:20px;font-size:13px;color:var(--ink2)}}
-  header.top{{background:linear-gradient(150deg,#161d2b,#243147);color:#fff;padding:64px 0 56px;margin-bottom:56px}}
-  header.top .inner{{max-width:880px}}
-  header.top h1{{font-size:clamp(28px,4vw,40px);line-height:1.15;font-weight:700;letter-spacing:-.01em}}
-  header.top p{{margin-top:14px;color:#c3cad6;font-size:16.5px;max-width:62ch}}
-  .badges{{margin-top:24px;display:flex;gap:10px;flex-wrap:wrap}}
-  .badge{{font-size:12.5px;border:1px solid rgba(255,255,255,.28);border-radius:999px;padding:5px 14px;color:#e6eaf0}}
-  .badge b{{color:#f9a173}}
+  header.top{{background:var(--ink);color:#fff;padding:72px 0 60px;margin-bottom:56px;position:relative;overflow:hidden}}
+  header.top .inner{{max-width:880px;position:relative;z-index:1}}
+  header.top h1{{font-family:var(--display);font-size:clamp(30px,4.4vw,46px);line-height:1.08;font-weight:800;letter-spacing:-.02em}}
+  header.top p{{margin-top:16px;color:#c9cdd2;font-size:16.5px;max-width:60ch;line-height:1.55}}
+
+  /* signature route line (hero) — a fleet-tracking route metaphor, drawn from the
+     product's subject matter. Generic waypoint dots (NOT the Cartrack logomark). */
+  .route{{display:flex;align-items:center;gap:16px;margin:32px 0 4px;max-width:580px}}
+  .route .wp{{display:flex;align-items:center;gap:9px;font-family:var(--display);font-weight:700;font-size:13px;letter-spacing:.02em;color:#fff;white-space:nowrap}}
+  .route .dot{{width:12px;height:12px;border-radius:999px;background:var(--accent);box-shadow:0 0 0 4px #f4773533;flex:none}}
+  .route .track{{flex:1;height:2px;transform-origin:left;background:repeating-linear-gradient(90deg,rgba(255,255,255,.45) 0 6px,transparent 6px 13px);animation:routedraw .9s ease .15s both}}
+  @keyframes routedraw{{from{{transform:scaleX(0)}}to{{transform:scaleX(1)}}}}
+  @media (prefers-reduced-motion:reduce){{.route .track{{animation:none}}}}
+
+  /* de-chromed stat strip (was glass pills) */
+  .statstrip{{margin-top:28px;display:flex;flex-wrap:wrap;gap:14px 30px}}
+  .statstrip .stat b{{font-family:var(--display);font-weight:800;font-size:24px;line-height:1;color:#fff;display:block}}
+  .statstrip .stat span{{font-size:12.5px;color:#aeb3b9}}
+  .statstrip .stat.tech b{{font-size:15px;letter-spacing:.01em}}
 
   section{{margin-bottom:56px}}
   h2{{font-size:26px;font-weight:700;letter-spacing:-.01em;margin-bottom:6px;padding-top:8px}}
   .sub{{color:var(--ink2);margin-bottom:26px;max-width:66ch}}
   h5{{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--mute);margin:20px 0 8px}}
 
-  .steps{{counter-reset:s;display:grid;gap:12px}}
-  .stepc{{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:20px 22px 20px 62px;position:relative;counter-increment:s}}
-  .stepc::before{{content:counter(s);position:absolute;left:20px;top:20px;width:26px;height:26px;border-radius:50%;background:var(--accent-d);color:#fff;font-size:13px;font-weight:700;display:flex;align-items:center;justify-content:center}}
+  .steps{{position:relative;display:grid;gap:12px;padding-left:40px}}
+  .steps::before{{content:"";position:absolute;left:7px;top:16px;bottom:16px;width:2px;background:repeating-linear-gradient(180deg,rgba(244,119,53,.5) 0 5px,transparent 5px 11px)}}
+  .stepc{{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:20px 22px;position:relative}}
+  .stepc::before{{content:"";position:absolute;left:-40px;top:22px;width:15px;height:15px;border-radius:999px;background:var(--accent);box-shadow:0 0 0 4px var(--bg)}}
   .stepc b{{display:block;margin-bottom:4px;font-size:15px}}
   .stepc p{{font-size:14px;color:var(--ink2)}}
   .stepc code{{white-space:nowrap}}
-  .tip{{background:#f0f7f3;border:1px solid #cfe5d8;border-radius:12px;padding:16px 20px;font-size:14px;color:#14532d;margin-top:14px}}
-  .warn{{background:#fdf1ea;border:1px solid #f3d3c0;border-radius:12px;padding:16px 20px;font-size:14px;color:#8a3a10;margin-top:14px}}
+  .tip{{background:#f0f7f3;border:1px solid #cfe5d8;border-radius:var(--r);padding:16px 20px;font-size:14px;color:#14532d;margin-top:14px}}
+  .warn{{background:#fdf1ea;border:1px solid #f3d3c0;border-radius:var(--r);padding:16px 20px;font-size:14px;color:#8a3a10;margin-top:14px}}
 
-  .filemap{{background:var(--card);border:1px solid var(--line);border-radius:12px;overflow:hidden;margin-top:8px}}
+  .filemap{{background:var(--card);border:1px solid var(--line);border-radius:var(--r);overflow:hidden;margin-top:8px}}
   .filemap .fr{{display:grid;grid-template-columns:280px 1fr;border-top:1px solid var(--line)}}
   .filemap .fr:first-child{{border-top:none}}
   .filemap .fp{{padding:14px 20px;font-family:var(--mono);font-size:13px;background:#fbf8f4;border-right:1px solid var(--line)}}
   .filemap .fd{{padding:14px 20px;font-size:14px;color:var(--ink2)}}
 
   .rules{{display:grid;gap:10px}}
-  .rule{{background:var(--card);border:1px solid var(--line);border-left:3px solid var(--accent-d);border-radius:10px;padding:14px 18px;font-size:14.5px}}
+  .rule{{background:var(--card);border:1px solid var(--line);border-left:3px solid var(--accent-d);border-radius:var(--r);padding:14px 18px;font-size:14.5px}}
   .rule b{{color:var(--ink)}}
 
   /* tokens */
   .tokgroup{{margin-bottom:34px}}
   .tokgroup h4{{font-size:15px;margin-bottom:12px}}
   .swgrid{{display:grid;grid-template-columns:repeat(auto-fill,minmax(148px,1fr));gap:10px}}
-  .sw{{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:10px}}
+  .sw{{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:10px}}
   .chipc{{height:44px;border-radius:7px}}
   .swn{{font-size:12px;font-weight:600;margin-top:8px}}
   .swv{{font-family:var(--mono);font-size:11px;color:var(--mute)}}
   .tnote{{font-size:12.5px;color:var(--mute);margin-top:8px}}
-  table.tok{{width:100%;border-collapse:collapse;background:var(--card);border:1px solid var(--line);border-radius:12px;overflow:hidden;font-size:13.5px}}
+  table.tok{{width:100%;border-collapse:collapse;background:var(--card);border:1px solid var(--line);border-radius:var(--r);overflow:hidden;font-size:13.5px}}
   table.tok th{{text-align:left;padding:10px 16px;background:#f4f1ec;font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--mute)}}
   table.tok td{{padding:9px 16px;border-top:1px solid var(--line);vertical-align:middle}}
   .bar{{height:12px;background:var(--accent);border-radius:3px}}
@@ -451,13 +474,13 @@ def render_shell(active, body, prefix="", page_title="Cartrack AI Design System 
 
   /* components */
   .cathead{{font-size:13px;letter-spacing:.16em;text-transform:uppercase;color:var(--mute);margin:44px 0 14px;padding-top:10px;border-top:1px dashed var(--line)}}
-  .comp{{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:28px 30px;margin-bottom:22px}}
+  .comp{{background:var(--card);border:1px solid var(--line);border-radius:var(--r-lg);padding:28px 30px;margin-bottom:22px}}
   .comphead{{display:flex;align-items:center;gap:10px;margin-bottom:8px;flex-wrap:wrap}}
   .comphead h3{{font-size:22px;letter-spacing:-.01em}}
   .pill{{font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;background:#f4ece4;color:var(--accent-d);border-radius:999px;padding:3px 10px}}
   .pill.soft{{background:#eef1f4;color:var(--ink2)}}
   .cdesc{{font-size:14.5px;color:var(--ink2)}}
-  .keyrule{{margin-top:12px;background:#fbf6ef;border:1px solid #efe3d2;border-radius:10px;padding:12px 16px;font-size:14px}}
+  .keyrule{{margin-top:12px;background:#fbf6ef;border:1px solid #efe3d2;border-radius:var(--r);padding:12px 16px;font-size:14px}}
   .keyrule::before{{content:"Key rule — ";font-weight:700;color:var(--accent-d)}}
   table.mini{{width:100%;border-collapse:collapse;font-size:13.5px;margin-top:4px}}
   table.mini td,table.mini th{{padding:7px 10px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}}
@@ -465,7 +488,7 @@ def render_shell(active, body, prefix="", page_title="Cartrack AI Design System 
   table.mini td.c,table.mini th.c{{text-align:center;width:40px}}
   code.typ{{background:#eef1f4}}
   .dodont{{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:18px}}
-  .do,.dont{{border-radius:10px;padding:14px 18px;font-size:13.5px}}
+  .do,.dont{{border-radius:var(--r);padding:14px 18px;font-size:13.5px}}
   .do{{background:#f0f7f3;border:1px solid #cfe5d8}} .dont{{background:#fbf0ef;border:1px solid #eed2cf}}
   .do h5{{color:var(--good);margin-top:0}} .dont h5{{color:var(--bad);margin-top:0}}
   .do ul,.dont ul{{padding-left:18px;display:grid;gap:4px}}
@@ -475,7 +498,7 @@ def render_shell(active, body, prefix="", page_title="Cartrack AI Design System 
   summary{{cursor:pointer;color:var(--accent-d);font-weight:600;font-size:13px}}
   ul.plain{{padding-left:18px;margin-top:8px;color:var(--ink2);display:grid;gap:5px}}
 
-  .livelink{{display:inline-block;font-size:13.5px;font-weight:600;white-space:nowrap;background:#f4ece4;border-radius:8px;padding:8px 16px;margin-top:4px}}
+  .livelink{{display:inline-block;font-size:13.5px;font-weight:600;white-space:nowrap;background:#f4ece4;border-radius:var(--r);padding:8px 16px;margin-top:4px}}
   .livelink:hover{{text-decoration:none;filter:brightness(.97)}}
   .checks{{display:flex;flex-wrap:wrap;gap:8px;margin-top:4px}}
   .chk{{font-size:12px;border:1px solid var(--line);border-radius:999px;padding:4px 12px;color:var(--mute);background:var(--card)}}
@@ -487,19 +510,24 @@ def render_shell(active, body, prefix="", page_title="Cartrack AI Design System 
   .pattern ul b, .pattern p b{{color:var(--ink)}}
 
   .paths{{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:16px}}
-  .path{{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:24px 22px}}
-  .path .who{{font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--accent-d);font-weight:700;margin-bottom:10px}}
+  .path{{background:var(--card);border:1px solid var(--line);border-left:3px solid var(--line);border-radius:var(--r-lg);padding:24px 22px}}
+  .path.p-designers{{border-left-color:var(--accent)}}
+  .path.p-developers{{border-left-color:var(--ink)}}
+  .path.p-agents{{border-left-color:var(--route-blue)}}
+  .path .who{{font-family:var(--display);font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--accent-d);font-weight:700;margin-bottom:10px}}
+  /* Montserrat display headings are a home-page-only signature (spec §7) */
+  body.p-home h2{{font-family:var(--display);font-weight:800;letter-spacing:-.01em}}
   .path h4{{font-size:16px;margin-bottom:8px}}
   .path p{{font-size:13.5px;color:var(--ink2)}}
-  .prompt{{margin-top:14px;background:#f6f3ee;border:1px solid var(--line);border-radius:10px;padding:12px 14px;font-size:12.5px;color:var(--ink2)}}
+  .prompt{{margin-top:14px;background:#f6f3ee;border:1px solid var(--line);border-radius:var(--r);padding:12px 14px;font-size:12.5px;color:var(--ink2)}}
   .prompt .expect{{display:block;margin-top:8px;font-size:11.5px;color:var(--mute)}}
   .whens{{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:16px}}
-  .whenuse,.whennot{{border-radius:10px;padding:14px 18px;font-size:13.5px;background:#f6f8fa;border:1px solid #dfe5ea}}
+  .whenuse,.whennot{{border-radius:var(--r);padding:14px 18px;font-size:13.5px;background:#f6f8fa;border:1px solid #dfe5ea}}
   .whenuse h5,.whennot h5{{margin-top:0}}
   .whenuse ul,.whennot ul{{padding-left:18px;display:grid;gap:4px}}
   .pill.aa{{background:#e7f2ec;color:var(--good)}}
   .idxgrid{{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px;margin-bottom:26px}}
-  .idxcard{{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px 18px;color:var(--ink);display:flex;flex-direction:column;gap:4px}}
+  .idxcard{{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:16px 18px;color:var(--ink);display:flex;flex-direction:column;gap:4px}}
   .idxcard:hover{{border-color:var(--accent);text-decoration:none}}
   .idxcard b{{font-size:14.5px}}
   .idxcard .idxmeta{{display:flex;gap:6px;align-items:center;flex-wrap:wrap;margin-top:2px}}
@@ -508,7 +536,7 @@ def render_shell(active, body, prefix="", page_title="Cartrack AI Design System 
   .idxcard p{{font-size:12.5px;color:var(--ink2);margin-top:4px}}
   .patgrid{{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:12px}}
   .grammar{{display:grid;gap:8px;margin:10px 0}}
-  .gex{{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:12px 16px;font-size:13px}}
+  .gex{{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:12px 16px;font-size:13px}}
   .gex span{{display:block;margin-top:4px;color:var(--mute);font-size:12.5px}}
 
   .navbadge{{font-size:9px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;background:#fdeee2;color:var(--accent-d);border-radius:999px;padding:1px 7px;vertical-align:middle}}
@@ -517,24 +545,24 @@ def render_shell(active, body, prefix="", page_title="Cartrack AI Design System 
   .prov{{margin-top:6px;font-size:12px;color:var(--mute)}}
   .cfoot{{margin-top:22px;padding-top:14px;border-top:1px dashed var(--line);font-size:12px;color:var(--mute)}}
   .cfoot code{{font-size:11px}}
-  .logi{{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:18px 22px;margin-bottom:12px}}
+  .logi{{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:18px 22px;margin-bottom:12px}}
   .logi .logd{{font-family:var(--mono);font-size:12px;color:var(--accent-d);font-weight:600}}
   .logi p{{font-size:14px;color:var(--ink2);margin-top:6px}}
   ul.provlist{{padding-left:20px;font-size:13px;color:var(--ink2);display:grid;gap:6px;margin-top:10px}}
 
   /* downloads */
   .dl{{display:grid;grid-template-columns:1fr 1fr;gap:12px}}
-  .dlc{{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:22px;display:flex;flex-direction:column;gap:6px}}
+  .dlc{{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:22px;display:flex;flex-direction:column;gap:6px}}
   .dlc.primary{{grid-column:1/-1;border:2px solid var(--accent-d);background:#fffaf6}}
   .dlc b{{font-size:15px}}
   .dlc span{{font-size:13.5px;color:var(--ink2)}}
-  .dlbtn{{margin-top:10px;align-self:flex-start;background:var(--accent-d);color:#fff !important;border-radius:8px;padding:9px 18px;font-size:13.5px;font-weight:600}}
+  .dlbtn{{margin-top:10px;align-self:flex-start;background:var(--accent-d);color:#fff !important;border-radius:var(--r);padding:9px 18px;font-size:13.5px;font-weight:600}}
   .dlbtn:hover{{text-decoration:none;filter:brightness(.92)}}
   .dlbtn.ghost{{background:transparent;color:var(--accent-d) !important;border:1px solid var(--accent-d)}}
 
   /* preview */
-  .prevframe{{width:100%;height:720px;border:1px solid var(--line);border-radius:12px;background:#fff}}
-  .searchbox{{width:100%;padding:11px 16px;font-size:14px;border:1px solid var(--line);border-radius:10px;margin-bottom:18px;background:#fff}}
+  .prevframe{{width:100%;height:720px;border:1px solid var(--line);border-radius:var(--r);background:#fff}}
+  .searchbox{{width:100%;padding:11px 16px;font-size:14px;border:1px solid var(--line);border-radius:var(--r);margin-bottom:18px;background:#fff}}
   .hidden{{display:none !important}}
 
   @media (max-width:900px){{
@@ -547,7 +575,7 @@ def render_shell(active, body, prefix="", page_title="Cartrack AI Design System 
   }}
 </style>
 </head>
-<body>
+<body class="{body_cls}">
 <div class="topbar">
   <button class="navtoggle" aria-label="Toggle navigation" aria-expanded="false" onclick="toggleNav()">☰</button>
   <span class="topbar-title">Cartrack AI Design System</span>
@@ -577,11 +605,16 @@ def body_home():
   <div class="inner">
     <h1>Build on-system UI with AI.<br>Start in two minutes.</h1>
     <p>This portal documents the Cartrack Fleet AI-ready design system: a self-contained folder that lets any AI coding agent — Claude, Cursor, Copilot — generate prototypes and UI that match our production Fleet Portal. Everything here is derived from the real fleetapp-web codebase.</p>
-    <div class="badges">
-      <span class="badge"><b>{n_comps}</b> documented components</span>
-      <span class="badge"><b>1</b> tokens source of truth</span>
-      <span class="badge"><b>0</b> setup steps per session</span>
-      <span class="badge">MD2 · MDC 14 · React</span>
+    <div class="route" aria-hidden="true">
+      <span class="wp"><span class="dot"></span>Download</span>
+      <span class="track"></span>
+      <span class="wp">Ship UI<span class="dot"></span></span>
+    </div>
+    <div class="statstrip">
+      <div class="stat"><b>{n_comps}</b><span>documented components</span></div>
+      <div class="stat"><b>1</b><span>tokens source of truth</span></div>
+      <div class="stat"><b>0</b><span>setup steps per session</span></div>
+      <div class="stat tech"><b>MD2 · MDC 14 · React</b></div>
     </div>
   </div>
 </header>
@@ -596,19 +629,19 @@ def body_home():
   </div>
 
   <div class="paths">
-    <div class="path">
+    <div class="path p-designers">
       <div class="who">For designers</div>
       <h4>Prototype in product language</h4>
       <p>Ask for screens in plain language — no need to mention the design system, the rules are already loaded. Iterate the same way ("denser table", "add a selection bar"). Verify against the <a href="preview.html">visual preview</a>.</p>
       <div class="prompt"><b>Try this first prompt:</b><br><i>"Build an HTML prototype of a vehicle list page: app bar with search, filter chips, a data table with status chips and pagination, and one primary action 'Add vehicle'."</i><br><span class="expect">Expected result: a single .html file using the MDC classes, orange <code>primary.dark</code> for the contained button (AA-safe), 14px Roboto body text, and 4px-grid spacing throughout.</span></div>
     </div>
-    <div class="path">
+    <div class="path p-developers">
       <div class="who">For developers</div>
       <h4>Build features on the real values</h4>
       <p>Each component is 3 files: <code>.tsx</code> (MDC class contract), <code>.doc.json</code> (the API and usage contract — read it first), <code>index.ts</code>. All visual values come from <code>tokens/tokens.json</code>.</p>
       <p style="margin-top:8px">The one non-obvious rule: in inline styles use <code>primitive.*</code> values — most <code>semantic.*</code> entries are alias strings awaiting a resolver. See <a href="foundations.html#rules">the rules</a> and the <a href="tokens.html">naming grammar</a>.</p>
     </div>
-    <div class="path">
+    <div class="path p-agents">
       <div class="who">For AI agents</div>
       <h4>Your rules load automatically</h4>
       <p>Claude tools auto-load <code>CLAUDE.md</code> (the index) which imports <code>AGENTS.md</code> (the contract). Other agents read <code>AGENTS.md</code> directly via the agents.md standard. Consult <code>components/&lt;Name&gt;/&lt;Name&gt;.doc.json</code> before using any component; verify work against the checklist at the end of AGENTS.md.</p>
