@@ -1,0 +1,10 @@
+{
+  "name": "Video",
+  "category": "Brand / Identity",
+  "status": "pending — not reviewed in detail",
+  "source": "Figma \"Brand Visual Guidelines\", section \"Videos\" — only seen as thumbnails in the full-file overview, no section-specific link supplied.",
+  "description": "Placeholder. Thumbnails suggest sub-pages covering title/safe zones, on-screen typography for video, and ending screens.",
+  "openQuestions": [
+    "Get a node-id link for this section (right-click the Videos frame in Figma → Copy link to selection) and re-run this analysis."
+  ]
+}

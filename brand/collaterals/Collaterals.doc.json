@@ -1,0 +1,30 @@
+{
+  "name": "Design Collaterals",
+  "category": "Brand / Identity",
+  "status": "documented — catalogue only, not a rules section",
+  "source": "Figma \"Brand Visual Guidelines\", section \"Design Collaterals\" (node 2394:693)",
+  "description": "Applied proof-of-system: real production examples showing Logo, Colour, Typography, Imagery, Icons, and Graphic Design working together across formats. Unlike the other sections, this one doesn't introduce new rules — it demonstrates the existing rules in production, and includes at least one campaign redesign (a visible before/after iteration).",
+  "keyRule": "Use this section as a reference gallery when evaluating whether a new piece of collateral matches the system — not as a source of new rules. If something here doesn't match a rule documented elsewhere in brand/, the rule elsewhere wins; flag the inconsistency rather than treating the example as license to deviate.",
+  "formatsShown": [
+    "Print Materials (section divider)",
+    "Brochures (multiple, including an 'inspiration' variant)",
+    "Digital Assets (section divider)",
+    "Social media carousels",
+    "Social media informative/article posts",
+    "Social media 3rd-party review-site posts",
+    "Social media scroll-stoppers",
+    "Social media achievement posts",
+    "Digital ads (standard)",
+    "Digital ads — Redesign 1 (a visible campaign iteration, shown alongside the original)"
+  ],
+  "doThis": [
+    "Check a new deliverable against the closest matching format shown here before finalizing.",
+    "Treat the 'Redesign 1' ads as the current direction, not the earlier version shown next to them."
+  ],
+  "dontDoThis": [
+    "Don't treat an applied example as an exception to a documented rule — raise it instead.",
+    "Don't copy layout choices from these examples as if they were prescriptive templates; they're proof of the system, not a template library."
+  ],
+  "relationToProductTokens": "None directly — this is a marketing-collateral gallery, not a rules or token source.",
+  "openQuestions": []
+}

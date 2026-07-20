@@ -1,0 +1,54 @@
+{
+  "name": "Imagery",
+  "category": "Brand / Identity",
+  "status": "documented",
+  "source": "Figma \"Brand Visual Guidelines\", section \"Images\" (node 2394:685)",
+  "description": "Art direction for photography across the brand: subject categories, editing/colour rules, and explicit exclusions. This is the deepest section in the guideline — a real photographic direction rather than a stock-photo disclaimer.",
+  "keyRule": "Photography should read as authentic and operational — real vehicles, real drivers, real operations contexts — rather than generic stock imagery of unrelated business/lifestyle scenes.",
+  "pages": [
+    {
+      "name": "Art direction",
+      "description": "Overview statement establishing the intended tone: authentic, operational, on-the-ground — not staged corporate stock photography."
+    },
+    {
+      "name": "People",
+      "description": "Guidance on depicting drivers/operators — natural poses and real work contexts over posed stock-photo people."
+    },
+    {
+      "name": "Vehicles",
+      "description": "Rules for vehicle photography — fleet vehicles shown in real operating contexts (roads, yards), not showroom-style shots."
+    },
+    {
+      "name": "Platform",
+      "description": "How to depict the Cartrack software/app itself in photography — device mockups showing real (or realistic) product UI, not placeholder screens."
+    },
+    {
+      "name": "Operations",
+      "description": "Depot, logistics, and day-to-day operational photography category — warehouses, loading, dispatch."
+    },
+    {
+      "name": "Adjustments and editing",
+      "description": "Post-processing rules for consistency across a shoot/campaign (see also Colour correcting)."
+    },
+    {
+      "name": "Colour correcting",
+      "description": "Specific colour-grading direction to keep photography consistent with the brand palette (warm/orange-leaning grade implied by examples)."
+    },
+    {
+      "name": "What to avoid",
+      "description": "Explicit exclusions — generic stock photography, staged/inauthentic poses, and imagery inconsistent with the operational tone."
+    }
+  ],
+  "doThis": [
+    "Use real operational contexts — vehicles on the road, drivers at work, actual depots.",
+    "Apply the specified colour-correction grade for consistency across a shoot.",
+    "Show the platform/app with realistic (not placeholder) UI when depicting the product."
+  ],
+  "dontDoThis": [
+    "Don't use generic corporate stock photography.",
+    "Don't stage people in unnatural poses.",
+    "Don't mix uncorrected/ungraded imagery into brand material."
+  ],
+  "relationToProductTokens": "No direct token relationship — this section governs marketing photography, not UI. Relevant only if the product ever surfaces marketing imagery in-app (e.g. onboarding, empty states) — in that case, this direction should govern the imagery choice even though it isn't a token.",
+  "openQuestions": []
+}

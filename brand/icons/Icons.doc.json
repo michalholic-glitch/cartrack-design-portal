@@ -1,0 +1,48 @@
+{
+  "name": "Icons",
+  "category": "Brand / Identity",
+  "status": "documented",
+  "source": "Figma \"Brand Visual Guidelines\", section \"Icons\" (node 2394:687)",
+  "description": "The brand's icon system standardizes on Material UI Icons for general-purpose iconography, supplemented by custom vehicle/fleet icons for domain-specific concepts Material doesn't cover.",
+  "keyRule": "Material UI Icons is the base library — don't source icons from another set. This is the strongest existing bridge between the brand system and the product design system, since product components are already MUI-based.",
+  "pages": [
+    {
+      "name": "Material UI Icons (overview)",
+      "description": "States Material UI Icons as the standard library, with a downloadable icon list/set for use in marketing material."
+    },
+    {
+      "name": "Material UI Icons (usage grid)",
+      "description": "A grid of the approved icon set with sizing/style guidance (outlined vs. filled, consistent stroke weight)."
+    },
+    {
+      "name": "Things to avoid",
+      "description": "Do/don't pairs — mismatched icon styles, inconsistent sizing, and off-brand icon sets are shown as incorrect."
+    },
+    {
+      "name": "Icons and colour",
+      "description": "Rules for applying brand colour to icons — approved colour/background combinations, contrast requirements, and a 'correct vs. avoid' pairing similar to the Colour section's approach."
+    },
+    {
+      "name": "Icons usage",
+      "description": "General placement/sizing guidance in applied contexts (cards, callouts)."
+    },
+    {
+      "name": "Unavailable icons",
+      "description": "A fallback formula for concepts Material UI doesn't have a direct icon for — combine two existing icons (e.g. a tool + a shield) to represent the missing concept, rather than commissioning or sourcing a custom icon ad hoc."
+    }
+  ],
+  "doThis": [
+    "Source all icons from Material UI Icons.",
+    "Use the two-icon combination formula for concepts without a direct match, instead of introducing an off-brand custom icon.",
+    "Follow the specified colour/contrast rules when colouring icons."
+  ],
+  "dontDoThis": [
+    "Don't mix in icons from other libraries.",
+    "Don't mix filled and outlined styles in the same context.",
+    "Don't apply colour combinations outside what's shown in 'Icons and colour'."
+  ],
+  "relationToProductTokens": "Genuine, working alignment: the product component library is built on Material Components / MUI, so the same icon set applies on both sides. This is the one area where the brand and product systems should actively share a source rather than maintain parallel ones — worth referencing this file from any future icon-related product documentation instead of restating it.",
+  "openQuestions": [
+    "Confirm whether the product codebase's icon usage (material-icons ligature names, per Button.doc.json) draws from the exact same Material Icons variant/version as this brand file's downloadable set."
+  ]
+}

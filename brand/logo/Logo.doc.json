@@ -1,0 +1,54 @@
+{
+  "name": "Logo",
+  "category": "Brand / Identity",
+  "status": "documented",
+  "source": "Figma \"Brand Visual Guidelines\", section \"Logo\" (node 2394:679)",
+  "description": "The Cartrack wordmark + arrow mark, and the rules governing how it is reproduced across marketing surfaces. Two lockup orientations exist: a horizontal lockup (arrow mark beside \"CARTRACK\") and a stacked lockup (arrow mark above the wordmark).",
+  "keyRule": "Never redraw, recolour outside approved applications, distort, or rotate the mark. Always give it the minimum clearspace shown in the guideline before any other element.",
+  "pages": [
+    {
+      "name": "Main logo versions",
+      "description": "Defines the two approved lockups: horizontal and stacked. Establishes which is the default (horizontal) and when the stacked version is used (tighter/squarer spaces)."
+    },
+    {
+      "name": "Clearspace",
+      "description": "Minimum padding around the logo, defined relative to the height of the arrow mark (exact ratio: TBD — verify against Figma). No text, imagery, or other logos may intrude into this zone."
+    },
+    {
+      "name": "Partner lockups",
+      "description": "Co-branding rules for joint marks with partners (examples shown: AVIS, Coca-Cola). A vertical divider rule separates the Cartrack mark from the partner mark, with defined spacing on both sides — the partner mark is sized to optical (not literal) parity with the Cartrack mark, not simply matched height."
+    },
+    {
+      "name": "Size and positioning",
+      "description": "Minimum reproduction size and placement conventions (exact minimum size: TBD — verify against Figma)."
+    },
+    {
+      "name": "Colour applications",
+      "description": "Approved logo colour treatments on white, black/dark, and photographic backgrounds. Includes a full-colour version, a white knockout, and a black version."
+    },
+    {
+      "name": "Incorrect logo usage",
+      "description": "Explicit \"don't\" examples — distortion, recolouring, low contrast placement, and effects (shadows/outlines) are shown struck through or marked incorrect."
+    },
+    {
+      "name": "Logomark usage",
+      "description": "Rules for when the arrow mark can be used alone without the wordmark (e.g. favicon, app icon, small-format social avatars, watermarking) and when the full lockup is required instead."
+    }
+  ],
+  "doThis": [
+    "Use the horizontal lockup by default; switch to stacked only in square/tight formats.",
+    "Maintain full clearspace before any other element.",
+    "Use the partner-lockup divider convention for any co-branded material.",
+    "Use the logomark alone only in the contexts the guideline calls out (small formats, watermarks)."
+  ],
+  "dontDoThis": [
+    "Don't redraw, distort, rotate, or recolour the mark outside approved applications.",
+    "Don't place the full-colour logo on low-contrast backgrounds.",
+    "Don't add effects — shadows, outlines, glows.",
+    "Don't scale partner logos to literal height parity — match optically."
+  ],
+  "relationToProductTokens": "No direct product-token equivalent — the logo is a brand asset, not a design token. Product UI should treat the app bar / nav logo placement as a separate, product-specific decision documented in the relevant component doc (e.g. AppBar), not derived from this file.",
+  "openQuestions": [
+    "Exact clearspace ratio and minimum reproduction size are visible in the guideline but not confirmed at pixel level — pull exact values if this logo usage needs to be enforced programmatically (e.g. lint rule for a marketing site builder)."
+  ]
+}

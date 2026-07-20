@@ -1,0 +1,66 @@
+{
+  "name": "Colour",
+  "category": "Brand / Identity",
+  "status": "documented — hex values unverified",
+  "source": "Figma \"Brand Visual Guidelines\", section \"Colours\" (node 2394:681)",
+  "description": "The marketing brand palette: Orange, Black, White, and Blue as the main colours, plus saturated variants, gradient treatments, a grey ramp, and rules for proportion, usage, in-type contrast, and approved combinations.",
+  "keyRule": "Orange is the dominant/accent colour, not a background flood — the 'colour ratio' page shows a deliberate proportion rule (large neutral areas, orange used sparingly as emphasis) rather than even weighting across all brand colours.",
+  "importantCaveat": "None of the hex values below are confirmed pixel-level — the Figma metadata/variable-def tools time out on this file (see BRAND.md), and screenshots at any resolution render this row's swatch labels too small to read reliably. Every hex value here is 'TBD — verify against Figma' except where explicitly cross-referenced to tokens.json (which is a confirmed, real value from the codebase, not the brand file).",
+  "pages": [
+    {
+      "name": "Main colours",
+      "description": "Four swatches: Orange, Black, White, Blue. Orange reads visually consistent with the product's brand orange. Hex for all four: TBD — verify against Figma."
+    },
+    {
+      "name": "Saturated colours",
+      "description": "Higher-saturation variants of the orange and blue mains, used for callouts/highlights rather than base fills. Hex: TBD."
+    },
+    {
+      "name": "Gradients",
+      "description": "Two directional gradient treatments — an orange-to-black gradient and a blue-based gradient — used as photo overlays and section backgrounds (see also graphic-design/GraphicDesign.doc.json → Overlay elements)."
+    },
+    {
+      "name": "Greys",
+      "description": "A multi-step grey ramp (more steps than the product's 3-step charcoal primitive — exact count and hex per step: TBD, the list renders too small to read at any screenshot resolution obtained so far)."
+    },
+    {
+      "name": "Custom gradients",
+      "description": "Additional gradient combinations layered over photography, sharing the orange/black/blue base palette."
+    },
+    {
+      "name": "Colour ratio",
+      "description": "A proportion guide (visually a stacked bar split across black / orange / blue) implying a dominant-neutral, sparing-accent rule. Exact ratio: TBD."
+    },
+    {
+      "name": "Colour usage",
+      "description": "Applied examples (recruitment-style ad cards) showing which colour combinations are approved as background fills."
+    },
+    {
+      "name": "Colour in type",
+      "description": "Do/don't examples for text-on-colour legibility — pairs applied examples with correct vs. incorrect text/background contrast. This is the brand file's own informal accessibility check; worth comparing against the product's WCAG AA rule (see tokens.json → accessibility.knownIssues) once exact hex are pulled."
+    },
+    {
+      "name": "Colour combinations",
+      "description": "A grid of approved two-colour pairings (shown as coloured dot pairs) — e.g. orange+black, blue+white — establishing which combinations are sanctioned and, by omission, which are not."
+    }
+  ],
+  "doThis": [
+    "Treat orange as an accent/emphasis colour, not a dominant fill, per the colour-ratio guidance.",
+    "Only use the combinations shown in 'Colour combinations' for two-colour pairings.",
+    "Check the 'Colour in type' examples before pairing text colour with a background colour."
+  ],
+  "dontDoThis": [
+    "Don't invent new gradient directions or colour pairings outside what's shown.",
+    "Don't assume a brand hex value — pull it from Figma directly rather than eyeballing it from a screenshot (this doc doesn't have confirmed values yet)."
+  ],
+  "relationToProductTokens": {
+    "orange": "Brand 'Orange' main colour reads as consistent with primitive.color.brand.orange.500 (#F47735) — not pixel-confirmed. semantic.color.brand.primary.main aliases this.",
+    "black": "Brand file uses what looks like pure black (#000000) directly in swatches and applications. Product tokens deliberately avoid pure black — semantic.color.brand.secondary uses charcoal (#333333/#5C5C5C/#0C0C0C), and semantic.color.text.primary is rgba(0,0,0,0.87), never raw black. Likely intentional divergence (marketing high-contrast graphics vs. UI text ergonomics) — not something to 'fix' without a decision.",
+    "blue": "Brand file's Blue is a full main colour with its own saturated/gradient variants. Product tokens.json has no brand-secondary blue — only primitive.color.hue.blue, a muted categorical colour scoped to data-viz/status, explicitly noted as not white-label-customizable and 'never use for brand or decorative emphasis'. This is the clearest open gap: if brand blue is meant to appear in product surfaces, it needs a deliberate new semantic token, not reuse of the dataViz blue.",
+    "greys": "Brand grey ramp appears to have more steps than primitive.color.brand.charcoal (3 steps) — possibly closer in size to primitive.color.hue.gray (7 steps). Not yet compared value-for-value."
+  },
+  "openQuestions": [
+    "Pull exact hex for Main colours, Saturated colours, and the Greys ramp directly from Figma (open the file in the Figma desktop app and re-run get_variable_defs / get_design_context with an active selection, since the remote metadata call times out on this file).",
+    "Decide whether brand Blue gets a formal semantic product token or stays marketing-only."
+  ]
+}

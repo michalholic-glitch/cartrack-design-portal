@@ -1,0 +1,61 @@
+{
+  "name": "Typography",
+  "category": "Brand / Identity",
+  "status": "documented — type-scale values unverified",
+  "source": "Figma \"Brand Visual Guidelines\", section \"Typography\" (node 2394:683)",
+  "description": "The marketing typeface pairing — Montserrat for display/headline use and Roboto for body copy — plus case, tracking/leading, readability, type-scale, and editorial (widow/orphan) rules.",
+  "keyRule": "Montserrat is a display face only. It appears in headline/font-pairing examples but never as the body typeface — Roboto carries all body copy. Don't use Montserrat for long-form text.",
+  "pages": [
+    {
+      "name": "Font pairing examples",
+      "description": "Shows Montserrat headline + Roboto body together in a realistic layout, establishing the default editorial pattern."
+    },
+    {
+      "name": "Roboto type cases",
+      "description": "Approved case treatments for Roboto (sentence case for body copy; specific rules for labels/eyebrows shown alongside)."
+    },
+    {
+      "name": "Roboto readability",
+      "description": "Guidance on line length, line-height, and paragraph spacing for legible body copy."
+    },
+    {
+      "name": "Montserrat type cases",
+      "description": "Approved case treatments for Montserrat headlines (appears to favour a bolder, more condensed treatment for impact headlines)."
+    },
+    {
+      "name": "Montserrat readability",
+      "description": "Sizing/weight guidance specific to Montserrat at headline scale."
+    },
+    {
+      "name": "Type case usage",
+      "description": "Cross-typeface rules for when to use uppercase/sentence case/title case across both faces."
+    },
+    {
+      "name": "Tracking and leading",
+      "description": "Letter-spacing and line-height values per size step (exact values: TBD — verify against Figma)."
+    },
+    {
+      "name": "Widows, orphans and suspended lines",
+      "description": "Editorial typesetting rule — instructs against leaving a single short word/line stranded at the top or bottom of a text block, shown with a 'bad' and 'fixed' example side by side. An unusually print-editorial level of care for a digital brand guideline."
+    },
+    {
+      "name": "Example / Example — fixed",
+      "description": "Full worked examples applying the above rules to a realistic paragraph of body copy, including a 'before' with a bad line break and an 'after' fix."
+    }
+  ],
+  "doThis": [
+    "Pair Montserrat headlines with Roboto body copy — don't mix headline faces.",
+    "Follow the case rules per typeface rather than defaulting to uppercase for emphasis.",
+    "Check line breaks for widows/orphans before shipping any long-form copy."
+  ],
+  "dontDoThis": [
+    "Don't use Montserrat for body copy or long-form text.",
+    "Don't leave a single stranded word/short line at a paragraph break.",
+    "Don't invent tracking/leading values outside what's specified."
+  ],
+  "relationToProductTokens": "Product UI font stack (semantic.typography.fontFamily → primitive.fontFamily.muiDefault = \"Roboto\", \"Helvetica\", \"Arial\", sans-serif) has no Montserrat anywhere. Roboto overlaps as the shared base typeface, but the product never uses a separate display face the way marketing uses Montserrat. Read as intentional: Montserrat is reserved for marketing headlines, not product UI — worth stating explicitly in tokens.json's fontFamily notes so it doesn't look like an oversight later.",
+  "openQuestions": [
+    "Pull exact tracking/leading and type-scale (px/rem) values from Figma directly.",
+    "Confirm whether Montserrat is used anywhere in-product (e.g. marketing-facing pages served from the same app) — if so, it needs a token; if not, it stays brand-only."
+  ]
+}

@@ -1,0 +1,40 @@
+{
+  "name": "Graphic Design",
+  "category": "Brand / Identity",
+  "status": "documented",
+  "source": "Figma \"Brand Visual Guidelines\", section \"Graphic Design\" (node 2394:691)",
+  "description": "Supporting graphic devices layered on top of colour, type, and imagery: shape/corner language, photo overlay treatments, the logomark used as a background watermark, and seasonal campaign badges.",
+  "keyRule": "Rounded corners are the default shape language for photography and containers; the correct/avoid example specifically calls out over-rounding (corners rounded past what suits the image's own content) as the failure mode, not squareness itself.",
+  "pages": [
+    {
+      "name": "Shapes",
+      "description": "States rounded corners as the standard treatment for photography and shape elements, with a correct-vs-avoid example pair showing an over-rounded corner as the incorrect case."
+    },
+    {
+      "name": "Shapes (applied)",
+      "description": "Applied examples on real vehicle/logistics photography showing the rounded-corner treatment combined with colour blocking and caption cards (e.g. 'Boosted delivery times', 'Improved driver safety')."
+    },
+    {
+      "name": "Overlay elements",
+      "description": "The orange-to-black and blue gradient treatments (see colour/Colour.doc.json → Gradients) applied specifically as photo overlays, plus textured/pattern overlay variants for section backgrounds."
+    },
+    {
+      "name": "Logomark",
+      "description": "Rules for using the arrow mark as a large, low-opacity background watermark/graphic device — distinct from the Logo section's rules for the mark used as identification. Includes seasonal badge executions (Spring, Heritage Day, Christmas) that adapt the watermark treatment for campaign material."
+    }
+  ],
+  "doThis": [
+    "Use rounded corners consistently on photography and containers, scaled to suit the image.",
+    "Use the approved overlay gradients rather than inventing new ones.",
+    "Use the logomark watermark treatment for campaign/seasonal material rather than a literal logo lockup."
+  ],
+  "dontDoThis": [
+    "Don't over-round corners past what the image content supports.",
+    "Don't introduce new overlay/gradient directions outside Colour → Gradients.",
+    "Don't confuse the watermark use of the logomark with the identification use documented in logo/Logo.doc.json → Logomark usage — they follow different rules (opacity/scale vs. clearspace/minimum size)."
+  ],
+  "relationToProductTokens": "Loosely relevant to primitive.radius in tokens.json (product uses a 4px MUI default radius). The brand's rounded-corner treatment on photography is a much larger radius applied to imagery/marketing containers, not a UI component radius — don't conflate the two scales.",
+  "openQuestions": [
+    "Confirm the actual corner-radius value(s) used here if this treatment needs to be reproduced outside Figma (e.g. in a marketing site template)."
+  ]
+}

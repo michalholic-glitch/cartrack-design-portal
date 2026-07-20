@@ -1,0 +1,10 @@
+{
+  "name": "Grid & Layouts",
+  "category": "Brand / Identity",
+  "status": "pending — not reviewed",
+  "source": "Figma \"Brand Visual Guidelines\", section \"Grid & Layouts\" — link supplied for this section pointed at the same node as Icons (2394:687), so this section has not actually been seen yet.",
+  "description": "Placeholder. The file overview shows sub-pages including 'Anatomy of a grid', 'Column grid', 'Validation grid', 'Validation grid variation', and 'Rule of thirds' (titles read from thumbnails only, not confirmed).",
+  "openQuestions": [
+    "Get the correct node-id link for this section (right-click the Grid & Layouts frame in Figma → Copy link to selection) and re-run this analysis."
+  ]
+}
