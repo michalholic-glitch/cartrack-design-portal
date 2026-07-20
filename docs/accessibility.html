@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Cartrack AI Design System — Documentation Portal</title>
+<title>Accessibility — Cartrack AI Design System</title>
 <style>
   :root{
     --ink:#141a24; --ink2:#4a5364; --mute:#7d8593; --bg:#faf9f7; --card:#fff;
@@ -184,11 +184,11 @@
   <div class="brand"><a class="brandlink" href="index.html"><b>Cartrack AI Design System</b></a><span>Documentation portal · v1</span></div>
   <nav>
     <div class="sect">Guide</div>
-    <a href="index.html" class="navtop active" aria-current="page">Home</a>
+    <a href="index.html" class="navtop">Home</a>
     <a href="foundations.html" class="navtop">Foundations</a>
     <div class="sect">Reference</div>
     <a href="tokens.html" class="navtop">Design tokens</a>
-    <a href="accessibility.html" class="navtop">Accessibility</a>
+    <a href="accessibility.html" class="navtop active" aria-current="page">Accessibility</a>
     <a href="patterns/index.html" class="navtop">Patterns (5)</a>
     <a href="patterns/detail-page.html" class="navcomp">Detail Page</a>
     <a href="patterns/login.html" class="navcomp">Login / Auth Page</a>
@@ -237,49 +237,15 @@
 </aside>
 
 <main>
-<header class="top">
-  <div class="inner">
-    <h1>Build on-system UI with AI.<br>Start in two minutes.</h1>
-    <p>This portal documents the Cartrack Fleet AI-ready design system: a self-contained folder that lets any AI coding agent — Claude, Cursor, Copilot — generate prototypes and UI that match our production Fleet Portal. Everything here is derived from the real fleetapp-web codebase.</p>
-    <div class="badges">
-      <span class="badge"><b>27</b> documented components</span>
-      <span class="badge"><b>1</b> tokens source of truth</span>
-      <span class="badge"><b>0</b> setup steps per session</span>
-      <span class="badge">MD2 · MDC 14 · React</span>
-    </div>
-  </div>
-</header>
-
-<div class="inner">
-<section id="start">
-  <h2>Getting started</h2>
-  <p class="sub">Everyone starts the same way — download the folder, connect it to your tool. Then pick your path.</p>
-  <div class="steps" style="margin-bottom:26px">
-    <div class="stepc"><b>Download the system</b><p>Grab <a href="downloads.html">cartrack-ai-design-system.zip</a> and unzip it anywhere on your computer (or clone it from the team's shared location).</p></div>
-    <div class="stepc"><b>Connect the folder to your AI tool</b><p><b>Claude Cowork:</b> new session → select the <code>cartrack-ai-design-system</code> folder. &nbsp;<b>Claude Code:</b> open a terminal in the folder and run <code>claude</code>. &nbsp;<b>Cursor / Copilot:</b> open the folder as a workspace — they pick up <code>AGENTS.md</code> automatically.</p></div>
-  </div>
-
-  <div class="paths">
-    <div class="path">
-      <div class="who">For designers</div>
-      <h4>Prototype in product language</h4>
-      <p>Ask for screens in plain language — no need to mention the design system, the rules are already loaded. Iterate the same way ("denser table", "add a selection bar"). Verify against the <a href="preview.html">visual preview</a>.</p>
-      <div class="prompt"><b>Try this first prompt:</b><br><i>"Build an HTML prototype of a vehicle list page: app bar with search, filter chips, a data table with status chips and pagination, and one primary action 'Add vehicle'."</i><br><span class="expect">Expected result: a single .html file using the MDC classes, orange <code>primary.dark</code> for the contained button (AA-safe), 14px Roboto body text, and 4px-grid spacing throughout.</span></div>
-    </div>
-    <div class="path">
-      <div class="who">For developers</div>
-      <h4>Build features on the real values</h4>
-      <p>Each component is 3 files: <code>.tsx</code> (MDC class contract), <code>.doc.json</code> (the API and usage contract — read it first), <code>index.ts</code>. All visual values come from <code>tokens/tokens.json</code>.</p>
-      <p style="margin-top:8px">The one non-obvious rule: in inline styles use <code>primitive.*</code> values — most <code>semantic.*</code> entries are alias strings awaiting a resolver. See <a href="foundations.html#rules">the rules</a> and the <a href="tokens.html">naming grammar</a>.</p>
-    </div>
-    <div class="path">
-      <div class="who">For AI agents</div>
-      <h4>Your rules load automatically</h4>
-      <p>Claude tools auto-load <code>CLAUDE.md</code> (the index) which imports <code>AGENTS.md</code> (the contract). Other agents read <code>AGENTS.md</code> directly via the agents.md standard. Consult <code>components/&lt;Name&gt;/&lt;Name&gt;.doc.json</code> before using any component; verify work against the checklist at the end of AGENTS.md.</p>
-      <div class="prompt"><b>Self-test:</b> if a human asks "what design system rules apply here?", you should be able to recite the AGENTS.md rules without any file being mentioned. If you can't, the folder isn't connected at its root.</div>
-    </div>
-  </div>
-  <div class="warn"><b>Important:</b> connect the <code>cartrack-ai-design-system</code> folder itself as the workspace root — not a parent folder. The automatic rule-loading (CLAUDE.md / AGENTS.md) is guaranteed from the root of the connected folder.</div>
+<div class="inner pagetop">
+<section id="accessibility">
+  <h2>Accessibility</h2>
+  <p class="sub">WCAG AA is enforced by the system, not by vigilance: the tokens are AA-safe when used as documented, and every component carries its own accessibility requirements (from its doc.json) on its own page.</p>
+  <div class="warn"><b>The one trap:</b> white text on brand orange <code>#F47735</code> fails AA at ~2.79:1. Filled surfaces with white text must use <code>primary.dark</code> <code>#BB4800</code> (~5.2:1). This single rule was behind all 5 contrast bugs found and fixed in the 2026-07-16 audit.</div>
+  <div class="tip"><b>Baseline for every component:</b> visible focus states, full keyboard operability, accessible names on all interactive elements, and AA contrast — the per-component requirements add to this, never replace it.</div>
+  <h5 style="margin-top:30px">Per-component requirements</h5>
+  <p class="sub" style="margin-bottom:14px">One line each — the full list lives on the component's own page.</p>
+  <table class="mini"><thead><tr><th style="width:180px">Component</th><th>Accessibility summary</th></tr></thead><tbody><tr><td><a href="components/app-bar.html#accessibility"><b>AppBar</b></a></td><td>Use a banner / header landmark; the title is a heading. <span class="tnote" style="display:inline">(+3 more)</span></td></tr><tr><td><a href="components/badge.html#accessibility"><b>Badge</b></a></td><td>The host&#x27;s accessible name includes the badge meaning (e.g. &quot;Notifications, 4 unread&quot;). <span class="tnote" style="display:inline">(+2 more)</span></td></tr><tr><td><a href="components/banner.html#accessibility"><b>Banner</b></a></td><td>Expose the banner via an appropriate live region (assertive for errors, polite for info) so it&#x27;s… <span class="tnote" style="display:inline">(+2 more)</span></td></tr><tr><td><a href="components/breadcrumbs.html#accessibility"><b>Breadcrumbs</b></a></td><td>Wrap in a nav labelled &quot;Breadcrumb&quot; with an ordered list. <span class="tnote" style="display:inline">(+3 more)</span></td></tr><tr><td><a href="components/button.html#accessibility"><b>Button</b></a></td><td>Buttons are real &lt;button&gt; elements with discernible text. <span class="tnote" style="display:inline">(+4 more)</span></td></tr><tr><td><a href="components/card.html#accessibility"><b>Card</b></a></td><td>The card&#x27;s title is a heading. <span class="tnote" style="display:inline">(+2 more)</span></td></tr><tr><td><a href="components/chip.html#accessibility"><b>Chip</b></a></td><td>Interactive chips are focusable with clear roles. <span class="tnote" style="display:inline">(+3 more)</span></td></tr><tr><td><a href="components/data-table.html#accessibility"><b>DataTable</b></a></td><td>Use real &lt;table&gt; semantics with &lt;th&gt; headers; sortable headers expose aria-sort. <span class="tnote" style="display:inline">(+4 more)</span></td></tr><tr><td><a href="components/dialog.html#accessibility"><b>Dialog</b></a></td><td>Use role=dialog with aria-modal and a labelled title. <span class="tnote" style="display:inline">(+3 more)</span></td></tr><tr><td><a href="components/divider.html#accessibility"><b>Divider</b></a></td><td>Decorative dividers are hidden from assistive tech. <span class="tnote" style="display:inline">(+2 more)</span></td></tr><tr><td><a href="components/expansion-panel.html#accessibility"><b>ExpansionPanel</b></a></td><td>The header is a button exposing aria-expanded and controlling its panel via aria-controls. <span class="tnote" style="display:inline">(+2 more)</span></td></tr><tr><td><a href="components/image-list.html#accessibility"><b>ImageList</b></a></td><td>Every image has meaningful alt text. <span class="tnote" style="display:inline">(+2 more)</span></td></tr><tr><td><a href="components/list.html#accessibility"><b>List</b></a></td><td>Use real list semantics (ul/li or role=list). <span class="tnote" style="display:inline">(+2 more)</span></td></tr><tr><td><a href="components/menu.html#accessibility"><b>Menu</b></a></td><td>The trigger exposes aria-haspopup and expanded state. <span class="tnote" style="display:inline">(+3 more)</span></td></tr><tr><td><a href="components/navigation-drawer.html#accessibility"><b>NavigationDrawer</b></a></td><td>Use a navigation landmark with a list of links. <span class="tnote" style="display:inline">(+3 more)</span></td></tr><tr><td><a href="components/navigation-rail.html#accessibility"><b>NavigationRail</b></a></td><td>A navigation landmark of links; the active item exposes aria-current. <span class="tnote" style="display:inline">(+2 more)</span></td></tr><tr><td><a href="components/pagination.html#accessibility"><b>Pagination</b></a></td><td>Pagination is a labelled navigation region. <span class="tnote" style="display:inline">(+3 more)</span></td></tr><tr><td><a href="components/picker.html#accessibility"><b>Picker</b></a></td><td>The field is labelled and announces the selected value. <span class="tnote" style="display:inline">(+2 more)</span></td></tr><tr><td><a href="components/progress-indicator.html#accessibility"><b>ProgressIndicator</b></a></td><td>Use progressbar role with aria-valuenow (determinate) or busy state (indeterminate). <span class="tnote" style="display:inline">(+2 more)</span></td></tr><tr><td><a href="components/selection-control.html#accessibility"><b>SelectionControl</b></a></td><td>Native inputs with associated labels; groups use fieldset/legend or radiogroup. <span class="tnote" style="display:inline">(+3 more)</span></td></tr><tr><td><a href="components/side-sheet.html#accessibility"><b>SideSheet</b></a></td><td>A modal side sheet uses role=dialog + aria-modal, traps focus, and restores it on close. <span class="tnote" style="display:inline">(+3 more)</span></td></tr><tr><td><a href="components/slider.html#accessibility"><b>Slider</b></a></td><td>Use a slider role with aria-valuemin/max/now (and text for ranges). <span class="tnote" style="display:inline">(+2 more)</span></td></tr><tr><td><a href="components/snackbar.html#accessibility"><b>Snackbar</b></a></td><td>Announce via a polite live region (assertive only for important messages). <span class="tnote" style="display:inline">(+2 more)</span></td></tr><tr><td><a href="components/stepper.html#accessibility"><b>Stepper</b></a></td><td>Convey the current step and total (&quot;Step 2 of 3&quot;) to assistive tech; the active step uses… <span class="tnote" style="display:inline">(+2 more)</span></td></tr><tr><td><a href="components/tabs.html#accessibility"><b>Tabs</b></a></td><td>Use the tablist/tab/tabpanel pattern; the active tab exposes aria-selected and arrow keys move… <span class="tnote" style="display:inline">(+2 more)</span></td></tr><tr><td><a href="components/text-field.html#accessibility"><b>TextField</b></a></td><td>Every field has a programmatic &lt;label&gt;; errors are linked via aria-describedby and announced. <span class="tnote" style="display:inline">(+2 more)</span></td></tr><tr><td><a href="components/tooltip.html#accessibility"><b>Tooltip</b></a></td><td>Associate the tooltip with its trigger (e.g. aria-describedby). <span class="tnote" style="display:inline">(+2 more)</span></td></tr></tbody></table>
 </section>
 </div>
 </main>

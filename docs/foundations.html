@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Cartrack AI Design System — Documentation Portal</title>
+<title>Foundations — Cartrack AI Design System</title>
 <style>
   :root{
     --ink:#141a24; --ink2:#4a5364; --mute:#7d8593; --bg:#faf9f7; --card:#fff;
@@ -184,8 +184,8 @@
   <div class="brand"><a class="brandlink" href="index.html"><b>Cartrack AI Design System</b></a><span>Documentation portal · v1</span></div>
   <nav>
     <div class="sect">Guide</div>
-    <a href="index.html" class="navtop active" aria-current="page">Home</a>
-    <a href="foundations.html" class="navtop">Foundations</a>
+    <a href="index.html" class="navtop">Home</a>
+    <a href="foundations.html" class="navtop active" aria-current="page">Foundations</a>
     <div class="sect">Reference</div>
     <a href="tokens.html" class="navtop">Design tokens</a>
     <a href="accessibility.html" class="navtop">Accessibility</a>
@@ -237,49 +237,33 @@
 </aside>
 
 <main>
-<header class="top">
-  <div class="inner">
-    <h1>Build on-system UI with AI.<br>Start in two minutes.</h1>
-    <p>This portal documents the Cartrack Fleet AI-ready design system: a self-contained folder that lets any AI coding agent — Claude, Cursor, Copilot — generate prototypes and UI that match our production Fleet Portal. Everything here is derived from the real fleetapp-web codebase.</p>
-    <div class="badges">
-      <span class="badge"><b>27</b> documented components</span>
-      <span class="badge"><b>1</b> tokens source of truth</span>
-      <span class="badge"><b>0</b> setup steps per session</span>
-      <span class="badge">MD2 · MDC 14 · React</span>
-    </div>
+<div class="inner pagetop">
+<section id="inside">
+  <h2>What's in the folder</h2>
+  <p class="sub">Six things. Each file's name tells the AI (or you) when to read it.</p>
+  <div class="filemap">
+    <div class="fr"><div class="fp">CLAUDE.md</div><div class="fd">The index — auto-loaded by Claude tools at session start. Folder map, token model, known issues.</div></div>
+    <div class="fr"><div class="fp">AGENTS.md</div><div class="fd">The behavior contract — rules every AI agent must follow. Auto-read by Cursor, Copilot, Codex; imported by CLAUDE.md for Claude.</div></div>
+    <div class="fr"><div class="fp">README.md</div><div class="fd">Human-friendly overview of the whole system.</div></div>
+    <div class="fr"><div class="fp">tokens/tokens.json</div><div class="fd">Single source of truth for every colour, spacing, type, radius and border-width value — extracted from the production codebase.</div></div>
+    <div class="fr"><div class="fp">components/&lt;Name&gt;/</div><div class="fd">27 components, 3 files each: <code>.tsx</code> implementation, <code>.doc.json</code> structured documentation (what this portal's reference is generated from), <code>index.ts</code> export.</div></div>
+    <div class="fr"><div class="fp">templates/</div><div class="fd">5 page patterns (table page, detail page, map view, settings, login) — which components compose each screen, and the composition rules. The <a href="patterns/index.html">Patterns</a> section is generated from these.</div></div>
+    <div class="fr"><div class="fp">component-library-preview.html</div><div class="fd">Every component rendered visually in one static page — open in any browser.</div></div>
   </div>
-</header>
+</section>
 
-<div class="inner">
-<section id="start">
-  <h2>Getting started</h2>
-  <p class="sub">Everyone starts the same way — download the folder, connect it to your tool. Then pick your path.</p>
-  <div class="steps" style="margin-bottom:26px">
-    <div class="stepc"><b>Download the system</b><p>Grab <a href="downloads.html">cartrack-ai-design-system.zip</a> and unzip it anywhere on your computer (or clone it from the team's shared location).</p></div>
-    <div class="stepc"><b>Connect the folder to your AI tool</b><p><b>Claude Cowork:</b> new session → select the <code>cartrack-ai-design-system</code> folder. &nbsp;<b>Claude Code:</b> open a terminal in the folder and run <code>claude</code>. &nbsp;<b>Cursor / Copilot:</b> open the folder as a workspace — they pick up <code>AGENTS.md</code> automatically.</p></div>
+<section id="rules">
+  <h2>The rules</h2>
+  <p class="sub">The full contract lives in <code>AGENTS.md</code> and loads automatically — but these are the ones humans should know too, because they apply to everyone producing UI, not just machines.</p>
+  <div class="rules">
+    <div class="rule"><b>Use the components, never raw HTML.</b> <code>&lt;Button&gt;</code> not <code>&lt;button&gt;</code>, <code>&lt;TextField&gt;</code> not <code>&lt;input&gt;</code>. All 27 live in <code>components/</code>.</div>
+    <div class="rule"><b>Never hardcode visual values.</b> Colours, spacing, type and radii always come from <code>tokens/tokens.json</code>.</div>
+    <div class="rule"><b>In code, use <code>primitive.*</code> values.</b> Most <code>semantic.*</code> entries are alias strings awaiting a build-time resolver — pasting one into a style sets the CSS to literal placeholder text. Exceptions (real literals): <code>semantic.color.text.*</code>, <code>border.default</code>, <code>interactive.*</code>.</div>
+    <div class="rule"><b>The doc.json is the source of truth.</b> Read a component's do/don't rules before using it — that's where the design judgment lives.</div>
+    <div class="rule"><b>One primary action per view.</b> One contained primary button; everything else is outlined or text.</div>
+    <div class="rule"><b>WCAG AA always.</b> Never white text on brand orange <code>#F47735</code> (~2.79:1 — fails). Filled surfaces with white text use <code>primary.dark</code> <code>#BB4800</code> (~5.2:1).</div>
+    <div class="rule"><b>Don't invent.</b> If a component, variant or token doesn't exist — flag the gap. Never fabricate.</div>
   </div>
-
-  <div class="paths">
-    <div class="path">
-      <div class="who">For designers</div>
-      <h4>Prototype in product language</h4>
-      <p>Ask for screens in plain language — no need to mention the design system, the rules are already loaded. Iterate the same way ("denser table", "add a selection bar"). Verify against the <a href="preview.html">visual preview</a>.</p>
-      <div class="prompt"><b>Try this first prompt:</b><br><i>"Build an HTML prototype of a vehicle list page: app bar with search, filter chips, a data table with status chips and pagination, and one primary action 'Add vehicle'."</i><br><span class="expect">Expected result: a single .html file using the MDC classes, orange <code>primary.dark</code> for the contained button (AA-safe), 14px Roboto body text, and 4px-grid spacing throughout.</span></div>
-    </div>
-    <div class="path">
-      <div class="who">For developers</div>
-      <h4>Build features on the real values</h4>
-      <p>Each component is 3 files: <code>.tsx</code> (MDC class contract), <code>.doc.json</code> (the API and usage contract — read it first), <code>index.ts</code>. All visual values come from <code>tokens/tokens.json</code>.</p>
-      <p style="margin-top:8px">The one non-obvious rule: in inline styles use <code>primitive.*</code> values — most <code>semantic.*</code> entries are alias strings awaiting a resolver. See <a href="foundations.html#rules">the rules</a> and the <a href="tokens.html">naming grammar</a>.</p>
-    </div>
-    <div class="path">
-      <div class="who">For AI agents</div>
-      <h4>Your rules load automatically</h4>
-      <p>Claude tools auto-load <code>CLAUDE.md</code> (the index) which imports <code>AGENTS.md</code> (the contract). Other agents read <code>AGENTS.md</code> directly via the agents.md standard. Consult <code>components/&lt;Name&gt;/&lt;Name&gt;.doc.json</code> before using any component; verify work against the checklist at the end of AGENTS.md.</p>
-      <div class="prompt"><b>Self-test:</b> if a human asks "what design system rules apply here?", you should be able to recite the AGENTS.md rules without any file being mentioned. If you can't, the folder isn't connected at its root.</div>
-    </div>
-  </div>
-  <div class="warn"><b>Important:</b> connect the <code>cartrack-ai-design-system</code> folder itself as the workspace root — not a parent folder. The automatic rule-loading (CLAUDE.md / AGENTS.md) is guaranteed from the root of the connected folder.</div>
 </section>
 </div>
 </main>
