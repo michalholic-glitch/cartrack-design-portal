@@ -17,6 +17,9 @@ All values are **derived from the real fleetapp-web production codebase** (karoo
 | `components/` | 27 components, one folder each: `<Name>.tsx` (React implementation), `<Name>.doc.json` (structured docs: props, variants, do/don't rules, token references), `index.ts` (export) | AI agents + developers |
 | `templates/` | Page patterns — table page, detail page, map/tracking view, settings, login: which components compose each screen and the composition rules | AI agents + designers |
 | `component-library-preview.html` | Static visual preview of every component — open it in any browser, no server needed | People |
+| `vibe-tests/` | Tests whether `AGENTS.md` + the `.doc.json` files actually produce correct output from a fresh AI agent — stratified prompts, a subagent-driven run, an aggregate pass-rate script | Whoever maintains this package |
+
+This folder is the complete, self-contained package — everything above is all you need. The documentation website these files are published through (and the Cartrack marketing brand guidelines) live in a sibling `portal/` folder in the source repo, not inside this one.
 
 ## How to use it
 

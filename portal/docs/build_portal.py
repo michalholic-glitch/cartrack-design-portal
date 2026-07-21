@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
-"""Generate the multi-page ds-portal site under docs/ from the real
-cartrack-ai-design-system files.
+"""Generate the multi-page ds-portal site under portal/docs/ from the real
+design-system/ package files.
 
 One URL per page: Home, Foundations, Tokens, Accessibility, a Patterns index +
 one page per pattern, a Components index + one page per component, plus Preview,
@@ -11,15 +11,48 @@ to break when files live in components/ and patterns/ subfolders.
 No framework, no build step, no server — same generation model as before, it just
 writes many files instead of one. Re-run after any doc.json/tokens.json/template
 change; never hand-edit the emitted HTML.
+
+Repo layout (since the 2026-07-21 package/portal split):
+  cartrack-ai-design-system/
+  ├── design-system/   ← the downloadable package (CLAUDE.md, AGENTS.md, tokens/,
+  │                        components/, templates/, vibe-tests/, the preview HTML)
+  └── portal/
+      └── docs/        ← this script + its generated output (deployed to Vercel)
+This script reads from design-system/ (DS) and writes into its own folder (DOCS).
+It also mirrors component-library-preview.html and the standalone download files
+from design-system/ into DOCS so the deployed site — which only serves files under
+portal/docs/ — doesn't need to reach outside its own output directory.
 """
-import json, html, os, re
+import json, html, os, re, shutil, zipfile
 from pathlib import Path
 
-HERE = Path(__file__).resolve().parent      # .../cartrack-ai-design-system/docs
-DS = HERE.parent                            # .../cartrack-ai-design-system
-DOCS = HERE                                 # output root for the generated site
+HERE = Path(__file__).resolve().parent            # .../cartrack-ai-design-system/portal/docs
+REPO_ROOT = HERE.parent.parent                     # .../cartrack-ai-design-system
+DS = REPO_ROOT / "design-system"                   # the package this site documents
+DOCS = HERE                                         # output root for the generated site
 
 tokens = json.load(open(DS / "tokens" / "tokens.json"))
+
+# ---------- mirror package files the deployed site needs to serve locally ----------
+# The live site only serves what's under portal/docs/, so anything it links to
+# (the visual preview, the standalone downloads) needs a local copy here, synced
+# from the actual package on every generation rather than hand-copied.
+shutil.copy2(DS / "component-library-preview.html", DOCS / "component-library-preview.html")
+
+DOWNLOADS_DIR = DOCS / "downloads"
+DOWNLOADS_DIR.mkdir(exist_ok=True)
+for name in ("AGENTS.md", "CLAUDE.md", "README.md"):
+    shutil.copy2(DS / name, DOWNLOADS_DIR / name)
+shutil.copy2(DS / "tokens" / "tokens.json", DOWNLOADS_DIR / "tokens.json")
+
+zip_target = DOWNLOADS_DIR / "cartrack-ai-design-system.zip"
+with zipfile.ZipFile(zip_target, "w", zipfile.ZIP_DEFLATED) as zf:
+    for path in sorted(DS.rglob("*")):
+        rel = path.relative_to(DS)
+        if "vibe-tests" + os.sep + "results" in str(rel):
+            continue  # test-run output, not part of the package
+        if path.is_file():
+            zf.write(path, Path("cartrack-ai-design-system") / rel)
 
 def resolve(v):
     """Resolve '{path.to.value}' alias strings against the tokens JSON."""
@@ -657,7 +690,7 @@ def body_home():
       <span class="idxmeta"><span class="idxcat">Preview · changelog · downloads</span></span>
       <p>The visual preview, what's new, and everything to take away — including the full system zip.</p></a>
   </div>
-  <div class="warn"><b>Important:</b> connect the <code>cartrack-ai-design-system</code> folder itself as the workspace root — not a parent folder. The automatic rule-loading (CLAUDE.md / AGENTS.md) is guaranteed from the root of the connected folder.</div>
+  <div class="warn"><b>Important:</b> connect the package folder itself as the workspace root — not a parent folder. Unzip the download and you're already there; if you instead clone the source repo, that's <code>design-system/</code>, not the repo root (the repo also holds this docs site, in a sibling <code>portal/</code> folder). The automatic rule-loading (CLAUDE.md / AGENTS.md) is guaranteed only from the root of the connected folder.</div>
 </section>
 </div>'''
 
@@ -679,10 +712,10 @@ def body_guides():
     <tr><td><code>tokens/tokens.json</code></td><td>Single source of truth for color, spacing, typography, radius, border width. <code>primitive</code> / <code>semantic</code> / <code>legacy</code> tiers, plus <code>_meta.changelog</code>.</td><td>AI agents + developers</td></tr>
     <tr><td><code>components/&lt;Name&gt;/</code></td><td>{n_comps} components, 3 files each: <code>.tsx</code> implementation, <code>.doc.json</code> structured docs (props, variants, do/don't, tokens), <code>index.ts</code>.</td><td>AI agents + developers</td></tr>
     <tr><td><code>templates/</code></td><td>{n_patterns} page patterns (table, detail, map/tracking, settings, login) — which components compose each screen and the composition rules.</td><td>AI agents + designers</td></tr>
-    <tr><td><code>brand/</code></td><td>Cartrack <b>marketing</b> brand guidelines — reference only, not a token source (see <a href="#concepts">core concepts</a>).</td><td>Designers, occasionally AI</td></tr>
     <tr><td><code>component-library-preview.html</code></td><td>Every component rendered visually, one static page, no server needed.</td><td>People</td></tr>
-    <tr><td><code>docs/</code></td><td>This documentation portal, generated from the sources above by <code>docs/build_portal.py</code>. Never hand-edited.</td><td>People</td></tr>
+    <tr><td><code>vibe-tests/</code></td><td>Tests whether these docs actually produce correct output from a fresh AI agent — stratified prompts, a subagent-driven run, and an aggregate pass-rate script.</td><td>Whoever maintains this package</td></tr>
   </tbody></table>
+  <p class="tnote" style="margin-top:8px">This table is the package: everything above lives in <code>design-system/</code> and is exactly what the zip download contains. The docs site you're reading now, and the marketing <code>brand/</code> guidelines, live in a sibling <code>portal/</code> folder in the source repo — useful context, not something you need to download to use the system.</p>
 
   <h3 id="why">Why it's built this way</h3>
   <p class="sub">Most design systems are written for humans to read occasionally. This one is written for an AI agent to read <i>every session</i> — so it has to be short, unambiguous, and structurally predictable rather than exhaustive. That's why there's no giant style-guide PDF: instructions live in two small root files (<code>CLAUDE.md</code>, <code>AGENTS.md</code>), and design judgment lives next to the code it governs (<code>&lt;Name&gt;.doc.json</code>), not in a separate wiki that drifts out of sync.</p>
@@ -690,8 +723,8 @@ def body_guides():
 
   <h3 id="quick-start">Quick start: download &amp; connect</h3>
   <div class="steps" style="margin-top:14px">
-    <div class="stepc"><b>Download the system</b><p>Grab the zip from <a href="../resources/downloads.html">Downloads</a> and unzip anywhere, or clone it from the team's shared location.</p></div>
-    <div class="stepc"><b>Connect it to your tool</b><p>Point the tool at the <code>cartrack-ai-design-system</code> folder <b>itself</b>, not a parent folder — rule-loading is guaranteed only from the root of the connected folder.</p><p style="margin-top:6px"><b>Claude Cowork:</b> new session → select the folder. &nbsp;<b>Claude Code:</b> open a terminal in the folder, run <code>claude</code>. &nbsp;<b>Cursor / Copilot / Codex:</b> open the folder as a workspace — they pick up <code>AGENTS.md</code> automatically via the agents.md standard.</p></div>
+    <div class="stepc"><b>Download the system</b><p>Grab the zip from <a href="../resources/downloads.html">Downloads</a> and unzip anywhere — the zip's top-level folder is the whole package. Or clone the source repo and use its <code>design-system/</code> folder (the repo also holds this docs site, in a sibling <code>portal/</code> folder you don't need).</p></div>
+    <div class="stepc"><b>Connect it to your tool</b><p>Point the tool at the package folder <b>itself</b> (the unzipped folder, or <code>design-system/</code> if you cloned the repo) — not a parent folder. Rule-loading is guaranteed only from the root of the connected folder.</p><p style="margin-top:6px"><b>Claude Cowork:</b> new session → select the folder. &nbsp;<b>Claude Code:</b> open a terminal in the folder, run <code>claude</code>. &nbsp;<b>Cursor / Copilot / Codex:</b> open the folder as a workspace — they pick up <code>AGENTS.md</code> automatically via the agents.md standard.</p></div>
   </div>
   <div class="tip"><b>Self-test:</b> ask your tool "what design system rules apply here?" It should recite the <code>AGENTS.md</code> rules without you naming a file. If it can't, the folder isn't connected at its root.</div>
 

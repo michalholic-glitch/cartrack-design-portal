@@ -6,8 +6,12 @@ Derived from the real fleetapp-web codebase (karoo-ui / MUI theme, MDC 14 compon
 
 ## Structure
 
+This folder is the whole package — everything an AI agent or developer needs to generate
+UI with this system. It's meant to be connected as a workspace root on its own (see the
+note at the bottom of this section).
+
 ```
-cartrack-ai-design-system/
+design-system/
 ├── CLAUDE.md                        # This file — the index (auto-loaded by Claude tools)
 ├── AGENTS.md                        # Rules AI agents must follow when generating UI
 ├── README.md                        # Human-friendly overview
@@ -20,8 +24,18 @@ cartrack-ai-design-system/
 │       └── index.ts                 # Export
 ├── templates/                       # Page patterns: table-page, detail-page, map-tracking-view,
 │                                    # settings-page, login — how components compose into screens
+├── vibe-tests/                      # Tests whether these docs actually produce correct output from a
+│                                    # fresh AI agent — see vibe-tests/README.md
 └── component-library-preview.html   # Static visual preview of all components (open in a browser)
 ```
+
+**Where this folder lives:** in the source repo, `design-system/` sits beside a sibling
+`portal/` folder that holds the documentation website, its generator script, and the
+Cartrack *marketing* brand guidelines (`portal/brand/` — reference-only, not a token
+source; never cite a `brand/*.doc.json` value in a component's tokens list or `.tsx`
+styles). None of that is needed to use the system — `design-system/` is the complete,
+self-contained deliverable. If you downloaded this as a zip, the folder you're standing
+in now is everything; there's nothing above it to worry about.
 
 ## Before writing any UI
 
@@ -40,6 +54,21 @@ cartrack-ai-design-system/
 ## Known issues
 
 - White text on brand orange `#F47735` fails WCAG AA (~2.79:1). Use `semantic.color.brand.primary.dark` (`#BB4800`, ~5.2:1) for filled surfaces with white text. Details: `tokens.json` → `accessibility.knownIssues`.
+
+## Testing whether the docs actually work
+
+`vibe-tests/` checks whether `AGENTS.md` + the component `.doc.json` files produce correct
+output from a fresh agent, instead of just assuming they do. Modeled on Meta's Astryx
+`/vibe-test` harness, scoped down for a docs-only repo (no build, no CI, no screenshot diffing) —
+it checks structural correctness: real components/tokens only, `doThis`/`dontDoThis` followed,
+gaps flagged instead of fabricated.
+
+To run: spawn a fresh subagent per prompt in `vibe-tests/prompts.json`, give it repo access and
+nothing else, have it self-evaluate and write results, then run `node vibe-tests/aggregate.mjs <iteration>`.
+Full instructions and result schema: `vibe-tests/README.md`.
+
+Re-run after material changes to `AGENTS.md` or `tokens.json` — a passing run today doesn't mean
+the docs still hold up after the next edit.
 
 ## Conventions
 

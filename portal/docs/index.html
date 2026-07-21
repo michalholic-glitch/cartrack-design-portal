@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>How to start — Cartrack AI Design System</title>
+<title>Cartrack AI Design System — Documentation Portal</title>
 <style>
   :root{
     /* colours sourced from tokens.json (see home-page-visual-redesign-spec §3.1):
@@ -18,8 +18,8 @@
     --display:'Montserrat',-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
   }
   /* Self-hosted Montserrat (latin subset, variable weight) — no external requests.
-     ../ keeps the path correct at every folder depth. */
-  @font-face{font-family:'Montserrat';font-style:normal;font-weight:100 900;font-display:swap;src:url('../fonts/montserrat.woff2') format('woff2')}
+      keeps the path correct at every folder depth. */
+  @font-face{font-family:'Montserrat';font-style:normal;font-weight:100 900;font-display:swap;src:url('fonts/montserrat.woff2') format('woff2')}
   *{margin:0;padding:0;box-sizing:border-box}
   html{scroll-behavior:smooth;scroll-padding-top:24px}
   body{font-family:var(--sans);background:var(--bg);color:var(--ink);line-height:1.6}
@@ -237,129 +237,72 @@
   }
 </style>
 </head>
-<body class="">
+<body class="p-home">
 <div class="topbar">
   <button class="navtoggle" aria-label="Toggle navigation" aria-expanded="false" onclick="toggleNav()">☰</button>
   <span class="topbar-title">Cartrack AI Design System</span>
 </div>
 <div class="layout">
 <aside>
-  <div class="brand"><a class="brandlink" href="../index.html"><b>Cartrack AI Design System</b></a><span>Documentation portal · v1</span></div>
+  <div class="brand"><a class="brandlink" href="index.html"><b>Cartrack AI Design System</b></a><span>Documentation portal · v1</span></div>
   <nav>
     <div class="navfilter"><input type="search" id="navfilter" placeholder="Filter components…" aria-label="Filter components" oninput="filterNav(this.value)"></div>
-    <a href="../index.html" class="navtop">Home</a>
-    <a href="../guides/index.html" class="navtop active" aria-current="page">How to start</a>
-    <details class="navgrp" id="grp-foundations" data-defopen="0"><summary><span class="chev"></span><span class="navlabel">Foundations</span><span class="navcount">4</span></summary><a href="../foundations/index.html" class="navcomp" data-leaf>Overview</a><a href="../foundations/colour.html" class="navcomp" data-leaf>Colour</a><a href="../foundations/typography.html" class="navcomp" data-leaf>Typography</a><a href="../foundations/spacing.html" class="navcomp" data-leaf>Spacing &amp; shape</a><a href="../foundations/accessibility.html" class="navcomp" data-leaf>Accessibility</a></details>
-    <details class="navgrp" id="grp-components" data-defopen="0"><summary><span class="chev"></span><span class="navlabel">Components</span><span class="navcount">27</span></summary><a href="../components/index.html" class="navcomp" data-leaf>Overview</a><details class="navsub" id="cat-actions" data-defopen="0"><summary><span class="chev"></span><span class="navlabel">Actions</span><span class="navcount">2</span></summary><a href="../components/button.html" class="navcomp" data-leaf>Button</a><a href="../components/menu.html" class="navcomp" data-leaf>Menu</a></details><details class="navsub" id="cat-data-display" data-defopen="0"><summary><span class="chev"></span><span class="navlabel">Data display</span><span class="navcount">8</span></summary><a href="../components/badge.html" class="navcomp" data-leaf>Badge</a><a href="../components/data-table.html" class="navcomp" data-leaf>DataTable</a><a href="../components/divider.html" class="navcomp" data-leaf>Divider</a><a href="../components/image-list.html" class="navcomp" data-leaf>ImageList</a><a href="../components/list.html" class="navcomp" data-leaf>List</a><a href="../components/pagination.html" class="navcomp" data-leaf>Pagination</a><a href="../components/progress-indicator.html" class="navcomp" data-leaf>ProgressIndicator</a><a href="../components/tooltip.html" class="navcomp" data-leaf>Tooltip</a></details><details class="navsub" id="cat-feedback" data-defopen="0"><summary><span class="chev"></span><span class="navlabel">Feedback</span><span class="navcount">2</span></summary><a href="../components/banner.html" class="navcomp" data-leaf>Banner</a><a href="../components/snackbar.html" class="navcomp" data-leaf>Snackbar</a></details><details class="navsub" id="cat-inputs-forms" data-defopen="0"><summary><span class="chev"></span><span class="navlabel">Inputs &amp; forms</span><span class="navcount">5</span></summary><a href="../components/chip.html" class="navcomp" data-leaf>Chip</a><a href="../components/picker.html" class="navcomp" data-leaf>Picker</a><a href="../components/selection-control.html" class="navcomp" data-leaf>SelectionControl</a><a href="../components/slider.html" class="navcomp" data-leaf>Slider</a><a href="../components/text-field.html" class="navcomp" data-leaf>TextField</a></details><details class="navsub" id="cat-navigation" data-defopen="0"><summary><span class="chev"></span><span class="navlabel">Navigation</span><span class="navcount">6</span></summary><a href="../components/app-bar.html" class="navcomp" data-leaf>AppBar</a><a href="../components/breadcrumbs.html" class="navcomp" data-leaf>Breadcrumbs</a><a href="../components/navigation-drawer.html" class="navcomp" data-leaf>NavigationDrawer</a><a href="../components/navigation-rail.html" class="navcomp" data-leaf>NavigationRail</a><a href="../components/stepper.html" class="navcomp" data-leaf>Stepper</a><a href="../components/tabs.html" class="navcomp" data-leaf>Tabs</a></details><details class="navsub" id="cat-surfaces" data-defopen="0"><summary><span class="chev"></span><span class="navlabel">Surfaces</span><span class="navcount">4</span></summary><a href="../components/card.html" class="navcomp" data-leaf>Card</a><a href="../components/dialog.html" class="navcomp" data-leaf>Dialog</a><a href="../components/expansion-panel.html" class="navcomp" data-leaf>ExpansionPanel</a><a href="../components/side-sheet.html" class="navcomp" data-leaf>SideSheet</a></details></details>
-    <details class="navgrp" id="grp-patterns" data-defopen="0"><summary><span class="chev"></span><span class="navlabel">Patterns</span><span class="navcount">5</span></summary><a href="../patterns/index.html" class="navcomp" data-leaf>Overview</a><a href="../patterns/detail-page.html" class="navcomp" data-leaf>Detail Page</a><a href="../patterns/login.html" class="navcomp" data-leaf>Login / Auth Page</a><a href="../patterns/map-tracking-view.html" class="navcomp" data-leaf>Map / Tracking View</a><a href="../patterns/settings-page.html" class="navcomp" data-leaf>Settings Page</a><a href="../patterns/table-page.html" class="navcomp" data-leaf>Table Page</a></details>
-    <details class="navgrp" id="grp-resources" data-defopen="0"><summary><span class="chev"></span><span class="navlabel">Resources</span><span class="navcount">3</span></summary><a href="../resources/index.html" class="navcomp" data-leaf>Overview</a><a href="../resources/preview.html" class="navcomp" data-leaf>Visual preview</a><a href="../resources/changelog.html" class="navcomp" data-leaf>What's new</a><a href="../resources/downloads.html" class="navcomp" data-leaf>Downloads</a></details>
+    <a href="index.html" class="navtop active" aria-current="page">Home</a>
+    <a href="guides/index.html" class="navtop">How to start</a>
+    <details class="navgrp" id="grp-foundations" data-defopen="0"><summary><span class="chev"></span><span class="navlabel">Foundations</span><span class="navcount">4</span></summary><a href="foundations/index.html" class="navcomp" data-leaf>Overview</a><a href="foundations/colour.html" class="navcomp" data-leaf>Colour</a><a href="foundations/typography.html" class="navcomp" data-leaf>Typography</a><a href="foundations/spacing.html" class="navcomp" data-leaf>Spacing &amp; shape</a><a href="foundations/accessibility.html" class="navcomp" data-leaf>Accessibility</a></details>
+    <details class="navgrp" id="grp-components" data-defopen="0"><summary><span class="chev"></span><span class="navlabel">Components</span><span class="navcount">27</span></summary><a href="components/index.html" class="navcomp" data-leaf>Overview</a><details class="navsub" id="cat-actions" data-defopen="0"><summary><span class="chev"></span><span class="navlabel">Actions</span><span class="navcount">2</span></summary><a href="components/button.html" class="navcomp" data-leaf>Button</a><a href="components/menu.html" class="navcomp" data-leaf>Menu</a></details><details class="navsub" id="cat-data-display" data-defopen="0"><summary><span class="chev"></span><span class="navlabel">Data display</span><span class="navcount">8</span></summary><a href="components/badge.html" class="navcomp" data-leaf>Badge</a><a href="components/data-table.html" class="navcomp" data-leaf>DataTable</a><a href="components/divider.html" class="navcomp" data-leaf>Divider</a><a href="components/image-list.html" class="navcomp" data-leaf>ImageList</a><a href="components/list.html" class="navcomp" data-leaf>List</a><a href="components/pagination.html" class="navcomp" data-leaf>Pagination</a><a href="components/progress-indicator.html" class="navcomp" data-leaf>ProgressIndicator</a><a href="components/tooltip.html" class="navcomp" data-leaf>Tooltip</a></details><details class="navsub" id="cat-feedback" data-defopen="0"><summary><span class="chev"></span><span class="navlabel">Feedback</span><span class="navcount">2</span></summary><a href="components/banner.html" class="navcomp" data-leaf>Banner</a><a href="components/snackbar.html" class="navcomp" data-leaf>Snackbar</a></details><details class="navsub" id="cat-inputs-forms" data-defopen="0"><summary><span class="chev"></span><span class="navlabel">Inputs &amp; forms</span><span class="navcount">5</span></summary><a href="components/chip.html" class="navcomp" data-leaf>Chip</a><a href="components/picker.html" class="navcomp" data-leaf>Picker</a><a href="components/selection-control.html" class="navcomp" data-leaf>SelectionControl</a><a href="components/slider.html" class="navcomp" data-leaf>Slider</a><a href="components/text-field.html" class="navcomp" data-leaf>TextField</a></details><details class="navsub" id="cat-navigation" data-defopen="0"><summary><span class="chev"></span><span class="navlabel">Navigation</span><span class="navcount">6</span></summary><a href="components/app-bar.html" class="navcomp" data-leaf>AppBar</a><a href="components/breadcrumbs.html" class="navcomp" data-leaf>Breadcrumbs</a><a href="components/navigation-drawer.html" class="navcomp" data-leaf>NavigationDrawer</a><a href="components/navigation-rail.html" class="navcomp" data-leaf>NavigationRail</a><a href="components/stepper.html" class="navcomp" data-leaf>Stepper</a><a href="components/tabs.html" class="navcomp" data-leaf>Tabs</a></details><details class="navsub" id="cat-surfaces" data-defopen="0"><summary><span class="chev"></span><span class="navlabel">Surfaces</span><span class="navcount">4</span></summary><a href="components/card.html" class="navcomp" data-leaf>Card</a><a href="components/dialog.html" class="navcomp" data-leaf>Dialog</a><a href="components/expansion-panel.html" class="navcomp" data-leaf>ExpansionPanel</a><a href="components/side-sheet.html" class="navcomp" data-leaf>SideSheet</a></details></details>
+    <details class="navgrp" id="grp-patterns" data-defopen="0"><summary><span class="chev"></span><span class="navlabel">Patterns</span><span class="navcount">5</span></summary><a href="patterns/index.html" class="navcomp" data-leaf>Overview</a><a href="patterns/detail-page.html" class="navcomp" data-leaf>Detail Page</a><a href="patterns/login.html" class="navcomp" data-leaf>Login / Auth Page</a><a href="patterns/map-tracking-view.html" class="navcomp" data-leaf>Map / Tracking View</a><a href="patterns/settings-page.html" class="navcomp" data-leaf>Settings Page</a><a href="patterns/table-page.html" class="navcomp" data-leaf>Table Page</a></details>
+    <details class="navgrp" id="grp-resources" data-defopen="0"><summary><span class="chev"></span><span class="navlabel">Resources</span><span class="navcount">3</span></summary><a href="resources/index.html" class="navcomp" data-leaf>Overview</a><a href="resources/preview.html" class="navcomp" data-leaf>Visual preview</a><a href="resources/changelog.html" class="navcomp" data-leaf>What's new</a><a href="resources/downloads.html" class="navcomp" data-leaf>Downloads</a></details>
   </nav>
 </aside>
 
 <main>
-<div class="inner pagetop">
-<article class="article">
-<section>
-  <h2>How to start</h2>
-  <p class="sub"><b>Cartrack AI Design System</b> is a self-contained, AI-ready component library and token set for the Cartrack Fleet Portal. One folder, no build step, no external dependencies — everything an AI agent or a human developer needs to generate consistent, on-brand, accessible UI lives inside it. It follows the "lean AI-optimized design system" pattern (the Astryx approach): tokens as a single source of truth, per-component documentation colocated with the code, and short root-level instruction files that tell an AI agent how to behave — instead of one giant style guide nobody reads.</p>
-  <p class="sub">Every value is <b>derived from the real fleetapp-web production codebase</b> (karoo-ui / MUI theme, MDC 14 components, legacy Sass variables). This documents what actually ships today, not an idealized spec — if something looks inconsistent, that's the current product, flagged rather than hidden.</p>
-  <p class="toc">On this page: <a href="#inside">What's inside</a> · <a href="#why">Why it's built this way</a> · <a href="#quick-start">Quick start</a> · <a href="#paths">Pick your path</a> · <a href="#concepts">Core concepts</a> · <a href="#rules">The rules</a> · <a href="#verify">Verify your work</a> · <a href="#scope">Scope &amp; limitations</a> · <a href="#next">Where to go next</a></p>
-
-  <h3 id="inside">What's inside the folder</h3>
-  <table class="mini"><thead><tr><th>Path</th><th>What it is</th><th style="width:150px">Who reads it</th></tr></thead><tbody>
-    <tr><td><code>CLAUDE.md</code></td><td>The index — folder map, token model, known issues. Auto-loaded by Claude tools at session start.</td><td>AI agents first</td></tr>
-    <tr><td><code>AGENTS.md</code></td><td>The behavior contract — the rules every AI agent must follow, plus a verification checklist. Auto-read by Cursor, Copilot, Codex; imported by <code>CLAUDE.md</code> for Claude.</td><td>AI agents</td></tr>
-    <tr><td><code>README.md</code></td><td>Human-friendly overview of the whole system.</td><td>People</td></tr>
-    <tr><td><code>tokens/tokens.json</code></td><td>Single source of truth for color, spacing, typography, radius, border width. <code>primitive</code> / <code>semantic</code> / <code>legacy</code> tiers, plus <code>_meta.changelog</code>.</td><td>AI agents + developers</td></tr>
-    <tr><td><code>components/&lt;Name&gt;/</code></td><td>27 components, 3 files each: <code>.tsx</code> implementation, <code>.doc.json</code> structured docs (props, variants, do/don't, tokens), <code>index.ts</code>.</td><td>AI agents + developers</td></tr>
-    <tr><td><code>templates/</code></td><td>5 page patterns (table, detail, map/tracking, settings, login) — which components compose each screen and the composition rules.</td><td>AI agents + designers</td></tr>
-    <tr><td><code>brand/</code></td><td>Cartrack <b>marketing</b> brand guidelines — reference only, not a token source (see <a href="#concepts">core concepts</a>).</td><td>Designers, occasionally AI</td></tr>
-    <tr><td><code>component-library-preview.html</code></td><td>Every component rendered visually, one static page, no server needed.</td><td>People</td></tr>
-    <tr><td><code>docs/</code></td><td>This documentation portal, generated from the sources above by <code>docs/build_portal.py</code>. Never hand-edited.</td><td>People</td></tr>
-  </tbody></table>
-
-  <h3 id="why">Why it's built this way</h3>
-  <p class="sub">Most design systems are written for humans to read occasionally. This one is written for an AI agent to read <i>every session</i> — so it has to be short, unambiguous, and structurally predictable rather than exhaustive. That's why there's no giant style-guide PDF: instructions live in two small root files (<code>CLAUDE.md</code>, <code>AGENTS.md</code>), and design judgment lives next to the code it governs (<code>&lt;Name&gt;.doc.json</code>), not in a separate wiki that drifts out of sync.</p>
-  <p class="sub">The tradeoff: some things are deliberately <b>not</b> included yet — a semantic-token resolver, tests, Storybook, theme packages — because the lean pattern only adds a piece once a concrete pain justifies it. See <a href="#scope">scope &amp; limitations</a>.</p>
-
-  <h3 id="quick-start">Quick start: download &amp; connect</h3>
-  <div class="steps" style="margin-top:14px">
-    <div class="stepc"><b>Download the system</b><p>Grab the zip from <a href="../resources/downloads.html">Downloads</a> and unzip anywhere, or clone it from the team's shared location.</p></div>
-    <div class="stepc"><b>Connect it to your tool</b><p>Point the tool at the <code>cartrack-ai-design-system</code> folder <b>itself</b>, not a parent folder — rule-loading is guaranteed only from the root of the connected folder.</p><p style="margin-top:6px"><b>Claude Cowork:</b> new session → select the folder. &nbsp;<b>Claude Code:</b> open a terminal in the folder, run <code>claude</code>. &nbsp;<b>Cursor / Copilot / Codex:</b> open the folder as a workspace — they pick up <code>AGENTS.md</code> automatically via the agents.md standard.</p></div>
-  </div>
-  <div class="tip"><b>Self-test:</b> ask your tool "what design system rules apply here?" It should recite the <code>AGENTS.md</code> rules without you naming a file. If it can't, the folder isn't connected at its root.</div>
-
-  <h3 id="paths">Pick your path</h3>
-  <div class="paths" style="margin-top:14px">
-    <div class="path p-designers">
-      <div class="who">For designers</div>
-      <h4>Prototype in product language</h4>
-      <p>Ask for screens in plain language — no need to mention the design system by name, the rules are already loaded once the folder is connected. Iterate the same way you'd brief a developer: "denser table", "add a selection bar". Check results against the <a href="../resources/preview.html">visual preview</a>.</p>
-      <div class="prompt"><b>Try this first prompt:</b><br><i>"Build an HTML prototype of a vehicle list page: app bar with search, filter chips, a data table with status chips and pagination, and one primary action 'Add vehicle'."</i><br><span class="expect">Expected result: a single .html file using the MDC classes, orange <code>primary.dark</code> for the contained button (AA-safe), 14px Roboto body text, and 4px-grid spacing throughout.</span></div>
+<header class="top">
+  <div class="inner">
+    <h1>Build on-system UI with AI.<br>Start in two minutes.</h1>
+    <p>This portal documents the Cartrack Fleet AI-ready design system: a self-contained folder that lets any AI coding agent — Claude, Cursor, Copilot — generate prototypes and UI that match our production Fleet Portal. Everything here is derived from the real fleetapp-web codebase.</p>
+    <div class="route" aria-hidden="true">
+      <span class="wp"><span class="dot"></span>Download</span>
+      <span class="track"></span>
+      <span class="wp">Ship UI<span class="dot"></span></span>
     </div>
-    <div class="path p-developers">
-      <div class="who">For developers</div>
-      <h4>Build features on the real values</h4>
-      <p>Every component is 3 files: <code>.tsx</code> (MDC class contract), <code>.doc.json</code> (the API and usage contract — <b>read this first</b>), <code>index.ts</code>. All visual values come from <code>tokens/tokens.json</code>.</p>
-      <p style="margin-top:8px">The one non-obvious rule up front: in inline styles, use <code>primitive.*</code> values. Most <code>semantic.*</code> entries are alias strings awaiting a build-time resolver this repo doesn't have yet — full explanation in <a href="#concepts">core concepts</a>.</p>
-    </div>
-    <div class="path p-agents">
-      <div class="who">For AI agents</div>
-      <h4>Your rules load automatically</h4>
-      <p>Claude tools auto-load <code>CLAUDE.md</code>, which imports <code>AGENTS.md</code>. Other agents read <code>AGENTS.md</code> directly via the agents.md standard. Before using any component, read its <code>.doc.json</code>. Before finishing a task, run the <a href="#verify">verification checklist</a>.</p>
-      <div class="prompt"><b>Self-test:</b> if a human asks "what design system rules apply here?", you should be able to recite the AGENTS.md rules without any file being mentioned. If you can't, the folder isn't connected at its root.</div>
+    <div class="statstrip">
+      <div class="stat"><b>27</b><span>documented components</span></div>
+      <div class="stat"><b>1</b><span>tokens source of truth</span></div>
+      <div class="stat"><b>0</b><span>setup steps per session</span></div>
+      <div class="stat tech"><b>MD2 · MDC 14 · React</b></div>
     </div>
   </div>
+</header>
 
-  <h3 id="concepts">Core concepts you need before writing anything</h3>
-  <div class="rules" style="margin-top:14px">
-    <div class="rule"><b>Tokens have three tiers.</b> <code>primitive.*</code> = raw values (hex, px) — safe to use directly in code. <code>semantic.*</code> = named roles (e.g. <code>semantic.color.brand.primary.main</code>) — mostly unresolved alias strings (<code>"{primitive...}"</code>) meant for a build-time resolver that doesn't exist yet; paste one into a runtime style and you set the CSS property to that literal placeholder text. <b>In <code>.tsx</code> styles use <code>primitive.*</code>; in docs and <code>.doc.json</code> files cite <code>semantic.*</code>.</b> Exceptions authored as real literals: <code>semantic.color.text.*</code>, <code>border.default</code>, <code>interactive.*</code>. <code>legacy.*</code> = deprecated pre-MUI values (5px grid, bold=600) — don't use in new work.</div>
-    <div class="rule"><b>Every component is the same 3 files.</b> <code>.doc.json</code> is the source of truth for how to use it — read <code>doThis</code> / <code>dontDoThis</code> and the <code>tokens</code> list before writing any code against a component.</div>
-    <div class="rule"><b>Templates encode composition, not just layout.</b> Before inventing a screen structure, check <a href="../patterns/index.html">the patterns</a> (table page, detail page, map/tracking, settings, login) — the composition rules there exist because someone already made those tradeoffs.</div>
-    <div class="rule"><b><code>brand/</code> is reference-only.</b> It documents Cartrack's <i>marketing</i> brand (website, ads, print) — not the product. It shares some values with <code>tokens.json</code> (brand orange, the Material icon base) and deliberately diverges on others (marketing has a dedicated blue and uses Montserrat + pure black; the product doesn't). Never cite a <code>brand/*.doc.json</code> value in a component's tokens list.</div>
+<div class="inner">
+<section id="whats-here">
+  <h2>What's here</h2>
+  <p class="sub">Five sections. Start with the guide if you're new; jump straight to the reference if you're not.</p>
+  <div class="idxgrid">
+    <a class="idxcard" href="guides/index.html">
+      <b>How to start</b>
+      <span class="idxmeta"><span class="idxcat">Guide</span></span>
+      <p>One page: setup, how the system works, the rules, and how to verify your work.</p></a>
+    <a class="idxcard" href="foundations/index.html">
+      <b>Foundations</b>
+      <span class="idxmeta"><span class="idxcat">Colour · type · spacing · accessibility</span></span>
+      <p>The design fundamentals, generated straight from <code>tokens.json</code>.</p></a>
+    <a class="idxcard" href="components/index.html">
+      <b>Components</b>
+      <span class="idxmeta"><span class="idxcat">27 components</span></span>
+      <p>Full reference: props, variants, do/don't rules, tokens and accessibility per component.</p></a>
+    <a class="idxcard" href="patterns/index.html">
+      <b>Patterns</b>
+      <span class="idxmeta"><span class="idxcat">5 page patterns</span></span>
+      <p>How components compose into whole screens — table pages, detail pages, maps, settings, login.</p></a>
+    <a class="idxcard" href="resources/index.html">
+      <b>Resources</b>
+      <span class="idxmeta"><span class="idxcat">Preview · changelog · downloads</span></span>
+      <p>The visual preview, what's new, and everything to take away — including the full system zip.</p></a>
   </div>
-
-  <h3 id="rules">The rules everyone follows</h3>
-  <p class="sub">The condensed <code>AGENTS.md</code> contract, human-readable — it applies to everyone producing UI, not just machines.</p>
-  <div class="rules">
-    <div class="rule"><b>Use the components, never raw HTML.</b> <code>&lt;Button&gt;</code> not <code>&lt;button&gt;</code>, <code>&lt;TextField&gt;</code> not <code>&lt;input&gt;</code>. All 27 live in <code>components/</code>.</div>
-    <div class="rule"><b>Never hardcode visual values.</b> Colours, spacing, type and radii always come from <code>tokens/tokens.json</code>.</div>
-    <div class="rule"><b>In code, use <code>primitive.*</code> values</b> — see <a href="#concepts">core concepts</a> for why.</div>
-    <div class="rule"><b>The doc.json is the source of truth.</b> Read a component's do/don't rules before using it — that's where the design judgment lives.</div>
-    <div class="rule"><b>One primary action per view.</b> One contained primary button; everything else is outlined or text.</div>
-    <div class="rule"><b>WCAG AA is not optional.</b> Never white text on brand orange <code>#F47735</code> (~2.79:1 — fails). Filled surfaces with white text use <code>primary.dark</code> <code>#BB4800</code> (~5.2:1) instead.</div>
-    <div class="rule"><b>Don't invent.</b> Missing component, variant or token → flag the gap, don't fabricate it.</div>
-  </div>
-  <div class="warn"><b>Hard "do not" list:</b> don't hardcode, don't paste <code>semantic.*</code> aliases into runtime styles, don't use <code>legacy.*</code> tokens, don't invent APIs, don't edit <code>tokens.json</code> structurally without a changelog entry, don't add dependencies.</div>
-  <p class="tnote" style="margin-top:12px">Need the machine-readable version? <a href="../resources/downloads.html">Download AGENTS.md</a> — the standalone contract file AI agents read.</p>
-
-  <h3 id="verify">Verify your work</h3>
-  <p class="sub">The same checklist <code>AGENTS.md</code> gives AI agents — it closes the loop for humans too.</p>
-  <div class="tip"><ul class="plain" style="list-style:none;padding-left:4px;margin:0;color:inherit">
-    <li>☐ <code>tokens.json</code> still parses as valid JSON, if touched</li>
-    <li>☐ No hardcoded colors/spacing/type introduced</li>
-    <li>☐ Only existing components, variants, and token paths used — every path cited actually exists in <code>tokens.json</code></li>
-    <li>☐ No white-on-orange (<code>#FFFFFF</code> on <code>#F47735</code>)</li>
-    <li>☐ New/changed components keep the 3-file pattern</li>
-    <li>☐ Structural <code>tokens.json</code> changes have a <code>_meta.changelog</code> entry</li>
-  </ul></div>
-
-  <h3 id="scope">Scope &amp; limitations</h3>
-  <ul class="plain" style="margin-top:10px">
-    <li><b>MD2-based</b> (Material Design 2 / MDC 14), matching current production — not MD3.</li>
-    <li>The HTML preview is <b>hand-authored and manually synced</b> to <code>tokens.json</code> — not generated, so it can drift if tokens change without a manual re-sync.</li>
-    <li><code>semantic.*</code> alias resolution, tests, Storybook, and theme packages are <b>deliberately not included yet</b>.</li>
-  </ul>
-
-  <h3 id="next">Where to go next</h3>
-  <div class="idxgrid" style="margin-top:14px">
-    <a class="idxcard" href="../foundations/index.html"><b>Foundations</b><p>Colour, typography, spacing &amp; shape, accessibility.</p></a>
-    <a class="idxcard" href="../components/index.html"><b>Components</b><p>All 27, by category.</p></a>
-    <a class="idxcard" href="../patterns/index.html"><b>Patterns</b><p>5 full-page compositions.</p></a>
-    <a class="idxcard" href="../resources/index.html"><b>Resources</b><p>Visual preview, changelog, downloads.</p></a>
-  </div>
+  <div class="warn"><b>Important:</b> connect the package folder itself as the workspace root — not a parent folder. Unzip the download and you're already there; if you instead clone the source repo, that's <code>design-system/</code>, not the repo root (the repo also holds this docs site, in a sibling <code>portal/</code> folder). The automatic rule-loading (CLAUDE.md / AGENTS.md) is guaranteed only from the root of the connected folder.</div>
 </section>
-</article>
 </div>
 </main>
 </div>
