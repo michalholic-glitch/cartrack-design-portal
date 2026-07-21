@@ -119,6 +119,20 @@
   .article h3{font-size:19px;letter-spacing:-.01em;margin:44px 0 12px;padding-top:22px;border-top:1px dashed var(--line)}
   .article .toc{font-size:13px;color:var(--ink2);margin:16px 0 0}
 
+  /* component detail v2: inline variant demos + state toggles */
+  .vrow{display:grid;grid-template-columns:300px 1fr;gap:16px;margin-top:12px;align-items:start}
+  .demo-embed{border:1px solid var(--line);border-radius:var(--r);padding:22px;display:flex;align-items:center;justify-content:center;overflow-x:auto;min-height:64px}
+  .vinfo b{font-size:14.5px}
+  .vinfo p{font-size:13.5px;color:var(--ink2);margin-top:2px}
+  pre.usage{margin-top:10px;background:#f6f3ee;border:1px solid var(--line);border-radius:var(--r);padding:8px 12px;font-size:12px;overflow-x:auto}
+  pre.usage code{background:none;padding:0;font-size:12px}
+  .statetry{display:grid;grid-template-columns:300px 1fr;gap:16px;margin-top:12px;align-items:center}
+  .statebtns{display:flex;flex-wrap:wrap;gap:8px}
+  .statebtn{font-family:var(--sans);font-size:12.5px;border:1px solid var(--line);background:var(--card);border-radius:999px;padding:5px 14px;cursor:pointer;color:var(--ink2)}
+  .statebtn:hover{border-color:var(--accent-d);color:var(--accent-d)}
+  .statebtn:focus-visible{outline:2px solid var(--accent-d);outline-offset:2px}
+  .statebtn.active{background:#fdf3ec;border-color:var(--accent-d);color:var(--accent-d);font-weight:600}
+
   /* tokens */
   .tokgroup{margin-bottom:34px}
   .tokgroup h4{font-size:15px;margin-bottom:12px}
@@ -233,8 +247,215 @@
     aside{position:fixed;top:0;left:0;width:280px;max-width:85vw;height:100vh;z-index:50;transform:translateX(-100%);transition:transform .2s ease}
     body.navopen aside{transform:translateX(0);box-shadow:0 0 40px rgba(0,0,0,.25)}
     body.navopen .navscrim{display:block;position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:45}
-    .dodont,.dl,.paths,.whens{grid-template-columns:1fr} .filemap .fr{grid-template-columns:1fr} .filemap .fp{border-right:none}
+    .dodont,.dl,.paths,.whens,.vrow,.statetry{grid-template-columns:1fr} .filemap .fr{grid-template-columns:1fr} .filemap .fp{border-right:none}
   }
+.demo-embed{
+    --primary:#F47735;--primary-dark:#BB4800;--primary-light:#FFA863;--on-primary:#FFFFFF;
+    --secondary:#333333;--secondary-dark:#0C0C0C;--secondary-light:#5C5C5C;--on-secondary:#FFFFFF;
+    --success:#4CAF50;--error:#F44336;--warning:#FF9800;--info:#2196F3;
+    --bg:#F9F9F9;--surface:#FFFFFF;--field:#F5F5F5;
+    --on-surface:rgba(0,0,0,.87);--on-surface-med:rgba(0,0,0,.6);--on-surface-dis:rgba(0,0,0,.38);
+    --divider:rgba(0,0,0,.12);--hover:rgba(0,0,0,.04);--selected:rgba(244,119,53,.08);--focus:rgba(244,119,53,.12);
+    --inverse-surface:#323232;--on-inverse:#FFFFFF;
+    --hairline:1px;--stroke-thin:2px;
+    --font:"Roboto","Helvetica","Arial",sans-serif;
+    --el1:0 2px 1px -1px rgba(0,0,0,.2),0 1px 1px 0 rgba(0,0,0,.14),0 1px 3px 0 rgba(0,0,0,.12);
+    --el2:0 3px 3px -2px rgba(0,0,0,.2),0 3px 4px 0 rgba(0,0,0,.14),0 1px 8px 0 rgba(0,0,0,.12);
+    --el8:0 5px 5px -3px rgba(0,0,0,.2),0 8px 10px 1px rgba(0,0,0,.14),0 3px 14px 2px rgba(0,0,0,.12);
+  }
+.demo-embed *{box-sizing:border-box}
+.demo-embed{font-size:14px}
+.demo-embed{margin:0;font-family:var(--font);background:var(--bg);color:var(--on-surface);font-size:.875rem;line-height:1.5}
+.demo-embed code{font-family:ui-monospace,Menlo,monospace;background:#eee;padding:1px 5px;border-radius:3px;font-size:.78rem}
+.demo-embed .layout{display:grid;grid-template-columns:250px 1fr;min-height:100vh}
+.demo-embed nav.side{position:sticky;top:0;align-self:start;height:100vh;overflow:auto;background:var(--surface);border-right:1px solid var(--divider);padding:18px 14px}
+.demo-embed nav.side h1{font-size:1rem;margin:0 0 2px}
+.demo-embed nav.side .sub{color:var(--on-surface-med);font-size:.72rem;margin-bottom:12px}
+.demo-embed nav.side input{width:100%;font:inherit;font-size:.85rem;padding:7px 10px;border:1px solid var(--divider);border-radius:4px;margin-bottom:10px}
+.demo-embed nav.side .grp{color:var(--on-surface-dis);font-size:.66rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;margin:14px 8px 4px}
+.demo-embed nav.side a{display:block;color:var(--on-surface-med);text-decoration:none;padding:5px 8px;border-radius:4px;font-size:.8rem}
+.demo-embed nav.side a:hover{background:var(--hover);color:var(--on-surface)}
+.demo-embed nav.side a.active{background:var(--selected);color:var(--primary-dark);font-weight:500}
+.demo-embed main{padding:28px 40px 96px;max-width:1120px}
+.demo-embed header.hero h2{font-size:1.7rem;font-weight:400;margin:0 0 6px}
+.demo-embed .lede{color:var(--on-surface-med);max-width:780px}
+.demo-embed .note{margin:14px 0 0;padding:12px 16px;border-left:4px solid var(--primary);background:#fff;border-radius:6px;font-size:.83rem;color:var(--on-surface-med);box-shadow:var(--el1)}
+.demo-embed section{margin-top:48px;scroll-margin-top:14px;padding-bottom:8px;border-bottom:1px solid var(--divider)}
+.demo-embed section>h3{font-size:1.25rem;font-weight:500;margin:0 0 4px;padding-bottom:6px;border-bottom:1px solid var(--divider);display:flex;align-items:center;gap:8px}
+.demo-embed section>h3 .cat{font-size:.62rem;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--on-surface-med);background:var(--field);padding:3px 8px;border-radius:10px}
+.demo-embed .desc{color:var(--on-surface-med);margin:6px 0 16px;font-size:.85rem;max-width:780px}
+.demo-embed .block{margin:18px 0}
+.demo-embed .block h4{font-size:.92rem;font-weight:500;margin:0 0 10px}
+.demo-embed .demo{display:flex;flex-wrap:wrap;gap:16px;align-items:center;padding:22px;background:var(--surface);border:1px solid var(--divider);border-radius:8px}
+.demo-embed .demo.col{flex-direction:column;align-items:stretch}
+.demo-embed .variant-grid{display:flex;flex-wrap:wrap;gap:14px}
+.demo-embed .variant-item{background:var(--surface);border:1px solid var(--divider);border-radius:8px;overflow:hidden;width:260px;display:flex;flex-direction:column}
+.demo-embed .variant-demo{padding:20px;min-height:96px;display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:10px;background:repeating-linear-gradient(45deg,#fafafa,#fafafa 10px,#f4f4f4 10px,#f4f4f4 20px)}
+.demo-embed .variant-label{padding:10px 12px;border-top:1px solid var(--divider);background:#fff}
+.demo-embed .variant-label b{display:block;font-size:.82rem;margin-bottom:2px}
+.demo-embed .variant-label span{display:block;font-size:.74rem;color:var(--on-surface-med);line-height:1.4}
+.demo-embed .bp-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.demo-embed .bp-col{border-radius:8px;padding:14px 16px;font-size:.82rem}
+.demo-embed .bp-col.do{background:#E8F5E9;border-left:4px solid var(--success)}
+.demo-embed .bp-col.dont{background:#FFEBEE;border-left:4px solid var(--error)}
+.demo-embed .bp-col h5{margin:0 0 8px;font-size:.78rem;text-transform:uppercase;letter-spacing:.04em}
+.demo-embed .bp-col.do h5{color:#1B5E20}
+.demo-embed .bp-col.dont h5{color:#B71C1C}
+.demo-embed .bp-col ul{margin:0;padding-left:18px}
+.demo-embed .bp-col li{margin-bottom:6px}
+@media(max-width:700px){.demo-embed .bp-grid{grid-template-columns:1fr}}
+.demo-embed table.proptable{width:100%;border-collapse:collapse;font-size:.8rem;background:var(--surface);border:1px solid var(--divider);border-radius:8px;overflow:hidden}
+.demo-embed table.proptable th{text-align:left;padding:9px 12px;background:var(--field);color:var(--on-surface-med);font-weight:500;border-bottom:1px solid var(--divider)}
+.demo-embed table.proptable td{padding:9px 12px;border-bottom:1px solid var(--divider);vertical-align:top}
+.demo-embed table.proptable tr:last-child td{border-bottom:none}
+.demo-embed table.proptable td:first-child{font-family:ui-monospace,Menlo,monospace;font-size:.76rem;white-space:nowrap;color:var(--primary-dark)}
+.demo-embed table.proptable td:nth-child(2){font-family:ui-monospace,Menlo,monospace;font-size:.74rem;color:var(--on-surface-med);white-space:nowrap}
+.demo-embed .btn{font:500 .875rem var(--font);letter-spacing:.05em;text-transform:uppercase;border-radius:4px;padding:0 16px;height:36px;border:none;cursor:pointer;display:inline-flex;align-items:center;gap:8px}
+.demo-embed .btn.contained{background:var(--primary-dark);color:var(--on-primary);box-shadow:var(--el1)}
+.demo-embed .btn.contained:hover{filter:brightness(.92)}
+.demo-embed .btn.contained.sec{background:var(--secondary)}
+.demo-embed .btn.outlined{background:transparent;color:var(--primary-dark);border:1px solid rgba(0,0,0,.23)}
+.demo-embed .btn.outlined:hover{background:var(--selected)}
+.demo-embed .btn.text{background:transparent;color:var(--primary-dark);padding:0 8px}
+.demo-embed .btn.text:hover{background:var(--selected)}
+.demo-embed .btn[disabled]{background:rgba(0,0,0,.12);color:var(--on-surface-dis);box-shadow:none;border:none;cursor:default}
+.demo-embed .fab{width:56px;height:56px;border-radius:50%;background:var(--primary);color:#fff;border:none;font-size:1.5rem;box-shadow:var(--el2);cursor:pointer}
+.demo-embed .fab.mini{width:40px;height:40px;font-size:1.2rem}
+.demo-embed .fab.ext{width:auto;border-radius:24px;height:48px;padding:0 20px;gap:8px;font-size:.875rem;font-weight:500;text-transform:uppercase}
+.demo-embed .iconbtn{width:40px;height:40px;border-radius:50%;border:none;background:transparent;color:var(--on-surface-med);font-size:1.1rem;cursor:pointer}
+.demo-embed .iconbtn:hover{background:var(--hover)}
+.demo-embed .toggle{display:inline-flex;border:1px solid rgba(0,0,0,.23);border-radius:4px;overflow:hidden}
+.demo-embed .toggle span{padding:8px 14px;color:var(--on-surface-med);cursor:pointer;font-size:.82rem}
+.demo-embed .toggle span+span{border-left:1px solid rgba(0,0,0,.23)}
+.demo-embed .toggle span.on{background:var(--selected);color:var(--primary-dark)}
+.demo-embed .tf{position:relative;min-width:200px}
+.demo-embed .tf.filled .f{background:var(--field);border:none;border-bottom:1px solid rgba(0,0,0,.42);border-radius:4px 4px 0 0;padding:20px 12px 6px}
+.demo-embed .tf.filled.focus .f{border-bottom:2px solid var(--primary)}
+.demo-embed .tf.filled .lbl{position:absolute;top:6px;left:12px;font-size:.7rem;color:var(--on-surface-med)}
+.demo-embed .tf.filled.focus .lbl{color:var(--primary-dark)}
+.demo-embed .tf.outlined .f{border:1px solid rgba(0,0,0,.23);border-radius:4px;padding:14px 12px}
+.demo-embed .tf.outlined.focus .f{border:2px solid var(--primary);padding:13px 11px}
+.demo-embed .tf.outlined .lbl{position:absolute;top:-7px;left:9px;background:var(--surface);padding:0 4px;font-size:.72rem;color:var(--on-surface-med)}
+.demo-embed .tf.outlined.focus .lbl{color:var(--primary-dark)}
+.demo-embed .tf .f{font-size:1rem;color:var(--on-surface)}
+.demo-embed .tf .sup{font-size:.72rem;color:var(--on-surface-med);margin:4px 12px 0}
+.demo-embed .tf.err .f{border-color:var(--error)!important}
+.demo-embed .tf.err .lbl, .demo-embed .tf .sup.err{color:var(--error)}
+.demo-embed .ph{color:var(--on-surface-dis)}
+.demo-embed .ctl{display:inline-flex;align-items:center;gap:8px;color:var(--on-surface)}
+.demo-embed .cbox{width:18px;height:18px;border:2px solid var(--on-surface-med);border-radius:2px;position:relative;display:inline-block}
+.demo-embed .cbox.on{background:var(--primary);border-color:var(--primary)}
+.demo-embed .cbox.on::after{content:"";position:absolute;left:5px;top:1px;width:5px;height:10px;border:solid #fff;border-width:0 2px 2px 0;transform:rotate(45deg)}
+.demo-embed .radio{width:18px;height:18px;border:2px solid var(--on-surface-med);border-radius:50%;position:relative;display:inline-block}
+.demo-embed .radio.on{border-color:var(--primary)}
+.demo-embed .radio.on::after{content:"";position:absolute;inset:3px;border-radius:50%;background:var(--primary)}
+.demo-embed .sw{width:34px;height:14px;border-radius:7px;background:rgba(0,0,0,.38);position:relative;display:inline-block}
+.demo-embed .sw .k{position:absolute;top:-3px;left:0;width:20px;height:20px;border-radius:50%;background:#fafafa;box-shadow:var(--el1)}
+.demo-embed .sw.on{background:var(--primary-light)}
+.demo-embed .sw.on .k{left:14px;background:var(--primary)}
+.demo-embed .slider{width:200px;height:var(--stroke-thin);background:rgba(244,119,53,.3);position:relative}
+.demo-embed .slider .fl{position:absolute;left:0;height:var(--stroke-thin);width:55%;background:var(--primary)}
+.demo-embed .slider .t{position:absolute;left:55%;top:-6px;width:14px;height:14px;border-radius:50%;background:var(--primary);transform:translateX(-50%)}
+.demo-embed .chip{display:inline-flex;align-items:center;gap:6px;height:32px;padding:0 12px;border-radius:16px;background:#e0e0e0;color:var(--on-surface);font-size:14px}
+.demo-embed .chip.out{background:transparent;border:1px solid rgba(0,0,0,.23)}
+.demo-embed .chip.sel{background:var(--selected);color:var(--primary-dark)}
+.demo-embed .card{background:var(--surface);border-radius:4px;box-shadow:var(--el1);width:280px;overflow:hidden}
+.demo-embed .card img.media{height:120px;background:linear-gradient(135deg,var(--primary-light),var(--primary));display:block}
+.demo-embed .card .media{height:80px;background:linear-gradient(135deg,var(--primary-light),var(--primary));display:block}
+.demo-embed .card .ch{padding:16px}
+.demo-embed .card .ch .t{font-size:16px;font-weight:500}
+.demo-embed .card .ch .s{color:var(--on-surface-med);font-size:14px}
+.demo-embed .card .cc{padding:0 16px 16px;color:var(--on-surface-med);font-size:.86rem}
+.demo-embed .card .ca{padding:8px;display:flex;gap:4px}
+.demo-embed .dialog{background:var(--surface);border-radius:4px;box-shadow:var(--el8);width:320px}
+.demo-embed .dialog .dt{padding:20px 24px 0;font-size:1.25rem;font-weight:500}
+.demo-embed .dialog .dc{padding:12px 24px 20px;color:var(--on-surface-med)}
+.demo-embed .dialog .da{padding:8px;display:flex;gap:4px;justify-content:flex-end}
+.demo-embed .accordion{width:100%;max-width:340px;background:var(--surface);box-shadow:var(--el1);border-radius:4px;overflow:hidden}
+.demo-embed .accordion .hd{padding:14px 16px;display:flex;justify-content:space-between}
+.demo-embed .accordion .bd2{padding:0 16px 16px;color:var(--on-surface-med);font-size:.84rem;border-top:1px solid var(--divider);padding-top:12px}
+.demo-embed .sheet{width:240px;background:var(--surface);box-shadow:var(--el8);border-radius:12px 12px 0 0;padding:8px 0}
+.demo-embed .backdrop{width:300px;height:140px;border-radius:8px;background:var(--primary);position:relative;overflow:hidden}
+.demo-embed .backdrop .front{position:absolute;bottom:0;left:0;right:0;height:90px;background:var(--surface);border-radius:16px 16px 0 0;padding:14px}
+.demo-embed .appbar{display:flex;align-items:center;gap:16px;background:var(--surface);color:var(--on-surface);padding:0 16px;height:56px;border-radius:4px;box-shadow:var(--el1)}
+.demo-embed .appbar.bottom{border-radius:4px;justify-content:space-around}
+.demo-embed .appbar .ti{flex:1;font-size:1.1rem;font-weight:500}
+.demo-embed .appbar .iconbtn{color:var(--on-surface-med)}
+.demo-embed .bottomnav{display:flex;background:var(--surface);box-shadow:var(--el2);border-radius:4px;justify-content:space-around;padding:8px 0}
+.demo-embed .bottomnav .it{display:flex;flex-direction:column;align-items:center;gap:3px;color:var(--on-surface-med);font-size:.7rem}
+.demo-embed .bottomnav .it.on{color:var(--primary-dark)}
+.demo-embed .drawer{width:220px;background:var(--surface);box-shadow:var(--el1);border-radius:4px;padding:8px 0}
+.demo-embed .drawer .it{display:flex;align-items:center;gap:16px;padding:10px 16px;color:var(--on-surface-med);font-size:.86rem;font-weight:500}
+.demo-embed .drawer .it.on{background:var(--selected);color:var(--primary-dark);border-radius:0 24px 24px 0;margin-right:8px}
+.demo-embed .rail{width:72px;background:var(--surface);box-shadow:var(--el1);border-radius:4px;padding:10px 0;display:flex;flex-direction:column;align-items:center;gap:14px}
+.demo-embed .rail .it{display:flex;flex-direction:column;align-items:center;gap:3px;font-size:.62rem;color:var(--on-surface-med)}
+.demo-embed .rail .it.on{color:var(--primary-dark)}
+.demo-embed .tabs{display:flex;border-bottom:1px solid var(--divider)}
+.demo-embed .tabs .t{padding:12px 18px;text-transform:uppercase;font-size:.82rem;font-weight:500;color:var(--on-surface-med);border-bottom:2px solid transparent;cursor:pointer}
+.demo-embed .tabs .t.on{color:var(--primary-dark);border-bottom-color:var(--primary)}
+.demo-embed .menu{width:200px;background:var(--surface);box-shadow:var(--el8);border-radius:4px;padding:8px 0}
+.demo-embed .menu .mi{padding:9px 16px;font-size:.9rem}
+.demo-embed .menu .mi:hover{background:var(--hover)}
+.demo-embed .table{width:100%;border-collapse:collapse;font-size:.84rem;background:var(--surface)}
+.demo-embed .table th{text-align:left;padding:14px 16px;color:var(--on-surface-med);font-weight:500;border-bottom:1px solid var(--divider)}
+.demo-embed .table td{padding:12px 16px;border-bottom:1px solid var(--divider)}
+.demo-embed .table tr:hover td{background:var(--hover)}
+.demo-embed .listmd{width:280px;background:var(--surface);box-shadow:var(--el1);border-radius:4px;overflow:hidden}
+.demo-embed .listmd .li{display:flex;align-items:center;gap:16px;padding:12px 16px;border-bottom:1px solid var(--divider)}
+.demo-embed .listmd .li:last-child{border:none}
+.demo-embed .avatar{width:40px;height:40px;border-radius:50%;background:var(--secondary);color:#fff;display:flex;align-items:center;justify-content:center}
+.demo-embed .imagelist{display:grid;grid-template-columns:repeat(3,1fr);gap:4px;width:220px}
+.demo-embed .imagelist div{height:60px;background:linear-gradient(135deg,var(--primary-light),var(--primary));border-radius:2px}
+.demo-embed .badge{position:relative;display:inline-flex}
+.demo-embed .badge .d{position:absolute;top:-4px;right:-6px;background:var(--error);color:#fff;font-size:12px;font-weight:500;min-width:18px;height:18px;border-radius:9px;display:flex;align-items:center;justify-content:center;padding:0 4px}
+.demo-embed .tip{background:var(--inverse-surface);color:var(--on-inverse);font-size:.7rem;padding:4px 8px;border-radius:4px}
+.demo-embed .linear{width:200px;height:4px;background:rgba(244,119,53,.3);overflow:hidden;border-radius:2px}
+.demo-embed .linear .v{height:100%;width:60%;background:var(--primary)}
+.demo-embed .spin{width:36px;height:36px;border:4px solid rgba(244,119,53,.25);border-top-color:var(--primary);border-radius:50%;animation:sp 1s linear infinite}
+@keyframes sp{to{transform:rotate(360deg)}}
+.demo-embed .picker{width:280px;background:var(--surface);box-shadow:var(--el8);border-radius:4px;overflow:hidden}
+.demo-embed .picker .ph2{background:var(--primary-dark);color:var(--on-primary);padding:16px}
+.demo-embed .picker .ph2 .d{font-size:1.8rem;font-weight:400}
+.demo-embed .picker .grid{display:grid;grid-template-columns:repeat(7,1fr);gap:2px;padding:12px}
+.demo-embed .picker .grid span{height:26px;display:flex;align-items:center;justify-content:center;font-size:.76rem;border-radius:50%}
+.demo-embed .picker .grid span.on{background:var(--primary-dark);color:var(--on-primary)}
+.demo-embed .clock{width:160px;height:160px;border-radius:50%;background:var(--field);position:relative;margin:12px auto}
+.demo-embed .clock .c{position:absolute;top:50%;left:50%;width:2px;height:55px;background:var(--primary);transform-origin:bottom;transform:translate(-50%,-100%) rotate(40deg)}
+.demo-embed .clock .dot{position:absolute;top:50%;left:50%;width:8px;height:8px;border-radius:50%;background:var(--primary);transform:translate(-50%,-50%)}
+.demo-embed .snackbar{display:inline-flex;align-items:center;gap:16px;background:var(--inverse-surface);color:var(--on-inverse);padding:14px 16px;border-radius:4px;font-size:.86rem}
+.demo-embed .snackbar a{color:var(--primary-light);text-transform:uppercase;font-weight:500;font-size:.8rem}
+.demo-embed .banner{display:flex;gap:12px;align-items:center;background:var(--surface);padding:14px 16px;border-bottom:1px solid var(--divider);font-size:.86rem;width:100%}
+.demo-embed .schip{display:inline-flex;align-items:center;gap:5px;height:24px;padding:0 8px;border-radius:12px;font-size:12px;font-weight:500}
+.demo-embed .schip.ok{background:#E8F5E9;color:#1B5E20}
+.demo-embed .schip.warn{background:#FFF3E0;color:#E65100}
+.demo-embed .schip.err{background:#FFEBEE;color:#B71C1C}
+.demo-embed .divider{height:var(--hairline);background:var(--divider);width:220px}
+.demo-embed .crumbs{font-size:.85rem;color:var(--on-surface-med)}
+.demo-embed .crumbs a{color:var(--on-surface-med);text-decoration:none}
+.demo-embed .crumbs a:hover{text-decoration:underline;color:var(--primary-dark)}
+.demo-embed .crumbs .s{margin:0 8px;opacity:.5}
+.demo-embed .pgn{display:flex;align-items:center;gap:4px}
+.demo-embed .pgn .lbl{color:var(--on-surface-med);font-size:.8rem;margin-right:12px}
+.demo-embed .pgn .p{min-width:32px;height:32px;border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:.82rem;color:var(--on-surface);cursor:pointer}
+.demo-embed .pgn .p:hover{background:var(--hover)}
+.demo-embed .pgn .p.on{background:var(--selected);color:var(--primary-dark);font-weight:500}
+.demo-embed .stepper2{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.demo-embed .st{display:flex;align-items:center;gap:8px;color:var(--on-surface-med);font-size:.85rem}
+.demo-embed .st .n{width:24px;height:24px;border-radius:50%;background:var(--on-surface-dis);color:#fff;display:flex;align-items:center;justify-content:center;font-size:.72rem}
+.demo-embed .st.on .n{background:var(--primary)}
+.demo-embed .st.done .n{background:var(--primary)}
+.demo-embed .st.on{color:var(--on-surface);font-weight:500}
+.demo-embed .st .bar{width:36px;height:1px;background:var(--divider)}
+.demo-embed .dt-tb{display:flex;align-items:center;gap:8px;padding:8px 12px;background:var(--surface);border-bottom:1px solid var(--divider)}
+.demo-embed .icb{width:32px;height:32px;border-radius:50%;border:none;background:transparent;color:var(--on-surface-med);cursor:pointer}
+.demo-embed .cbx{width:16px;height:16px}
+.demo-embed .editcell{border:1px dashed var(--primary);padding:2px 4px;border-radius:2px}
+.demo-embed .dt-ft{display:flex;align-items:center;justify-content:flex-end;gap:8px;padding:8px 12px;color:var(--on-surface-med);font-size:.8rem}
+.demo-embed .hidden{display:none!important}
+@media(max-width:880px){.demo-embed .layout{grid-template-columns:1fr}
+.demo-embed nav.side{display:none}
+.demo-embed main{padding:22px 16px 80px}
+.demo-embed .bp-grid{grid-template-columns:1fr}}
 </style>
 </head>
 <body class="">
@@ -274,21 +495,21 @@
       <div class="whennot"><h5>When not to use</h5><ul><li>Don&#x27;t put long text in a badge.</li></ul></div>
     </div>
   <h5>Anatomy</h5><ol class="anatomy"><li><b>Host</b> — the icon/element the badge sits on.</li><li><b>Badge</b> — the small count or dot indicator (usually top-right).</li><li><b>Content</b> — a number, capped value (&quot;99+&quot;), or empty dot.</li></ol>
-  <h5>Variants</h5><table class="mini"><tbody><tr><td><b>Numeric</b></td><td>Show a count (unread alerts, pending tasks).</td></tr><tr><td><b>Dot</b></td><td>Indicate &quot;new&quot;/attention without a number.</td></tr><tr><td><b>Capped</b></td><td>Large counts shown as &quot;99+&quot;.</td></tr></tbody></table>
+  <h5>Variants</h5><p class="tnote">Demos are the real preview markup, inlined at build time. "Example usage" lines are generated from doc.json — a documentation aid, not tested code.</p><div class="vrow"><div class="demo-embed vtile"><span class="badge"><button class="iconbtn">🔔</button><span class="d">4</span></span></div><div class="vinfo"><b>Numeric</b><p>Show a count (unread alerts, pending tasks).</p><pre class="usage"><code>&lt;Badge children={…} hostLabel=&quot;…&quot; /&gt;</code></pre></div></div><div class="vrow"><div class="demo-embed vtile"><span class="badge"><button class="iconbtn">🚚</button><span class="d" style="min-width:8px;height:8px;padding:0"></span></span></div><div class="vinfo"><b>Dot</b><p>Indicate &quot;new&quot;/attention without a number.</p><pre class="usage"><code>&lt;Badge children={…} hostLabel=&quot;…&quot; /&gt;</code></pre></div></div><div class="vrow"><div class="demo-embed vtile"><span class="badge"><button class="iconbtn">✉</button><span class="d">99+</span></span></div><div class="vinfo"><b>Capped</b><p>Large counts shown as &quot;99+&quot;.</p><pre class="usage"><code>&lt;Badge children={…} hostLabel=&quot;…&quot; /&gt;</code></pre></div></div>
   <h5>States</h5><table class="mini"><tbody><tr><td><b>Visible</b></td><td>Error-colour pill/dot on the host.</td></tr><tr><td><b>Empty (dot)</b></td><td>Small filled dot, no number.</td></tr><tr><td><b>Hidden</b></td><td>Removed at zero/none.</td></tr></tbody></table>
   <h5>Behaviors</h5><table class="mini"><tbody><tr><td><b>Capping</b></td><td>Cap large counts (e.g. 99+) so the badge stays small and readable.</td></tr><tr><td><b>Zero</b></td><td>Hide the badge at zero unless &quot;0&quot; is meaningful.</td></tr><tr><td><b>Live updates</b></td><td>When the count changes, update it promptly and announce it to assistive tech.</td></tr></tbody></table>
   <div class="dodont">
     <div class="do"><h5>Do</h5><ul><li>Cap large counts (99+).</li><li>Use a dot when a number isn&#x27;t needed.</li><li>Announce count changes.</li></ul></div>
     <div class="dont"><h5>Don&#39;t</h5><ul><li>Don&#x27;t show &quot;0&quot; unless it matters.</li><li>Don&#x27;t rely on the badge alone to convey critical detail.</li></ul></div>
   </div>
-  <h5>Props</h5><table class="mini props"><thead><tr><th>Prop</th><th>Type</th><th class="c">Req</th><th>Description</th></tr></thead><tbody><tr><td><code>children</code></td><td><code class="typ">React.ReactNode</code></td><td class="c">✓</td><td>The host element (icon/button) the badge is anchored to.</td></tr><tr><td><code>hostLabel</code></td><td><code class="typ">string</code></td><td class="c">✓</td><td>Accessible label for the host, e.g. &quot;Notifications&quot;.</td></tr><tr><td><code>count</code></td><td><code class="typ">number</code></td><td class="c"></td><td>Numeric count; capped and rendered as &quot;99+&quot; above 99.</td></tr><tr><td><code>dot</code></td><td><code class="typ">boolean</code></td><td class="c"></td><td>Renders a dot badge (no number) instead of a numeric pill.</td></tr><tr><td><code>showZero</code></td><td><code class="typ">boolean</code></td><td class="c"></td><td>Show the badge even when count is 0. Default false — badge hides at zero.</td></tr></tbody></table>
+  <h5>Props</h5><table class="mini props"><thead><tr><th>Prop</th><th>Type</th><th>Default</th><th class="c">Req</th><th>Description</th></tr></thead><tbody><tr><td><code>children</code></td><td><code class="typ">React.ReactNode</code></td><td>—</td><td class="c">✓</td><td>The host element (icon/button) the badge is anchored to.</td></tr><tr><td><code>hostLabel</code></td><td><code class="typ">string</code></td><td>—</td><td class="c">✓</td><td>Accessible label for the host, e.g. &quot;Notifications&quot;.</td></tr><tr><td><code>count</code></td><td><code class="typ">number</code></td><td>—</td><td class="c"></td><td>Numeric count; capped and rendered as &quot;99+&quot; above 99.</td></tr><tr><td><code>dot</code></td><td><code class="typ">boolean</code></td><td>—</td><td class="c"></td><td>Renders a dot badge (no number) instead of a numeric pill.</td></tr><tr><td><code>showZero</code></td><td><code class="typ">boolean</code></td><td>—</td><td class="c"></td><td>Show the badge even when count is 0. Default false — badge hides at zero.</td></tr></tbody></table>
   <h5>Tokens used</h5><div class="tokpaths"><code class="tokpath">semantic.color.status.error.main</code><code class="tokpath">semantic.color.status.error.onStatus</code><code class="tokpath">semantic.spacing.sm</code><code class="tokpath">semantic.typography.scale.labelSmall</code></div>
   <details><summary>Visual specs</summary><table class="mini"><tbody><tr><td>Numeric badge</td><td>~16–18px tall pill</td></tr><tr><td>Dot</td><td>~8px</td></tr><tr><td>Colour</td><td>error (#F44336) with white text (passes AA)</td></tr><tr><td>Text</td><td>Roboto ~11–12px / 500</td></tr></tbody></table></details>
   <h5 id="accessibility">Accessibility</h5><ul class="plain"><li>The host&#x27;s accessible name includes the badge meaning (e.g. &quot;Notifications, 4 unread&quot;).</li><li>Changes are announced via a live region.</li><li>The dot/number is not the only signal of an important state.</li></ul>
   <h5>Related components</h5><table class="mini"><tbody><tr><td><a href="chip.html"><b>Chip</b></a></td><td>When the label needs words, not just a count</td></tr><tr><td><a href="tooltip.html"><b>Tooltip</b></a></td><td>Icon-only targets with a badge still need a tooltip</td></tr></tbody></table>
   <h5>Design checklist</h5><div class="checks"><span class="chk on">✓ Tokens wired</span><span class="chk on">✓ Docs complete</span><span class="chk on">✓ AA reviewed (2026-07-16)</span><span class="chk on">✓ Preview synced</span><span class="chk ">○ Validated in a production prototype</span></div>
   <details class="research"><summary>Research &amp; findings</summary><p class="tnote">No usage findings logged yet. When research or prototype feedback exists for this component, add a <code>research</code> field to its doc.json and regenerate the portal.</p></details>
-  <h5>Live example</h5><a class="livelink" href="../component-library-preview.html#badge" target="_blank">See Badge in the visual preview ↗</a>
+  <h5>Full page</h5><a class="livelink" href="../component-library-preview.html#badge" target="_blank">See this component in a full page layout ↗</a>
   <div class="cfoot">Improve this component — edit <code>components/Badge/Badge.doc.json</code> and regenerate the portal.</div>
 </article>
 </div>
@@ -353,6 +574,24 @@
   // choosing a destination closes the mobile drawer
   document.querySelectorAll('nav a[href]').forEach(function(a){
     a.addEventListener('click', window.closeNav);
+  });
+
+  // component detail: state toggles (spec §7) — only rendered where the
+  // preview stylesheet has a real hook, so no capability is faked here
+  document.querySelectorAll('[data-state-toggle]').forEach(function(b){
+    b.addEventListener('click', function(){
+      var d=document.getElementById(b.getAttribute('data-target'));
+      var el=d&&d.firstElementChild; if(!el) return;
+      var k=b.getAttribute('data-state-toggle');
+      if(k==='disabled'){
+        if(el.hasAttribute('disabled')) el.removeAttribute('disabled');
+        else el.setAttribute('disabled','');
+      } else {
+        el.classList.toggle(k);
+      }
+      b.classList.toggle('active');
+      b.setAttribute('aria-pressed', b.classList.contains('active')?'true':'false');
+    });
   });
 })();</script>
 </body>

@@ -119,6 +119,20 @@
   .article h3{font-size:19px;letter-spacing:-.01em;margin:44px 0 12px;padding-top:22px;border-top:1px dashed var(--line)}
   .article .toc{font-size:13px;color:var(--ink2);margin:16px 0 0}
 
+  /* component detail v2: inline variant demos + state toggles */
+  .vrow{display:grid;grid-template-columns:300px 1fr;gap:16px;margin-top:12px;align-items:start}
+  .demo-embed{border:1px solid var(--line);border-radius:var(--r);padding:22px;display:flex;align-items:center;justify-content:center;overflow-x:auto;min-height:64px}
+  .vinfo b{font-size:14.5px}
+  .vinfo p{font-size:13.5px;color:var(--ink2);margin-top:2px}
+  pre.usage{margin-top:10px;background:#f6f3ee;border:1px solid var(--line);border-radius:var(--r);padding:8px 12px;font-size:12px;overflow-x:auto}
+  pre.usage code{background:none;padding:0;font-size:12px}
+  .statetry{display:grid;grid-template-columns:300px 1fr;gap:16px;margin-top:12px;align-items:center}
+  .statebtns{display:flex;flex-wrap:wrap;gap:8px}
+  .statebtn{font-family:var(--sans);font-size:12.5px;border:1px solid var(--line);background:var(--card);border-radius:999px;padding:5px 14px;cursor:pointer;color:var(--ink2)}
+  .statebtn:hover{border-color:var(--accent-d);color:var(--accent-d)}
+  .statebtn:focus-visible{outline:2px solid var(--accent-d);outline-offset:2px}
+  .statebtn.active{background:#fdf3ec;border-color:var(--accent-d);color:var(--accent-d);font-weight:600}
+
   /* tokens */
   .tokgroup{margin-bottom:34px}
   .tokgroup h4{font-size:15px;margin-bottom:12px}
@@ -233,8 +247,9 @@
     aside{position:fixed;top:0;left:0;width:280px;max-width:85vw;height:100vh;z-index:50;transform:translateX(-100%);transition:transform .2s ease}
     body.navopen aside{transform:translateX(0);box-shadow:0 0 40px rgba(0,0,0,.25)}
     body.navopen .navscrim{display:block;position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:45}
-    .dodont,.dl,.paths,.whens{grid-template-columns:1fr} .filemap .fr{grid-template-columns:1fr} .filemap .fp{border-right:none}
+    .dodont,.dl,.paths,.whens,.vrow,.statetry{grid-template-columns:1fr} .filemap .fr{grid-template-columns:1fr} .filemap .fp{border-right:none}
   }
+
 </style>
 </head>
 <body class="">
@@ -332,6 +347,24 @@
   // choosing a destination closes the mobile drawer
   document.querySelectorAll('nav a[href]').forEach(function(a){
     a.addEventListener('click', window.closeNav);
+  });
+
+  // component detail: state toggles (spec §7) — only rendered where the
+  // preview stylesheet has a real hook, so no capability is faked here
+  document.querySelectorAll('[data-state-toggle]').forEach(function(b){
+    b.addEventListener('click', function(){
+      var d=document.getElementById(b.getAttribute('data-target'));
+      var el=d&&d.firstElementChild; if(!el) return;
+      var k=b.getAttribute('data-state-toggle');
+      if(k==='disabled'){
+        if(el.hasAttribute('disabled')) el.removeAttribute('disabled');
+        else el.setAttribute('disabled','');
+      } else {
+        el.classList.toggle(k);
+      }
+      b.classList.toggle('active');
+      b.setAttribute('aria-pressed', b.classList.contains('active')?'true':'false');
+    });
   });
 })();</script>
 </body>

@@ -119,6 +119,20 @@
   .article h3{font-size:19px;letter-spacing:-.01em;margin:44px 0 12px;padding-top:22px;border-top:1px dashed var(--line)}
   .article .toc{font-size:13px;color:var(--ink2);margin:16px 0 0}
 
+  /* component detail v2: inline variant demos + state toggles */
+  .vrow{display:grid;grid-template-columns:300px 1fr;gap:16px;margin-top:12px;align-items:start}
+  .demo-embed{border:1px solid var(--line);border-radius:var(--r);padding:22px;display:flex;align-items:center;justify-content:center;overflow-x:auto;min-height:64px}
+  .vinfo b{font-size:14.5px}
+  .vinfo p{font-size:13.5px;color:var(--ink2);margin-top:2px}
+  pre.usage{margin-top:10px;background:#f6f3ee;border:1px solid var(--line);border-radius:var(--r);padding:8px 12px;font-size:12px;overflow-x:auto}
+  pre.usage code{background:none;padding:0;font-size:12px}
+  .statetry{display:grid;grid-template-columns:300px 1fr;gap:16px;margin-top:12px;align-items:center}
+  .statebtns{display:flex;flex-wrap:wrap;gap:8px}
+  .statebtn{font-family:var(--sans);font-size:12.5px;border:1px solid var(--line);background:var(--card);border-radius:999px;padding:5px 14px;cursor:pointer;color:var(--ink2)}
+  .statebtn:hover{border-color:var(--accent-d);color:var(--accent-d)}
+  .statebtn:focus-visible{outline:2px solid var(--accent-d);outline-offset:2px}
+  .statebtn.active{background:#fdf3ec;border-color:var(--accent-d);color:var(--accent-d);font-weight:600}
+
   /* tokens */
   .tokgroup{margin-bottom:34px}
   .tokgroup h4{font-size:15px;margin-bottom:12px}
@@ -233,8 +247,215 @@
     aside{position:fixed;top:0;left:0;width:280px;max-width:85vw;height:100vh;z-index:50;transform:translateX(-100%);transition:transform .2s ease}
     body.navopen aside{transform:translateX(0);box-shadow:0 0 40px rgba(0,0,0,.25)}
     body.navopen .navscrim{display:block;position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:45}
-    .dodont,.dl,.paths,.whens{grid-template-columns:1fr} .filemap .fr{grid-template-columns:1fr} .filemap .fp{border-right:none}
+    .dodont,.dl,.paths,.whens,.vrow,.statetry{grid-template-columns:1fr} .filemap .fr{grid-template-columns:1fr} .filemap .fp{border-right:none}
   }
+.demo-embed{
+    --primary:#F47735;--primary-dark:#BB4800;--primary-light:#FFA863;--on-primary:#FFFFFF;
+    --secondary:#333333;--secondary-dark:#0C0C0C;--secondary-light:#5C5C5C;--on-secondary:#FFFFFF;
+    --success:#4CAF50;--error:#F44336;--warning:#FF9800;--info:#2196F3;
+    --bg:#F9F9F9;--surface:#FFFFFF;--field:#F5F5F5;
+    --on-surface:rgba(0,0,0,.87);--on-surface-med:rgba(0,0,0,.6);--on-surface-dis:rgba(0,0,0,.38);
+    --divider:rgba(0,0,0,.12);--hover:rgba(0,0,0,.04);--selected:rgba(244,119,53,.08);--focus:rgba(244,119,53,.12);
+    --inverse-surface:#323232;--on-inverse:#FFFFFF;
+    --hairline:1px;--stroke-thin:2px;
+    --font:"Roboto","Helvetica","Arial",sans-serif;
+    --el1:0 2px 1px -1px rgba(0,0,0,.2),0 1px 1px 0 rgba(0,0,0,.14),0 1px 3px 0 rgba(0,0,0,.12);
+    --el2:0 3px 3px -2px rgba(0,0,0,.2),0 3px 4px 0 rgba(0,0,0,.14),0 1px 8px 0 rgba(0,0,0,.12);
+    --el8:0 5px 5px -3px rgba(0,0,0,.2),0 8px 10px 1px rgba(0,0,0,.14),0 3px 14px 2px rgba(0,0,0,.12);
+  }
+.demo-embed *{box-sizing:border-box}
+.demo-embed{font-size:14px}
+.demo-embed{margin:0;font-family:var(--font);background:var(--bg);color:var(--on-surface);font-size:.875rem;line-height:1.5}
+.demo-embed code{font-family:ui-monospace,Menlo,monospace;background:#eee;padding:1px 5px;border-radius:3px;font-size:.78rem}
+.demo-embed .layout{display:grid;grid-template-columns:250px 1fr;min-height:100vh}
+.demo-embed nav.side{position:sticky;top:0;align-self:start;height:100vh;overflow:auto;background:var(--surface);border-right:1px solid var(--divider);padding:18px 14px}
+.demo-embed nav.side h1{font-size:1rem;margin:0 0 2px}
+.demo-embed nav.side .sub{color:var(--on-surface-med);font-size:.72rem;margin-bottom:12px}
+.demo-embed nav.side input{width:100%;font:inherit;font-size:.85rem;padding:7px 10px;border:1px solid var(--divider);border-radius:4px;margin-bottom:10px}
+.demo-embed nav.side .grp{color:var(--on-surface-dis);font-size:.66rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;margin:14px 8px 4px}
+.demo-embed nav.side a{display:block;color:var(--on-surface-med);text-decoration:none;padding:5px 8px;border-radius:4px;font-size:.8rem}
+.demo-embed nav.side a:hover{background:var(--hover);color:var(--on-surface)}
+.demo-embed nav.side a.active{background:var(--selected);color:var(--primary-dark);font-weight:500}
+.demo-embed main{padding:28px 40px 96px;max-width:1120px}
+.demo-embed header.hero h2{font-size:1.7rem;font-weight:400;margin:0 0 6px}
+.demo-embed .lede{color:var(--on-surface-med);max-width:780px}
+.demo-embed .note{margin:14px 0 0;padding:12px 16px;border-left:4px solid var(--primary);background:#fff;border-radius:6px;font-size:.83rem;color:var(--on-surface-med);box-shadow:var(--el1)}
+.demo-embed section{margin-top:48px;scroll-margin-top:14px;padding-bottom:8px;border-bottom:1px solid var(--divider)}
+.demo-embed section>h3{font-size:1.25rem;font-weight:500;margin:0 0 4px;padding-bottom:6px;border-bottom:1px solid var(--divider);display:flex;align-items:center;gap:8px}
+.demo-embed section>h3 .cat{font-size:.62rem;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--on-surface-med);background:var(--field);padding:3px 8px;border-radius:10px}
+.demo-embed .desc{color:var(--on-surface-med);margin:6px 0 16px;font-size:.85rem;max-width:780px}
+.demo-embed .block{margin:18px 0}
+.demo-embed .block h4{font-size:.92rem;font-weight:500;margin:0 0 10px}
+.demo-embed .demo{display:flex;flex-wrap:wrap;gap:16px;align-items:center;padding:22px;background:var(--surface);border:1px solid var(--divider);border-radius:8px}
+.demo-embed .demo.col{flex-direction:column;align-items:stretch}
+.demo-embed .variant-grid{display:flex;flex-wrap:wrap;gap:14px}
+.demo-embed .variant-item{background:var(--surface);border:1px solid var(--divider);border-radius:8px;overflow:hidden;width:260px;display:flex;flex-direction:column}
+.demo-embed .variant-demo{padding:20px;min-height:96px;display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:10px;background:repeating-linear-gradient(45deg,#fafafa,#fafafa 10px,#f4f4f4 10px,#f4f4f4 20px)}
+.demo-embed .variant-label{padding:10px 12px;border-top:1px solid var(--divider);background:#fff}
+.demo-embed .variant-label b{display:block;font-size:.82rem;margin-bottom:2px}
+.demo-embed .variant-label span{display:block;font-size:.74rem;color:var(--on-surface-med);line-height:1.4}
+.demo-embed .bp-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.demo-embed .bp-col{border-radius:8px;padding:14px 16px;font-size:.82rem}
+.demo-embed .bp-col.do{background:#E8F5E9;border-left:4px solid var(--success)}
+.demo-embed .bp-col.dont{background:#FFEBEE;border-left:4px solid var(--error)}
+.demo-embed .bp-col h5{margin:0 0 8px;font-size:.78rem;text-transform:uppercase;letter-spacing:.04em}
+.demo-embed .bp-col.do h5{color:#1B5E20}
+.demo-embed .bp-col.dont h5{color:#B71C1C}
+.demo-embed .bp-col ul{margin:0;padding-left:18px}
+.demo-embed .bp-col li{margin-bottom:6px}
+@media(max-width:700px){.demo-embed .bp-grid{grid-template-columns:1fr}}
+.demo-embed table.proptable{width:100%;border-collapse:collapse;font-size:.8rem;background:var(--surface);border:1px solid var(--divider);border-radius:8px;overflow:hidden}
+.demo-embed table.proptable th{text-align:left;padding:9px 12px;background:var(--field);color:var(--on-surface-med);font-weight:500;border-bottom:1px solid var(--divider)}
+.demo-embed table.proptable td{padding:9px 12px;border-bottom:1px solid var(--divider);vertical-align:top}
+.demo-embed table.proptable tr:last-child td{border-bottom:none}
+.demo-embed table.proptable td:first-child{font-family:ui-monospace,Menlo,monospace;font-size:.76rem;white-space:nowrap;color:var(--primary-dark)}
+.demo-embed table.proptable td:nth-child(2){font-family:ui-monospace,Menlo,monospace;font-size:.74rem;color:var(--on-surface-med);white-space:nowrap}
+.demo-embed .btn{font:500 .875rem var(--font);letter-spacing:.05em;text-transform:uppercase;border-radius:4px;padding:0 16px;height:36px;border:none;cursor:pointer;display:inline-flex;align-items:center;gap:8px}
+.demo-embed .btn.contained{background:var(--primary-dark);color:var(--on-primary);box-shadow:var(--el1)}
+.demo-embed .btn.contained:hover{filter:brightness(.92)}
+.demo-embed .btn.contained.sec{background:var(--secondary)}
+.demo-embed .btn.outlined{background:transparent;color:var(--primary-dark);border:1px solid rgba(0,0,0,.23)}
+.demo-embed .btn.outlined:hover{background:var(--selected)}
+.demo-embed .btn.text{background:transparent;color:var(--primary-dark);padding:0 8px}
+.demo-embed .btn.text:hover{background:var(--selected)}
+.demo-embed .btn[disabled]{background:rgba(0,0,0,.12);color:var(--on-surface-dis);box-shadow:none;border:none;cursor:default}
+.demo-embed .fab{width:56px;height:56px;border-radius:50%;background:var(--primary);color:#fff;border:none;font-size:1.5rem;box-shadow:var(--el2);cursor:pointer}
+.demo-embed .fab.mini{width:40px;height:40px;font-size:1.2rem}
+.demo-embed .fab.ext{width:auto;border-radius:24px;height:48px;padding:0 20px;gap:8px;font-size:.875rem;font-weight:500;text-transform:uppercase}
+.demo-embed .iconbtn{width:40px;height:40px;border-radius:50%;border:none;background:transparent;color:var(--on-surface-med);font-size:1.1rem;cursor:pointer}
+.demo-embed .iconbtn:hover{background:var(--hover)}
+.demo-embed .toggle{display:inline-flex;border:1px solid rgba(0,0,0,.23);border-radius:4px;overflow:hidden}
+.demo-embed .toggle span{padding:8px 14px;color:var(--on-surface-med);cursor:pointer;font-size:.82rem}
+.demo-embed .toggle span+span{border-left:1px solid rgba(0,0,0,.23)}
+.demo-embed .toggle span.on{background:var(--selected);color:var(--primary-dark)}
+.demo-embed .tf{position:relative;min-width:200px}
+.demo-embed .tf.filled .f{background:var(--field);border:none;border-bottom:1px solid rgba(0,0,0,.42);border-radius:4px 4px 0 0;padding:20px 12px 6px}
+.demo-embed .tf.filled.focus .f{border-bottom:2px solid var(--primary)}
+.demo-embed .tf.filled .lbl{position:absolute;top:6px;left:12px;font-size:.7rem;color:var(--on-surface-med)}
+.demo-embed .tf.filled.focus .lbl{color:var(--primary-dark)}
+.demo-embed .tf.outlined .f{border:1px solid rgba(0,0,0,.23);border-radius:4px;padding:14px 12px}
+.demo-embed .tf.outlined.focus .f{border:2px solid var(--primary);padding:13px 11px}
+.demo-embed .tf.outlined .lbl{position:absolute;top:-7px;left:9px;background:var(--surface);padding:0 4px;font-size:.72rem;color:var(--on-surface-med)}
+.demo-embed .tf.outlined.focus .lbl{color:var(--primary-dark)}
+.demo-embed .tf .f{font-size:1rem;color:var(--on-surface)}
+.demo-embed .tf .sup{font-size:.72rem;color:var(--on-surface-med);margin:4px 12px 0}
+.demo-embed .tf.err .f{border-color:var(--error)!important}
+.demo-embed .tf.err .lbl, .demo-embed .tf .sup.err{color:var(--error)}
+.demo-embed .ph{color:var(--on-surface-dis)}
+.demo-embed .ctl{display:inline-flex;align-items:center;gap:8px;color:var(--on-surface)}
+.demo-embed .cbox{width:18px;height:18px;border:2px solid var(--on-surface-med);border-radius:2px;position:relative;display:inline-block}
+.demo-embed .cbox.on{background:var(--primary);border-color:var(--primary)}
+.demo-embed .cbox.on::after{content:"";position:absolute;left:5px;top:1px;width:5px;height:10px;border:solid #fff;border-width:0 2px 2px 0;transform:rotate(45deg)}
+.demo-embed .radio{width:18px;height:18px;border:2px solid var(--on-surface-med);border-radius:50%;position:relative;display:inline-block}
+.demo-embed .radio.on{border-color:var(--primary)}
+.demo-embed .radio.on::after{content:"";position:absolute;inset:3px;border-radius:50%;background:var(--primary)}
+.demo-embed .sw{width:34px;height:14px;border-radius:7px;background:rgba(0,0,0,.38);position:relative;display:inline-block}
+.demo-embed .sw .k{position:absolute;top:-3px;left:0;width:20px;height:20px;border-radius:50%;background:#fafafa;box-shadow:var(--el1)}
+.demo-embed .sw.on{background:var(--primary-light)}
+.demo-embed .sw.on .k{left:14px;background:var(--primary)}
+.demo-embed .slider{width:200px;height:var(--stroke-thin);background:rgba(244,119,53,.3);position:relative}
+.demo-embed .slider .fl{position:absolute;left:0;height:var(--stroke-thin);width:55%;background:var(--primary)}
+.demo-embed .slider .t{position:absolute;left:55%;top:-6px;width:14px;height:14px;border-radius:50%;background:var(--primary);transform:translateX(-50%)}
+.demo-embed .chip{display:inline-flex;align-items:center;gap:6px;height:32px;padding:0 12px;border-radius:16px;background:#e0e0e0;color:var(--on-surface);font-size:14px}
+.demo-embed .chip.out{background:transparent;border:1px solid rgba(0,0,0,.23)}
+.demo-embed .chip.sel{background:var(--selected);color:var(--primary-dark)}
+.demo-embed .card{background:var(--surface);border-radius:4px;box-shadow:var(--el1);width:280px;overflow:hidden}
+.demo-embed .card img.media{height:120px;background:linear-gradient(135deg,var(--primary-light),var(--primary));display:block}
+.demo-embed .card .media{height:80px;background:linear-gradient(135deg,var(--primary-light),var(--primary));display:block}
+.demo-embed .card .ch{padding:16px}
+.demo-embed .card .ch .t{font-size:16px;font-weight:500}
+.demo-embed .card .ch .s{color:var(--on-surface-med);font-size:14px}
+.demo-embed .card .cc{padding:0 16px 16px;color:var(--on-surface-med);font-size:.86rem}
+.demo-embed .card .ca{padding:8px;display:flex;gap:4px}
+.demo-embed .dialog{background:var(--surface);border-radius:4px;box-shadow:var(--el8);width:320px}
+.demo-embed .dialog .dt{padding:20px 24px 0;font-size:1.25rem;font-weight:500}
+.demo-embed .dialog .dc{padding:12px 24px 20px;color:var(--on-surface-med)}
+.demo-embed .dialog .da{padding:8px;display:flex;gap:4px;justify-content:flex-end}
+.demo-embed .accordion{width:100%;max-width:340px;background:var(--surface);box-shadow:var(--el1);border-radius:4px;overflow:hidden}
+.demo-embed .accordion .hd{padding:14px 16px;display:flex;justify-content:space-between}
+.demo-embed .accordion .bd2{padding:0 16px 16px;color:var(--on-surface-med);font-size:.84rem;border-top:1px solid var(--divider);padding-top:12px}
+.demo-embed .sheet{width:240px;background:var(--surface);box-shadow:var(--el8);border-radius:12px 12px 0 0;padding:8px 0}
+.demo-embed .backdrop{width:300px;height:140px;border-radius:8px;background:var(--primary);position:relative;overflow:hidden}
+.demo-embed .backdrop .front{position:absolute;bottom:0;left:0;right:0;height:90px;background:var(--surface);border-radius:16px 16px 0 0;padding:14px}
+.demo-embed .appbar{display:flex;align-items:center;gap:16px;background:var(--surface);color:var(--on-surface);padding:0 16px;height:56px;border-radius:4px;box-shadow:var(--el1)}
+.demo-embed .appbar.bottom{border-radius:4px;justify-content:space-around}
+.demo-embed .appbar .ti{flex:1;font-size:1.1rem;font-weight:500}
+.demo-embed .appbar .iconbtn{color:var(--on-surface-med)}
+.demo-embed .bottomnav{display:flex;background:var(--surface);box-shadow:var(--el2);border-radius:4px;justify-content:space-around;padding:8px 0}
+.demo-embed .bottomnav .it{display:flex;flex-direction:column;align-items:center;gap:3px;color:var(--on-surface-med);font-size:.7rem}
+.demo-embed .bottomnav .it.on{color:var(--primary-dark)}
+.demo-embed .drawer{width:220px;background:var(--surface);box-shadow:var(--el1);border-radius:4px;padding:8px 0}
+.demo-embed .drawer .it{display:flex;align-items:center;gap:16px;padding:10px 16px;color:var(--on-surface-med);font-size:.86rem;font-weight:500}
+.demo-embed .drawer .it.on{background:var(--selected);color:var(--primary-dark);border-radius:0 24px 24px 0;margin-right:8px}
+.demo-embed .rail{width:72px;background:var(--surface);box-shadow:var(--el1);border-radius:4px;padding:10px 0;display:flex;flex-direction:column;align-items:center;gap:14px}
+.demo-embed .rail .it{display:flex;flex-direction:column;align-items:center;gap:3px;font-size:.62rem;color:var(--on-surface-med)}
+.demo-embed .rail .it.on{color:var(--primary-dark)}
+.demo-embed .tabs{display:flex;border-bottom:1px solid var(--divider)}
+.demo-embed .tabs .t{padding:12px 18px;text-transform:uppercase;font-size:.82rem;font-weight:500;color:var(--on-surface-med);border-bottom:2px solid transparent;cursor:pointer}
+.demo-embed .tabs .t.on{color:var(--primary-dark);border-bottom-color:var(--primary)}
+.demo-embed .menu{width:200px;background:var(--surface);box-shadow:var(--el8);border-radius:4px;padding:8px 0}
+.demo-embed .menu .mi{padding:9px 16px;font-size:.9rem}
+.demo-embed .menu .mi:hover{background:var(--hover)}
+.demo-embed .table{width:100%;border-collapse:collapse;font-size:.84rem;background:var(--surface)}
+.demo-embed .table th{text-align:left;padding:14px 16px;color:var(--on-surface-med);font-weight:500;border-bottom:1px solid var(--divider)}
+.demo-embed .table td{padding:12px 16px;border-bottom:1px solid var(--divider)}
+.demo-embed .table tr:hover td{background:var(--hover)}
+.demo-embed .listmd{width:280px;background:var(--surface);box-shadow:var(--el1);border-radius:4px;overflow:hidden}
+.demo-embed .listmd .li{display:flex;align-items:center;gap:16px;padding:12px 16px;border-bottom:1px solid var(--divider)}
+.demo-embed .listmd .li:last-child{border:none}
+.demo-embed .avatar{width:40px;height:40px;border-radius:50%;background:var(--secondary);color:#fff;display:flex;align-items:center;justify-content:center}
+.demo-embed .imagelist{display:grid;grid-template-columns:repeat(3,1fr);gap:4px;width:220px}
+.demo-embed .imagelist div{height:60px;background:linear-gradient(135deg,var(--primary-light),var(--primary));border-radius:2px}
+.demo-embed .badge{position:relative;display:inline-flex}
+.demo-embed .badge .d{position:absolute;top:-4px;right:-6px;background:var(--error);color:#fff;font-size:12px;font-weight:500;min-width:18px;height:18px;border-radius:9px;display:flex;align-items:center;justify-content:center;padding:0 4px}
+.demo-embed .tip{background:var(--inverse-surface);color:var(--on-inverse);font-size:.7rem;padding:4px 8px;border-radius:4px}
+.demo-embed .linear{width:200px;height:4px;background:rgba(244,119,53,.3);overflow:hidden;border-radius:2px}
+.demo-embed .linear .v{height:100%;width:60%;background:var(--primary)}
+.demo-embed .spin{width:36px;height:36px;border:4px solid rgba(244,119,53,.25);border-top-color:var(--primary);border-radius:50%;animation:sp 1s linear infinite}
+@keyframes sp{to{transform:rotate(360deg)}}
+.demo-embed .picker{width:280px;background:var(--surface);box-shadow:var(--el8);border-radius:4px;overflow:hidden}
+.demo-embed .picker .ph2{background:var(--primary-dark);color:var(--on-primary);padding:16px}
+.demo-embed .picker .ph2 .d{font-size:1.8rem;font-weight:400}
+.demo-embed .picker .grid{display:grid;grid-template-columns:repeat(7,1fr);gap:2px;padding:12px}
+.demo-embed .picker .grid span{height:26px;display:flex;align-items:center;justify-content:center;font-size:.76rem;border-radius:50%}
+.demo-embed .picker .grid span.on{background:var(--primary-dark);color:var(--on-primary)}
+.demo-embed .clock{width:160px;height:160px;border-radius:50%;background:var(--field);position:relative;margin:12px auto}
+.demo-embed .clock .c{position:absolute;top:50%;left:50%;width:2px;height:55px;background:var(--primary);transform-origin:bottom;transform:translate(-50%,-100%) rotate(40deg)}
+.demo-embed .clock .dot{position:absolute;top:50%;left:50%;width:8px;height:8px;border-radius:50%;background:var(--primary);transform:translate(-50%,-50%)}
+.demo-embed .snackbar{display:inline-flex;align-items:center;gap:16px;background:var(--inverse-surface);color:var(--on-inverse);padding:14px 16px;border-radius:4px;font-size:.86rem}
+.demo-embed .snackbar a{color:var(--primary-light);text-transform:uppercase;font-weight:500;font-size:.8rem}
+.demo-embed .banner{display:flex;gap:12px;align-items:center;background:var(--surface);padding:14px 16px;border-bottom:1px solid var(--divider);font-size:.86rem;width:100%}
+.demo-embed .schip{display:inline-flex;align-items:center;gap:5px;height:24px;padding:0 8px;border-radius:12px;font-size:12px;font-weight:500}
+.demo-embed .schip.ok{background:#E8F5E9;color:#1B5E20}
+.demo-embed .schip.warn{background:#FFF3E0;color:#E65100}
+.demo-embed .schip.err{background:#FFEBEE;color:#B71C1C}
+.demo-embed .divider{height:var(--hairline);background:var(--divider);width:220px}
+.demo-embed .crumbs{font-size:.85rem;color:var(--on-surface-med)}
+.demo-embed .crumbs a{color:var(--on-surface-med);text-decoration:none}
+.demo-embed .crumbs a:hover{text-decoration:underline;color:var(--primary-dark)}
+.demo-embed .crumbs .s{margin:0 8px;opacity:.5}
+.demo-embed .pgn{display:flex;align-items:center;gap:4px}
+.demo-embed .pgn .lbl{color:var(--on-surface-med);font-size:.8rem;margin-right:12px}
+.demo-embed .pgn .p{min-width:32px;height:32px;border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:.82rem;color:var(--on-surface);cursor:pointer}
+.demo-embed .pgn .p:hover{background:var(--hover)}
+.demo-embed .pgn .p.on{background:var(--selected);color:var(--primary-dark);font-weight:500}
+.demo-embed .stepper2{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.demo-embed .st{display:flex;align-items:center;gap:8px;color:var(--on-surface-med);font-size:.85rem}
+.demo-embed .st .n{width:24px;height:24px;border-radius:50%;background:var(--on-surface-dis);color:#fff;display:flex;align-items:center;justify-content:center;font-size:.72rem}
+.demo-embed .st.on .n{background:var(--primary)}
+.demo-embed .st.done .n{background:var(--primary)}
+.demo-embed .st.on{color:var(--on-surface);font-weight:500}
+.demo-embed .st .bar{width:36px;height:1px;background:var(--divider)}
+.demo-embed .dt-tb{display:flex;align-items:center;gap:8px;padding:8px 12px;background:var(--surface);border-bottom:1px solid var(--divider)}
+.demo-embed .icb{width:32px;height:32px;border-radius:50%;border:none;background:transparent;color:var(--on-surface-med);cursor:pointer}
+.demo-embed .cbx{width:16px;height:16px}
+.demo-embed .editcell{border:1px dashed var(--primary);padding:2px 4px;border-radius:2px}
+.demo-embed .dt-ft{display:flex;align-items:center;justify-content:flex-end;gap:8px;padding:8px 12px;color:var(--on-surface-med);font-size:.8rem}
+.demo-embed .hidden{display:none!important}
+@media(max-width:880px){.demo-embed .layout{grid-template-columns:1fr}
+.demo-embed nav.side{display:none}
+.demo-embed main{padding:22px 16px 80px}
+.demo-embed .bp-grid{grid-template-columns:1fr}}
 </style>
 </head>
 <body class="">
@@ -274,21 +495,21 @@
       <div class="whennot"><h5>When not to use</h5><ul><li>Don&#x27;t use white text on the orange header.</li></ul></div>
     </div>
   <h5>Anatomy</h5><ol class="anatomy"><li><b>Input field</b> — typeable date/time with a calendar/clock trigger.</li><li><b>Header</b> — the current selection summary on the surface.</li><li><b>Calendar grid</b> — selectable days; navigates by month/year.</li><li><b>Clock dial</b> — hours/minutes for time selection.</li><li><b>Range highlight</b> — the span between start and end on a range picker.</li><li><b>Actions</b> — confirm/cancel where selection isn&#x27;t immediate.</li></ol>
-  <h5>Variants</h5><table class="mini"><tbody><tr><td><b>Date picker</b></td><td>A single date (due date, start date).</td></tr><tr><td><b>Date range picker</b></td><td>A from–to span (report period, trip history).</td></tr><tr><td><b>Time picker</b></td><td>A time of day (schedule, cut-off).</td></tr><tr><td><b>Date-time / date-time range</b></td><td>When both date and time matter (precise trip windows).</td></tr><tr><td><b>Field-only</b></td><td>Keyboard entry without a popup (power users).</td></tr><tr><td><b>Static / inline</b></td><td>Always-open calendar embedded in a panel.</td></tr></tbody></table>
-  <h5>States</h5><table class="mini"><tbody><tr><td><b>Day enabled</b></td><td>Default text in the grid.</td></tr><tr><td><b>Day hover/focus</b></td><td>State-layer circle.</td></tr><tr><td><b>Day selected</b></td><td>Primary filled circle.</td></tr><tr><td><b>In-range</b></td><td>Light primary band between endpoints.</td></tr><tr><td><b>Disabled / out-of-range</b></td><td>38% opacity, not selectable.</td></tr></tbody></table>
+  <h5>Variants</h5><p class="tnote">Demos are the real preview markup, inlined at build time. "Example usage" lines are generated from doc.json — a documentation aid, not tested code.</p><div class="vrow"><div class="demo-embed vtile"><div class="picker"><div class="ph2"><div style="font-size:.8rem">JUN 2026</div><div class="d">Sat, Jun 20</div></div><div class="grid"><span>S</span><span>M</span><span>T</span><span>W</span><span>T</span><span>F</span><span>S</span><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span><span>7</span><span>8</span><span>9</span><span>10</span><span>11</span><span>12</span><span>13</span><span class="on">20</span></div></div></div><div class="vinfo"><b>Date picker</b><p>A single date (due date, start date).</p><pre class="usage"><code>&lt;Picker variant=&quot;date-picker&quot; mode=&quot;date&quot; /&gt;</code></pre></div></div><div class="vrow"><div class="demo-embed vtile"><span class="tf outlined"><span class="lbl">Date range</span><div class="f">1 Jun – 30 Jun 📅</div></span></div><div class="vinfo"><b>Date range picker</b><p>A from–to span (report period, trip history).</p><pre class="usage"><code>&lt;Picker variant=&quot;date-range-picker&quot; mode=&quot;date&quot; /&gt;</code></pre></div></div><div class="vrow"><div class="demo-embed vtile"><div class="picker" style="width:220px"><div class="ph2"><div class="d">14:30</div></div><div class="clock"><div class="c"></div><div class="dot"></div></div></div></div><div class="vinfo"><b>Time picker</b><p>A time of day (schedule, cut-off).</p><pre class="usage"><code>&lt;Picker variant=&quot;time-picker&quot; mode=&quot;date&quot; /&gt;</code></pre></div></div><div class="vrow"><div class="demo-embed vtile"><div class="picker"><div class="ph2"><div style="font-size:.8rem">JUN 2026</div><div class="d">Sat, Jun 20</div></div><div class="grid"><span>S</span><span>M</span><span>T</span><span>W</span><span>T</span><span>F</span><span>S</span><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span><span>7</span><span>8</span><span>9</span><span>10</span><span>11</span><span>12</span><span>13</span><span class="on">20</span></div></div> <div class="picker" style="width:220px"><div class="ph2"><div class="d">14:30</div></div><div class="clock"><div class="c"></div><div class="dot"></div></div></div></div><div class="vinfo"><b>Date-time / date-time range</b><p>When both date and time matter (precise trip windows).</p><pre class="usage"><code>&lt;Picker variant=&quot;date-time-date-time-range&quot; mode=&quot;date&quot; /&gt;</code></pre></div></div><div class="vrow"><div class="demo-embed vtile"><span class="tf outlined"><span class="lbl">Due date</span><div class="f">20 Jun 2026</div></span></div><div class="vinfo"><b>Field-only</b><p>Keyboard entry without a popup (power users).</p><pre class="usage"><code>&lt;Picker variant=&quot;field-only&quot; mode=&quot;date&quot; /&gt;</code></pre></div></div><div class="vrow"><div class="demo-embed vtile"><div class="picker"><div class="ph2"><div style="font-size:.8rem">JUN 2026</div><div class="d">Sat, Jun 20</div></div><div class="grid"><span>S</span><span>M</span><span>T</span><span>W</span><span>T</span><span>F</span><span>S</span><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span><span>7</span><span>8</span><span>9</span><span>10</span><span>11</span><span>12</span><span>13</span><span class="on">20</span></div></div></div><div class="vinfo"><b>Static / inline</b><p>Always-open calendar embedded in a panel.</p><pre class="usage"><code>&lt;Picker variant=&quot;static-inline&quot; mode=&quot;date&quot; /&gt;</code></pre></div></div>
+  <h5>States</h5><table class="mini"><tbody><tr><td><b>Day enabled</b></td><td>Default text in the grid.</td></tr><tr><td><b>Day hover/focus</b></td><td>State-layer circle.</td></tr><tr><td><b>Day selected</b></td><td>Primary filled circle.</td></tr><tr><td><b>In-range</b></td><td>Light primary band between endpoints.</td></tr><tr><td><b>Disabled / out-of-range</b></td><td>38% opacity, not selectable.</td></tr></tbody></table><div class="statetry"><div class="demo-embed" id="sd-picker"><span class="tf outlined"><span class="lbl">Date range</span><div class="f">1 Jun – 30 Jun 📅</div></span></div><div><div class="statebtns"><button class="statebtn" type="button" aria-pressed="false" data-state-toggle="focus" data-target="sd-picker">Day hover/focus</button></div><p class="tnote" style="margin-top:8px">Click to toggle. Only states with a real hook in the preview stylesheet are interactive; the rest are documented above.</p></div></div>
   <h5>Behaviors</h5><table class="mini"><tbody><tr><td><b>Type or pick</b></td><td>The field accepts typed input in the locale format; the calendar/clock offers visual selection. Both stay in sync.</td></tr><tr><td><b>Ranges</b></td><td>Selecting a start then an end highlights the span; presets (&quot;Last 7 days&quot;, &quot;This month&quot;) speed up common choices.</td></tr><tr><td><b>Constraints</b></td><td>Min/max and disabled dates prevent invalid choices (e.g. no future service date in the past); validation shows in the field&#x27;s supporting text.</td></tr><tr><td><b>Locale &amp; time zone</b></td><td>Formats, first-day-of-week, and time zone follow the operator&#x27;s settings — important for a global fleet.</td></tr></tbody></table>
   <div class="dodont">
     <div class="do"><h5>Do</h5><ul><li>Allow typing and picking.</li><li>Offer presets for common ranges.</li><li>Respect locale &amp; time zone.</li><li>Disable invalid dates rather than erroring after.</li></ul></div>
     <div class="dont"><h5>Don&#39;t</h5><ul><li>Don&#x27;t force calendar-only entry for power users.</li><li>Don&#x27;t ignore time zones on a global fleet.</li></ul></div>
   </div>
-  <h5>Props</h5><table class="mini props"><thead><tr><th>Prop</th><th>Type</th><th class="c">Req</th><th>Description</th></tr></thead><tbody><tr><td><code>mode</code></td><td><code class="typ">&#x27;date&#x27; | &#x27;time&#x27; | &#x27;dateRange&#x27;</code></td><td class="c">✓</td><td>Which picker shape to render — Date picker, Time picker, or Date range picker per the spec&#x27;s Variants table. Date-time is composed by pairing a date-mode Picker with a time-mode Picker rather than a fourth mode.</td></tr><tr><td><code>value</code></td><td><code class="typ">Date | [Date | null, Date | null] | null</code></td><td class="c"></td><td>Current value: a single Date for date/time mode, or a [start, end] tuple for dateRange mode.</td></tr><tr><td><code>onChange</code></td><td><code class="typ">(value: Date | [Date | null, Date | null] | null) =&gt; void</code></td><td class="c"></td><td>Called when the operator types or picks a new value; both input paths stay in sync per the &#x27;Type or pick&#x27; behavior.</td></tr><tr><td><code>label</code></td><td><code class="typ">string</code></td><td class="c"></td><td>Field label.</td></tr><tr><td><code>variant</code></td><td><code class="typ">&#x27;popup&#x27; | &#x27;field-only&#x27; | &#x27;static&#x27;</code></td><td class="c"></td><td>Popup (typeable field + calendar/clock trigger, default), Field-only (keyboard entry without a popup, for power users), or Static/inline (always-open calendar embedded in a panel).</td></tr><tr><td><code>minDate</code></td><td><code class="typ">Date</code></td><td class="c"></td><td>Earliest selectable date/time; part of the Constraints behavior that disables invalid choices rather than erroring after.</td></tr><tr><td><code>maxDate</code></td><td><code class="typ">Date</code></td><td class="c"></td><td>Latest selectable date/time.</td></tr><tr><td><code>disabledDates</code></td><td><code class="typ">Date[]</code></td><td class="c"></td><td>Individually disabled dates, e.g. to block a future service date in the past.</td></tr><tr><td><code>presets</code></td><td><code class="typ">PickerPreset[]</code></td><td class="c"></td><td>Quick presets for a date range, e.g. &quot;Last 7 days&quot;, &quot;This month&quot;, to speed up common choices.</td></tr><tr><td><code>open</code></td><td><code class="typ">boolean</code></td><td class="c"></td><td>Whether the popup calendar/clock surface is open (popup variant only).</td></tr><tr><td><code>onOpenChange</code></td><td><code class="typ">(open: boolean) =&gt; void</code></td><td class="c"></td><td>Called when the popup surface should open or close.</td></tr><tr><td><code>className</code></td><td><code class="typ">string</code></td><td class="c"></td><td>Optional extra class names to compose with the base picker/tf classes.</td></tr></tbody></table>
+  <h5>Props</h5><table class="mini props"><thead><tr><th>Prop</th><th>Type</th><th>Default</th><th class="c">Req</th><th>Description</th></tr></thead><tbody><tr><td><code>mode</code></td><td><code class="typ">&#x27;date&#x27; | &#x27;time&#x27; | &#x27;dateRange&#x27;</code></td><td>—</td><td class="c">✓</td><td>Which picker shape to render — Date picker, Time picker, or Date range picker per the spec&#x27;s Variants table. Date-time is composed by pairing a date-mode Picker with a time-mode Picker rather than a fourth mode.</td></tr><tr><td><code>value</code></td><td><code class="typ">Date | [Date | null, Date | null] | null</code></td><td>—</td><td class="c"></td><td>Current value: a single Date for date/time mode, or a [start, end] tuple for dateRange mode.</td></tr><tr><td><code>onChange</code></td><td><code class="typ">(value: Date | [Date | null, Date | null] | null) =&gt; void</code></td><td>—</td><td class="c"></td><td>Called when the operator types or picks a new value; both input paths stay in sync per the &#x27;Type or pick&#x27; behavior.</td></tr><tr><td><code>label</code></td><td><code class="typ">string</code></td><td>—</td><td class="c"></td><td>Field label.</td></tr><tr><td><code>variant</code></td><td><code class="typ">&#x27;popup&#x27; | &#x27;field-only&#x27; | &#x27;static&#x27;</code></td><td>—</td><td class="c"></td><td>Popup (typeable field + calendar/clock trigger, default), Field-only (keyboard entry without a popup, for power users), or Static/inline (always-open calendar embedded in a panel).</td></tr><tr><td><code>minDate</code></td><td><code class="typ">Date</code></td><td>—</td><td class="c"></td><td>Earliest selectable date/time; part of the Constraints behavior that disables invalid choices rather than erroring after.</td></tr><tr><td><code>maxDate</code></td><td><code class="typ">Date</code></td><td>—</td><td class="c"></td><td>Latest selectable date/time.</td></tr><tr><td><code>disabledDates</code></td><td><code class="typ">Date[]</code></td><td>—</td><td class="c"></td><td>Individually disabled dates, e.g. to block a future service date in the past.</td></tr><tr><td><code>presets</code></td><td><code class="typ">PickerPreset[]</code></td><td>—</td><td class="c"></td><td>Quick presets for a date range, e.g. &quot;Last 7 days&quot;, &quot;This month&quot;, to speed up common choices.</td></tr><tr><td><code>open</code></td><td><code class="typ">boolean</code></td><td>—</td><td class="c"></td><td>Whether the popup calendar/clock surface is open (popup variant only).</td></tr><tr><td><code>onOpenChange</code></td><td><code class="typ">(open: boolean) =&gt; void</code></td><td>—</td><td class="c"></td><td>Called when the popup surface should open or close.</td></tr><tr><td><code>className</code></td><td><code class="typ">string</code></td><td>—</td><td class="c"></td><td>Optional extra class names to compose with the base picker/tf classes.</td></tr></tbody></table>
   <h5>Tokens used</h5><div class="tokpaths"><code class="tokpath">semantic.color.brand.primary.main</code><code class="tokpath">semantic.color.brand.primary.dark</code><code class="tokpath">semantic.color.brand.primary.onPrimary</code><code class="tokpath">semantic.radius.default</code><code class="tokpath">semantic.radius.pill</code></div>
   <details><summary>Visual specs</summary><table class="mini"><tbody><tr><td>Surface radius / elevation</td><td>4px, overlay elevation</td></tr><tr><td>Header</td><td>primary background — use dark text or primary-dark; white on #F47735 fails AA</td></tr><tr><td>Day cell</td><td>~36px, circular selection</td></tr><tr><td>Selected colour</td><td>primary (#F47735)</td></tr></tbody></table></details>
   <h5 id="accessibility">Accessibility</h5><ul class="plain"><li>The field is labelled and announces the selected value.</li><li>The calendar is keyboard navigable (arrows move days, Page changes months) with aria grid semantics.</li><li>Selected and disabled days are conveyed to assistive tech, not by colour alone.</li></ul>
   <h5>Related components</h5><table class="mini"><tbody><tr><td><a href="text-field.html"><b>TextField</b></a></td><td>Typed entry for known exact dates/times</td></tr><tr><td><a href="dialog.html"><b>Dialog</b></a></td><td>The modal surface pickers open inside</td></tr></tbody></table>
   <h5>Design checklist</h5><div class="checks"><span class="chk on">✓ Tokens wired</span><span class="chk on">✓ Docs complete</span><span class="chk on">✓ AA reviewed (2026-07-16)</span><span class="chk on">✓ Preview synced</span><span class="chk ">○ Validated in a production prototype</span></div>
   <details class="research"><summary>Research &amp; findings</summary><p class="tnote">No usage findings logged yet. When research or prototype feedback exists for this component, add a <code>research</code> field to its doc.json and regenerate the portal.</p></details>
-  <h5>Live example</h5><a class="livelink" href="../component-library-preview.html#picker" target="_blank">See Picker in the visual preview ↗</a>
+  <h5>Full page</h5><a class="livelink" href="../component-library-preview.html#picker" target="_blank">See this component in a full page layout ↗</a>
   <div class="cfoot">Improve this component — edit <code>components/Picker/Picker.doc.json</code> and regenerate the portal.</div>
 </article>
 </div>
@@ -353,6 +574,24 @@
   // choosing a destination closes the mobile drawer
   document.querySelectorAll('nav a[href]').forEach(function(a){
     a.addEventListener('click', window.closeNav);
+  });
+
+  // component detail: state toggles (spec §7) — only rendered where the
+  // preview stylesheet has a real hook, so no capability is faked here
+  document.querySelectorAll('[data-state-toggle]').forEach(function(b){
+    b.addEventListener('click', function(){
+      var d=document.getElementById(b.getAttribute('data-target'));
+      var el=d&&d.firstElementChild; if(!el) return;
+      var k=b.getAttribute('data-state-toggle');
+      if(k==='disabled'){
+        if(el.hasAttribute('disabled')) el.removeAttribute('disabled');
+        else el.setAttribute('disabled','');
+      } else {
+        el.classList.toggle(k);
+      }
+      b.classList.toggle('active');
+      b.setAttribute('aria-pressed', b.classList.contains('active')?'true':'false');
+    });
   });
 })();</script>
 </body>

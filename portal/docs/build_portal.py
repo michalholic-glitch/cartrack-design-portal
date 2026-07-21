@@ -86,6 +86,154 @@ for c in comps:
 
 comp_names = sorted((c["name"] for c in comps), key=len, reverse=True)
 
+# ---------- preview demo extraction (component-detail-page spec §5) ----------
+# The hand-authored preview file is the single source of real demo markup.
+# Everything below is a read-only string operation over it — the component
+# repo stays untouched, and a missing fragment degrades to text-only.
+PREVIEW_HTML = (DS / "component-library-preview.html").read_text(encoding="utf-8")
+PREVIEW_CSS = re.search(r'<style>(.*?)</style>', PREVIEW_HTML, re.S).group(1)
+
+def _scope_css(css, scope=".demo-embed"):
+    """Prefix every selector with the scope class so preview styles can't
+    collide with the portal's own. html/body/:root map to the scope itself;
+    @keyframes pass through; @media recurse."""
+    css = re.sub(r'/\*.*?\*/', '', css, flags=re.S)
+    out, i, n = [], 0, len(css)
+    def block_end(start):
+        depth = 0
+        for j in range(start, n):
+            if css[j] == '{': depth += 1
+            elif css[j] == '}':
+                depth -= 1
+                if depth == 0: return j + 1
+        return n
+    while i < n:
+        b = css.find('{', i)
+        if b == -1: break
+        sel = css[i:b].strip()
+        e = block_end(b)
+        body = css[b:e]
+        if sel.startswith('@keyframes') or (sel.startswith('@') and not sel.startswith('@media')):
+            out.append(sel + body)
+        elif sel.startswith('@media'):
+            out.append(sel + '{' + _scope_css(body[1:-1], scope) + '}')
+        else:
+            parts = []
+            for p_ in sel.split(','):
+                p_ = p_.strip()
+                if not p_: continue
+                if p_ in ('html', 'body', ':root'):
+                    parts.append(scope)
+                elif p_ == '*':
+                    parts.append(scope + ' *')
+                else:
+                    parts.append(scope + ' ' + p_)
+            out.append(', '.join(parts) + body)
+        i = e
+    return '\n'.join(out)
+
+DEMO_CSS = _scope_css(PREVIEW_CSS)
+
+def _balanced_div_inner(text, open_idx):
+    """Given the index of a '<div ...>' opening tag, return its inner HTML."""
+    start = text.index('>', open_idx) + 1
+    depth, i = 1, start
+    while depth and i < len(text):
+        no, nc = text.find('<div', i), text.find('</div>', i)
+        if nc == -1: return text[start:].strip()
+        if no != -1 and no < nc:
+            depth += 1; i = no + 4
+        else:
+            depth -= 1; i = nc + 6
+    return text[start:i - 6].strip()
+
+def _extract_demos():
+    """slug -> [{'label': variant name, 'html': demo fragment}, ...]"""
+    demos = {}
+    for m in re.finditer(r'<section id="([a-z-]+)">', PREVIEW_HTML):
+        sid = m.group(1)
+        end = PREVIEW_HTML.find('</section>', m.end())
+        sec = PREVIEW_HTML[m.end():end]
+        items = []
+        for im in re.finditer(r'<div class="variant-item">', sec):
+            after = sec[im.end():]
+            dm = re.search(r'<div class="variant-demo">', after)
+            lm = re.search(r'<div class="variant-label"><b>(.*?)</b>', after, re.S)
+            if not dm or not lm: continue
+            frag = _balanced_div_inner(after, dm.start())
+            # cut anything from the label onward (balanced scan can't overrun
+            # into it because variant-demo closes before variant-label opens)
+            label = re.sub(r'<[^>]+>', '', lm.group(1)).strip()
+            frag = re.sub(r'\s+id="[^"]*"', '', frag)  # avoid duplicate ids on the page
+            items.append({"label": label, "html": frag})
+        demos[sid] = items
+    return demos
+
+DEMOS = _extract_demos()
+
+def demo_for_variant(comp_slug, variant_name, index):
+    """Match by exact label text (spec §5.3), fall back to order, else None."""
+    items = DEMOS.get(comp_slug, [])
+    for it in items:
+        if it["label"] == variant_name:
+            return it["html"]
+    if index < len(items):
+        return items[index]["html"]
+    return None
+
+# state-toggle hooks (spec §7): a state is interactive only if the preview
+# stylesheet already has a class/attribute rule for it on the demo's root.
+_HOOK_COMBOS = set()
+for _selm in re.finditer(r'([^{}]+)\{', PREVIEW_CSS):
+    _sel = _selm.group(1)
+    for _hm in re.finditer(r'\.([\w-]+)\.(on|focus)\b', _sel):
+        _HOOK_COMBOS.add((_hm.group(1), _hm.group(2)))
+    for _hm in re.finditer(r'\.([\w-]+)\[disabled\]', _sel):
+        _HOOK_COMBOS.add((_hm.group(1), 'disabled'))
+
+_STATE_KEYWORDS = {"disabled": "disabled", "selected": "on", "checked": "on",
+                   "active": "on", "on": "on", "focus": "focus", "focused": "focus"}
+
+def _root_classes(frag):
+    m = re.match(r'\s*<\w+[^>]*class="([^"]+)"', frag or "")
+    return m.group(1).split() if m else []
+
+def _hook_for_state(state_name, root_classes):
+    """Return the CSS hook ('on'/'focus'/'disabled') if the preview stylesheet
+    defines it for this demo's root element, else None."""
+    words = re.split(r'[\s/,-]+', state_name.lower())
+    for w in words:
+        hook = _STATE_KEYWORDS.get(w)
+        if hook and any((cls, hook) in _HOOK_COMBOS for cls in root_classes):
+            return hook
+    return None
+
+# usage snippets (spec §8) — generated documentation aid, not tested code
+def _variant_value(name):
+    return re.sub(r'[^a-z0-9]+', '-', name.split('(')[0].strip().lower()).strip('-')
+
+def _example_value(p):
+    t, n = p.get("type", ""), p.get("name", "").lower()
+    if t.startswith("'"):
+        m = re.match(r"'([^']*)'", t)
+        return f'"{m.group(1)}"' if m else '"…"'
+    if "boolean" in t: return "{true}"
+    if "number" in t: return "{1}"
+    if "=>" in t or "()" in t: return "{() => {}}"
+    if "string" in t:
+        return '"Save"' if n in ("label", "title", "text") else '"…"'
+    return "{…}"
+
+def usage_snippet(c, v):
+    bits = [c["name"]]
+    prop_names = {p.get("name") for p in c.get("props", [])}
+    if "variant" in prop_names:
+        bits.append(f'variant="{_variant_value(v.get("name", ""))}"')
+    for p in c.get("props", []):
+        if p.get("required") and p.get("name") != "variant":
+            bits.append(f'{p["name"]}={_example_value(p)}')
+    return "<" + " ".join(bits) + " />"
+
 # ---------- token display helpers ----------
 def swatch_group(title, items, note=None):
     cells = ""
@@ -376,9 +524,27 @@ NAV_JS = r'''
   document.querySelectorAll('nav a[href]').forEach(function(a){
     a.addEventListener('click', window.closeNav);
   });
+
+  // component detail: state toggles (spec §7) — only rendered where the
+  // preview stylesheet has a real hook, so no capability is faked here
+  document.querySelectorAll('[data-state-toggle]').forEach(function(b){
+    b.addEventListener('click', function(){
+      var d=document.getElementById(b.getAttribute('data-target'));
+      var el=d&&d.firstElementChild; if(!el) return;
+      var k=b.getAttribute('data-state-toggle');
+      if(k==='disabled'){
+        if(el.hasAttribute('disabled')) el.removeAttribute('disabled');
+        else el.setAttribute('disabled','');
+      } else {
+        el.classList.toggle(k);
+      }
+      b.classList.toggle('active');
+      b.setAttribute('aria-pressed', b.classList.contains('active')?'true':'false');
+    });
+  });
 })();'''
 
-def render_shell(active, body, prefix="", page_title="Cartrack AI Design System — Documentation Portal"):
+def render_shell(active, body, prefix="", page_title="Cartrack AI Design System — Documentation Portal", extra_css=""):
     nav = render_nav(active, prefix)
     body_cls = "p-home" if active == "home" else ""
     return f'''<!DOCTYPE html>
@@ -502,6 +668,20 @@ def render_shell(active, body, prefix="", page_title="Cartrack AI Design System 
   .article h3{{font-size:19px;letter-spacing:-.01em;margin:44px 0 12px;padding-top:22px;border-top:1px dashed var(--line)}}
   .article .toc{{font-size:13px;color:var(--ink2);margin:16px 0 0}}
 
+  /* component detail v2: inline variant demos + state toggles */
+  .vrow{{display:grid;grid-template-columns:300px 1fr;gap:16px;margin-top:12px;align-items:start}}
+  .demo-embed{{border:1px solid var(--line);border-radius:var(--r);padding:22px;display:flex;align-items:center;justify-content:center;overflow-x:auto;min-height:64px}}
+  .vinfo b{{font-size:14.5px}}
+  .vinfo p{{font-size:13.5px;color:var(--ink2);margin-top:2px}}
+  pre.usage{{margin-top:10px;background:#f6f3ee;border:1px solid var(--line);border-radius:var(--r);padding:8px 12px;font-size:12px;overflow-x:auto}}
+  pre.usage code{{background:none;padding:0;font-size:12px}}
+  .statetry{{display:grid;grid-template-columns:300px 1fr;gap:16px;margin-top:12px;align-items:center}}
+  .statebtns{{display:flex;flex-wrap:wrap;gap:8px}}
+  .statebtn{{font-family:var(--sans);font-size:12.5px;border:1px solid var(--line);background:var(--card);border-radius:999px;padding:5px 14px;cursor:pointer;color:var(--ink2)}}
+  .statebtn:hover{{border-color:var(--accent-d);color:var(--accent-d)}}
+  .statebtn:focus-visible{{outline:2px solid var(--accent-d);outline-offset:2px}}
+  .statebtn.active{{background:#fdf3ec;border-color:var(--accent-d);color:var(--accent-d);font-weight:600}}
+
   /* tokens */
   .tokgroup{{margin-bottom:34px}}
   .tokgroup h4{{font-size:15px;margin-bottom:12px}}
@@ -616,8 +796,9 @@ def render_shell(active, body, prefix="", page_title="Cartrack AI Design System 
     aside{{position:fixed;top:0;left:0;width:280px;max-width:85vw;height:100vh;z-index:50;transform:translateX(-100%);transition:transform .2s ease}}
     body.navopen aside{{transform:translateX(0);box-shadow:0 0 40px rgba(0,0,0,.25)}}
     body.navopen .navscrim{{display:block;position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:45}}
-    .dodont,.dl,.paths,.whens{{grid-template-columns:1fr}} .filemap .fr{{grid-template-columns:1fr}} .filemap .fp{{border-right:none}}
+    .dodont,.dl,.paths,.whens,.vrow,.statetry{{grid-template-columns:1fr}} .filemap .fr{{grid-template-columns:1fr}} .filemap .fp{{border-right:none}}
   }}
+{extra_css}
 </style>
 </head>
 <body class="{body_cls}">
@@ -976,15 +1157,49 @@ def body_component(c):
         rows = "".join(f'<li><b>{esc(a.get("name",""))}</b> — {esc(a.get("description",""))}</li>' for a in c["anatomy"])
         anat = f'<h5>Anatomy</h5><ol class="anatomy">{rows}</ol>'
 
-    # variants
-    variants = "".join(f'<tr><td><b>{esc(v.get("name",""))}</b></td><td>{esc(v.get("whenToUse",""))}</td></tr>' for v in c.get("variants", []))
-    vt = f'<h5>Variants</h5><table class="mini"><tbody>{variants}</tbody></table>' if variants else ""
+    # variants — demo tile + text + generated usage snippet (spec §4.4, §8);
+    # a variant with no preview fragment degrades to text-only (spec §5)
+    vrows = ""
+    for i, v in enumerate(c.get("variants", [])):
+        frag = demo_for_variant(s, v.get("name", ""), i)
+        tile = f'<div class="demo-embed vtile">{frag}</div>' if frag else ""
+        snippet = f'<pre class="usage"><code>{esc(usage_snippet(c, v))}</code></pre>'
+        info = (f'<div class="vinfo"><b>{esc(v.get("name",""))}</b>'
+                f'<p>{esc(v.get("whenToUse",""))}</p>{snippet}</div>')
+        vrows += f'<div class="vrow">{tile}{info}</div>' if tile else f'<div class="vrow" style="grid-template-columns:1fr">{info}</div>'
+    vt = ""
+    if vrows:
+        vt = (f'<h5>Variants</h5>'
+              f'<p class="tnote">Demos are the real preview markup, inlined at build time. '
+              f'"Example usage" lines are generated from doc.json — a documentation aid, not tested code.</p>'
+              f'{vrows}')
 
-    # states & behaviors
+    # states & behaviors — text table plus, where the preview stylesheet has a
+    # real CSS hook for a state, one interactive demo instance (spec §4.6, §7)
     states = ""
     if c.get("states"):
         rows = "".join(f'<tr><td><b>{esc(s2.get("state",""))}</b></td><td>{esc(s2.get("treatment",""))}</td></tr>' for s2 in c["states"])
         states = f'<h5>States</h5><table class="mini"><tbody>{rows}</tbody></table>'
+        # pick the first variant fragment whose root element has a hook for any state
+        state_frag, chips = None, ""
+        for it in DEMOS.get(s, []):
+            roots = _root_classes(it["html"])
+            hooked = [(s2.get("state",""), _hook_for_state(s2.get("state",""), roots))
+                      for s2 in c["states"]]
+            hooked = [(nm, hk) for nm, hk in hooked if hk]
+            if hooked:
+                state_frag = it["html"]
+                seen = set()
+                for nm, hk in hooked:
+                    if hk in seen: continue
+                    seen.add(hk)
+                    chips += (f'<button class="statebtn" type="button" aria-pressed="false" '
+                              f'data-state-toggle="{hk}" data-target="sd-{s}">{esc(nm)}</button>')
+                break
+        if state_frag and chips:
+            states += (f'<div class="statetry"><div class="demo-embed" id="sd-{s}">{state_frag}</div>'
+                       f'<div><div class="statebtns">{chips}</div>'
+                       f'<p class="tnote" style="margin-top:8px">Click to toggle. Only states with a real hook in the preview stylesheet are interactive; the rest are documented above.</p></div></div>')
     beh = ""
     if c.get("behaviors"):
         rows = "".join(f'<tr><td><b>{esc(b.get("name",""))}</b></td><td>{esc(b.get("description",""))}</td></tr>' for b in c["behaviors"])
@@ -994,12 +1209,14 @@ def body_component(c):
     dos = "".join(f'<li>{esc(x)}</li>' for x in c.get("doThis", []))
     donts = "".join(f'<li>{esc(x)}</li>' for x in remaining_donts)
 
-    # props
+    # props — Default column is additive/optional (spec §6): renders the field
+    # when a doc.json has it, an em-dash when it doesn't; no backfill required
     props = ""
     for p in c.get("props", []):
         req = "✓" if p.get("required") else ""
-        props += f'<tr><td><code>{esc(p.get("name",""))}</code></td><td><code class="typ">{esc(p.get("type",""))}</code></td><td class="c">{req}</td><td>{esc(p.get("description",""))}</td></tr>'
-    pt = f'<h5>Props</h5><table class="mini props"><thead><tr><th>Prop</th><th>Type</th><th class="c">Req</th><th>Description</th></tr></thead><tbody>{props}</tbody></table>' if props else ""
+        default = f'<code>{esc(p["default"])}</code>' if p.get("default") not in (None, "") else "—"
+        props += f'<tr><td><code>{esc(p.get("name",""))}</code></td><td><code class="typ">{esc(p.get("type",""))}</code></td><td>{default}</td><td class="c">{req}</td><td>{esc(p.get("description",""))}</td></tr>'
+    pt = f'<h5>Props</h5><table class="mini props"><thead><tr><th>Prop</th><th>Type</th><th>Default</th><th class="c">Req</th><th>Description</th></tr></thead><tbody>{props}</tbody></table>' if props else ""
 
     # tokens used
     toks = "".join(f'<code class="tokpath">{esc(t)}</code>' for t in c.get("tokens", []))
@@ -1033,8 +1250,9 @@ def body_component(c):
 
     research = '<details class="research"><summary>Research &amp; findings</summary><p class="tnote">No usage findings logged yet. When research or prototype feedback exists for this component, add a <code>research</code> field to its doc.json and regenerate the portal.</p></details>'
 
-    # live example — anchor into the shared preview file (slug == preview anchor id)
-    live = f'<h5>Live example</h5><a class="livelink" href="../component-library-preview.html#{s}" target="_blank">See {esc(name)} in the visual preview ↗</a>'
+    # full-page link — variants now render inline above, so this link's job is
+    # composition context, not the only demo (spec §4.12)
+    live = f'<h5>Full page</h5><a class="livelink" href="../component-library-preview.html#{s}" target="_blank">See this component in a full page layout ↗</a>'
 
     feedback = f'<div class="cfoot">Improve this component — edit <code>components/{esc(name)}/{esc(name)}.doc.json</code> and regenerate the portal.</div>'
 
@@ -1133,10 +1351,10 @@ function filterIdx(q){
 # ================================================================
 # Write all pages
 # ================================================================
-def write(relpath, active, body, prefix, page_title):
+def write(relpath, active, body, prefix, page_title, extra_css=""):
     p = DOCS / relpath
     p.parent.mkdir(parents=True, exist_ok=True)
-    p.write_text(render_shell(active, body, prefix, page_title), encoding="utf-8")
+    p.write_text(render_shell(active, body, prefix, page_title, extra_css), encoding="utf-8")
     return p
 
 def write_redirect(old, new):
@@ -1199,7 +1417,7 @@ written.append(write("components/index.html", "components", body_components_inde
 for c in comps:
     s = slug(c["name"])
     written.append(write(f"components/{s}.html", f"comp:{s}", body_component(c), "../",
-                         f"{c['name']} — Cartrack AI Design System"))
+                         f"{c['name']} — Cartrack AI Design System", extra_css=DEMO_CSS))
 
 total_kb = round(sum(os.path.getsize(p) for p in written) / 1024)
 print(f"Wrote {len(written)} pages to {DOCS} — {total_kb} KB total")
