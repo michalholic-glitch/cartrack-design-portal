@@ -623,6 +623,7 @@ def render_shell(active, body, prefix="", page_title="Cartrack AI Design System 
   header.top .inner{{max-width:880px;position:relative;z-index:1}}
   header.top h1{{font-family:var(--display);font-size:clamp(30px,4.4vw,46px);line-height:1.08;font-weight:800;letter-spacing:-.02em}}
   header.top p{{margin-top:16px;color:#c9cdd2;font-size:16.5px;max-width:60ch;line-height:1.55}}
+  header.top p.tagline{{color:#c9cdd2;font-size:14.5px;margin-top:10px;font-style:italic}}
 
   /* signature route line (hero) — a fleet-tracking route metaphor, drawn from the
      product's subject matter. Generic waypoint dots (NOT the Cartrack logomark). */
@@ -826,11 +827,51 @@ def render_shell(active, body, prefix="", page_title="Cartrack AI Design System 
 # ================================================================
 # Page bodies
 # ================================================================
+# ---------- vibe-test evidence for the home Proof block (narrative spec §8) ----------
+def vibe_proof_line():
+    """Read vibe-tests/results/ live at build time. Three tiers: no results →
+    no line at all; a smoke run (<10 evaluated prompts) → honest phrasing with
+    no percentage; a full run → the real pass rate, named and dated so the
+    claim stays falsifiable. Never a placeholder, never an invented figure."""
+    results_dir = DS / "vibe-tests" / "results"
+    if not results_dir.is_dir():
+        return ""
+    runs = {}
+    for f in results_dir.glob("*/results/*.json"):
+        try:
+            r = json.load(open(f))
+        except Exception:
+            continue
+        runs.setdefault(f.parent.parent.name, []).append(r)
+    if not runs:
+        return ""
+    def latest_ts(rs):
+        return max((r.get("timestamp", "") for r in rs), default="")
+    iteration = max(runs, key=lambda k: (latest_ts(runs[k]), k))
+    rs = runs[iteration]
+    n = len(rs)
+    passed = sum(1 for r in rs if r.get("evaluation", {}).get("success"))
+    date = (latest_ts(rs) or "")[:10]
+    stamp = esc(iteration) + (f", {esc(date)}" if date else "")
+    if n < 10:
+        cats = sorted({r.get("category", "") for r in rs if r.get("category")})
+        catstr = f' ({esc(", ".join(cats))})' if cats else ""
+        outcome = "all" if passed == n else f"only {passed} of {n}"
+        return (f'<div class="rule"><b>Smoke-tested against {n} adversarial prompts</b>{catstr} — '
+                f'{outcome} passed without inventing components, tokens or rules (run: {stamp}). '
+                f'No percentage claimed from a {n}-prompt sample; a full vibe-test iteration replaces '
+                f'this line automatically once it lands in <code>vibe-tests/results/</code>.</div>')
+    pct = round(passed / n * 100)
+    return (f'<div class="rule"><b>{pct}% pass rate across {n} adversarial prompts</b> — '
+            f'run: {stamp}, read from <code>vibe-tests/results/</code> at build time.</div>')
+
 def body_home():
+    vibe_proof = vibe_proof_line()
     return f'''<header class="top">
   <div class="inner">
     <h1>Build on-system UI with AI.<br>Start in two minutes.</h1>
     <p>This portal documents the Cartrack Fleet AI-ready design system: a self-contained folder that lets any AI coding agent — Claude, Cursor, Copilot — generate prototypes and UI that match our production Fleet Portal. Everything here is derived from the real fleetapp-web codebase.</p>
+    <p class="tagline">Not a component library on its own — the actual Fleet Portal's tokens and components, packaged so an AI agent can build with them without touching production code.</p>
     <div class="route" aria-hidden="true">
       <span class="wp"><span class="dot"></span>Download</span>
       <span class="track"></span>
@@ -846,8 +887,73 @@ def body_home():
 </header>
 
 <div class="inner">
+<section id="why">
+  <h2>Why this exists</h2>
+  <p class="sub">Design systems drift: the documentation says one thing, production ships another, and an AI agent asked to "build a screen" happily invents a third visual language on the spot. This folder removes both failure modes — every value is extracted from the production Fleet Portal, and the agent rules travel with the folder itself. <a href="guides/index.html#why">Why it's built this way →</a></p>
+</section>
+
+<section id="what">
+  <h2>What it is</h2>
+  <p class="sub">One folder, four things inside:</p>
+  <div class="filemap">
+    <div class="fr"><div class="fp">tokens/tokens.json</div><div class="fd">Every colour, spacing, type and radius value — extracted from production, never invented.</div></div>
+    <div class="fr"><div class="fp">components/</div><div class="fd">{n_comps} components, each with structured docs an agent reads before using it.</div></div>
+    <div class="fr"><div class="fp">templates/</div><div class="fd">{n_patterns} page patterns encoding how whole screens compose.</div></div>
+    <div class="fr"><div class="fp">CLAUDE.md · AGENTS.md</div><div class="fd">The instruction files that load automatically and set the rules for every agent.</div></div>
+  </div>
+  <p class="tnote" style="margin-top:10px"><a href="guides/index.html#inside">Full folder map →</a></p>
+</section>
+
+<section id="proof">
+  <h2>Proof, not promises</h2>
+  <p class="sub">The system's own first rule is "don't invent" — so here is where each headline number comes from.</p>
+  <div class="rules">
+    <div class="rule"><b>{n_comps} components</b> — each mapped prop-for-prop against the real fleetapp-web source (MDC 14 class contracts), not designed from scratch.</div>
+    <div class="rule"><b>One tokens source of truth</b> — every value in <code>tokens.json</code> was extracted from production and cites its origin files in <code>_meta.generatedFrom</code>.</div>
+    <div class="rule"><b>Zero setup steps per session</b> — <code>CLAUDE.md</code> / <code>AGENTS.md</code> load automatically when the folder is connected; nothing to install or configure.</div>
+    {vibe_proof}
+  </div>
+</section>
+
+<section id="paths">
+  <h2>Pick your path</h2>
+  <div class="paths">
+    <div class="path p-designers">
+      <div class="who">For designers</div>
+      <h4>Prototype in product language</h4>
+      <p>Brief it like you'd brief a developer — the rules are already loaded. <a href="guides/index.html#paths">Full path + first prompt →</a></p>
+    </div>
+    <div class="path p-developers">
+      <div class="who">For developers</div>
+      <h4>Build features on the real values</h4>
+      <p>Three files per component; every visual value comes from <code>tokens.json</code>. <a href="guides/index.html#paths">Full path →</a></p>
+    </div>
+    <div class="path p-agents">
+      <div class="who">For AI agents</div>
+      <h4>Your rules load automatically</h4>
+      <p>Read each component's <code>doc.json</code> before using it; flag gaps, never invent. <a href="guides/index.html#paths">Full path →</a></p>
+    </div>
+  </div>
+</section>
+
+<section id="how">
+  <h2>How it works</h2>
+  <div class="steps">
+    <div class="stepc"><b>Connect the folder</b><p>Point your AI tool at the <code>cartrack-ai-design-system</code> folder itself — Claude Cowork, Claude Code, Cursor and Copilot all pick it up.</p></div>
+    <div class="stepc"><b>The rules load</b><p>The agent reads <code>CLAUDE.md</code> / <code>AGENTS.md</code> automatically at session start — no prompt engineering needed.</p></div>
+    <div class="stepc"><b>It builds from the real system</b><p>Components and tokens from production; anything missing gets flagged instead of invented.</p></div>
+  </div>
+  <p class="tnote" style="margin-top:12px"><a href="guides/index.html#quick-start">Full quick start →</a></p>
+</section>
+
+<section id="see">
+  <h2>See it working</h2>
+  <p class="sub">Every component, rendered in one static page — open it in any browser, nothing to install.</p>
+  <a class="livelink" href="resources/preview.html">See every component rendered — no setup ↗</a>
+</section>
+
 <section id="whats-here">
-  <h2>What's here</h2>
+  <h5>More in this portal</h5>
   <p class="sub">Five sections. Start with the guide if you're new; jump straight to the reference if you're not.</p>
   <div class="idxgrid">
     <a class="idxcard" href="guides/index.html">
