@@ -235,19 +235,22 @@ def render_nav(active, prefix):
 
     parts.append(flat("index.html", "Home", "home"))
 
-    parts.append('<div class="sect">Guide</div>')
-    parts.append(flat("foundations.html", "Foundations", "foundations"))
-    parts.append(flat("tokens.html", "Design tokens", "tokens"))
-    parts.append(flat("accessibility.html", "Accessibility", "accessibility"))
+    # Guides group
+    g_open = active == "guides" or active.startswith("guide:")
+    ginner = leaf("guides/index.html", "Overview", "guides")
+    ginner += leaf("guides/getting-started.html", "Getting started", "guide:getting-started")
+    ginner += leaf("guides/how-it-works.html", "How the system works", "guide:how-it-works")
+    ginner += leaf("guides/rules.html", "Rules for AI &amp; humans", "guide:rules")
+    parts.append(group("grp-guides", "Guides", 3, g_open, ginner))
 
-    parts.append('<div class="sect">Library</div>')
-
-    # Patterns group
-    pat_open = active == "patterns" or active.startswith("pat:")
-    pinner = leaf("patterns/index.html", "Overview", "patterns")
-    for p in patterns:
-        pinner += leaf(f"patterns/{p['slug']}.html", esc(p["navtitle"]), f"pat:{p['slug']}")
-    parts.append(group("grp-patterns", "Patterns", n_patterns, pat_open, pinner))
+    # Foundations group
+    f_open = active == "foundations" or active.startswith("found:")
+    finner = leaf("foundations/index.html", "Overview", "foundations")
+    finner += leaf("foundations/colour.html", "Colour", "found:colour")
+    finner += leaf("foundations/typography.html", "Typography", "found:typography")
+    finner += leaf("foundations/spacing.html", "Spacing &amp; shape", "found:spacing")
+    finner += leaf("foundations/accessibility.html", "Accessibility", "found:accessibility")
+    parts.append(group("grp-foundations", "Foundations", 4, f_open, finner))
 
     # Components group, with a collapsible sub-group per category
     comp_open = active == "components" or active.startswith("comp:")
@@ -269,10 +272,20 @@ def render_nav(active, prefix):
                    f'<span class="navcount">{len(cat_comps)}</span></summary>{sub_links}</details>')
     parts.append(group("grp-components", "Components", n_comps, comp_open, cinner))
 
-    parts.append('<div class="sect">Resources</div>')
-    parts.append(flat("preview.html", "Visual preview", "preview"))
-    parts.append(flat("changelog.html", "What's new", "changelog"))
-    parts.append(flat("downloads.html", "Downloads", "downloads"))
+    # Patterns group
+    pat_open = active == "patterns" or active.startswith("pat:")
+    pinner = leaf("patterns/index.html", "Overview", "patterns")
+    for p in patterns:
+        pinner += leaf(f"patterns/{p['slug']}.html", esc(p["navtitle"]), f"pat:{p['slug']}")
+    parts.append(group("grp-patterns", "Patterns", n_patterns, pat_open, pinner))
+
+    # Resources group
+    r_open = active == "resources" or active.startswith("res:")
+    rinner = leaf("resources/index.html", "Overview", "resources")
+    rinner += leaf("resources/preview.html", "Visual preview", "res:preview")
+    rinner += leaf("resources/changelog.html", "What's new", "res:changelog")
+    rinner += leaf("resources/downloads.html", "Downloads", "res:downloads")
+    parts.append(group("grp-resources", "Resources", 3, r_open, rinner))
 
     return "\n    ".join(parts)
 
@@ -620,11 +633,65 @@ def body_home():
 </header>
 
 <div class="inner">
+<section id="whats-here">
+  <h2>What's here</h2>
+  <p class="sub">Five sections. Start with the guides if you're new; jump straight to the reference if you're not.</p>
+  <div class="idxgrid">
+    <a class="idxcard" href="guides/index.html">
+      <b>Guides</b>
+      <span class="idxmeta"><span class="idxcat">3 guides</span></span>
+      <p>Get set up, learn how the system works, and the rules everyone — human or AI — follows.</p></a>
+    <a class="idxcard" href="foundations/index.html">
+      <b>Foundations</b>
+      <span class="idxmeta"><span class="idxcat">Colour · type · spacing · accessibility</span></span>
+      <p>The design fundamentals, generated straight from <code>tokens.json</code>.</p></a>
+    <a class="idxcard" href="components/index.html">
+      <b>Components</b>
+      <span class="idxmeta"><span class="idxcat">{n_comps} components</span></span>
+      <p>Full reference: props, variants, do/don't rules, tokens and accessibility per component.</p></a>
+    <a class="idxcard" href="patterns/index.html">
+      <b>Patterns</b>
+      <span class="idxmeta"><span class="idxcat">{n_patterns} page patterns</span></span>
+      <p>How components compose into whole screens — table pages, detail pages, maps, settings, login.</p></a>
+    <a class="idxcard" href="resources/index.html">
+      <b>Resources</b>
+      <span class="idxmeta"><span class="idxcat">Preview · changelog · downloads</span></span>
+      <p>The visual preview, what's new, and everything to take away — including the full system zip.</p></a>
+  </div>
+  <div class="warn"><b>Important:</b> connect the <code>cartrack-ai-design-system</code> folder itself as the workspace root — not a parent folder. The automatic rule-loading (CLAUDE.md / AGENTS.md) is guaranteed from the root of the connected folder.</div>
+</section>
+</div>'''
+
+def body_guides_index():
+    return '''<div class="inner pagetop">
+<section id="guides">
+  <h2>Guides</h2>
+  <p class="sub">How to get productive with the system — from first download to knowing the rules by heart.</p>
+  <div class="idxgrid">
+    <a class="idxcard" href="getting-started.html">
+      <b>Getting started</b>
+      <span class="idxmeta"><span class="idxcat">Guide</span></span>
+      <p>Download the folder, connect it to your AI tool, and take your first steps — per role.</p></a>
+    <a class="idxcard" href="how-it-works.html">
+      <b>How the system works</b>
+      <span class="idxmeta"><span class="idxcat">Guide</span></span>
+      <p>What's in the folder, the 3-file component pattern, and how this portal is generated.</p></a>
+    <a class="idxcard" href="rules.html">
+      <b>Rules for AI &amp; humans</b>
+      <span class="idxmeta"><span class="idxcat">Guide</span></span>
+      <p>The seven rules everyone producing UI follows — the human-readable AGENTS.md contract.</p></a>
+  </div>
+</section>
+</div>'''
+
+def body_guide_getting_started():
+    return f'''<div class="inner pagetop">
+<a class="backlink" href="index.html">← All guides</a>
 <section id="start">
   <h2>Getting started</h2>
   <p class="sub">Everyone starts the same way — download the folder, connect it to your tool. Then pick your path.</p>
   <div class="steps" style="margin-bottom:26px">
-    <div class="stepc"><b>Download the system</b><p>Grab <a href="downloads.html">cartrack-ai-design-system.zip</a> and unzip it anywhere on your computer (or clone it from the team's shared location).</p></div>
+    <div class="stepc"><b>Download the system</b><p>Grab <a href="../resources/downloads.html">cartrack-ai-design-system.zip</a> and unzip it anywhere on your computer (or clone it from the team's shared location).</p></div>
     <div class="stepc"><b>Connect the folder to your AI tool</b><p><b>Claude Cowork:</b> new session → select the <code>cartrack-ai-design-system</code> folder. &nbsp;<b>Claude Code:</b> open a terminal in the folder and run <code>claude</code>. &nbsp;<b>Cursor / Copilot:</b> open the folder as a workspace — they pick up <code>AGENTS.md</code> automatically.</p></div>
   </div>
 
@@ -632,14 +699,14 @@ def body_home():
     <div class="path p-designers">
       <div class="who">For designers</div>
       <h4>Prototype in product language</h4>
-      <p>Ask for screens in plain language — no need to mention the design system, the rules are already loaded. Iterate the same way ("denser table", "add a selection bar"). Verify against the <a href="preview.html">visual preview</a>.</p>
+      <p>Ask for screens in plain language — no need to mention the design system, the rules are already loaded. Iterate the same way ("denser table", "add a selection bar"). Verify against the <a href="../resources/preview.html">visual preview</a>.</p>
       <div class="prompt"><b>Try this first prompt:</b><br><i>"Build an HTML prototype of a vehicle list page: app bar with search, filter chips, a data table with status chips and pagination, and one primary action 'Add vehicle'."</i><br><span class="expect">Expected result: a single .html file using the MDC classes, orange <code>primary.dark</code> for the contained button (AA-safe), 14px Roboto body text, and 4px-grid spacing throughout.</span></div>
     </div>
     <div class="path p-developers">
       <div class="who">For developers</div>
       <h4>Build features on the real values</h4>
       <p>Each component is 3 files: <code>.tsx</code> (MDC class contract), <code>.doc.json</code> (the API and usage contract — read it first), <code>index.ts</code>. All visual values come from <code>tokens/tokens.json</code>.</p>
-      <p style="margin-top:8px">The one non-obvious rule: in inline styles use <code>primitive.*</code> values — most <code>semantic.*</code> entries are alias strings awaiting a resolver. See <a href="foundations.html#rules">the rules</a> and the <a href="tokens.html">naming grammar</a>.</p>
+      <p style="margin-top:8px">The one non-obvious rule: in inline styles use <code>primitive.*</code> values — most <code>semantic.*</code> entries are alias strings awaiting a resolver. See <a href="rules.html">the rules</a> and the <a href="../foundations/index.html">naming grammar</a>.</p>
     </div>
     <div class="path p-agents">
       <div class="who">For AI agents</div>
@@ -652,24 +719,30 @@ def body_home():
 </section>
 </div>'''
 
-def body_foundations():
+def body_guide_how_it_works():
     return f'''<div class="inner pagetop">
+<a class="backlink" href="index.html">← All guides</a>
 <section id="inside">
-  <h2>What's in the folder</h2>
-  <p class="sub">Six things. Each file's name tells the AI (or you) when to read it.</p>
+  <h2>How the system works</h2>
+  <p class="sub">Six things in the folder. Each file's name tells the AI (or you) when to read it.</p>
   <div class="filemap">
     <div class="fr"><div class="fp">CLAUDE.md</div><div class="fd">The index — auto-loaded by Claude tools at session start. Folder map, token model, known issues.</div></div>
     <div class="fr"><div class="fp">AGENTS.md</div><div class="fd">The behavior contract — rules every AI agent must follow. Auto-read by Cursor, Copilot, Codex; imported by CLAUDE.md for Claude.</div></div>
     <div class="fr"><div class="fp">README.md</div><div class="fd">Human-friendly overview of the whole system.</div></div>
     <div class="fr"><div class="fp">tokens/tokens.json</div><div class="fd">Single source of truth for every colour, spacing, type, radius and border-width value — extracted from the production codebase.</div></div>
     <div class="fr"><div class="fp">components/&lt;Name&gt;/</div><div class="fd">{n_comps} components, 3 files each: <code>.tsx</code> implementation, <code>.doc.json</code> structured documentation (what this portal's reference is generated from), <code>index.ts</code> export.</div></div>
-    <div class="fr"><div class="fp">templates/</div><div class="fd">{n_patterns} page patterns (table page, detail page, map view, settings, login) — which components compose each screen, and the composition rules. The <a href="patterns/index.html">Patterns</a> section is generated from these.</div></div>
+    <div class="fr"><div class="fp">templates/</div><div class="fd">{n_patterns} page patterns (table page, detail page, map view, settings, login) — which components compose each screen, and the composition rules. The <a href="../patterns/index.html">Patterns</a> section is generated from these.</div></div>
     <div class="fr"><div class="fp">component-library-preview.html</div><div class="fd">Every component rendered visually in one static page — open in any browser.</div></div>
   </div>
+  <div class="tip"><b>How this portal stays honest:</b> every page here is generated from those source files by <code>docs/build_portal.py</code> — edit the sources and re-run, never hand-edit the HTML. The reference can't drift from the system because it <i>is</i> the system, re-rendered.</div>
 </section>
+</div>'''
 
+def body_guide_rules():
+    return f'''<div class="inner pagetop">
+<a class="backlink" href="index.html">← All guides</a>
 <section id="rules">
-  <h2>The rules</h2>
+  <h2>Rules for AI &amp; humans</h2>
   <p class="sub">The full contract lives in <code>AGENTS.md</code> and loads automatically — but these are the ones humans should know too, because they apply to everyone producing UI, not just machines.</p>
   <div class="rules">
     <div class="rule"><b>Use the components, never raw HTML.</b> <code>&lt;Button&gt;</code> not <code>&lt;button&gt;</code>, <code>&lt;TextField&gt;</code> not <code>&lt;input&gt;</code>. All {n_comps} live in <code>components/</code>.</div>
@@ -680,29 +753,73 @@ def body_foundations():
     <div class="rule"><b>WCAG AA always.</b> Never white text on brand orange <code>#F47735</code> (~2.79:1 — fails). Filled surfaces with white text use <code>primary.dark</code> <code>#BB4800</code> (~5.2:1).</div>
     <div class="rule"><b>Don't invent.</b> If a component, variant or token doesn't exist — flag the gap. Never fabricate.</div>
   </div>
+  <p class="tnote" style="margin-top:16px">Need the machine-readable version? <a href="../resources/downloads.html">Download AGENTS.md</a> — the standalone contract file AI agents read.</p>
 </section>
 </div>'''
 
-def body_tokens():
+def body_found_index():
     return f'''<div class="inner pagetop">
 <section id="tokens">
-  <h2>Design tokens</h2>
-  <p class="sub">Generated from <code>tokens/tokens.json</code>. Two tiers: <b>primitive</b> (raw values) and <b>semantic</b> (named roles that alias primitives). Reference semantic names in docs; use primitive values in code. Base font: <code>{esc(base_font)}</code> at <code>{esc(base_size)}</code>.</p>
-  <div class="warn"><b>Never copy hex values out of this page.</b> Reference the token — the values shown here are for verification only. Copied hex numbers can't be updated when the system changes; token references can.</div>
+  <h2>Foundations</h2>
+  <p class="sub">The design fundamentals, generated from <code>tokens/tokens.json</code>. Two tiers: <b>primitive</b> (raw values) and <b>semantic</b> (named roles that alias primitives). Reference semantic names in docs; use primitive values in code.</p>
+  <div class="warn"><b>Never copy hex values out of these pages.</b> Reference the token — the values shown here are for verification only. Copied hex numbers can't be updated when the system changes; token references can.</div>
 
-  <div class="tokgroup"><h4>How token names work</h4>
+  <div class="idxgrid" style="margin-top:26px">
+    <a class="idxcard" href="colour.html"><b>Colour</b><span class="idxmeta"><span class="idxcat">Foundation</span></span><p>Brand, status, text, surface, interactive-state and fleet-specific palettes.</p></a>
+    <a class="idxcard" href="typography.html"><b>Typography</b><span class="idxmeta"><span class="idxcat">Foundation</span></span><p>Base font, weights, and the full type scale with live samples.</p></a>
+    <a class="idxcard" href="spacing.html"><b>Spacing &amp; shape</b><span class="idxmeta"><span class="idxcat">Foundation</span></span><p>The 4px spacing grid, corner radii and border widths.</p></a>
+    <a class="idxcard" href="accessibility.html"><b>Accessibility</b><span class="idxmeta"><span class="idxcat">Foundation</span></span><p>The AA policy, the one contrast trap, and per-component requirements.</p></a>
+  </div>
+
+  <div class="tokgroup" style="margin-top:34px"><h4>How token names work</h4>
     <p class="tnote" style="font-size:13.5px">Names are compositional — you can predict a token's name without looking it up:</p>
     <div class="grammar">
       <div class="gex"><code>semantic.color.brand.primary.dark</code><span><b>tier</b> (semantic) → <b>category</b> (color) → <b>group</b> (brand) → <b>role</b> (primary) → <b>variant</b> (dark)</span></div>
       <div class="gex"><code>primitive.spacing.4</code><span><b>tier</b> (primitive) → <b>category</b> (spacing) → <b>step</b> (4 × 4px grid = 16px)</span></div>
       <div class="gex"><code>semantic.typography.scale.labelSmall</code><span><b>tier</b> → <b>category</b> → <b>group</b> (scale) → <b>style name</b> (MD3-style role naming)</span></div>
     </div>
-    <p class="tnote">Which tier to use where: <b>docs and doc.json files cite <code>semantic.*</code></b> (the intent); <b>code uses <code>primitive.*</code></b> (the concrete value) — see the rule above.</p>
+    <p class="tnote">Which tier to use where: <b>docs and doc.json files cite <code>semantic.*</code></b> (the intent); <b>code uses <code>primitive.*</code></b> (the concrete value) — see <a href="../guides/rules.html">the rules</a>.</p>
   </div>
+  <div class="tokgroup" style="margin-top:34px"><h4>Where these values come from</h4>
+    <p class="tnote" style="font-size:13.5px">Every value was extracted from the production fleetapp-web codebase — nothing was invented:</p>
+    <ul class="provlist">{prov_items}</ul>
+  </div>
+</section>
+</div>'''
+
+def body_found_colour():
+    return f'''<div class="inner pagetop">
+<a class="backlink" href="index.html">← Foundations</a>
+<section id="colour">
+  <h2>Colour</h2>
+  <p class="sub">Generated from <code>tokens/tokens.json</code>. Reference the token, never the hex — the values shown are for verification only.</p>
   {tok_html}
   <div class="tokgroup"><h4>Interaction states — the rule, not just the list</h4>
     <p class="tnote" style="font-size:13.5px">State-layer colours aren't hand-picked — they're computed: <b>hover = 4% overlay</b> of the base colour, <b>selected = 8%</b>, <b>focus = 12%</b> (in production: <code>alpha(brandColor, opacity)</code> in karoo-ui's ThemeProvider). Need a state colour that isn't listed? Derive it with this rule — never invent a new alpha value.</p>
   </div>
+  <div class="warn"><b>Known issue (from tokens.json):</b> white on brand orange <code>#F47735</code> fails WCAG AA at ~2.79:1. Use <code>primary.dark</code> <code>#BB4800</code> for filled surfaces with white text. Details: <a href="accessibility.html">Accessibility</a>.</div>
+</section>
+</div>'''
+
+def body_found_typography():
+    return f'''<div class="inner pagetop">
+<a class="backlink" href="index.html">← Foundations</a>
+<section id="typography">
+  <h2>Typography</h2>
+  <p class="sub">Base font: <code>{esc(base_font)}</code> at <code>{esc(base_size)}</code>. Styles reference <code>semantic.typography.scale.*</code>.</p>
+  <div class="tokgroup"><h4>Type scale</h4>
+    <table class="tok"><thead><tr><th>Style</th><th>Size</th><th>Weight</th><th>Line</th><th>Sample</th></tr></thead><tbody>{ty_rows}</tbody></table>
+    <p class="tnote">⚠ <code>labelSmall</code> and <code>titleMedium</code> exist as tokens but are not yet registered MUI variants in karoo-ui — see their notes in tokens.json.</p>
+  </div>
+</section>
+</div>'''
+
+def body_found_spacing():
+    return f'''<div class="inner pagetop">
+<a class="backlink" href="index.html">← Foundations</a>
+<section id="spacing">
+  <h2>Spacing &amp; shape</h2>
+  <p class="sub">The 4px spacing grid, corner radii and border widths — all from <code>tokens/tokens.json</code>.</p>
   <div class="tokgroup"><h4>Spacing (4px grid)</h4>
     <table class="tok"><thead><tr><th>Token</th><th>Value</th><th></th></tr></thead><tbody>{sp_rows}{sem_sp}</tbody></table>
   </div>
@@ -711,15 +828,6 @@ def body_tokens():
   </div>
   <div class="tokgroup"><h4>Border width</h4>
     <table class="tok"><thead><tr><th>Token</th><th>Value</th><th></th></tr></thead><tbody>{bw_rows}</tbody></table>
-  </div>
-  <div class="tokgroup"><h4>Type scale</h4>
-    <table class="tok"><thead><tr><th>Style</th><th>Size</th><th>Weight</th><th>Line</th><th>Sample</th></tr></thead><tbody>{ty_rows}</tbody></table>
-    <p class="tnote">⚠ <code>labelSmall</code> and <code>titleMedium</code> exist as tokens but are not yet registered MUI variants in karoo-ui — see their notes in tokens.json.</p>
-  </div>
-  <div class="warn"><b>Known issue (from tokens.json):</b> white on brand orange <code>#F47735</code> fails WCAG AA at ~2.79:1. Use <code>primary.dark</code> <code>#BB4800</code> for filled surfaces with white text.</div>
-  <div class="tokgroup" style="margin-top:34px"><h4>Where these values come from</h4>
-    <p class="tnote" style="font-size:13.5px">Every value was extracted from the production fleetapp-web codebase — nothing was invented:</p>
-    <ul class="provlist">{prov_items}</ul>
   </div>
 </section>
 </div>'''
@@ -734,8 +842,9 @@ def body_accessibility():
             summary = summary[:100].rsplit(" ", 1)[0] + "…"
         s = slug(c["name"])
         extra = "" if len(items) <= 1 else f' <span class="tnote" style="display:inline">(+{len(items)-1} more)</span>'
-        rows += f'<tr><td><a href="components/{s}.html#accessibility"><b>{esc(c["name"])}</b></a></td><td>{esc(summary)}{extra}</td></tr>'
+        rows += f'<tr><td><a href="../components/{s}.html#accessibility"><b>{esc(c["name"])}</b></a></td><td>{esc(summary)}{extra}</td></tr>'
     return f'''<div class="inner pagetop">
+<a class="backlink" href="index.html">← Foundations</a>
 <section id="accessibility">
   <h2>Accessibility</h2>
   <p class="sub">WCAG AA is enforced by the system, not by vigilance: the tokens are AA-safe when used as documented, and every component carries its own accessibility requirements (from its doc.json) on its own page.</p>
@@ -918,17 +1027,32 @@ def body_component(c):
 </article>
 </div>'''
 
+def body_resources_index():
+    return '''<div class="inner pagetop">
+<section id="resources">
+  <h2>Resources</h2>
+  <p class="sub">The visual preview, the changelog, and everything to take away.</p>
+  <div class="idxgrid">
+    <a class="idxcard" href="preview.html"><b>Visual preview</b><span class="idxmeta"><span class="idxcat">Resource</span></span><p>Every component rendered visually on one static page.</p></a>
+    <a class="idxcard" href="changelog.html"><b>What's new</b><span class="idxmeta"><span class="idxcat">Resource</span></span><p>Every structural change to the system, most recent first.</p></a>
+    <a class="idxcard" href="downloads.html"><b>Downloads</b><span class="idxmeta"><span class="idxcat">Resource</span></span><p>The complete system zip, plus the standalone rule and token files.</p></a>
+  </div>
+</section>
+</div>'''
+
 def body_preview():
     return '''<div class="inner pagetop">
+<a class="backlink" href="index.html">← Resources</a>
 <section id="preview">
   <h2>Visual preview</h2>
-  <p class="sub">The full component library rendered as static HTML — synced to tokens.json. <a href="component-library-preview.html" target="_blank">Open full-screen ↗</a></p>
-  <iframe class="prevframe" src="component-library-preview.html" title="Component library preview" loading="lazy"></iframe>
+  <p class="sub">The full component library rendered as static HTML — synced to tokens.json. <a href="../component-library-preview.html" target="_blank">Open full-screen ↗</a></p>
+  <iframe class="prevframe" src="../component-library-preview.html" title="Component library preview" loading="lazy"></iframe>
 </section>
 </div>'''
 
 def body_changelog():
     return f'''<div class="inner pagetop">
+<a class="backlink" href="index.html">← Resources</a>
 <section id="changelog">
   <h2>What's new</h2>
   <p class="sub">Generated from <code>tokens.json → _meta.changelog</code>. Every structural change to the system is logged there — most recent first.</p>
@@ -938,15 +1062,16 @@ def body_changelog():
 
 def body_downloads():
     return f'''<div class="inner pagetop">
+<a class="backlink" href="index.html">← Resources</a>
 <section id="downloads">
   <h2>Downloads</h2>
   <p class="sub">Everything needed to start. The zip is the recommended download — it contains the complete, self-contained system.</p>
   <div class="dl">
-    <div class="dlc primary"><b>Complete design system (.zip)</b><span>The full folder: rules, tokens, all {n_comps} components with docs, and the visual preview. Unzip → connect to your AI tool → done. ({zip_kb} KB)</span><a class="dlbtn" href="downloads/cartrack-ai-design-system.zip" download>Download the system</a></div>
-    <div class="dlc"><b>tokens.json</b><span>Just the design tokens — for tooling integrations or a quick look.</span><a class="dlbtn ghost" href="downloads/tokens.json" download>Download</a></div>
-    <div class="dlc"><b>AGENTS.md</b><span>The behavior contract for AI agents, standalone.</span><a class="dlbtn ghost" href="downloads/AGENTS.md" download>Download</a></div>
-    <div class="dlc"><b>CLAUDE.md</b><span>The auto-loading index for Claude tools, standalone.</span><a class="dlbtn ghost" href="downloads/CLAUDE.md" download>Download</a></div>
-    <div class="dlc"><b>README.md</b><span>The human-friendly overview, standalone.</span><a class="dlbtn ghost" href="downloads/README.md" download>Download</a></div>
+    <div class="dlc primary"><b>Complete design system (.zip)</b><span>The full folder: rules, tokens, all {n_comps} components with docs, and the visual preview. Unzip → connect to your AI tool → done. ({zip_kb} KB)</span><a class="dlbtn" href="../downloads/cartrack-ai-design-system.zip" download>Download the system</a></div>
+    <div class="dlc"><b>tokens.json</b><span>Just the design tokens — for tooling integrations or a quick look.</span><a class="dlbtn ghost" href="../downloads/tokens.json" download>Download</a></div>
+    <div class="dlc"><b>AGENTS.md</b><span>The behavior contract for AI agents, standalone.</span><a class="dlbtn ghost" href="../downloads/AGENTS.md" download>Download</a></div>
+    <div class="dlc"><b>CLAUDE.md</b><span>The auto-loading index for Claude tools, standalone.</span><a class="dlbtn ghost" href="../downloads/CLAUDE.md" download>Download</a></div>
+    <div class="dlc"><b>README.md</b><span>The human-friendly overview, standalone.</span><a class="dlbtn ghost" href="../downloads/README.md" download>Download</a></div>
   </div>
 </section>
 </div>'''
@@ -970,14 +1095,53 @@ def write(relpath, active, body, prefix, page_title):
     p.write_text(render_shell(active, body, prefix, page_title), encoding="utf-8")
     return p
 
+def write_redirect(old, new):
+    """Static meta-refresh stub so previously published URLs keep working."""
+    p = DOCS / old
+    p.write_text(f'''<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8">
+<meta http-equiv="refresh" content="0; url={new}">
+<link rel="canonical" href="{new}">
+<title>Moved — Cartrack AI Design System</title>
+</head><body style="font-family:sans-serif;padding:40px">
+<p>This page has moved to <a href="{new}">{new}</a>.</p>
+</body></html>''', encoding="utf-8")
+    return p
+
+SITE = "Cartrack AI Design System"
 written = []
-written.append(write("index.html", "home", body_home(), "", "Cartrack AI Design System — Documentation Portal"))
-written.append(write("foundations.html", "foundations", body_foundations(), "", "Foundations — Cartrack AI Design System"))
-written.append(write("tokens.html", "tokens", body_tokens(), "", "Design tokens — Cartrack AI Design System"))
-written.append(write("accessibility.html", "accessibility", body_accessibility(), "", "Accessibility — Cartrack AI Design System"))
-written.append(write("preview.html", "preview", body_preview(), "", "Visual preview — Cartrack AI Design System"))
-written.append(write("changelog.html", "changelog", body_changelog(), "", "What's new — Cartrack AI Design System"))
-written.append(write("downloads.html", "downloads", body_downloads(), "", "Downloads — Cartrack AI Design System"))
+written.append(write("index.html", "home", body_home(), "", f"{SITE} — Documentation Portal"))
+
+# guides
+written.append(write("guides/index.html", "guides", body_guides_index(), "../", f"Guides — {SITE}"))
+written.append(write("guides/getting-started.html", "guide:getting-started", body_guide_getting_started(), "../", f"Getting started — {SITE}"))
+written.append(write("guides/how-it-works.html", "guide:how-it-works", body_guide_how_it_works(), "../", f"How the system works — {SITE}"))
+written.append(write("guides/rules.html", "guide:rules", body_guide_rules(), "../", f"Rules for AI & humans — {SITE}"))
+
+# foundations
+written.append(write("foundations/index.html", "foundations", body_found_index(), "../", f"Foundations — {SITE}"))
+written.append(write("foundations/colour.html", "found:colour", body_found_colour(), "../", f"Colour — {SITE}"))
+written.append(write("foundations/typography.html", "found:typography", body_found_typography(), "../", f"Typography — {SITE}"))
+written.append(write("foundations/spacing.html", "found:spacing", body_found_spacing(), "../", f"Spacing & shape — {SITE}"))
+written.append(write("foundations/accessibility.html", "found:accessibility", body_accessibility(), "../", f"Accessibility — {SITE}"))
+
+# resources
+written.append(write("resources/index.html", "resources", body_resources_index(), "../", f"Resources — {SITE}"))
+written.append(write("resources/preview.html", "res:preview", body_preview(), "../", f"Visual preview — {SITE}"))
+written.append(write("resources/changelog.html", "res:changelog", body_changelog(), "../", f"What's new — {SITE}"))
+written.append(write("resources/downloads.html", "res:downloads", body_downloads(), "../", f"Downloads — {SITE}"))
+
+# redirect stubs at the old top-level URLs (IA v1 → v2)
+redirects = [
+    ("tokens.html", "foundations/index.html"),
+    ("foundations.html", "guides/how-it-works.html"),
+    ("accessibility.html", "foundations/accessibility.html"),
+    ("preview.html", "resources/preview.html"),
+    ("changelog.html", "resources/changelog.html"),
+    ("downloads.html", "resources/downloads.html"),
+]
+for old, new in redirects:
+    written.append(write_redirect(old, new))
 
 # patterns
 written.append(write("patterns/index.html", "patterns", body_patterns_index(), "../", "Patterns — Cartrack AI Design System"))
