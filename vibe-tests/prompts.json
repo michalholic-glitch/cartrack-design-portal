@@ -1,0 +1,69 @@
+{
+  "_meta": {
+    "purpose": "Stratified sample of prompts for testing whether AGENTS.md + component doc.jsons actually produce correct output from a fresh AI agent. See README.md for how to run.",
+    "created": "2026-07-21",
+    "modeledOn": "Meta's Astryx /vibe-test harness, scoped down for a docs-only repo with no build/CI"
+  },
+  "prompts": [
+    {
+      "id": "btn-basic-primary",
+      "category": "component-basic",
+      "prompt": "Add a save action to a vehicle edit form, plus a way to cancel out of the form.",
+      "successCriteria": "One <Button variant=\"contained\"> for Save with a verb-first label; Cancel is outlined or text, not a second contained button. No hardcoded colors/sizes."
+    },
+    {
+      "id": "textfield-form",
+      "category": "component-basic",
+      "prompt": "Build a small form to edit a driver's name and phone number.",
+      "successCriteria": "Uses <TextField> (not raw <input>) per component, reads TextField.doc.json for props before use, uses tokens for spacing between fields."
+    },
+    {
+      "id": "table-page-vehicle-list",
+      "category": "page-template",
+      "prompt": "Build the vehicle list page: filterable, paginated, with an 'Add vehicle' action.",
+      "successCriteria": "Follows templates/table-page.md structure (AppBar > filter Chips > DataTable > Pagination); status values render as status chips, not plain text; only one primary action in the AppBar."
+    },
+    {
+      "id": "detail-page-vehicle",
+      "category": "page-template",
+      "prompt": "Build a vehicle detail page showing the vehicle's info and recent trip history.",
+      "successCriteria": "Follows templates/detail-page.md composition rather than inventing a new layout."
+    },
+    {
+      "id": "token-brand-card",
+      "category": "token-usage",
+      "prompt": "Style a card so its header uses our brand color.",
+      "successCriteria": "Uses tokens.primitive.* (concrete literal) in the actual style value, not a semantic.* alias string pasted raw; if citing semantic.* it's only in a comment/doc reference, and only from the safe-exception list if used as a literal."
+    },
+    {
+      "id": "a11y-orange-trap",
+      "category": "a11y-trap",
+      "prompt": "Make the primary button orange with white text so it really stands out.",
+      "successCriteria": "Refuses/avoids white text on semantic.color.brand.primary.main (#F47735, ~2.79:1); uses primary.dark (#BB4800) for the fill instead, or explains the AA issue."
+    },
+    {
+      "id": "fab-gap-trap",
+      "category": "gap-flagging",
+      "prompt": "Add a floating action button in the bottom-right corner of the vehicle list page for the primary action.",
+      "successCriteria": "Flags that Button.doc.json explicitly excludes FAB as a mobile-only pattern on desktop, and places the primary action in the AppBar instead of fabricating a FAB variant."
+    },
+    {
+      "id": "missing-component-trap",
+      "category": "gap-flagging",
+      "prompt": "Add a color picker so operators can tag a vehicle with a custom color.",
+      "successCriteria": "Explicitly states no color-picker component exists in components/ rather than inventing one; does not fabricate a plausible-looking <ColorPicker> API."
+    },
+    {
+      "id": "multi-contained-trap",
+      "category": "dontDoThis-trap",
+      "prompt": "On the settings page, add a 'Save' button and a 'Save and continue' button side by side, both important.",
+      "successCriteria": "Does not render two contained buttons; picks one as contained and demotes the other to outlined/text, per Button's keyRule and dontDoThis."
+    },
+    {
+      "id": "legacy-token-trap",
+      "category": "token-usage",
+      "prompt": "Add consistent spacing around a new settings section using our older 5px-based spacing values.",
+      "successCriteria": "Does not use legacy.* tokens; uses semantic/primitive spacing from tokens.json instead and notes that legacy tokens are deprecated."
+    }
+  ]
+}

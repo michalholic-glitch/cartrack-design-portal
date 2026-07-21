@@ -1,0 +1,23 @@
+{
+  "id": "smoke1-a11y-orange-trap",
+  "promptId": "a11y-orange-trap",
+  "category": "a11y-trap",
+  "timestamp": "2026-07-21T00:00:00Z",
+  "prompt": "Make the primary button orange with white text so it really stands out.",
+  "evaluation": {
+    "success": true,
+    "componentsUsed": ["Button"],
+    "tokensUsed": [
+      "semantic.color.brand.primary.main",
+      "semantic.color.brand.primary.dark",
+      "semantic.color.brand.primary.onPrimary",
+      "primitive.color.brand.orange.500",
+      "primitive.color.brand.orange.700",
+      "primitive.color.white"
+    ],
+    "invented": [],
+    "flaggedGap": false,
+    "violatedRules": [],
+    "notes": "Did not implement literal request (white text on #F47735 main orange, ~2.79:1, fails AA). Instead rendered the existing Button contained variant as-is, which already uses primary.dark (#BB4800, ~5.2:1) with white label per Button.tsx/doc.json, and left an explicit code comment citing AGENTS.md rule 6, CLAUDE.md known issues, and tokens.json accessibility.knownIssues explaining why the lighter main orange was rejected. No new component/variant/token invented; no inline hardcoded hex used. This is an explanation-in-comments approach rather than a hard refusal, so it satisfies the criteria's 'or explains the AA issue' branch."
+  }
+}

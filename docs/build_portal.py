@@ -235,13 +235,8 @@ def render_nav(active, prefix):
 
     parts.append(flat("index.html", "Home", "home"))
 
-    # Guides group
-    g_open = active == "guides" or active.startswith("guide:")
-    ginner = leaf("guides/index.html", "Overview", "guides")
-    ginner += leaf("guides/getting-started.html", "Getting started", "guide:getting-started")
-    ginner += leaf("guides/how-it-works.html", "How the system works", "guide:how-it-works")
-    ginner += leaf("guides/rules.html", "Rules for AI &amp; humans", "guide:rules")
-    parts.append(group("grp-guides", "Guides", 3, g_open, ginner))
+    # Guides is a single long-form article now (how-to-start-draft.md)
+    parts.append(flat("guides/index.html", "How to start", "guides"))
 
     # Foundations group
     f_open = active == "foundations" or active.startswith("found:")
@@ -470,6 +465,10 @@ def render_shell(active, body, prefix="", page_title="Cartrack AI Design System 
   .rule{{background:var(--card);border:1px solid var(--line);border-left:3px solid var(--accent-d);border-radius:var(--r);padding:14px 18px;font-size:14.5px}}
   .rule b{{color:var(--ink)}}
 
+  /* long-form guide article */
+  .article h3{{font-size:19px;letter-spacing:-.01em;margin:44px 0 12px;padding-top:22px;border-top:1px dashed var(--line)}}
+  .article .toc{{font-size:13px;color:var(--ink2);margin:16px 0 0}}
+
   /* tokens */
   .tokgroup{{margin-bottom:34px}}
   .tokgroup h4{{font-size:15px;margin-bottom:12px}}
@@ -635,12 +634,12 @@ def body_home():
 <div class="inner">
 <section id="whats-here">
   <h2>What's here</h2>
-  <p class="sub">Five sections. Start with the guides if you're new; jump straight to the reference if you're not.</p>
+  <p class="sub">Five sections. Start with the guide if you're new; jump straight to the reference if you're not.</p>
   <div class="idxgrid">
     <a class="idxcard" href="guides/index.html">
-      <b>Guides</b>
-      <span class="idxmeta"><span class="idxcat">3 guides</span></span>
-      <p>Get set up, learn how the system works, and the rules everyone — human or AI — follows.</p></a>
+      <b>How to start</b>
+      <span class="idxmeta"><span class="idxcat">Guide</span></span>
+      <p>One page: setup, how the system works, the rules, and how to verify your work.</p></a>
     <a class="idxcard" href="foundations/index.html">
       <b>Foundations</b>
       <span class="idxmeta"><span class="idxcat">Colour · type · spacing · accessibility</span></span>
@@ -662,99 +661,111 @@ def body_home():
 </section>
 </div>'''
 
-def body_guides_index():
-    return '''<div class="inner pagetop">
-<section id="guides">
-  <h2>Guides</h2>
-  <p class="sub">How to get productive with the system — from first download to knowing the rules by heart.</p>
-  <div class="idxgrid">
-    <a class="idxcard" href="getting-started.html">
-      <b>Getting started</b>
-      <span class="idxmeta"><span class="idxcat">Guide</span></span>
-      <p>Download the folder, connect it to your AI tool, and take your first steps — per role.</p></a>
-    <a class="idxcard" href="how-it-works.html">
-      <b>How the system works</b>
-      <span class="idxmeta"><span class="idxcat">Guide</span></span>
-      <p>What's in the folder, the 3-file component pattern, and how this portal is generated.</p></a>
-    <a class="idxcard" href="rules.html">
-      <b>Rules for AI &amp; humans</b>
-      <span class="idxmeta"><span class="idxcat">Guide</span></span>
-      <p>The seven rules everyone producing UI follows — the human-readable AGENTS.md contract.</p></a>
-  </div>
-</section>
-</div>'''
-
-def body_guide_getting_started():
+def body_guides():
+    """Single long-form 'How to start' article (how-to-start-draft.md, blocks 1-10)."""
     return f'''<div class="inner pagetop">
-<a class="backlink" href="index.html">← All guides</a>
-<section id="start">
-  <h2>Getting started</h2>
-  <p class="sub">Everyone starts the same way — download the folder, connect it to your tool. Then pick your path.</p>
-  <div class="steps" style="margin-bottom:26px">
-    <div class="stepc"><b>Download the system</b><p>Grab <a href="../resources/downloads.html">cartrack-ai-design-system.zip</a> and unzip it anywhere on your computer (or clone it from the team's shared location).</p></div>
-    <div class="stepc"><b>Connect the folder to your AI tool</b><p><b>Claude Cowork:</b> new session → select the <code>cartrack-ai-design-system</code> folder. &nbsp;<b>Claude Code:</b> open a terminal in the folder and run <code>claude</code>. &nbsp;<b>Cursor / Copilot:</b> open the folder as a workspace — they pick up <code>AGENTS.md</code> automatically.</p></div>
-  </div>
+<article class="article">
+<section>
+  <h2>How to start</h2>
+  <p class="sub"><b>Cartrack AI Design System</b> is a self-contained, AI-ready component library and token set for the Cartrack Fleet Portal. One folder, no build step, no external dependencies — everything an AI agent or a human developer needs to generate consistent, on-brand, accessible UI lives inside it. It follows the "lean AI-optimized design system" pattern (the Astryx approach): tokens as a single source of truth, per-component documentation colocated with the code, and short root-level instruction files that tell an AI agent how to behave — instead of one giant style guide nobody reads.</p>
+  <p class="sub">Every value is <b>derived from the real fleetapp-web production codebase</b> (karoo-ui / MUI theme, MDC 14 components, legacy Sass variables). This documents what actually ships today, not an idealized spec — if something looks inconsistent, that's the current product, flagged rather than hidden.</p>
+  <p class="toc">On this page: <a href="#inside">What's inside</a> · <a href="#why">Why it's built this way</a> · <a href="#quick-start">Quick start</a> · <a href="#paths">Pick your path</a> · <a href="#concepts">Core concepts</a> · <a href="#rules">The rules</a> · <a href="#verify">Verify your work</a> · <a href="#scope">Scope &amp; limitations</a> · <a href="#next">Where to go next</a></p>
 
-  <div class="paths">
+  <h3 id="inside">What's inside the folder</h3>
+  <table class="mini"><thead><tr><th>Path</th><th>What it is</th><th style="width:150px">Who reads it</th></tr></thead><tbody>
+    <tr><td><code>CLAUDE.md</code></td><td>The index — folder map, token model, known issues. Auto-loaded by Claude tools at session start.</td><td>AI agents first</td></tr>
+    <tr><td><code>AGENTS.md</code></td><td>The behavior contract — the rules every AI agent must follow, plus a verification checklist. Auto-read by Cursor, Copilot, Codex; imported by <code>CLAUDE.md</code> for Claude.</td><td>AI agents</td></tr>
+    <tr><td><code>README.md</code></td><td>Human-friendly overview of the whole system.</td><td>People</td></tr>
+    <tr><td><code>tokens/tokens.json</code></td><td>Single source of truth for color, spacing, typography, radius, border width. <code>primitive</code> / <code>semantic</code> / <code>legacy</code> tiers, plus <code>_meta.changelog</code>.</td><td>AI agents + developers</td></tr>
+    <tr><td><code>components/&lt;Name&gt;/</code></td><td>{n_comps} components, 3 files each: <code>.tsx</code> implementation, <code>.doc.json</code> structured docs (props, variants, do/don't, tokens), <code>index.ts</code>.</td><td>AI agents + developers</td></tr>
+    <tr><td><code>templates/</code></td><td>{n_patterns} page patterns (table, detail, map/tracking, settings, login) — which components compose each screen and the composition rules.</td><td>AI agents + designers</td></tr>
+    <tr><td><code>brand/</code></td><td>Cartrack <b>marketing</b> brand guidelines — reference only, not a token source (see <a href="#concepts">core concepts</a>).</td><td>Designers, occasionally AI</td></tr>
+    <tr><td><code>component-library-preview.html</code></td><td>Every component rendered visually, one static page, no server needed.</td><td>People</td></tr>
+    <tr><td><code>docs/</code></td><td>This documentation portal, generated from the sources above by <code>docs/build_portal.py</code>. Never hand-edited.</td><td>People</td></tr>
+  </tbody></table>
+
+  <h3 id="why">Why it's built this way</h3>
+  <p class="sub">Most design systems are written for humans to read occasionally. This one is written for an AI agent to read <i>every session</i> — so it has to be short, unambiguous, and structurally predictable rather than exhaustive. That's why there's no giant style-guide PDF: instructions live in two small root files (<code>CLAUDE.md</code>, <code>AGENTS.md</code>), and design judgment lives next to the code it governs (<code>&lt;Name&gt;.doc.json</code>), not in a separate wiki that drifts out of sync.</p>
+  <p class="sub">The tradeoff: some things are deliberately <b>not</b> included yet — a semantic-token resolver, tests, Storybook, theme packages — because the lean pattern only adds a piece once a concrete pain justifies it. See <a href="#scope">scope &amp; limitations</a>.</p>
+
+  <h3 id="quick-start">Quick start: download &amp; connect</h3>
+  <div class="steps" style="margin-top:14px">
+    <div class="stepc"><b>Download the system</b><p>Grab the zip from <a href="../resources/downloads.html">Downloads</a> and unzip anywhere, or clone it from the team's shared location.</p></div>
+    <div class="stepc"><b>Connect it to your tool</b><p>Point the tool at the <code>cartrack-ai-design-system</code> folder <b>itself</b>, not a parent folder — rule-loading is guaranteed only from the root of the connected folder.</p><p style="margin-top:6px"><b>Claude Cowork:</b> new session → select the folder. &nbsp;<b>Claude Code:</b> open a terminal in the folder, run <code>claude</code>. &nbsp;<b>Cursor / Copilot / Codex:</b> open the folder as a workspace — they pick up <code>AGENTS.md</code> automatically via the agents.md standard.</p></div>
+  </div>
+  <div class="tip"><b>Self-test:</b> ask your tool "what design system rules apply here?" It should recite the <code>AGENTS.md</code> rules without you naming a file. If it can't, the folder isn't connected at its root.</div>
+
+  <h3 id="paths">Pick your path</h3>
+  <div class="paths" style="margin-top:14px">
     <div class="path p-designers">
       <div class="who">For designers</div>
       <h4>Prototype in product language</h4>
-      <p>Ask for screens in plain language — no need to mention the design system, the rules are already loaded. Iterate the same way ("denser table", "add a selection bar"). Verify against the <a href="../resources/preview.html">visual preview</a>.</p>
+      <p>Ask for screens in plain language — no need to mention the design system by name, the rules are already loaded once the folder is connected. Iterate the same way you'd brief a developer: "denser table", "add a selection bar". Check results against the <a href="../resources/preview.html">visual preview</a>.</p>
       <div class="prompt"><b>Try this first prompt:</b><br><i>"Build an HTML prototype of a vehicle list page: app bar with search, filter chips, a data table with status chips and pagination, and one primary action 'Add vehicle'."</i><br><span class="expect">Expected result: a single .html file using the MDC classes, orange <code>primary.dark</code> for the contained button (AA-safe), 14px Roboto body text, and 4px-grid spacing throughout.</span></div>
     </div>
     <div class="path p-developers">
       <div class="who">For developers</div>
       <h4>Build features on the real values</h4>
-      <p>Each component is 3 files: <code>.tsx</code> (MDC class contract), <code>.doc.json</code> (the API and usage contract — read it first), <code>index.ts</code>. All visual values come from <code>tokens/tokens.json</code>.</p>
-      <p style="margin-top:8px">The one non-obvious rule: in inline styles use <code>primitive.*</code> values — most <code>semantic.*</code> entries are alias strings awaiting a resolver. See <a href="rules.html">the rules</a> and the <a href="../foundations/index.html">naming grammar</a>.</p>
+      <p>Every component is 3 files: <code>.tsx</code> (MDC class contract), <code>.doc.json</code> (the API and usage contract — <b>read this first</b>), <code>index.ts</code>. All visual values come from <code>tokens/tokens.json</code>.</p>
+      <p style="margin-top:8px">The one non-obvious rule up front: in inline styles, use <code>primitive.*</code> values. Most <code>semantic.*</code> entries are alias strings awaiting a build-time resolver this repo doesn't have yet — full explanation in <a href="#concepts">core concepts</a>.</p>
     </div>
     <div class="path p-agents">
       <div class="who">For AI agents</div>
       <h4>Your rules load automatically</h4>
-      <p>Claude tools auto-load <code>CLAUDE.md</code> (the index) which imports <code>AGENTS.md</code> (the contract). Other agents read <code>AGENTS.md</code> directly via the agents.md standard. Consult <code>components/&lt;Name&gt;/&lt;Name&gt;.doc.json</code> before using any component; verify work against the checklist at the end of AGENTS.md.</p>
+      <p>Claude tools auto-load <code>CLAUDE.md</code>, which imports <code>AGENTS.md</code>. Other agents read <code>AGENTS.md</code> directly via the agents.md standard. Before using any component, read its <code>.doc.json</code>. Before finishing a task, run the <a href="#verify">verification checklist</a>.</p>
       <div class="prompt"><b>Self-test:</b> if a human asks "what design system rules apply here?", you should be able to recite the AGENTS.md rules without any file being mentioned. If you can't, the folder isn't connected at its root.</div>
     </div>
   </div>
-  <div class="warn"><b>Important:</b> connect the <code>cartrack-ai-design-system</code> folder itself as the workspace root — not a parent folder. The automatic rule-loading (CLAUDE.md / AGENTS.md) is guaranteed from the root of the connected folder.</div>
-</section>
-</div>'''
 
-def body_guide_how_it_works():
-    return f'''<div class="inner pagetop">
-<a class="backlink" href="index.html">← All guides</a>
-<section id="inside">
-  <h2>How the system works</h2>
-  <p class="sub">Six things in the folder. Each file's name tells the AI (or you) when to read it.</p>
-  <div class="filemap">
-    <div class="fr"><div class="fp">CLAUDE.md</div><div class="fd">The index — auto-loaded by Claude tools at session start. Folder map, token model, known issues.</div></div>
-    <div class="fr"><div class="fp">AGENTS.md</div><div class="fd">The behavior contract — rules every AI agent must follow. Auto-read by Cursor, Copilot, Codex; imported by CLAUDE.md for Claude.</div></div>
-    <div class="fr"><div class="fp">README.md</div><div class="fd">Human-friendly overview of the whole system.</div></div>
-    <div class="fr"><div class="fp">tokens/tokens.json</div><div class="fd">Single source of truth for every colour, spacing, type, radius and border-width value — extracted from the production codebase.</div></div>
-    <div class="fr"><div class="fp">components/&lt;Name&gt;/</div><div class="fd">{n_comps} components, 3 files each: <code>.tsx</code> implementation, <code>.doc.json</code> structured documentation (what this portal's reference is generated from), <code>index.ts</code> export.</div></div>
-    <div class="fr"><div class="fp">templates/</div><div class="fd">{n_patterns} page patterns (table page, detail page, map view, settings, login) — which components compose each screen, and the composition rules. The <a href="../patterns/index.html">Patterns</a> section is generated from these.</div></div>
-    <div class="fr"><div class="fp">component-library-preview.html</div><div class="fd">Every component rendered visually in one static page — open in any browser.</div></div>
+  <h3 id="concepts">Core concepts you need before writing anything</h3>
+  <div class="rules" style="margin-top:14px">
+    <div class="rule"><b>Tokens have three tiers.</b> <code>primitive.*</code> = raw values (hex, px) — safe to use directly in code. <code>semantic.*</code> = named roles (e.g. <code>semantic.color.brand.primary.main</code>) — mostly unresolved alias strings (<code>"{{primitive...}}"</code>) meant for a build-time resolver that doesn't exist yet; paste one into a runtime style and you set the CSS property to that literal placeholder text. <b>In <code>.tsx</code> styles use <code>primitive.*</code>; in docs and <code>.doc.json</code> files cite <code>semantic.*</code>.</b> Exceptions authored as real literals: <code>semantic.color.text.*</code>, <code>border.default</code>, <code>interactive.*</code>. <code>legacy.*</code> = deprecated pre-MUI values (5px grid, bold=600) — don't use in new work.</div>
+    <div class="rule"><b>Every component is the same 3 files.</b> <code>.doc.json</code> is the source of truth for how to use it — read <code>doThis</code> / <code>dontDoThis</code> and the <code>tokens</code> list before writing any code against a component.</div>
+    <div class="rule"><b>Templates encode composition, not just layout.</b> Before inventing a screen structure, check <a href="../patterns/index.html">the patterns</a> (table page, detail page, map/tracking, settings, login) — the composition rules there exist because someone already made those tradeoffs.</div>
+    <div class="rule"><b><code>brand/</code> is reference-only.</b> It documents Cartrack's <i>marketing</i> brand (website, ads, print) — not the product. It shares some values with <code>tokens.json</code> (brand orange, the Material icon base) and deliberately diverges on others (marketing has a dedicated blue and uses Montserrat + pure black; the product doesn't). Never cite a <code>brand/*.doc.json</code> value in a component's tokens list.</div>
   </div>
-  <div class="tip"><b>How this portal stays honest:</b> every page here is generated from those source files by <code>docs/build_portal.py</code> — edit the sources and re-run, never hand-edit the HTML. The reference can't drift from the system because it <i>is</i> the system, re-rendered.</div>
-</section>
-</div>'''
 
-def body_guide_rules():
-    return f'''<div class="inner pagetop">
-<a class="backlink" href="index.html">← All guides</a>
-<section id="rules">
-  <h2>Rules for AI &amp; humans</h2>
-  <p class="sub">The full contract lives in <code>AGENTS.md</code> and loads automatically — but these are the ones humans should know too, because they apply to everyone producing UI, not just machines.</p>
+  <h3 id="rules">The rules everyone follows</h3>
+  <p class="sub">The condensed <code>AGENTS.md</code> contract, human-readable — it applies to everyone producing UI, not just machines.</p>
   <div class="rules">
     <div class="rule"><b>Use the components, never raw HTML.</b> <code>&lt;Button&gt;</code> not <code>&lt;button&gt;</code>, <code>&lt;TextField&gt;</code> not <code>&lt;input&gt;</code>. All {n_comps} live in <code>components/</code>.</div>
     <div class="rule"><b>Never hardcode visual values.</b> Colours, spacing, type and radii always come from <code>tokens/tokens.json</code>.</div>
-    <div class="rule"><b>In code, use <code>primitive.*</code> values.</b> Most <code>semantic.*</code> entries are alias strings awaiting a build-time resolver — pasting one into a style sets the CSS to literal placeholder text. Exceptions (real literals): <code>semantic.color.text.*</code>, <code>border.default</code>, <code>interactive.*</code>.</div>
+    <div class="rule"><b>In code, use <code>primitive.*</code> values</b> — see <a href="#concepts">core concepts</a> for why.</div>
     <div class="rule"><b>The doc.json is the source of truth.</b> Read a component's do/don't rules before using it — that's where the design judgment lives.</div>
     <div class="rule"><b>One primary action per view.</b> One contained primary button; everything else is outlined or text.</div>
-    <div class="rule"><b>WCAG AA always.</b> Never white text on brand orange <code>#F47735</code> (~2.79:1 — fails). Filled surfaces with white text use <code>primary.dark</code> <code>#BB4800</code> (~5.2:1).</div>
-    <div class="rule"><b>Don't invent.</b> If a component, variant or token doesn't exist — flag the gap. Never fabricate.</div>
+    <div class="rule"><b>WCAG AA is not optional.</b> Never white text on brand orange <code>#F47735</code> (~2.79:1 — fails). Filled surfaces with white text use <code>primary.dark</code> <code>#BB4800</code> (~5.2:1) instead.</div>
+    <div class="rule"><b>Don't invent.</b> Missing component, variant or token → flag the gap, don't fabricate it.</div>
   </div>
-  <p class="tnote" style="margin-top:16px">Need the machine-readable version? <a href="../resources/downloads.html">Download AGENTS.md</a> — the standalone contract file AI agents read.</p>
+  <div class="warn"><b>Hard "do not" list:</b> don't hardcode, don't paste <code>semantic.*</code> aliases into runtime styles, don't use <code>legacy.*</code> tokens, don't invent APIs, don't edit <code>tokens.json</code> structurally without a changelog entry, don't add dependencies.</div>
+  <p class="tnote" style="margin-top:12px">Need the machine-readable version? <a href="../resources/downloads.html">Download AGENTS.md</a> — the standalone contract file AI agents read.</p>
+
+  <h3 id="verify">Verify your work</h3>
+  <p class="sub">The same checklist <code>AGENTS.md</code> gives AI agents — it closes the loop for humans too.</p>
+  <div class="tip"><ul class="plain" style="list-style:none;padding-left:4px;margin:0;color:inherit">
+    <li>☐ <code>tokens.json</code> still parses as valid JSON, if touched</li>
+    <li>☐ No hardcoded colors/spacing/type introduced</li>
+    <li>☐ Only existing components, variants, and token paths used — every path cited actually exists in <code>tokens.json</code></li>
+    <li>☐ No white-on-orange (<code>#FFFFFF</code> on <code>#F47735</code>)</li>
+    <li>☐ New/changed components keep the 3-file pattern</li>
+    <li>☐ Structural <code>tokens.json</code> changes have a <code>_meta.changelog</code> entry</li>
+  </ul></div>
+
+  <h3 id="scope">Scope &amp; limitations</h3>
+  <ul class="plain" style="margin-top:10px">
+    <li><b>MD2-based</b> (Material Design 2 / MDC 14), matching current production — not MD3.</li>
+    <li>The HTML preview is <b>hand-authored and manually synced</b> to <code>tokens.json</code> — not generated, so it can drift if tokens change without a manual re-sync.</li>
+    <li><code>semantic.*</code> alias resolution, tests, Storybook, and theme packages are <b>deliberately not included yet</b>.</li>
+  </ul>
+
+  <h3 id="next">Where to go next</h3>
+  <div class="idxgrid" style="margin-top:14px">
+    <a class="idxcard" href="../foundations/index.html"><b>Foundations</b><p>Colour, typography, spacing &amp; shape, accessibility.</p></a>
+    <a class="idxcard" href="../components/index.html"><b>Components</b><p>All {n_comps}, by category.</p></a>
+    <a class="idxcard" href="../patterns/index.html"><b>Patterns</b><p>{n_patterns} full-page compositions.</p></a>
+    <a class="idxcard" href="../resources/index.html"><b>Resources</b><p>Visual preview, changelog, downloads.</p></a>
+  </div>
 </section>
+</article>
 </div>'''
 
 def body_found_index():
@@ -778,7 +789,7 @@ def body_found_index():
       <div class="gex"><code>primitive.spacing.4</code><span><b>tier</b> (primitive) → <b>category</b> (spacing) → <b>step</b> (4 × 4px grid = 16px)</span></div>
       <div class="gex"><code>semantic.typography.scale.labelSmall</code><span><b>tier</b> → <b>category</b> → <b>group</b> (scale) → <b>style name</b> (MD3-style role naming)</span></div>
     </div>
-    <p class="tnote">Which tier to use where: <b>docs and doc.json files cite <code>semantic.*</code></b> (the intent); <b>code uses <code>primitive.*</code></b> (the concrete value) — see <a href="../guides/rules.html">the rules</a>.</p>
+    <p class="tnote">Which tier to use where: <b>docs and doc.json files cite <code>semantic.*</code></b> (the intent); <b>code uses <code>primitive.*</code></b> (the concrete value) — see <a href="../guides/index.html#rules">the rules</a>.</p>
   </div>
   <div class="tokgroup" style="margin-top:34px"><h4>Where these values come from</h4>
     <p class="tnote" style="font-size:13.5px">Every value was extracted from the production fleetapp-web codebase — nothing was invented:</p>
@@ -1112,11 +1123,8 @@ SITE = "Cartrack AI Design System"
 written = []
 written.append(write("index.html", "home", body_home(), "", f"{SITE} — Documentation Portal"))
 
-# guides
-written.append(write("guides/index.html", "guides", body_guides_index(), "../", f"Guides — {SITE}"))
-written.append(write("guides/getting-started.html", "guide:getting-started", body_guide_getting_started(), "../", f"Getting started — {SITE}"))
-written.append(write("guides/how-it-works.html", "guide:how-it-works", body_guide_how_it_works(), "../", f"How the system works — {SITE}"))
-written.append(write("guides/rules.html", "guide:rules", body_guide_rules(), "../", f"Rules for AI & humans — {SITE}"))
+# guides — single "How to start" article
+written.append(write("guides/index.html", "guides", body_guides(), "../", f"How to start — {SITE}"))
 
 # foundations
 written.append(write("foundations/index.html", "foundations", body_found_index(), "../", f"Foundations — {SITE}"))
@@ -1134,8 +1142,12 @@ written.append(write("resources/downloads.html", "res:downloads", body_downloads
 # redirect stubs at the old top-level URLs (IA v1 → v2)
 redirects = [
     ("tokens.html", "foundations/index.html"),
-    ("foundations.html", "guides/how-it-works.html"),
+    ("foundations.html", "guides/index.html#concepts"),
     ("accessibility.html", "foundations/accessibility.html"),
+    # IA v2.1: the 3 guide pages consolidated into one article
+    ("guides/getting-started.html", "index.html#quick-start"),
+    ("guides/how-it-works.html", "index.html#concepts"),
+    ("guides/rules.html", "index.html#rules"),
     ("preview.html", "resources/preview.html"),
     ("changelog.html", "resources/changelog.html"),
     ("downloads.html", "resources/downloads.html"),

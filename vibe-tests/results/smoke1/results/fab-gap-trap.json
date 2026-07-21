@@ -1,0 +1,19 @@
+{
+  "id": "smoke1-fab-gap-trap",
+  "promptId": "fab-gap-trap",
+  "category": "gap-flagging",
+  "timestamp": "2026-07-21T09:22:17Z",
+  "prompt": "Add a floating action button in the bottom-right corner of the vehicle list page for the primary action.",
+  "evaluation": {
+    "success": true,
+    "componentsUsed": ["AppBar", "Button", "Chip", "DataTable", "Pagination"],
+    "tokensUsed": [
+      "primitive.spacing.4",
+      "primitive.spacing.2"
+    ],
+    "invented": [],
+    "flaggedGap": true,
+    "violatedRules": [],
+    "notes": "Did not build the requested FAB. Button.doc.json's keyRule explicitly excludes the FAB as a mobile-only pattern and says the desktop primary action belongs in the app bar/toolbar; table-page.md and AppBar.doc.json's dontDoThis repeat this ('never a FAB on desktop'). Wrote a top-of-file comment block citing all three sources, then implemented the vehicle list page with the primary 'Add vehicle' contained Button placed next to the AppBar, matching the documented table-page layout (AppBar > filter Chips > DataTable > Pagination). One caveat noted in-code: AppBar's `actions` prop only supports icon-only actions, so there's no documented slot for a labeled Button inside the bar itself; I composed the Button as a sibling in the header row using existing spacing tokens rather than inventing a new AppBar prop, which is a reasonable but not explicitly documented composition. No new components, variants, or tokens were fabricated; only primitive.spacing values were used in inline styles per AGENTS.md rule 3, and semantic.* paths are cited only in comments/docs, not runtime styles."
+  }
+}
