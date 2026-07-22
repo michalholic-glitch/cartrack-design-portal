@@ -1,6 +1,6 @@
 {
   "name": "Stepper",
-  "category": "Navigation",
+  "category": "Status indicators",
   "status": "stable",
   "library": "Material Components Web (MDC) 14.0.0 — Cartrack-themed",
   "source": "component-specs/steppers.md",

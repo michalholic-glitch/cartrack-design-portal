@@ -1,6 +1,6 @@
 {
   "name": "Card",
-  "category": "Surfaces",
+  "category": "Layout and structure",
   "status": "stable",
   "library": "Material Components Web (MDC) 14.0.0 — Cartrack-themed",
   "source": "component-specs/cards.md",

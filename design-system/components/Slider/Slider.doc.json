@@ -1,6 +1,6 @@
 {
   "name": "Slider",
-  "category": "Inputs & forms",
+  "category": "Forms and inputs",
   "status": "stable",
   "library": "Material Components Web (MDC) 14.0.0 — Cartrack-themed",
   "source": "component-specs/sliders.md",

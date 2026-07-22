@@ -1,6 +1,6 @@
 {
   "name": "Pagination",
-  "category": "Data display",
+  "category": "Navigation",
   "status": "stable",
   "library": "Material Components Web (MDC) 14.0.0 — Cartrack-themed",
   "source": "component-specs/pagination.md",

@@ -1,6 +1,6 @@
 {
   "name": "Divider",
-  "category": "Data display",
+  "category": "Text and data display",
   "status": "stable",
   "library": "Material Components Web (MDC) 14.0.0 — Cartrack-themed",
   "source": "component-specs/dividers.md",

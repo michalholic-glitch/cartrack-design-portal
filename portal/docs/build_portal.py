@@ -118,9 +118,11 @@ def icon(name, color="currentColor", size=22):
             f'stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" style="color:{color}" '
             f'aria-hidden="true">{ICON_PATHS[name]}</svg>')
 
-# category → icon (component-library section)
-CAT_ICONS = {"Actions": "toggle", "Data display": "table", "Feedback": "message",
-             "Inputs & forms": "forms", "Navigation": "nav", "Surfaces": "layers"}
+# category → icon (component-library section) — Atlassian-modeled categories
+CAT_ICONS = {"Forms and inputs": "forms", "Images and icons": "eye", "Labels": "star",
+             "Layout and structure": "grid", "Loading": "tokens", "Messaging": "message",
+             "Navigation": "nav", "Overlays and layering": "layers",
+             "Status indicators": "checklist", "Text and data display": "table"}
 
 # pattern slug → hand-built wireframe thumbnail (patterns section). Kept as literal
 # markup, not generated from the .md body, because the whole point is a recognizable
@@ -154,6 +156,58 @@ for d in sorted((DS / "components").iterdir()):
 categories = {}
 for c in comps:
     categories.setdefault(c.get("category", "Other"), []).append(c)
+
+# Atlassian-modeled category order (component-library-redesign-build-prompt).
+# Categories are still derived live from doc.json "category" fields; this only
+# fixes their display order. Iteration guards against empty categories so the
+# generator can't crash if the set shifts later.
+CATEGORY_ORDER = [
+    "Forms and inputs", "Images and icons", "Labels", "Layout and structure",
+    "Loading", "Messaging", "Navigation", "Overlays and layering",
+    "Status indicators", "Text and data display",
+]
+
+# "Coming soon" gaps per category — names + one-line notes taken verbatim from
+# component-library-vs-atlassian-gap-analysis.md §4 (the per-category tables;
+# note its §5 summary miscounts Images and icons as 4 — the tables list 5).
+# Index cards only, deliberately no pages: most of these have no content beyond
+# "doesn't exist yet", and a page would imply design work that hasn't happened.
+COMING_SOON = {
+    "Images and icons": [
+        ("Avatar", "No equivalent — driver/user avatar isn't documented as a component."),
+        ("Avatar group", "Depends on Avatar existing first."),
+        ("Icon", "FontAwesome is confirmed as the icon system, but there's no Icon component doc and no icon-size/color token layer."),
+        ("Image", "ImageList exists (a layout for multiple images) but there's no single-Image component doc."),
+        ("Tile", "No tile/card-icon pattern currently documented."),
+    ],
+    "Labels": [
+        ("Date label", "No dedicated date-status label component."),
+        ("Tag group", "No wrapper/layout component for grouped chips — chips are used individually today."),
+    ],
+    "Layout and structure": [
+        ("Page header", "Was partially AppBar's role; AppBar was removed for having zero real usage — a confirmed, deliberate gap."),
+    ],
+    "Loading": [
+        ("Skeleton", "No skeleton-loading component documented."),
+    ],
+    "Messaging": [
+        ("Empty state", "No \"no data\" placeholder component documented, despite DataTable being the most-used component — worth prioritizing."),
+        ("Inline message", "Banner is page/region-level; nothing smaller and inline exists."),
+        ("Section message", "Possibly coverable by a Banner variant, but not currently documented as one — flagged rather than assumed."),
+        ("Spotlight", "No onboarding/feature-tour component."),
+    ],
+    "Overlays and layering": [
+        ("Blanket", "The modal scrim likely exists inside Dialog/SideSheet's implementation but isn't separately documented."),
+        ("Inline dialog", "No small anchored-popover component distinct from Menu."),
+        ("Popup", "Same gap as Inline dialog — Menu covers action lists, not arbitrary popup content."),
+    ],
+    "Text and data display": [
+        ("Code", "No inline/block code-display component — low priority for this product."),
+        ("Inline edit", "No click-to-edit-in-place component."),
+        ("Table tree", "No expandable/hierarchical table variant."),
+        ("Visually hidden", "Accessibility utility, not currently documented as a reusable component."),
+    ],
+}
 
 comp_names = sorted((c["name"] for c in comps), key=len, reverse=True)
 
@@ -514,7 +568,7 @@ def render_nav(active, prefix):
     # Components group, with a collapsible sub-group per category
     comp_open = active == "components" or active.startswith("comp:")
     cinner = leaf("components/index.html", "Overview", "components")
-    for cat in sorted(categories):
+    for cat in [c for c in CATEGORY_ORDER if c in categories] + sorted(c for c in categories if c not in CATEGORY_ORDER):
         cat_comps = sorted(categories[cat], key=lambda x: x["name"])
         cat_active = any(active == f"comp:{slug(c['name'])}" for c in cat_comps)
         sub_links = ""
@@ -922,6 +976,8 @@ def render_shell(active, body, prefix="", page_title="Cartrack AI Design System 
   .idxcard .idxcat{{font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--mute)}}
   .idxcard .idxstatus{{font-size:9.5px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;background:#eef1f4;color:var(--ink2);border-radius:999px;padding:1px 8px}}
   .idxcard p{{font-size:12.5px;color:var(--ink2);margin-top:4px}}
+  .idxcard.soon{{opacity:.55;filter:grayscale(.4);cursor:default}}
+  .idxcard.soon:hover{{border-color:var(--line)}}
   .patgrid{{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:12px}}
   .grammar{{display:grid;gap:8px;margin:10px 0}}
   .gex{{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:12px 16px;font-size:13px}}
@@ -1533,21 +1589,33 @@ def body_pattern(p):
 </div>'''
 
 def body_components_index():
-    cards = ""
-    for c in sorted(comps, key=lambda x: x["name"]):
-        desc = c.get("description", "")
-        short = desc[:110].rsplit(" ", 1)[0] + "…" if len(desc) > 110 else desc
-        st = c.get("status", "stable")
-        cards += f'''<a class="idxcard" href="{slug(c['name'])}.html">
+    sections = ""
+    order = [c for c in CATEGORY_ORDER if c in categories or COMING_SOON.get(c)] \
+            + sorted(c for c in categories if c not in CATEGORY_ORDER)
+    for cat in order:
+        cards = ""
+        for c in sorted(categories.get(cat, []), key=lambda x: x["name"]):
+            desc = c.get("description", "")
+            short = desc[:110].rsplit(" ", 1)[0] + "…" if len(desc) > 110 else desc
+            st = c.get("status", "stable")
+            cards += f'''<a class="idxcard" href="{slug(c['name'])}.html">
       <b>{esc(c['name'])}</b>
-      <span class="idxmeta"><span class="idxcat">{esc(c.get('category',''))}</span><span class="idxstatus">{esc(st)}</span></span>
+      <span class="idxmeta"><span class="idxcat">{esc(cat)}</span><span class="idxstatus">{esc(st)}</span></span>
       <p>{esc(short)}</p></a>'''
+        for name, note in COMING_SOON.get(cat, []):
+            cards += f'''<div class="idxcard soon" aria-disabled="true">
+      <b>{esc(name)}</b>
+      <span class="idxmeta"><span class="idxcat">{esc(cat)}</span><span class="idxstatus">Coming soon</span></span>
+      <p>{esc(note)}</p></div>'''
+        if not cards:
+            continue
+        sections += f'<div class="cathead">{esc(cat)}</div><div class="idxgrid">{cards}</div>'
     return f'''<div class="inner pagetop">
 <section id="components">
   <h2>Component reference</h2>
-  <p class="sub">All {n_comps} components, generated directly from their <code>doc.json</code> files — this index can never drift from the source. Each has its own page with full API, do/don't rules, tokens and accessibility.</p>
+  <p class="sub">All {n_comps} components, generated directly from their <code>doc.json</code> files — this index can never drift from the source. Grouped into the 10 Atlassian-modeled categories; greyed cards are confirmed gaps, not yet built.</p>
   <input class="searchbox" id="csearch" type="search" placeholder="Filter components… (e.g. table, chip, dialog)" oninput="filterIdx(this.value)">
-  <div class="idxgrid" id="idxgrid">{cards}</div>
+  <div id="idxgrid">{sections}</div>
 </section>
 </div>''' + SEARCH_SCRIPT
 
@@ -1769,7 +1837,17 @@ SEARCH_SCRIPT = '''
 function filterIdx(q){
   q = q.trim().toLowerCase();
   document.querySelectorAll('#idxgrid .idxcard').forEach(function(el){
-    el.classList.toggle('hidden', q !== '' && el.textContent.toLowerCase().indexOf(q) === -1);
+    // match name + description + category, NOT the status badge ("stable" contains "table")
+    var b=el.querySelector('b'), p=el.querySelector('p'), c=el.querySelector('.idxcat');
+    var hay=((b?b.textContent:'')+' '+(p?p.textContent:'')+' '+(c?c.textContent:'')).toLowerCase();
+    el.classList.toggle('hidden', q !== '' && hay.indexOf(q) === -1);
+  });
+  // hide a category heading (and its grid) when every card in it is filtered out
+  document.querySelectorAll('#idxgrid .cathead').forEach(function(h){
+    var grid = h.nextElementSibling;
+    var any = grid && grid.querySelector('.idxcard:not(.hidden)');
+    h.classList.toggle('hidden', !any);
+    if (grid) grid.classList.toggle('hidden', !any);
   });
 }
 </script>'''

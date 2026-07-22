@@ -1,6 +1,6 @@
 {
   "name": "ImageList",
-  "category": "Data display",
+  "category": "Images and icons",
   "status": "stable",
   "library": "Material Components Web (MDC) 14.0.0 — Cartrack-themed",
   "source": "component-specs/image-lists.md",

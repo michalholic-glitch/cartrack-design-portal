@@ -1,6 +1,6 @@
 {
   "name": "Button",
-  "category": "Actions",
+  "category": "Forms and inputs",
   "status": "stable",
   "library": "Material Components Web (MDC) 14.0.0 — Cartrack-themed",
   "source": "component-specs/buttons.md",
