@@ -47,7 +47,7 @@
     "Don't add effects — shadows, outlines, glows.",
     "Don't scale partner logos to literal height parity — match optically."
   ],
-  "relationToProductTokens": "No direct product-token equivalent — the logo is a brand asset, not a design token. Product UI should treat the app bar / nav logo placement as a separate, product-specific decision documented in the relevant component doc (e.g. AppBar), not derived from this file.",
+  "relationToProductTokens": "No direct product-token equivalent — the logo is a brand asset, not a design token. Product UI should treat the page-header / nav logo placement as a separate, product-specific decision documented in the relevant page-template guidance (see design-system/templates/), not derived from this file.",
   "openQuestions": [
     "Exact clearspace ratio and minimum reproduction size are visible in the guideline but not confirmed at pixel level — pull exact values if this logo usage needs to be enforced programmatically (e.g. lint rule for a marketing site builder)."
   ]

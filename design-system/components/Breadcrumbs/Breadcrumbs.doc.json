@@ -120,10 +120,6 @@
   ],
   "related": [
     {
-      "name": "AppBar",
-      "why": "Hosts the page title the trail leads to"
-    },
-    {
       "name": "Tabs",
       "why": "For switching sibling views at the same level"
     }

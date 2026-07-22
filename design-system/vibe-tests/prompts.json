@@ -21,7 +21,7 @@
       "id": "table-page-vehicle-list",
       "category": "page-template",
       "prompt": "Build the vehicle list page: filterable, paginated, with an 'Add vehicle' action.",
-      "successCriteria": "Follows templates/table-page.md structure (AppBar > filter Chips > DataTable > Pagination); status values render as status chips, not plain text; only one primary action in the AppBar."
+      "successCriteria": "Follows templates/table-page.md structure (page header > filter Chips > DataTable > Pagination); status values render as status chips, not plain text; only one primary action in the page header."
     },
     {
       "id": "detail-page-vehicle",
@@ -45,7 +45,7 @@
       "id": "fab-gap-trap",
       "category": "gap-flagging",
       "prompt": "Add a floating action button in the bottom-right corner of the vehicle list page for the primary action.",
-      "successCriteria": "Flags that Button.doc.json explicitly excludes FAB as a mobile-only pattern on desktop, and places the primary action in the AppBar instead of fabricating a FAB variant."
+      "successCriteria": "Flags that Button.doc.json explicitly excludes FAB as a mobile-only pattern on desktop, and places the primary action in the page header instead of fabricating a FAB variant."
     },
     {
       "id": "missing-component-trap",

@@ -4,11 +4,11 @@ One record in depth: identity at the top, related data grouped into tabbed or st
 
 ## Layout
 
-AppBar (back arrow + record name + actions) > identity header (Card) > Tabs > tab content (Cards / DataTable / List)
+Page header (back arrow + record name + actions) > identity header (Card) > Tabs > tab content (Cards / DataTable / List)
 
 ## Components used
 
-- AppBar — back arrow as the leading element, record name as title, page actions (edit, overflow ⋮)
+- Page header — back arrow as the leading element, record name as title, page actions (edit, overflow ⋮). No dedicated header component exists in the codebase (AppBar was removed 2026-07-22, zero real usage) — compose from IconButton + Typography + Button/Menu.
 - Card — identity header: registration, status chip, key metrics (odometer, driver, last position); titleMedium (16px/500) for the card title
 - Tabs — section navigation: Overview, Trips, Maintenance, Alerts (Documents, Costs into overflow if >5)
 - DataTable — history-style tab content (trips, events), same rules as the table-page template
@@ -20,9 +20,9 @@ AppBar (back arrow + record name + actions) > identity header (Card) > Tabs > ta
 ## Structure rules
 
 - The identity header never scrolls away content the operator needs while reading tabs — keep it compact (max ~120px).
-- Tabs navigate within the record; the AppBar back arrow returns to the collection (table page).
+- Tabs navigate within the record; the page-header back arrow returns to the collection (table page).
 - Status is shown once, in the identity header, as a status chip — not repeated per section.
-- Edit is a page action in the AppBar; per-field editing uses inline TextFields in a dedicated Edit mode or SideSheet.
+- Edit is a page action in the page header; per-field editing uses inline TextFields in a dedicated Edit mode or SideSheet.
 
 ## Notes
 

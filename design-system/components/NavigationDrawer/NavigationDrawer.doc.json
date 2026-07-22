@@ -155,10 +155,6 @@
     {
       "name": "Tabs",
       "why": "Content-level navigation inside a page"
-    },
-    {
-      "name": "AppBar",
-      "why": "The bar toggles the drawer via its nav icon"
     }
   ]
 }

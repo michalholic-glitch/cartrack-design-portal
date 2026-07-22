@@ -4,11 +4,11 @@ Grouped, mostly-form content where the operator changes state rather than reads 
 
 ## Layout
 
-AppBar (title) > two-column: settings navigation (List) left, settings content (Cards with form controls) right
+Page header (title) > two-column: settings navigation (List) left, settings content (Cards with form controls) right
 
 ## Components used
 
-- AppBar — page title only; no primary action (saving happens per section)
+- Page header — page title only; no primary action (saving happens per section). No dedicated header component exists in the codebase (AppBar was removed 2026-07-22, zero real usage) — compose from Typography.
 - List — settings category navigation (single-line items, selected state = 8% overlay + primary-dark text)
 - Card — one card per settings group, titleMedium heading, ≤6 controls each
 - SelectionControl — switches for on/off preferences (the default control), checkboxes for multi-select groups, radios for exclusive choices

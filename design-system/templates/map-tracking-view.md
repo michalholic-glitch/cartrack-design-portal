@@ -19,7 +19,7 @@ NavigationRail (left edge) > full-bleed map canvas > floating asset panel (SideS
 
 ## Structure rules
 
-- The map is the page — no AppBar; search and filters float on the canvas with surface backgrounds and el2 shadows.
+- The map is the page — no page header; search and filters float on the canvas with surface backgrounds and el2 shadows.
 - Marker colour = list status-chip colour = the same vehicleStatus token. One source, three renderings.
 - The asset panel is collapsible; collapsed state leaves only search + filter chips floating.
 - Marker click = lightweight Card popup; "View details" navigates to the detail page — never open a full Dialog over the map.
