@@ -150,8 +150,7 @@
   .backdrop .front{position:absolute;bottom:0;left:0;right:0;height:90px;background:var(--surface);border-radius:16px 16px 0 0;padding:14px}
 
   /* AA fix (2026-07-16): was background:var(--primary);color:#fff — the exact same white-on-orange
-     failure as .btn.contained/.picker .ph2 (~2.79:1), and it directly contradicts AppBar.doc.json's
-     own guidance ("Prefer a white bar + dark content for legibility" / "Don't ship an orange bar
+     failure as .btn.contained/.picker .ph2 (~2.79:1), and it directly contradicts the same AA guidance applied elsewhere ("Prefer a white bar + dark content for legibility" / "Don't ship an orange bar
      with white text without checking contrast"). Default now matches that stated preference:
      surface + on-surface. An orange-filled bar is still valid per spec but requires the
      primary-dark/on-primary treatment already used by the Contextual variant's inline override below. */
@@ -239,7 +238,7 @@
     <a href="#slider">Slider</a>
     <a href="#text-field">Text field</a>
     <div class="grp">Navigation</div>
-    <a href="#app-bar">App bar</a>
+    
     <a href="#breadcrumbs">Breadcrumbs</a>
     <a href="#navigation-drawer">Navigation drawer</a>
     <a href="#navigation-rail">Navigation rail</a>
@@ -655,60 +654,6 @@
       <tr><td>trailingIcon</td><td>string</td><td>—</td><td>Trailing Material icon ligature, e.g. "clear" or a unit like "km".</td></tr>
       <tr><td>multiline</td><td>boolean</td><td>—</td><td>Renders a textarea that grows with content instead of a single-line input.</td></tr>
       <tr><td>rows</td><td>number</td><td>—</td><td>Textarea row count when multiline is true.</td></tr>
-    </table>
-  </div>
-</section>
-<section id="app-bar"><h3>AppBar</h3>
-  <p class="desc">The top app bar is the page header — it names where the operator is and holds page-level actions: global search, notifications, account, and the page's primary action. On desktop it also hosts the action a phone would put in a FAB.</p>
-  <div class="note">Keep the top bar light — most navigation belongs in the left drawer/rail. The bar carries the title, global tools, and the one primary action for the page.</div>
-
-  <div class="block"><h4>Variants</h4>
-    <div class="variant-grid">
-      <div class="variant-item">
-        <div class="variant-demo"><div class="appbar"><span class="iconbtn">☰</span><span class="ti">Vehicles</span><span class="iconbtn">🔍</span><span class="iconbtn">🔔</span><span class="iconbtn">⋮</span></div></div>
-        <div class="variant-label"><b>Standard</b><span>Default page header with title + actions.</span></div>
-      </div>
-      <div class="variant-item">
-        <div class="variant-demo"><div class="appbar"><span class="iconbtn">☰</span><span class="ti">Vehicles</span><button class="btn contained sec">Add vehicle</button><span class="iconbtn">⋮</span></div></div>
-        <div class="variant-label"><b>With primary action</b><span>Hosts the page's contained primary action (the desktop replacement for a FAB).</span></div>
-      </div>
-      <div class="variant-item">
-        <div class="variant-demo"><div class="appbar" style="background:var(--selected);color:var(--primary-dark)"><span class="iconbtn" style="color:var(--primary-dark)">✕</span><span class="ti" style="font-size:.95rem">3 selected</span><span class="iconbtn" style="color:var(--primary-dark)">⤓</span><span class="iconbtn" style="color:var(--primary-dark)">🗑</span></div></div>
-        <div class="variant-label"><b>Contextual / selection</b><span>Appears when items are selected; shows count + bulk actions.</span></div>
-      </div>
-      <div class="variant-item">
-        <div class="variant-demo"><div class="appbar"><span class="iconbtn">☰</span><span class="ti">Vehicles</span><span class="iconbtn">🔍</span><span class="iconbtn">🔔</span><span class="iconbtn">⋮</span></div></div>
-        <div class="variant-label"><b>With search</b><span>Expands an inline global search field.</span></div>
-      </div>
-    </div>
-  </div>
-
-  <div class="block"><h4>Best practices</h4>
-    <div class="bp-grid">
-      <div class="bp-col do"><h5>Do</h5><ul>
-        <li>Show the current location as the title.</li>
-        <li>Host one primary action here per page.</li>
-        <li>Switch to the contextual bar during selection.</li>
-        <li>Prefer a white bar + dark content for legibility.</li>
-      </ul></div>
-      <div class="bp-col dont"><h5>Don't</h5><ul>
-        <li>Don't crowd the bar with primary navigation — that's the drawer's job.</li>
-        <li>Don't place a FAB on desktop; use the bar's primary action.</li>
-        <li>Don't ship an orange bar with white text without checking contrast.</li>
-      </ul></div>
-    </div>
-  </div>
-
-  <div class="block"><h4>Props</h4>
-    <table class="proptable"><tr><th>Prop</th><th>Type</th><th>Default</th><th>Description</th></tr>
-      <tr><td>title</td><td>string</td><td>—</td><td>Current page/section name shown as the title.</td></tr>
-      <tr><td>actions</td><td>AppBarAction[]</td><td>—</td><td>Standard header actions (search, notifications, overflow, etc).</td></tr>
-      <tr><td>showNavigationIcon</td><td>boolean</td><td>—</td><td>Shows the nav toggle / back arrow leading element.</td></tr>
-      <tr><td>onNavigationIconClick</td><td>() =&gt; void</td><td>—</td><td>Handler for the leading nav icon.</td></tr>
-      <tr><td>contextual</td><td>boolean</td><td>—</td><td>Switches to the contextual / selection bar variant.</td></tr>
-      <tr><td>selectedCount</td><td>number</td><td>—</td><td>Number of selected items, shown in the contextual bar.</td></tr>
-      <tr><td>contextualActions</td><td>AppBarAction[]</td><td>—</td><td>Bulk actions shown only while contextual is true.</td></tr>
-      <tr><td>onCloseContextual</td><td>() =&gt; void</td><td>—</td><td>Called when the contextual bar's close control clears selection.</td></tr>
     </table>
   </div>
 </section>

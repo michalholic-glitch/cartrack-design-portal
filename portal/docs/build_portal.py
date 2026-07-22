@@ -492,11 +492,15 @@ def render_nav(active, prefix):
     # Foundations group
     f_open = active == "foundations" or active.startswith("found:")
     finner = leaf("foundations/index.html", "Overview", "foundations")
+    finner += leaf("foundations/tokens.html", "Design tokens", "found:tokens")
     finner += leaf("foundations/colour.html", "Colour", "found:colour")
     finner += leaf("foundations/typography.html", "Typography", "found:typography")
     finner += leaf("foundations/spacing.html", "Spacing &amp; shape", "found:spacing")
+    finner += leaf("foundations/iconography.html", "Iconography", "found:iconography")
+    finner += leaf("foundations/grid.html", "Grid", "found:grid")
+    finner += leaf("foundations/elevation.html", "Elevation", "found:elevation")
     finner += leaf("foundations/accessibility.html", "Accessibility", "found:accessibility")
-    parts.append(group("grp-foundations", "Foundations", 4, f_open, finner))
+    parts.append(group("grp-foundations", "Foundations", 8, f_open, finner))
 
     # Components group, with a collapsible sub-group per category
     comp_open = active == "components" or active.startswith("comp:")
@@ -1238,6 +1242,66 @@ def body_guides():
 </article>
 </div>'''
 
+# ---------- foundations redesign data (foundations-section-redesign spec) ----------
+# Everything below is read live from tokens.json / doc.jsons — never hand-typed.
+
+# data-visualization palette — semantic.color.dataViz (10 hues × 4 roles)
+_dv = tokens["semantic"]["color"].get("dataViz", {})
+dv_note = _dv.get("note", "")
+dv_rows = ""
+for _hue, _obj in _dv.items():
+    if _hue.startswith("_") or _hue == "note" or not isinstance(_obj, dict):
+        continue
+    _cells = ""
+    for _role in ("background", "border", "icon", "text"):
+        _v = resolve(_obj.get(_role, ""))
+        if isinstance(_v, str) and (_v.startswith("#") or _v.startswith("rgba")):
+            _b = "border:1px solid #e3e0da;" if str(_v).upper() in ("#FFFFFF", "#F9F9F9", "#FAFAFA") else ""
+            _cells += f'<td><div class="chipc" style="height:20px;{_b}background:{esc(_v)}"></div><div class="swv">{esc(_v)}</div></td>'
+        else:
+            _cells += "<td>—</td>"
+    _n = f'<div class="tnote">{esc(_obj["note"])}</div>' if _obj.get("note") else ""
+    dv_rows += f'<tr><td><code>dataViz.{esc(_hue)}</code>{_n}</td>{_cells}</tr>'
+
+# neutral ramp — primitive.color.hue.gray, surfaced as its own palette
+_gray = tokens["primitive"]["color"]["hue"]["gray"]
+_gray_items = [(k, v) for k, v in _gray.items()
+               if not k.startswith("_") and k != "note" and isinstance(v, str)]
+neutral_html = swatch_group(
+    "Neutral palette (primitive.color.hue.gray)", _gray_items,
+    f"Raw neutral primitives. Caveat: gray.10 ({_gray.get('10', '')}) is the value "
+    f"semantic.color.surface.appBackground resolves to — read it as that surface role, "
+    f"not a competing background colour.")
+
+# real spacing consumers, from component doc.jsons (cited, never invented)
+spacing_consumers = {}
+for _c in comps:
+    for _tok in _c.get("tokens", []):
+        if _tok.startswith("semantic.spacing."):
+            spacing_consumers.setdefault(_tok.rsplit(".", 1)[1], []).append(_c["name"])
+
+def spacing_bucket_rows():
+    out = ""
+    for k in ("xs", "sm", "md", "lg", "xl", "xxl"):
+        if k not in tokens["semantic"]["spacing"]:
+            continue
+        val = resolve(tokens["semantic"]["spacing"][k])
+        names = sorted(set(spacing_consumers.get(k, [])))
+        if names:
+            who = "Cited by: " + ", ".join(names) + "."
+        else:
+            who = "No component doc.json cites this step today — flagged rather than given an invented example."
+        out += (f'<div class="rule"><b><code>semantic.spacing.{k}</code> — {esc(val)}</b> — {esc(who)}</div>')
+    return out
+
+sem_sp_note = tokens["semantic"]["spacing"].get("note", "")
+prim_sp_note = tokens["primitive"]["spacing"].get("note", "")
+bp_note = tokens.get("legacy", {}).get("breakpoints", {}).get("note", "")
+bp_keys = [k for k in tokens.get("legacy", {}).get("breakpoints", {}) if k != "note"]
+fa_value = tokens["primitive"]["fontFamily"].get("fontAwesome", "")
+default_variant = tokens["semantic"]["typography"].get("defaultVariant", "")
+ty_note = tokens["semantic"]["typography"].get("note", "")
+
 def body_found_index():
     return f'''<div class="inner pagetop">
 <section id="tokens">
@@ -1245,14 +1309,38 @@ def body_found_index():
   <p class="sub">The design fundamentals, generated from <code>tokens/tokens.json</code>. Two tiers: <b>primitive</b> (raw values) and <b>semantic</b> (named roles that alias primitives). Reference semantic names in docs; use primitive values in code.</p>
   <div class="warn"><b>Never copy hex values out of these pages.</b> Reference the token — the values shown here are for verification only. Copied hex numbers can't be updated when the system changes; token references can.</div>
 
-  <div class="idxgrid" style="margin-top:26px">
-    <a class="idxcard" href="colour.html"><b>Colour</b><span class="idxmeta"><span class="idxcat">Foundation</span></span><p>Brand, status, text, surface, interactive-state and fleet-specific palettes.</p></a>
-    <a class="idxcard" href="typography.html"><b>Typography</b><span class="idxmeta"><span class="idxcat">Foundation</span></span><p>Base font, weights, and the full type scale with live samples.</p></a>
-    <a class="idxcard" href="spacing.html"><b>Spacing &amp; shape</b><span class="idxmeta"><span class="idxcat">Foundation</span></span><p>The 4px spacing grid, corner radii and border widths.</p></a>
-    <a class="idxcard" href="accessibility.html"><b>Accessibility</b><span class="idxmeta"><span class="idxcat">Foundation</span></span><p>The AA policy, the one contrast trap, and per-component requirements.</p></a>
+  <h5 style="margin-top:30px">Design tokens</h5>
+  <div class="idxgrid">
+    <a class="idxcard" href="tokens.html"><b>Design tokens</b><span class="idxmeta"><span class="idxcat">Mechanism</span></span><p>What a token is, how names compose, which tier to use where, and where every value comes from.</p></a>
   </div>
 
-  <div class="tokgroup" style="margin-top:34px"><h4>How token names work</h4>
+  <h5 style="margin-top:26px">Guidelines</h5>
+  <div class="idxgrid">
+    <a class="idxcard" href="accessibility.html"><b>Accessibility</b><span class="idxmeta"><span class="idxcat">Guideline</span></span><p>The AA policy, the one contrast trap, and per-component requirements.</p></a>
+  </div>
+
+  <h5 style="margin-top:26px">Styles</h5>
+  <div class="idxgrid">
+    <a class="idxcard" href="colour.html"><b>Colour</b><span class="idxmeta"><span class="idxcat">Style</span></span><p>Brand, status, text, surface, interactive-state, fleet-specific, data-viz and neutral palettes.</p></a>
+    <a class="idxcard" href="typography.html"><b>Typography</b><span class="idxmeta"><span class="idxcat">Style</span></span><p>Base font, weights, and the full type scale with live samples.</p></a>
+    <a class="idxcard" href="spacing.html"><b>Spacing &amp; shape</b><span class="idxmeta"><span class="idxcat">Style</span></span><p>The 4px spacing grid with real usage buckets, plus corner radii and border widths.</p></a>
+    <a class="idxcard" href="iconography.html"><b>Iconography</b><span class="idxmeta"><span class="idxcat">Style</span><span class="idxstatus">stub</span></span><p>What's known (FontAwesome) and what token work is still missing.</p></a>
+    <a class="idxcard" href="grid.html"><b>Grid</b><span class="idxmeta"><span class="idxcat">Style</span><span class="idxstatus">stub</span></span><p>Not yet defined in tokens — only flagged legacy breakpoints exist.</p></a>
+    <a class="idxcard" href="elevation.html"><b>Elevation</b><span class="idxmeta"><span class="idxcat">Style</span><span class="idxstatus">stub</span></span><p>No shadow/z-index tokens yet — MUI defaults used unoverridden.</p></a>
+  </div>
+
+  <p class="tnote" style="margin-top:22px">Looking for the token naming grammar or the provenance list? Both moved to the <a href="tokens.html">Design tokens</a> page.</p>
+</section>
+</div>'''
+
+def body_found_tokens():
+    return f'''<div class="inner pagetop">
+<a class="backlink" href="index.html">← Foundations</a>
+<section id="tokens-explained">
+  <h2>Design tokens</h2>
+  <p class="sub">A design token is a named value: <code>semantic.color.brand.primary.dark</code> instead of <code>#BB4800</code>. The name says what the value is <i>for</i>, so when the underlying value changes in <code>tokens/tokens.json</code>, everything that cites the name follows automatically — while a copied raw hex is frozen the moment you paste it. Tokens are the mechanism that lets an AI agent (or a person) build UI that stays correct when the system moves.</p>
+
+  <div class="tokgroup" style="margin-top:30px"><h4>How token names work</h4>
     <p class="tnote" style="font-size:13.5px">Names are compositional — you can predict a token's name without looking it up:</p>
     <div class="grammar">
       <div class="gex"><code>semantic.color.brand.primary.dark</code><span><b>tier</b> (semantic) → <b>category</b> (color) → <b>group</b> (brand) → <b>role</b> (primary) → <b>variant</b> (dark)</span></div>
@@ -1268,6 +1356,39 @@ def body_found_index():
 </section>
 </div>'''
 
+def body_found_iconography():
+    return f'''<div class="inner pagetop">
+<a class="backlink" href="index.html">← Foundations</a>
+<section id="iconography">
+  <h2>Iconography</h2>
+  <p class="sub">This page will cover the icon system: which icon set the product uses, the size and colour tokens icons should reference, and the usage rules (when an icon needs a label, minimum touch targets, decorative vs. meaningful icons).</p>
+  <p class="sub">What's confirmed today: the icon font is <b>{esc(fa_value)}</b>, documented as <code>primitive.fontFamily.fontAwesome</code> in tokens.json. That's the whole token story so far.</p>
+  <div class="warn"><b>Not yet defined:</b> there is no icon size or icon colour token layer in <code>tokens.json</code>, and Icon is not one of the {n_comps} documented components. Completing this page needs that token extraction to happen first — until then this stub states what's known rather than inventing sizes that don't exist in the source.</div>
+</section>
+</div>'''
+
+def body_found_grid():
+    bp_list = ", ".join(f"<code>{esc(k)}</code>" for k in bp_keys)
+    return f'''<div class="inner pagetop">
+<a class="backlink" href="index.html">← Foundations</a>
+<section id="grid">
+  <h2>Grid</h2>
+  <p class="sub">This page will cover layout structure: breakpoints, columns, gutters and page margins — the values that decide how screens reflow between desktop and mobile.</p>
+  <p class="sub">What exists today: a <code>legacy.breakpoints</code> group ({bp_list}), and nothing else.</p>
+  <div class="warn"><b>Not yet defined:</b> those legacy breakpoints are explicitly flagged in their own tokens.json note — <i>"{esc(bp_note)}"</i> — so they are not documented here as if they were the real grid. Real breakpoint/column tokens need to be extracted from the production codebase before this page gets content.</div>
+</section>
+</div>'''
+
+def body_found_elevation():
+    return f'''<div class="inner pagetop">
+<a class="backlink" href="index.html">← Foundations</a>
+<section id="elevation">
+  <h2>Elevation</h2>
+  <p class="sub">This page will cover surface depth: the shadow scale, when a surface raises (menus, dialogs, snackbars), and the z-index layering rules.</p>
+  <div class="warn"><b>Not yet defined:</b> <code>tokens.json</code> contains no shadow or z-index tokens — the product uses MUI's default shadow scale, unoverridden. That's the same situation <code>fontFamily.muiDefault</code> was in before it was documented, and extracting the shadow scale the same way is the logical next step — but it's a token-extraction task, not a docs task, so this page stays a stub until it happens.</div>
+</section>
+</div>'''
+
 def body_found_colour():
     return f'''<div class="inner pagetop">
 <a class="backlink" href="index.html">← Foundations</a>
@@ -1275,6 +1396,12 @@ def body_found_colour():
   <h2>Colour</h2>
   <p class="sub">Generated from <code>tokens/tokens.json</code>. Reference the token, never the hex — the values shown are for verification only.</p>
   {tok_html}
+  <div class="tokgroup"><h4>Data visualization (semantic.color.dataViz)</h4>
+    <p class="tnote" style="font-size:13.5px">{esc(dv_note)}</p>
+    <table class="tok"><thead><tr><th>Hue</th><th>background</th><th>border</th><th>icon</th><th>text</th></tr></thead><tbody>{dv_rows}</tbody></table>
+    <p class="tnote">Per-hue notes above come straight from tokens.json — where a hue has no 70 step in the source, the token says so rather than papering over it.</p>
+  </div>
+  {neutral_html}
   <div class="tokgroup"><h4>Interaction states — the rule, not just the list</h4>
     <p class="tnote" style="font-size:13.5px">State-layer colours aren't hand-picked — they're computed: <b>hover = 4% overlay</b> of the base colour, <b>selected = 8%</b>, <b>focus = 12%</b> (in production: <code>alpha(brandColor, opacity)</code> in karoo-ui's ThemeProvider). Need a state colour that isn't listed? Derive it with this rule — never invent a new alpha value.</p>
   </div>
@@ -1288,6 +1415,13 @@ def body_found_typography():
 <section id="typography">
   <h2>Typography</h2>
   <p class="sub">Base font: <code>{esc(base_font)}</code> at <code>{esc(base_size)}</code>. Styles reference <code>semantic.typography.scale.*</code>.</p>
+  <div class="tokgroup"><h4>Principles</h4>
+    <div class="rules">
+      <div class="rule"><b>One face, one base.</b> Roboto at a {esc(base_size)} base via MUI's unoverridden default stack (<code>fontFamily</code> aliases <code>primitive.fontFamily.muiDefault</code>) — no second typeface exists in the product.</div>
+      <div class="rule"><b><code>{esc(default_variant)}</code> is the default.</b> <code>semantic.typography.defaultVariant</code> names it explicitly — body text you don't specify a variant for is this, app-wide.</div>
+      <div class="rule"><b>Flag, don't hide.</b> <code>labelSmall</code> and <code>titleMedium</code> exist as tokens but aren't registered MUI variants yet — their own notes say so, and so does this page, rather than presenting them as fully usable.</div>
+    </div>
+  </div>
   <div class="tokgroup"><h4>Type scale</h4>
     <table class="tok"><thead><tr><th>Style</th><th>Size</th><th>Weight</th><th>Line</th><th>Sample</th></tr></thead><tbody>{ty_rows}</tbody></table>
     <p class="tnote">⚠ <code>labelSmall</code> and <code>titleMedium</code> exist as tokens but are not yet registered MUI variants in karoo-ui — see their notes in tokens.json.</p>
@@ -1304,6 +1438,25 @@ def body_found_spacing():
   <div class="tokgroup"><h4>Spacing (4px grid)</h4>
     <table class="tok"><thead><tr><th>Token</th><th>Value</th><th></th></tr></thead><tbody>{sp_rows}{sem_sp}</tbody></table>
   </div>
+
+  <div class="tokgroup"><h4>Usage guidance — which step, where</h4>
+    <p class="tnote" style="font-size:13.5px">Each bucket lists the components whose <code>doc.json</code> actually cites that token — real consumers from the component library, not invented examples.</p>
+    <div class="rules">{spacing_bucket_rows()}</div>
+  </div>
+
+  <div class="dodont">
+    <div class="do"><h5>Do</h5><ul>
+      <li>{esc(sem_sp_note)}</li>
+      <li>{esc(prim_sp_note)}</li>
+    </ul></div>
+    <div class="dont"><h5>Don&#39;t</h5><ul>
+      <li>Don't hard-code arbitrary px values — the spacing token's own note ends with exactly that warning.</li>
+      <li>Don't confuse the two grids: primitive steps are 4px, MUI's <code>theme.spacing(n)</code> is 8px — the mapping in the note above is the bridge.</li>
+    </ul></div>
+  </div>
+
+  <h5 style="margin-top:34px">Shape</h5>
+  <p class="tnote" style="margin-bottom:10px">Radius and border width live here rather than on their own pages — five radius values and two border widths don't justify standalone pages.</p>
   <div class="tokgroup"><h4>Radius</h4>
     <table class="tok"><thead><tr><th>Token</th><th>Value</th><th></th></tr></thead><tbody>{rad_rows}</tbody></table>
   </div>
@@ -1329,6 +1482,14 @@ def body_accessibility():
 <section id="accessibility">
   <h2>Accessibility</h2>
   <p class="sub">WCAG AA is enforced by the system, not by vigilance: the tokens are AA-safe when used as documented, and every component carries its own accessibility requirements (from its doc.json) on its own page.</p>
+  <div class="tokgroup"><h4>Principles</h4>
+    <div class="rules">
+      <div class="rule"><b>AA is the floor, and the tokens carry it.</b> Use the palette as documented and the contrast maths is already done — vigilance is a fallback, not the mechanism.</div>
+      <div class="rule"><b>Baseline beyond contrast.</b> Visible focus states, full keyboard operability and accessible names are required on every interactive element, on every component, always.</div>
+      <div class="rule"><b>Per-component requirements add, never replace.</b> A component's own accessibility list extends the baseline — nothing on it grants an exemption.</div>
+      <div class="rule"><b>Known issues get named, not buried.</b> The one documented trap lives in <code>tokens.json → accessibility.knownIssues</code> and is repeated below, on the Colour page, and in the rules.</div>
+    </div>
+  </div>
   <div class="warn"><b>The one trap:</b> white text on brand orange <code>#F47735</code> fails AA at ~2.79:1. Filled surfaces with white text must use <code>primary.dark</code> <code>#BB4800</code> (~5.2:1). This single rule was behind all 5 contrast bugs found and fixed in the 2026-07-16 audit.</div>
   <div class="tip"><b>Baseline for every component:</b> visible focus states, full keyboard operability, accessible names on all interactive elements, and AA contrast — the per-component requirements add to this, never replace it.</div>
   <h5 style="margin-top:30px">Per-component requirements</h5>
@@ -1635,6 +1796,10 @@ written.append(write("guides/index.html", "guides", body_guides(), "../", f"How 
 
 # foundations
 written.append(write("foundations/index.html", "foundations", body_found_index(), "../", f"Foundations — {SITE}"))
+written.append(write("foundations/tokens.html", "found:tokens", body_found_tokens(), "../", f"Design tokens — {SITE}"))
+written.append(write("foundations/iconography.html", "found:iconography", body_found_iconography(), "../", f"Iconography — {SITE}"))
+written.append(write("foundations/grid.html", "found:grid", body_found_grid(), "../", f"Grid — {SITE}"))
+written.append(write("foundations/elevation.html", "found:elevation", body_found_elevation(), "../", f"Elevation — {SITE}"))
 written.append(write("foundations/colour.html", "found:colour", body_found_colour(), "../", f"Colour — {SITE}"))
 written.append(write("foundations/typography.html", "found:typography", body_found_typography(), "../", f"Typography — {SITE}"))
 written.append(write("foundations/spacing.html", "found:spacing", body_found_spacing(), "../", f"Spacing & shape — {SITE}"))
