@@ -612,6 +612,25 @@ NAV_JS = r'''
       b.setAttribute('aria-pressed', b.classList.contains('active')?'true':'false');
     });
   });
+
+  // home trip-log: the route rail traces scroll progress; waypoints light up
+  // as the reader "drives" past them
+  var journey=document.querySelector('.journey'), trace=document.getElementById('jtrace');
+  if(journey && trace){
+    var wps=Array.prototype.slice.call(journey.querySelectorAll('.eyebrow'));
+    var update=function(){
+      var r=journey.getBoundingClientRect();
+      var probe=window.innerHeight*0.45;            // the "vehicle position" line
+      var y=Math.max(0, Math.min(probe-r.top, r.height-16));
+      trace.style.height=y+'px';
+      wps.forEach(function(e){
+        e.parentElement.classList.toggle('wp-passed', e.getBoundingClientRect().top < probe);
+      });
+    };
+    window.addEventListener('scroll', update, {passive:true});
+    window.addEventListener('resize', update);
+    update();
+  }
 })();'''
 
 def render_shell(active, body, prefix="", page_title="Cartrack AI Design System — Documentation Portal", extra_css=""):
@@ -690,8 +709,10 @@ def render_shell(active, body, prefix="", page_title="Cartrack AI Design System 
   .pagetop{{padding-top:48px}}
   .backlink{{display:inline-block;margin-bottom:20px;font-size:13px;color:var(--ink2)}}
   header.top{{background:var(--ink);color:#fff;padding:72px 0 60px;margin-bottom:56px;position:relative;overflow:hidden}}
+  /* map graticule — the hero is a tracking scene, not a flat block */
+  header.top::before{{content:"";position:absolute;inset:0;background-image:radial-gradient(circle,rgba(255,255,255,.075) 1px,transparent 1.5px);background-size:24px 24px;pointer-events:none}}
   header.top .inner{{max-width:880px;position:relative;z-index:1}}
-  header.top h1{{font-family:var(--display);font-size:clamp(30px,4.4vw,46px);line-height:1.08;font-weight:800;letter-spacing:-.02em}}
+  header.top h1{{font-family:var(--display);font-size:clamp(30px,4.2vw,45px);line-height:1.06;font-weight:900;letter-spacing:-.03em;text-wrap:balance}}
   header.top p{{margin-top:16px;color:#c9cdd2;font-size:16.5px;max-width:60ch;line-height:1.55}}
   header.top p.tagline{{color:#c9cdd2;font-size:14.5px;margin-top:10px;font-style:italic}}
 
@@ -708,6 +729,22 @@ def render_shell(active, body, prefix="", page_title="Cartrack AI Design System 
   .statstrip{{margin-top:28px;display:flex;flex-wrap:wrap;gap:14px 30px}}
   .statstrip .stat b{{font-family:var(--display);font-weight:800;font-size:24px;line-height:1;color:#fff;display:block}}
   .statstrip .stat span{{font-size:12.5px;color:#aeb3b9}}
+
+  /* telemetry readout — mono is the data voice of a tracking console */
+  .telemetry{{margin-top:30px;font-family:var(--mono);font-size:12.5px;color:#9aa0a8;display:flex;flex-wrap:wrap;gap:6px 0;align-items:center}}
+  .telemetry b{{color:#fff;font-weight:600}}
+  .telemetry .sep{{color:var(--accent);padding:0 12px}}
+
+  /* trip-log journey rail — the page is a route; the reader is the vehicle */
+  .journey{{position:relative;padding-left:38px}}
+  .journey::before{{content:"";position:absolute;left:7px;top:8px;bottom:8px;width:2px;background:repeating-linear-gradient(180deg,rgba(12,12,12,.22) 0 6px,transparent 6px 13px)}}
+  .jtrace{{position:absolute;left:7px;top:8px;width:2px;background:var(--accent);max-height:calc(100% - 16px);height:0}}
+  .eyebrow{{font-family:var(--mono);font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--mute);position:relative;margin-bottom:6px}}
+  .eyebrow::before{{content:"";position:absolute;left:-38px;top:1px;width:12px;height:12px;border-radius:999px;background:var(--bg);border:2px solid rgba(12,12,12,.35);box-shadow:0 0 0 4px var(--bg);transition:background .25s,border-color .25s}}
+  .wp-passed .eyebrow::before{{background:var(--accent);border-color:var(--accent)}}
+  .wp-passed .eyebrow{{color:var(--accent-d)}}
+  .eyebrow.dest::before{{border-radius:3px}}
+  @media (prefers-reduced-motion:reduce){{.eyebrow::before{{transition:none}}}}
   .statstrip .stat.tech b{{font-size:15px;letter-spacing:.01em}}
 
   section{{margin-bottom:56px}}
@@ -965,17 +1002,20 @@ def body_home():
     <p>Real Fleet Portal tokens and components — {n_comps} components, one tokens source of truth, {n_patterns} page patterns — packaged into one folder so an AI coding tool (Claude, Cursor, Copilot) can build on-brand UI without ever touching production code.</p>
     <p class="tagline">Start by downloading the package, then connect the folder to your AI tool of choice.</p>
     <a class="dlbtn lg" href="downloads/cartrack-ai-design-system.zip" download>Download the system</a>
-    <div class="statstrip">
-      <div class="stat"><b>{n_comps}</b><span>documented components</span></div>
-      <div class="stat"><b>{n_patterns}</b><span>page patterns</span></div>
-      <div class="stat"><b>1</b><span>tokens source of truth</span></div>
-      <div class="stat tech"><b>MD2 · MDC 14 · React</b></div>
+    <div class="telemetry" aria-label="System stats">
+      <span><b>{n_comps}</b> components</span><span class="sep">·</span>
+      <span><b>{n_patterns}</b> patterns</span><span class="sep">·</span>
+      <span><b>1</b> tokens source</span><span class="sep">·</span>
+      <span><b>0</b> setup steps</span><span class="sep">·</span>
+      <span>MD2 / MDC 14 / React</span>
     </div>
   </div>
 </header>
 
 <div class="inner">
+<div class="journey"><div class="jtrace" id="jtrace"></div>
 <section id="how">
+  <p class="eyebrow">WP·01 — Setup</p>
   <h2>How it works</h2>
   <p class="sub">Three steps from zero to a production-optimized UI prototype.</p>
   <div class="iconsteps">
@@ -987,6 +1027,7 @@ def body_home():
 </section>
 
 <section id="inside">
+  <p class="eyebrow">WP·02 — Payload</p>
   <h2>What's inside the download</h2>
   <p class="sub">One folder — every tile below maps to a section further down this page.</p>
   <div class="ictilegrid">
@@ -1008,6 +1049,7 @@ def body_home():
 </section>
 
 <section id="tokens">
+  <p class="eyebrow">WP·03 — Foundations</p>
   <h2>Tokens &amp; foundations</h2>
   <p class="sub">Every colour, spacing, type and radius value in <code>tokens/tokens.json</code> — derived from the real fleetapp-web codebase, not invented.</p>
   <div class="swrow">
@@ -1036,6 +1078,7 @@ def body_home():
 </section>
 
 <section id="components">
+  <p class="eyebrow">WP·04 — Inventory</p>
   <h2>Component library</h2>
   <p class="sub"><b>{n_comps} components</b>, each mapped prop-for-prop against the real production source — not designed from scratch.</p>
   <div class="ictilegrid">{cat_items}</div>
@@ -1043,6 +1086,7 @@ def body_home():
 </section>
 
 <section id="patterns">
+  <p class="eyebrow">WP·05 — Compositions</p>
   <h2>Patterns</h2>
   <p class="sub"><b>{n_patterns} page patterns</b> — how components compose into whole screens, not just isolated pieces. Hover a shape for what it's for.</p>
   <div class="wfgrid">{pattern_items}</div>
@@ -1050,11 +1094,13 @@ def body_home():
 </section>
 
 <section id="cta-end">
+  <p class="eyebrow dest">Destination — ship UI</p>
   <div class="ctaend">
     <p>Ready to start?</p>
     <a class="dlbtn lg" href="downloads/cartrack-ai-design-system.zip" download>Download the system</a>
   </div>
 </section>
+</div>
 
 <section id="whats-here">
   <h5>More in this portal</h5>
