@@ -73,6 +73,68 @@ def slug(name):
     component-library-preview.html, so live-example links keep working."""
     return re.sub(r'(?<!^)(?=[A-Z])', '-', name).lower()
 
+# ---------- hand-drawn inline icon set (home page visual-modules pass) ----------
+# No icon font, no CDN, nothing to self-host or subset — each icon is plain inline
+# SVG path data, same "no external dependency" posture as the rest of this generator.
+# fill/stroke both read `currentColor`, which resolves from the `color` CSS property
+# set inline per call, so one path set works in any of the three role colours.
+ICON_PATHS = {
+    "download": '<path d="M12 4v10"/><path d="M8 11l4 4 4-4"/><path d="M5 19h14"/>',
+    "plug": '<circle cx="7" cy="12" r="3"/><circle cx="17" cy="12" r="3"/><path d="M10 12h4"/>',
+    "checklist": ('<rect x="4" y="4" width="16" height="16" rx="2"/>'
+                   '<path d="M7.5 9l1.2 1.2L10.5 8"/><path d="M13 9h4"/><path d="M7.5 15h9"/>'),
+    "file": ('<path d="M7 3h7l4 4v13a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1z"/>'
+              '<path d="M14 3v4h4"/><path d="M9 13h6"/><path d="M9 16h6"/>'),
+    "tokens": ('<circle cx="12" cy="12" r="8"/>'
+               '<circle cx="9" cy="10" r="1.2" fill="currentColor" stroke="none"/>'
+               '<circle cx="12" cy="8" r="1.2" fill="currentColor" stroke="none"/>'
+               '<circle cx="15" cy="10" r="1.2" fill="currentColor" stroke="none"/>'
+               '<circle cx="10" cy="14" r="1.2" fill="currentColor" stroke="none"/>'),
+    "box": '<path d="M4 8l8-4 8 4-8 4-8-4z"/><path d="M4 8v8l8 4 8-4V8"/><path d="M12 12v8"/>',
+    "grid": ('<rect x="4" y="4" width="7" height="7" rx="1"/><rect x="13" y="4" width="7" height="7" rx="1"/>'
+             '<rect x="4" y="13" width="7" height="7" rx="1"/><rect x="13" y="13" width="7" height="7" rx="1"/>'),
+    "eye": '<path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7-10-7-10-7z"/><circle cx="12" cy="12" r="3"/>',
+    "flask": ('<path d="M9 3h6"/><path d="M10 3v6l-5 9a2 2 0 0 0 1.8 3h10.4a2 2 0 0 0 1.8-3l-5-9V3"/>'
+              '<path d="M8 16h8"/>'),
+    "table": '<rect x="3" y="4" width="18" height="16" rx="1"/><path d="M3 9h18"/><path d="M9 9v11"/>',
+    "nav": '<circle cx="12" cy="12" r="9"/><path d="M14.5 9.5l-2 5-3 1.5 2-5z"/>',
+    "forms": '<rect x="4" y="5" width="16" height="4" rx="1"/><rect x="4" y="15" width="16" height="4" rx="1"/><path d="M4 11h10"/>',
+    "layers": '<rect x="5" y="3" width="14" height="9" rx="1.5"/><rect x="7" y="12" width="14" height="9" rx="1.5"/>',
+    "message": '<path d="M4 5h16v11H9l-5 4V5z"/><path d="M8 9h8"/><path d="M8 12h5"/>',
+    "toggle": '<rect x="3" y="8" width="18" height="8" rx="4"/><circle cx="15" cy="12" r="3" fill="currentColor" stroke="none"/>',
+}
+
+def icon(name, color="currentColor", size=22):
+    return (f'<svg viewBox="0 0 24 24" width="{size}" height="{size}" fill="none" stroke="currentColor" '
+            f'stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" style="color:{color}" '
+            f'aria-hidden="true">{ICON_PATHS[name]}</svg>')
+
+# category → icon (component-library section)
+CAT_ICONS = {"Actions": "toggle", "Data display": "table", "Feedback": "message",
+             "Inputs & forms": "forms", "Navigation": "nav", "Surfaces": "layers"}
+
+# pattern slug → hand-built wireframe thumbnail (patterns section). Kept as literal
+# markup, not generated from the .md body, because the whole point is a recognizable
+# layout *shape* per pattern — that's a design decision per pattern, not derivable data.
+PATTERN_WIREFRAMES = {
+    "table-page": ('<div style="position:absolute;top:0;left:0;right:0;height:8px;background:var(--ink)"></div>'
+                    '<div style="position:absolute;top:16px;left:8px;right:8px;height:5px;background:#d8d4cc"></div>'
+                    '<div style="position:absolute;top:26px;left:8px;right:8px;height:5px;background:#d8d4cc"></div>'
+                    '<div style="position:absolute;top:36px;left:8px;right:8px;height:5px;background:#d8d4cc"></div>'),
+    "login": '<div style="position:absolute;top:18px;left:20px;right:20px;height:28px;border-radius:4px;background:#fff;border:1px solid var(--line)"></div>',
+    "map-tracking-view": ('<div style="position:absolute;top:0;left:0;right:0;height:8px;background:var(--ink)"></div>'
+                           '<div style="position:absolute;top:32px;left:44px;width:8px;height:8px;border-radius:50%;background:var(--accent-d)"></div>'),
+    "detail-page": ('<div style="position:absolute;top:0;left:0;right:0;height:10px;background:var(--ink)"></div>'
+                     '<div style="position:absolute;top:16px;left:8px;width:24px;height:5px;background:var(--accent-d)"></div>'
+                     '<div style="position:absolute;top:26px;left:8px;right:8px;bottom:8px;background:#e6e2da"></div>'),
+    "settings-page": "".join(
+        f'<div style="position:absolute;top:{8+i*12}px;left:8px;right:8px;height:6px;background:#d8d4cc"></div>'
+        f'<div style="position:absolute;top:{8+i*12}px;right:8px;width:10px;height:6px;border-radius:3px;'
+        f'background:{"var(--accent-d)" if i == 0 else "#e6e2da"}"></div>'
+        for i in range(3)),
+}
+PATTERN_WIREFRAME_BG = {"map-tracking-view": "#dbe6ee"}
+
 # ---------- load all component docs ----------
 comps = []
 for d in sorted((DS / "components").iterdir()):
@@ -669,15 +731,47 @@ def render_shell(active, body, prefix="", page_title="Cartrack AI Design System 
   .filemap .fp{{padding:14px 20px;font-family:var(--mono);font-size:13px;background:#fbf8f4;border-right:1px solid var(--line)}}
   .filemap .fd{{padding:14px 20px;font-size:14px;color:var(--ink2)}}
 
-  /* folder-tree visual — home page "what's inside"/"component library"/"patterns"
-     sections (explainer spec v2 §4.3, §4.5, §4.6). Same card/border language as
-     .filemap, just with a depth level so it reads as an actual tree, not one flat row. */
-  .ftree{{background:var(--card);border:1px solid var(--line);border-radius:var(--r-lg);overflow:hidden;margin-top:8px}}
-  .ftrow{{display:grid;grid-template-columns:280px 1fr;gap:16px;padding:11px 22px;border-top:1px solid var(--line);align-items:baseline}}
-  .ftrow:first-child{{border-top:none}}
-  .ftrow.depth-1{{padding-left:46px}}
-  .ftname{{font-family:var(--mono);font-size:13px;color:var(--ink)}}
-  .ftdesc{{font-size:13.5px;color:var(--ink2)}}
+  /* icon step row — home "how it works" (visual-modules pass). Circle + connecting
+     line replaces the three text step-cards; copy moves to a link-out, not the card. */
+  .iconsteps{{position:relative;display:flex;justify-content:space-between;gap:8px;margin-top:6px}}
+  .iconsteps::before{{content:"";position:absolute;top:22px;left:60px;right:60px;height:2px;
+    background:repeating-linear-gradient(90deg,rgba(0,0,0,.18) 0 6px,transparent 6px 12px)}}
+  .iconsteps .istep{{flex:1;text-align:center;position:relative}}
+  .iconsteps .ic{{width:44px;height:44px;border-radius:999px;background:var(--ink);color:#fff;
+    display:flex;align-items:center;justify-content:center;margin:0 auto 10px}}
+  .iconsteps b{{display:block;font-size:13px;color:var(--ink)}}
+  .iconsteps span{{display:block;font-size:12px;color:var(--ink2);margin-top:2px}}
+
+  /* icon tiles — "what's inside" (colour-coded by role) and "component library"
+     (icon + count badge per category). One shared tile shape, two uses. */
+  .ictilegrid{{display:grid;grid-template-columns:repeat(auto-fit,minmax(128px,1fr));gap:10px;margin-top:8px}}
+  .ictile{{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:16px 14px;
+    text-align:center;position:relative}}
+  .ictile svg{{display:block;margin:0 auto 8px}}
+  .ictile .iclabel{{font-family:var(--mono);font-size:12px;color:var(--ink)}}
+  .ictile .icbadge{{position:absolute;top:10px;right:10px;font-size:10.5px;font-weight:700;
+    background:#f1eee9;color:var(--mute);border-radius:999px;padding:1px 8px}}
+  .iclegend{{display:flex;gap:16px;margin-top:12px;font-size:11.5px;color:var(--mute)}}
+  .iclegend .dot{{width:9px;height:9px;border-radius:999px;display:inline-block;margin-right:5px;vertical-align:-1px}}
+
+  /* token swatches — "tokens & foundations", real values, no describing-in-prose */
+  .swrow{{display:flex;gap:10px;margin-bottom:16px}}
+  .swrow .swchip{{flex:1;text-align:center}}
+  .swrow .swchip .sw{{height:44px;border-radius:8px}}
+  .swrow .swchip span{{display:block;font-family:var(--mono);font-size:10.5px;color:var(--mute);margin-top:6px}}
+  .spbars{{display:flex;align-items:flex-end;gap:10px;margin-bottom:16px}}
+  .spbars .spcol{{display:flex;flex-direction:column;align-items:center}}
+  .spbars .spcol div{{width:20px;background:var(--mute)}}
+  .spbars .spcol span{{font-size:10px;color:var(--mute);margin-top:4px}}
+  .typesamples{{display:flex;align-items:baseline;gap:20px;margin-bottom:14px}}
+  .typesamples .tsl{{display:block;font-size:11px;color:var(--mute);margin-top:4px}}
+
+  /* pattern wireframe thumbnails — layout *shape*, not a one-line description */
+  .wfgrid{{display:grid;grid-template-columns:repeat(auto-fit,minmax(110px,1fr));gap:12px;margin-top:8px}}
+  .wf{{text-align:center}}
+  .wf .wfframe{{position:relative;height:64px;border:1px solid var(--line);border-radius:6px;
+    background:var(--chrome);overflow:hidden}}
+  .wf .wflabel{{font-size:11px;color:var(--ink);margin-top:6px}}
 
   .rules{{display:grid;gap:10px}}
   .rule{{background:var(--card);border:1px solid var(--line);border-left:3px solid var(--accent-d);border-radius:var(--r);padding:14px 18px;font-size:14.5px}}
@@ -850,15 +944,21 @@ def render_shell(active, body, prefix="", page_title="Cartrack AI Design System 
 # ================================================================
 def body_home():
     cat_items = "".join(
-        f'<div class="ftrow depth-1"><span class="ftname">{esc(cat)}</span>'
-        f'<span class="ftdesc">{len(items)} component{"s" if len(items) != 1 else ""}</span></div>'
+        f'<div class="ictile"><span class="icbadge">{len(items)}</span>{icon(CAT_ICONS.get(cat, "box"), "var(--accent-d)")}'
+        f'<div class="iclabel" style="font-family:var(--sans)">{esc(cat)}</div></div>'
         for cat, items in sorted(categories.items(), key=lambda kv: -len(kv[1]))
     )
-    pattern_items = "".join(
-        f'<div class="ftrow depth-1"><span class="ftname">{esc(p["navtitle"])}</span>'
-        f'<span class="ftdesc">{esc(p["blurb"])}</span></div>'
-        for p in patterns
-    )
+    pattern_item_parts = []
+    for p in patterns:
+        bg = PATTERN_WIREFRAME_BG.get(p["slug"])
+        bg_style = f' style="background:{bg}"' if bg else ""
+        wf_inner = PATTERN_WIREFRAMES.get(p["slug"], "")
+        pattern_item_parts.append(
+            f'<div class="wf" title="{esc(p["blurb"])}">'
+            f'<div class="wfframe"{bg_style}>{wf_inner}</div>'
+            f'<div class="wflabel">{esc(p["navtitle"])}</div></div>'
+        )
+    pattern_items = "".join(pattern_item_parts)
     return f'''<header class="top">
   <div class="inner">
     <h1>The AI-optimized design system<br>for Cartrack Fleet.</h1>
@@ -878,53 +978,74 @@ def body_home():
 <section id="how">
   <h2>How it works</h2>
   <p class="sub">Three steps from zero to a production-optimized UI prototype.</p>
-  <div class="steps">
-    <div class="stepc"><b>1. Download the package</b><p>Grab the zip and unzip anywhere — the top-level folder is the whole thing. No build step, no dependencies to install.</p></div>
-    <div class="stepc"><b>2. Point your AI tool at the folder</b><p>Connect it as the workspace root in Claude Cowork or Claude Code, or open it as the workspace in Cursor, Copilot, or Codex — the folder itself, not a parent folder.</p></div>
-    <div class="stepc"><b>3. The rules load automatically</b><p>Claude reads <code>CLAUDE.md</code>, which imports <code>AGENTS.md</code>; other tools read <code>AGENTS.md</code> directly via the agents.md standard. From here, just ask for UI in plain language.</p></div>
+  <div class="iconsteps">
+    <div class="istep"><div class="ic">{icon("download", "#fff")}</div><b>Download</b><span>Unzip the package anywhere</span></div>
+    <div class="istep"><div class="ic">{icon("plug", "#fff")}</div><b>Connect</b><span>Point your AI tool at the folder</span></div>
+    <div class="istep"><div class="ic">{icon("checklist", "#fff")}</div><b>Rules load</b><span>CLAUDE.md / AGENTS.md read automatically</span></div>
   </div>
-  <p class="tnote" style="margin-top:12px"><a href="guides/index.html#quick-start">Full quick start →</a></p>
+  <p class="tnote" style="margin-top:16px"><a href="guides/index.html#quick-start">Full quick start, incl. Cursor/Copilot/Codex setup →</a></p>
 </section>
 
 <section id="inside">
   <h2>What's inside the download</h2>
-  <p class="sub">One folder. Everything an AI tool or a developer needs lives inside it — nothing to fetch from elsewhere.</p>
-  <div class="ftree">
-    <div class="ftrow"><span class="ftname">cartrack-ai-design-system/</span><span class="ftdesc">the whole package — this is what you connect to your AI tool</span></div>
-    <div class="ftrow depth-1"><span class="ftname">CLAUDE.md</span><span class="ftdesc">Auto-loaded by Claude tools first — folder map, token model, known issues, imports AGENTS.md.</span></div>
-    <div class="ftrow depth-1"><span class="ftname">AGENTS.md</span><span class="ftdesc">The behavior contract every AI agent follows — read directly by Cursor, Copilot, Codex.</span></div>
-    <div class="ftrow depth-1"><span class="ftname">README.md</span><span class="ftdesc">Human-friendly overview of the whole system.</span></div>
-    <div class="ftrow depth-1"><span class="ftname">tokens/tokens.json</span><span class="ftdesc">Single source of truth for colour, spacing, type and radius — see "Tokens &amp; foundations" below.</span></div>
-    <div class="ftrow depth-1"><span class="ftname">components/</span><span class="ftdesc">{n_comps} components, three files each — see "Component library" below.</span></div>
-    <div class="ftrow depth-1"><span class="ftname">templates/</span><span class="ftdesc">{n_patterns} page patterns — see "Patterns" below.</span></div>
-    <div class="ftrow depth-1"><span class="ftname">component-library-preview.html</span><span class="ftdesc">Every component rendered visually, one static page — open it in any browser, nothing to install.</span></div>
-    <div class="ftrow depth-1"><span class="ftname">vibe-tests/</span><span class="ftdesc">Checks whether a fresh AI agent actually follows the rules above, not just documents them.</span></div>
+  <p class="sub">One folder — every tile below maps to a section further down this page.</p>
+  <div class="ictilegrid">
+    <div class="ictile">{icon("file", "var(--ink)")}<div class="iclabel">CLAUDE.md</div></div>
+    <div class="ictile">{icon("file", "var(--ink)")}<div class="iclabel">AGENTS.md</div></div>
+    <div class="ictile">{icon("file", "var(--ink)")}<div class="iclabel">README.md</div></div>
+    <div class="ictile">{icon("tokens", "var(--accent-d)")}<div class="iclabel">tokens.json</div></div>
+    <div class="ictile">{icon("box", "var(--accent-d)")}<div class="iclabel">components/</div></div>
+    <div class="ictile">{icon("grid", "var(--accent-d)")}<div class="iclabel">templates/</div></div>
+    <div class="ictile">{icon("eye", "var(--route-blue)")}<div class="iclabel">preview.html</div></div>
+    <div class="ictile">{icon("flask", "var(--route-blue)")}<div class="iclabel">vibe-tests/</div></div>
   </div>
-  <p class="tnote" style="margin-top:10px">Every rule above is enforced, not just written down: WCAG AA contrast is checked, every value is pulled from the real production codebase rather than invented, and a missing component or token gets flagged instead of fabricated. <a href="guides/index.html#inside">Full folder map →</a></p>
+  <div class="iclegend">
+    <span><span class="dot" style="background:var(--ink)"></span>instructions</span>
+    <span><span class="dot" style="background:var(--accent-d)"></span>content</span>
+    <span><span class="dot" style="background:var(--route-blue)"></span>verification</span>
+  </div>
+  <p class="tnote" style="margin-top:12px">Every rule above is enforced, not just written down: WCAG AA contrast is checked, values are pulled from the real production codebase rather than invented, and a missing component or token gets flagged instead of fabricated. <a href="guides/index.html#inside">Full folder map →</a></p>
 </section>
 
 <section id="tokens">
   <h2>Tokens &amp; foundations</h2>
-  <p class="sub"><code>tokens/tokens.json</code> is the single source of truth for every colour, spacing, type and radius value — three tiers, all derived from the real fleetapp-web codebase:</p>
-  <div class="rules">
-    <div class="rule"><b>primitive</b> — raw values, safe to use directly in code. e.g. <code>primitive.color.brand.orange.500</code>.</div>
-    <div class="rule"><b>semantic</b> — named roles that alias primitives (e.g. <code>semantic.color.brand.primary.dark</code>) — cite these in docs; most are unresolved aliases in code until a build-time resolver exists.</div>
-    <div class="rule"><b>legacy</b> — deprecated pre-MUI values (e.g. <code>legacy.spacing</code>'s 5px grid) — real and still imported in ~119 files, but don't build new UI against it.</div>
+  <p class="sub">Every colour, spacing, type and radius value in <code>tokens/tokens.json</code> — derived from the real fleetapp-web codebase, not invented.</p>
+  <div class="swrow">
+    <div class="swchip"><div class="sw" style="background:#F47735"></div><span>orange.500</span></div>
+    <div class="swchip"><div class="sw" style="background:#BB4800"></div><span>orange.700</span></div>
+    <div class="swchip"><div class="sw" style="background:#0C0C0C"></div><span>charcoal.900</span></div>
+    <div class="swchip"><div class="sw" style="background:var(--route-blue)"></div><span>blue.base</span></div>
   </div>
-  <p class="tnote" style="margin-top:10px">Plus a fourth block, <code>accessibility</code>, documenting known contrast issues (like white text on brand orange failing AA) so agents don't repeat them. <a href="foundations/index.html">Full foundations reference →</a></p>
+  <div class="spbars">
+    <div class="spcol"><div style="height:4px"></div><span>4</span></div>
+    <div class="spcol"><div style="height:8px"></div><span>8</span></div>
+    <div class="spcol"><div style="height:16px"></div><span>16</span></div>
+    <div class="spcol"><div style="height:24px"></div><span>24</span></div>
+    <div class="spcol"><div style="height:32px"></div><span>32</span></div>
+  </div>
+  <div class="typesamples">
+    <div><span style="font-weight:300;font-size:26px">Aa</span><span class="tsl">light 300</span></div>
+    <div><span style="font-weight:400;font-size:26px">Aa</span><span class="tsl">regular 400</span></div>
+    <div><span style="font-weight:700;font-size:26px">Aa</span><span class="tsl">bold 700</span></div>
+    <div style="color:var(--mute);font-size:12px">Roboto, 14px base</div>
+  </div>
+  <div style="display:flex;gap:8px">
+    <span class="pill soft">primitive</span><span class="pill soft">semantic</span><span class="pill soft">legacy</span>
+  </div>
+  <p class="tnote" style="margin-top:12px"><a href="foundations/index.html">Full foundations reference →</a></p>
 </section>
 
 <section id="components">
   <h2>Component library</h2>
-  <p class="sub"><b>{n_comps} components</b>, each mapped prop-for-prop against the real production source — not designed from scratch. Every one is three files: the implementation, structured docs (props, variants, do/don't, tokens), and an index.</p>
-  <div class="ftree">{cat_items}</div>
+  <p class="sub"><b>{n_comps} components</b>, each mapped prop-for-prop against the real production source — not designed from scratch.</p>
+  <div class="ictilegrid">{cat_items}</div>
   <p class="tnote" style="margin-top:10px"><a href="components/index.html">Full component reference →</a></p>
 </section>
 
 <section id="patterns">
   <h2>Patterns</h2>
-  <p class="sub"><b>{n_patterns} page patterns</b> showing how components compose into whole screens — the difference between a component library and something that builds production-optimized prototypes.</p>
-  <div class="ftree">{pattern_items}</div>
+  <p class="sub"><b>{n_patterns} page patterns</b> — how components compose into whole screens, not just isolated pieces. Hover a shape for what it's for.</p>
+  <div class="wfgrid">{pattern_items}</div>
   <p class="tnote" style="margin-top:10px"><a href="patterns/index.html">Full patterns reference →</a></p>
 </section>
 
