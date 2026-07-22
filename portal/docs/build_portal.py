@@ -111,6 +111,9 @@ ICON_PATHS = {
     "ruler": ('<path d="M4 4v16"/><path d="M20 4v16"/><path d="M8 12h8"/>'
               '<path d="M10 9.5L7.5 12l2.5 2.5"/><path d="M14 9.5l2.5 2.5-2.5 2.5"/>'),
     "star": '<path d="M12 3.5l2.4 4.9 5.4.8-3.9 3.8.9 5.4-4.8-2.5-4.8 2.5.9-5.4-3.9-3.8 5.4-.8z"/>',
+    # sidebar nav icons
+    "home": '<path d="M4 11l8-7 8 7"/><path d="M6 9.5V20h12V9.5"/><path d="M10 20v-5.5h4V20"/>',
+    "flag": '<path d="M6 21V4"/><path d="M6 4h11l-2.5 4L17 12H6"/>',
 }
 
 def icon(name, color="currentColor", size=22):
@@ -528,29 +531,33 @@ def render_nav(active, prefix):
     <details> groups that are closed at rest; the branch holding the current
     page is emitted `open` so it works with JS disabled, and a small script
     (NAV_JS) handles filtering, localStorage persistence and the mobile drawer."""
-    def flat(href, label, key):
+    def flat(href, label, key, ic=None):
         cur = ' aria-current="page"' if key == active else ''
         acls = ' active' if key == active else ''
-        return f'<a href="{prefix}{href}" class="navtop{acls}"{cur}>{label}</a>'
+        icn = icon(ic, size=17) if ic else ''
+        return f'<a href="{prefix}{href}" class="navtop{acls}"{cur}>{icn}<span class="navlabel">{label}</span></a>'
     def leaf(href, label, key):
         cur = ' aria-current="page"' if key == active else ''
         acls = ' active' if key == active else ''
         return f'<a href="{prefix}{href}" class="navcomp{acls}" data-leaf{cur}>{label}</a>'
-    def group(gid, label, count, is_open, inner):
+    def group(gid, label, count, is_open, inner, ic=None):
         oa = " open" if is_open else ""
         ha = " has-active" if is_open else ""
+        icn = icon(ic, size=17) if ic else ''
         return (f'<details class="navgrp{ha}" id="{gid}" data-defopen="{1 if is_open else 0}"{oa}>'
-                f'<summary><span class="chev"></span><span class="navlabel">{label}</span>'
-                f'<span class="navcount">{count}</span></summary>{inner}</details>')
+                f'<summary>{icn}<span class="navlabel">{label}</span>'
+                f'<span class="navcount">{count}</span><span class="chev"></span></summary>{inner}</details>')
 
     parts = ['<div class="navfilter"><input type="search" id="navfilter" '
              'placeholder="Filter components…" aria-label="Filter components" '
              'oninput="filterNav(this.value)"></div>']
 
-    parts.append(flat("index.html", "Home", "home"))
+    # Area 1 — orientation: home + the intro article
+    parts.append('<div class="sect">Get started</div>')
+    parts.append(flat("index.html", "Home", "home", ic="home"))
+    parts.append(flat("guides/index.html", "How to start", "guides", ic="flag"))
 
-    # Guides is a single long-form article now (how-to-start-draft.md)
-    parts.append(flat("guides/index.html", "How to start", "guides"))
+    parts.append('<div class="sect">Library</div>')
 
     # Foundations group
     f_open = active == "foundations" or active.startswith("found:")
@@ -563,7 +570,7 @@ def render_nav(active, prefix):
     finner += leaf("foundations/grid.html", "Grid", "found:grid")
     finner += leaf("foundations/elevation.html", "Elevation", "found:elevation")
     finner += leaf("foundations/accessibility.html", "Accessibility", "found:accessibility")
-    parts.append(group("grp-foundations", "Foundations", 8, f_open, finner))
+    parts.append(group("grp-foundations", "Foundations", 8, f_open, finner, ic="tokens"))
 
     # Components group, with a collapsible sub-group per category
     comp_open = active == "components" or active.startswith("comp:")
@@ -581,24 +588,22 @@ def render_nav(active, prefix):
         oa = " open" if cat_active else ""
         cinner += (f'<details class="navsub{ha}" id="cat-{cat_slug(cat)}" '
                    f'data-defopen="{1 if cat_active else 0}"{oa}>'
-                   f'<summary><span class="chev"></span><span class="navlabel">{esc(cat)}</span>'
-                   f'<span class="navcount">{len(cat_comps)}</span></summary>{sub_links}</details>')
-    parts.append(group("grp-components", "Components", n_comps, comp_open, cinner))
+                   f'<summary><span class="navlabel">{esc(cat)}</span>'
+                   f'<span class="navcount">{len(cat_comps)}</span><span class="chev"></span></summary>{sub_links}</details>')
+    parts.append(group("grp-components", "Components", n_comps, comp_open, cinner, ic="box"))
 
     # Patterns group
     pat_open = active == "patterns" or active.startswith("pat:")
     pinner = leaf("patterns/index.html", "Overview", "patterns")
     for p in patterns:
         pinner += leaf(f"patterns/{p['slug']}.html", esc(p["navtitle"]), f"pat:{p['slug']}")
-    parts.append(group("grp-patterns", "Patterns", n_patterns, pat_open, pinner))
+    parts.append(group("grp-patterns", "Patterns", n_patterns, pat_open, pinner, ic="grid"))
 
-    # Resources group
-    r_open = active == "resources" or active.startswith("res:")
-    rinner = leaf("resources/index.html", "Overview", "resources")
-    rinner += leaf("resources/preview.html", "Visual preview", "res:preview")
-    rinner += leaf("resources/changelog.html", "What's new", "res:changelog")
-    rinner += leaf("resources/downloads.html", "Downloads", "res:downloads")
-    parts.append(group("grp-resources", "Resources", 3, r_open, rinner))
+    # Area 3 — resources, all visible (no group to open)
+    parts.append('<div class="sect">Resources</div>')
+    parts.append(flat("resources/preview.html", "Visual preview", "res:preview", ic="eye"))
+    parts.append(flat("resources/changelog.html", "What's new", "res:changelog", ic="message"))
+    parts.append(flat("resources/downloads.html", "Downloads", "res:downloads", ic="download"))
 
     return "\n    ".join(parts)
 
@@ -732,37 +737,43 @@ def render_shell(active, body, prefix="", page_title="Cartrack AI Design System 
   code{{font-family:var(--mono);font-size:.86em;background:#f1eee9;border-radius:4px;padding:1px 6px}}
 
   .layout{{display:grid;grid-template-columns:250px 1fr;min-height:100vh}}
-  /* ------- sidebar ------- */
-  aside{{border-right:1px solid var(--line);background:var(--chrome);padding:28px 0;position:sticky;top:0;height:100vh;overflow-y:auto}}
-  .brand{{padding:0 24px 20px;border-bottom:1px solid var(--line)}}
-  .brand b{{font-size:15px;display:block}}
-  .brand span{{font-size:12px;color:var(--mute)}}
+  /* ------- sidebar (three-area layout: Get started / Library / Resources) ------- */
+  aside{{border-right:1px solid var(--line);background:var(--chrome);padding:24px 0 28px;position:sticky;top:0;height:100vh;overflow-y:auto}}
+  .brand{{padding:0 22px 18px;margin:0 0 4px;border-bottom:1px solid var(--line)}}
+  .brand b{{font-family:var(--display);font-size:14.5px;letter-spacing:-.01em;display:block}}
+  .brand span{{font-family:var(--mono);font-size:10.5px;letter-spacing:.06em;color:var(--mute)}}
   .brandlink{{color:inherit}} .brandlink:hover{{text-decoration:none}}
-  nav{{padding:16px 0}}
-  nav a{{display:block;padding:6px 24px;font-size:13.5px;color:var(--ink2)}}
-  nav a:hover{{background:#faf5f0;text-decoration:none;color:var(--accent-d)}}
-  nav a.active{{background:#fdf3ec;color:var(--accent-d);font-weight:600;box-shadow:inset 3px 0 0 var(--accent-d)}}
-  nav .sect{{font-family:var(--display);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--mute);font-weight:700;padding:18px 24px 6px}}
-  nav .navcat{{font-size:11px;color:var(--mute);padding:10px 24px 2px;font-weight:600}}
-  nav .navcomp{{padding:3.5px 24px 3.5px 34px;font-size:13px}}
+  nav{{padding:10px 10px 16px}}
+  /* every row — link or group summary — is the same rounded pill on one grid */
+  nav a,nav details > summary{{display:flex;align-items:center;gap:9px;padding:6px 10px;margin:1px 0;border-radius:8px;font-size:13.5px;color:var(--ink2);line-height:1.45}}
+  nav a:hover,nav details > summary:hover{{background:#fff;box-shadow:0 0 0 1px var(--line);text-decoration:none;color:var(--ink)}}
+  nav a.active{{background:#fdf3ec;color:var(--accent-d);font-weight:600}}
+  nav a.active:hover{{box-shadow:none}}
+  nav a svg,nav summary svg{{flex:none;opacity:.75}}
+  nav a.active svg{{opacity:1}}
+  /* mono area labels — the telemetry voice, same as the home page eyebrows */
+  nav .sect{{font-family:var(--mono);font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--mute);padding:20px 10px 6px}}
+  nav .sect:first-of-type{{padding-top:8px}}
+  nav .navcomp{{font-size:13px;padding-left:36px}}
 
-  /* ------- collapsible nav ------- */
-  .navfilter{{padding:2px 16px 14px}}
-  .navfilter input{{width:100%;padding:8px 12px;font-size:13px;border:1px solid var(--line);border-radius:var(--r);background:#fff;color:var(--ink)}}
+  /* collapsible groups */
+  .navfilter{{padding:2px 10px 10px}}
+  .navfilter input{{width:100%;padding:8px 12px;font-size:13px;border:1px solid var(--line);border-radius:8px;background:#fff;color:var(--ink)}}
   .navfilter input:focus{{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px #f4713a22}}
   nav details{{overflow:hidden}}
-  nav details > summary{{list-style:none;display:flex;align-items:center;gap:8px;cursor:pointer;padding:6px 24px;font-size:13.5px;color:var(--ink2);font-weight:600;user-select:none}}
+  nav details > summary{{list-style:none;cursor:pointer;font-weight:600;user-select:none}}
   nav details > summary::-webkit-details-marker{{display:none}}
-  nav details > summary:hover{{background:#faf5f0;color:var(--accent-d)}}
   nav .navlabel{{flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}}
-  nav .navcount{{font-size:10.5px;font-weight:700;color:var(--mute);background:#f1eee9;border-radius:999px;padding:1px 8px;min-width:24px;text-align:center}}
-  nav .chev{{flex:none;width:10px;font-size:10px;color:var(--mute);transition:transform .15s}}
+  nav .navcount{{font-family:var(--mono);font-size:10.5px;color:var(--mute);min-width:20px;text-align:right}}
+  nav .chev{{flex:none;width:12px;font-size:9px;color:var(--mute);text-align:center;transition:transform .15s}}
   nav .chev::before{{content:"\\25B8"}}
   nav details[open] > summary .chev{{transform:rotate(90deg)}}
   nav details.has-active > summary .navlabel{{color:var(--accent-d)}}
-  nav .navgrp > .navcomp{{padding-left:34px}}
-  nav .navsub > summary{{padding-left:34px;font-weight:500}}
-  nav .navsub > .navcomp{{padding-left:48px}}
+  /* nesting aligns text under the parent label (icon 17px + gap 9px) */
+  nav .navgrp > .navcomp{{padding-left:36px}}
+  nav .navsub > summary{{padding-left:36px;font-weight:500;font-size:13px}}
+  nav .navsub > .navcomp{{padding-left:50px}}
+  @media (prefers-reduced-motion:reduce){{nav .chev{{transition:none}}}}
 
   /* ------- mobile top bar + drawer ------- */
   .topbar{{display:none;align-items:center;gap:12px;padding:12px 18px;border-bottom:1px solid var(--line);background:#fff;position:sticky;top:0;z-index:40}}
