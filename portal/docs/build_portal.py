@@ -102,6 +102,15 @@ ICON_PATHS = {
     "layers": '<rect x="5" y="3" width="14" height="9" rx="1.5"/><rect x="7" y="12" width="14" height="9" rx="1.5"/>',
     "message": '<path d="M4 5h16v11H9l-5 4V5z"/><path d="M8 9h8"/><path d="M8 12h5"/>',
     "toggle": '<rect x="3" y="8" width="18" height="8" rx="4"/><circle cx="15" cy="12" r="3" fill="currentColor" stroke="none"/>',
+    # foundations overview card icons
+    "a11y": ('<circle cx="12" cy="5" r="2"/>'
+             '<path d="M4.5 9.5c2.5.7 5 1 7.5 1s5-.3 7.5-1"/>'
+             '<path d="M12 10.5V14"/><path d="M12 14l-2.5 6"/><path d="M12 14l2.5 6"/>'),
+    "droplet": '<path d="M12 3.5s6 6.7 6 10.7a6 6 0 0 1-12 0c0-4 6-10.7 6-10.7z"/><path d="M9.5 14a2.5 2.5 0 0 0 2 2.4"/>',
+    "type": '<path d="M5 7V5h14v2"/><path d="M12 5v14"/><path d="M9 19h6"/>',
+    "ruler": ('<path d="M4 4v16"/><path d="M20 4v16"/><path d="M8 12h8"/>'
+              '<path d="M10 9.5L7.5 12l2.5 2.5"/><path d="M14 9.5l2.5 2.5-2.5 2.5"/>'),
+    "star": '<path d="M12 3.5l2.4 4.9 5.4.8-3.9 3.8.9 5.4-4.8-2.5-4.8 2.5.9-5.4-3.9-3.8 5.4-.8z"/>',
 }
 
 def icon(name, color="currentColor", size=22):
@@ -1311,22 +1320,22 @@ def body_found_index():
 
   <h5 style="margin-top:30px">Design tokens</h5>
   <div class="idxgrid">
-    <a class="idxcard" href="tokens.html"><b>Design tokens</b><span class="idxmeta"><span class="idxcat">Mechanism</span></span><p>What a token is, how names compose, which tier to use where, and where every value comes from.</p></a>
+    <a class="idxcard" href="tokens.html">{icon("tokens", "var(--accent-d)")}<b>Design tokens</b><span class="idxmeta"><span class="idxcat">Mechanism</span></span><p>What a token is, how names compose, which tier to use where, and where every value comes from.</p></a>
   </div>
 
   <h5 style="margin-top:26px">Guidelines</h5>
   <div class="idxgrid">
-    <a class="idxcard" href="accessibility.html"><b>Accessibility</b><span class="idxmeta"><span class="idxcat">Guideline</span></span><p>The AA policy, the one contrast trap, and per-component requirements.</p></a>
+    <a class="idxcard" href="accessibility.html">{icon("a11y", "var(--accent-d)")}<b>Accessibility</b><span class="idxmeta"><span class="idxcat">Guideline</span></span><p>The AA policy, the one contrast trap, and per-component requirements.</p></a>
   </div>
 
   <h5 style="margin-top:26px">Styles</h5>
   <div class="idxgrid">
-    <a class="idxcard" href="colour.html"><b>Colour</b><span class="idxmeta"><span class="idxcat">Style</span></span><p>Brand, status, text, surface, interactive-state, fleet-specific, data-viz and neutral palettes.</p></a>
-    <a class="idxcard" href="typography.html"><b>Typography</b><span class="idxmeta"><span class="idxcat">Style</span></span><p>Base font, weights, and the full type scale with live samples.</p></a>
-    <a class="idxcard" href="spacing.html"><b>Spacing &amp; shape</b><span class="idxmeta"><span class="idxcat">Style</span></span><p>The 4px spacing grid with real usage buckets, plus corner radii and border widths.</p></a>
-    <a class="idxcard" href="iconography.html"><b>Iconography</b><span class="idxmeta"><span class="idxcat">Style</span><span class="idxstatus">stub</span></span><p>What's known (FontAwesome) and what token work is still missing.</p></a>
-    <a class="idxcard" href="grid.html"><b>Grid</b><span class="idxmeta"><span class="idxcat">Style</span><span class="idxstatus">stub</span></span><p>Not yet defined in tokens — only flagged legacy breakpoints exist.</p></a>
-    <a class="idxcard" href="elevation.html"><b>Elevation</b><span class="idxmeta"><span class="idxcat">Style</span><span class="idxstatus">stub</span></span><p>No shadow/z-index tokens yet — MUI defaults used unoverridden.</p></a>
+    <a class="idxcard" href="colour.html">{icon("droplet", "var(--accent-d)")}<b>Colour</b><span class="idxmeta"><span class="idxcat">Style</span></span><p>Brand, status, text, surface, interactive-state, fleet-specific, data-viz and neutral palettes.</p></a>
+    <a class="idxcard" href="typography.html">{icon("type", "var(--accent-d)")}<b>Typography</b><span class="idxmeta"><span class="idxcat">Style</span></span><p>Base font, weights, and the full type scale with live samples.</p></a>
+    <a class="idxcard" href="spacing.html">{icon("ruler", "var(--accent-d)")}<b>Spacing &amp; shape</b><span class="idxmeta"><span class="idxcat">Style</span></span><p>The 4px spacing grid with real usage buckets, plus corner radii and border widths.</p></a>
+    <a class="idxcard" href="iconography.html">{icon("star", "var(--mute)")}<b>Iconography</b><span class="idxmeta"><span class="idxcat">Style</span><span class="idxstatus">stub</span></span><p>What's known (FontAwesome) and what token work is still missing.</p></a>
+    <a class="idxcard" href="grid.html">{icon("grid", "var(--mute)")}<b>Grid</b><span class="idxmeta"><span class="idxcat">Style</span><span class="idxstatus">stub</span></span><p>Not yet defined in tokens — only flagged legacy breakpoints exist.</p></a>
+    <a class="idxcard" href="elevation.html">{icon("layers", "var(--mute)")}<b>Elevation</b><span class="idxmeta"><span class="idxcat">Style</span><span class="idxstatus">stub</span></span><p>No shadow/z-index tokens yet — MUI defaults used unoverridden.</p></a>
   </div>
 
   <p class="tnote" style="margin-top:22px">Looking for the token naming grammar or the provenance list? Both moved to the <a href="tokens.html">Design tokens</a> page.</p>
