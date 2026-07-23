@@ -2,8 +2,9 @@
   "name": "SelectionControl",
   "category": "Forms and inputs",
   "status": "stable",
+  "aaReviewed": "2026-07-16",
   "library": "Material Components Web (MDC) 14.0.0 — Cartrack-themed",
-  "source": "component-specs/selection-controls.md",
+  "source": "md2-cartrack-library/components/selection-controls.html",
   "description": "Selection controls capture choices: checkboxes for multi-select, radio buttons for one-of-many, and switches for instant on/off settings. Choosing the right one tells the operator how the choice behaves.",
   "keyRule": "Checkbox = select none/some/all and apply on submit. Radio = pick exactly one from a small set. Switch = toggle a setting that takes effect immediately.",
   "variants": [

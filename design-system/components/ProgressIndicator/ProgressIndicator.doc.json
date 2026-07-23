@@ -2,8 +2,9 @@
   "name": "ProgressIndicator",
   "category": "Loading",
   "status": "stable",
+  "aaReviewed": "2026-07-16",
   "library": "Material Components Web (MDC) 14.0.0 — Cartrack-themed",
-  "source": "component-specs/progress.md",
+  "source": "md2-cartrack-library/components/progress.html",
   "description": "Progress indicators show that the app is working — loading a report, exporting trips, fetching a page of vehicles. They reassure the operator that something is happening and, when possible, how far along it is.",
   "keyRule": "Use determinate progress when you know the percentage; indeterminate when you don't. For content that's loading into a known layout (tables, cards), prefer skeletons over spinners.",
   "variants": [

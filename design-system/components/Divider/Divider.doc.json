@@ -2,8 +2,9 @@
   "name": "Divider",
   "category": "Text and data display",
   "status": "stable",
+  "aaReviewed": "2026-07-16",
   "library": "Material Components Web (MDC) 14.0.0 — Cartrack-themed",
-  "source": "component-specs/dividers.md",
+  "source": "md2-cartrack-library/components/dividers.html",
   "description": "A divider is a thin line that separates and groups content — between list items, sections of a form, or regions of a dense layout. Used sparingly, it brings order without adding weight.",
   "keyRule": "Reach for whitespace and grouping first; add a divider only where a clear boundary helps. Too many lines make a layout feel busy.",
   "variants": [

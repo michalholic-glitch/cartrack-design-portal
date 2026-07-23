@@ -2,8 +2,9 @@
   "name": "Menu",
   "category": "Navigation",
   "status": "stable",
+  "aaReviewed": "2026-07-16",
   "library": "Material Components Web (MDC) 14.0.0 — Cartrack-themed",
-  "source": "component-specs/menus.md",
+  "source": "md2-cartrack-library/components/menus.html",
   "description": "Menus show a temporary list of choices on a surface — overflow actions behind a ⋮ button, row actions in a data table, or a list of options from a control. They appear on demand and dismiss on selection or outside click.",
   "keyRule": "Use a menu for secondary or overflow actions. Don't hide a view's primary action in a menu — promote it to a button in the toolbar.",
   "variants": [

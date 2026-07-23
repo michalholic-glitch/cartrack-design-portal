@@ -2,8 +2,9 @@
   "name": "Badge",
   "category": "Labels",
   "status": "stable",
+  "aaReviewed": "2026-07-16",
   "library": "Material Components Web (MDC) 14.0.0 — Cartrack-themed",
-  "source": "component-specs/badges.md",
+  "source": "md2-cartrack-library/components/badges.html",
   "description": "A badge is a small indicator placed on another element to show a count or status — the number of unread alerts on the notifications bell, or a dot marking a vehicle that needs attention.",
   "keyRule": "Use a badge to draw attention to a count or new state on an icon or item. Keep it glanceable — for detailed status use a status chip instead.",
   "variants": [

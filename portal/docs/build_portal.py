@@ -1709,11 +1709,13 @@ def body_component(c):
     name = c["name"]
     s = slug(name)
 
-    # header meta
+    # header meta — "References", not "Source": the doc.json IS the maintained source
+    # of truth (parity-gated against the .tsx); these are the upstream materials it
+    # mirrors (the MDC markup contract page, or the real fleet-web file it wraps).
     prov = ""
     if c.get("library") or c.get("source"):
         bits = [esc(x) for x in (c.get("library"), c.get("source")) if x]
-        prov = f'<div class="prov">Source: {" · ".join(bits)}</div>'
+        prov = f'<div class="prov">References: {" · ".join(bits)}</div>'
     keyrule = f'<div class="keyrule">{esc(c["keyRule"])}</div>' if c.get("keyRule") else ""
 
     # when to use / when not to use
@@ -1829,16 +1831,18 @@ def body_component(c):
         items = "".join(f'<tr><td><a href="{slug(r["name"])}.html"><b>{esc(r["name"])}</b></a></td><td>{esc(r.get("why",""))}</td></tr>' for r in c["related"])
         rel = f'<h5>Related components</h5><table class="mini"><tbody>{items}</tbody></table>'
 
-    # design checklist
+    # design checklist — every tick is DERIVED (doc.json fields, live-demo manifest),
+    # never hardcoded: the page may not claim anything its sources don't state.
     has_doc = all(c.get(k) for k in ("anatomy", "props", "doThis", "dontDoThis", "accessibility"))
     def chk(done, label):
         return f'<span class="chk {"on" if done else ""}">{"✓" if done else "○"} {label}</span>'
+    aa = c.get("aaReviewed")
     checklist = ('<h5>Design checklist</h5><div class="checks">'
         + chk(bool(c.get("tokens")), "Tokens wired")
         + chk(has_doc, "Docs complete")
-        + chk(True, "AA reviewed (2026-07-16)")
-        + chk(True, "Preview synced")
-        + chk(False, "Validated in a production prototype")
+        + chk(bool(aa), f"AA reviewed ({esc(aa)})" if aa else "AA reviewed")
+        + chk(is_live, "Live demo (rendered from the .tsx)")
+        + chk(bool(c.get("validatedInPrototype")), "Validated in a production prototype")
         + '</div>')
 
     research = '<details class="research"><summary>Research &amp; findings</summary><p class="tnote">No usage findings logged yet. When research or prototype feedback exists for this component, add a <code>research</code> field to its doc.json and regenerate the portal.</p></details>'
@@ -1877,7 +1881,7 @@ def body_component(c):
     <h3>{esc(name)}</h3>
     <span class="pill">{esc(c.get("category",""))}</span>
     <span class="pill soft">{esc(c.get("status",""))}</span>
-    <span class="pill aa" title="Reviewed against WCAG AA during the 2026-07-16 preview audit">AA reviewed</span>
+    {f'<span class="pill aa" title="Reviewed against WCAG AA during the {esc(c["aaReviewed"])} preview audit">AA reviewed</span>' if c.get("aaReviewed") else ''}
     {livepill}
   </div>
   <p class="cdesc">{esc(c.get("description",""))}</p>

@@ -2,8 +2,9 @@
   "name": "Tooltip",
   "category": "Overlays and layering",
   "status": "stable",
+  "aaReviewed": "2026-07-16",
   "library": "Material Components Web (MDC) 14.0.0 — Cartrack-themed",
-  "source": "component-specs/tooltips.md",
+  "source": "md2-cartrack-library/components/tooltips.html",
   "description": "Tooltips reveal a short text label on hover or focus — naming an icon-only button, or showing a value that's been truncated in a dense table. They're especially valuable on desktop, where hover exists.",
   "keyRule": "Use a tooltip for brief, supplementary text — an icon's name, a truncated cell's full value. Never put essential information or actions only in a tooltip.",
   "variants": [

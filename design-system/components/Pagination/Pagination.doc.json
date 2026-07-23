@@ -2,8 +2,9 @@
   "name": "Pagination",
   "category": "Navigation",
   "status": "stable",
+  "aaReviewed": "2026-07-16",
   "library": "Material Components Web (MDC) 14.0.0 — Cartrack-themed",
-  "source": "component-specs/pagination.md",
+  "source": "md2-cartrack-library/components/pagination.html",
   "description": "Pagination breaks a large dataset into pages an operator can move through — the standard way to navigate the thousands of vehicles, trips, and alerts in the portal's data tables.",
   "keyRule": "Desktop tables paginate — they don't infinite-scroll. For large or server-driven data, fetch one page at a time rather than loading everything.",
   "variants": [

@@ -2,8 +2,9 @@
   "name": "Card",
   "category": "Layout and structure",
   "status": "stable",
+  "aaReviewed": "2026-07-16",
   "library": "Material Components Web (MDC) 14.0.0 — Cartrack-themed",
-  "source": "component-specs/cards.md",
+  "source": "md2-cartrack-library/components/cards.html",
   "description": "A card groups related content and actions about a single subject — a vehicle summary, a KPI, an alert. Cards make a dashboard scannable by giving each thing its own contained surface.",
   "keyRule": "Use a card to collect everything about one entity. If you're listing many comparable records, a data table is usually clearer than a wall of cards.",
   "variants": [

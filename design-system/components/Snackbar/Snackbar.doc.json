@@ -2,8 +2,9 @@
   "name": "Snackbar",
   "category": "Messaging",
   "status": "stable",
+  "aaReviewed": "2026-07-16",
   "library": "Material Components Web (MDC) 14.0.0 — Cartrack-themed",
-  "source": "component-specs/snackbars.md",
+  "source": "md2-cartrack-library/components/snackbars.html",
   "description": "A snackbar gives brief, low-priority feedback about an action just taken — \"Vehicle saved\", \"Export started\" — usually with a single optional action like Undo. It appears briefly and dismisses on its own.",
   "keyRule": "Use a snackbar for transient confirmation that doesn't need acknowledgement. For a message that must persist until acted on, use a banner; for a blocking choice, a dialog.",
   "variants": [

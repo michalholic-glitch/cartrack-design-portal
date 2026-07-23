@@ -2,8 +2,9 @@
   "name": "Breadcrumbs",
   "category": "Navigation",
   "status": "stable",
+  "aaReviewed": "2026-07-16",
   "library": "Material Components Web (MDC) 14.0.0 — Cartrack-themed",
-  "source": "component-specs/breadcrumbs.md",
+  "source": "md2-cartrack-library/components/breadcrumbs.html",
   "description": "Breadcrumbs show where the operator is within the portal's hierarchy and let them step back up it — from a single vehicle, to the vehicle list, to the fleet. They orient users in deep desktop navigation.",
   "keyRule": "Use breadcrumbs when content sits more than one level deep. They complement — not replace — the left navigation drawer.",
   "variants": [

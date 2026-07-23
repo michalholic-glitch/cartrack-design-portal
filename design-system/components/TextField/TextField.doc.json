@@ -2,8 +2,9 @@
   "name": "TextField",
   "category": "Forms and inputs",
   "status": "stable",
+  "aaReviewed": "2026-07-16",
   "library": "Material Components Web (MDC) 14.0.0 — Cartrack-themed",
-  "source": "component-specs/text-fields.md",
+  "source": "md2-cartrack-library/components/text-fields.html",
   "description": "Text fields let operators enter and edit text — a registration number, a driver's name, an odometer reading, a note. They come in filled and outlined styles and always carry a label so the field's purpose stays visible once filled.",
   "keyRule": "Pick one style and use it consistently across a form. In the Cartrack portal, outlined is the default for forms; filled suits dense, list-like settings.",
   "variants": [

@@ -2,8 +2,9 @@
   "name": "Tabs",
   "category": "Navigation",
   "status": "stable",
+  "aaReviewed": "2026-07-16",
   "library": "Material Components Web (MDC) 14.0.0 — Cartrack-themed",
-  "source": "component-specs/tabs.md",
+  "source": "md2-cartrack-library/components/tabs.html",
   "description": "Tabs switch between related views of the same subject — a vehicle's Overview, Trips, Maintenance, and Alerts — without leaving the page. They keep peer views one click apart.",
   "keyRule": "Use tabs for peer views of one record or population. They're not top-level navigation (that's the drawer) and not a wizard (that's a stepper).",
   "variants": [

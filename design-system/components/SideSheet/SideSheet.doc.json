@@ -2,8 +2,9 @@
   "name": "SideSheet",
   "category": "Layout and structure",
   "status": "stable",
+  "aaReviewed": "2026-07-16",
   "library": "Material Components Web (MDC) 14.0.0 — Cartrack-themed",
-  "source": "component-specs/side-sheet.md",
+  "source": "md2-cartrack-library/components/side-sheet.html",
   "description": "A side sheet is a surface anchored to the right edge that shows contextual detail beside the main content — the selected vehicle's summary next to the list, or a filters panel — without navigating away.",
   "keyRule": "Use a side sheet to keep context: the operator sees a record's detail while the list stays visible. (Bottom sheets are a mobile pattern and are excluded from this desktop set.)",
   "variants": [

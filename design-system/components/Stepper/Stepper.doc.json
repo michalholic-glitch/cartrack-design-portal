@@ -2,8 +2,9 @@
   "name": "Stepper",
   "category": "Status indicators",
   "status": "stable",
+  "aaReviewed": "2026-07-16",
   "library": "Material Components Web (MDC) 14.0.0 — Cartrack-themed",
-  "source": "component-specs/steppers.md",
+  "source": "md2-cartrack-library/components/steppers.html",
   "description": "A stepper guides an operator through a task in ordered steps — onboarding a new vehicle, building a report, running a bulk assignment. It shows progress and what's left to do.",
   "keyRule": "Use a stepper for a sequence that benefits from being broken up and tracked. For peer views with no order, use tabs instead.",
   "variants": [

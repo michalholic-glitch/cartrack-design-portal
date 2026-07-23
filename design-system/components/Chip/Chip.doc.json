@@ -2,8 +2,9 @@
   "name": "Chip",
   "category": "Labels",
   "status": "stable",
+  "aaReviewed": "2026-07-16",
   "library": "Material Components Web (MDC) 14.0.0 — Cartrack-themed",
-  "source": "component-specs/chips.md",
+  "source": "md2-cartrack-library/components/chips.html",
   "description": "Chips are compact elements that represent an input, a filter, or a choice — a selected driver, an active filter on a vehicle list, a quick action. They pack a lot of interaction into a small footprint.",
   "keyRule": "Use chips for selections and filters the operator manipulates. For read-only status (Active/Idle/Offline) use a status chip with a consistent colour mapping.",
   "variants": [

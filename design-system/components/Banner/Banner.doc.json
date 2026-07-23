@@ -2,8 +2,9 @@
   "name": "Banner",
   "category": "Messaging",
   "status": "stable",
+  "aaReviewed": "2026-07-16",
   "library": "Material Components Web (MDC) 14.0.0 — Cartrack-themed",
-  "source": "component-specs/banners.md",
+  "source": "md2-cartrack-library/components/banners.html",
   "description": "A banner is a prominent message with one or two actions, shown at the top of a region. It surfaces something important but non-blocking — vehicles due for service, a sync issue, a new feature — and stays until the operator acts.",
   "keyRule": "Use a banner for a persistent, moderate-priority message that needs acknowledgement. For transient confirmation use a snackbar; for a blocking decision use a dialog.",
   "variants": [

@@ -2,8 +2,9 @@
   "name": "NavigationDrawer",
   "category": "Navigation",
   "status": "stable",
+  "aaReviewed": "2026-07-16",
   "library": "Material Components Web (MDC) 14.0.0 — Cartrack-themed",
-  "source": "component-specs/navigation-drawer.md",
+  "source": "md2-cartrack-library/components/navigation-drawer.html",
   "description": "The navigation drawer is the portal's primary, persistent navigation — anchored to the left edge and grouped by purpose. It's how operators move between the map, assets, and the domain pillars throughout a session.",
   "keyRule": "On desktop the drawer is permanent (always visible) — not a temporary overlay. Group items by purpose so the model stays legible; default new features into a pillar, not the top level.",
   "variants": [

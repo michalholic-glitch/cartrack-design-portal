@@ -2,8 +2,9 @@
   "name": "Button",
   "category": "Forms and inputs",
   "status": "stable",
+  "aaReviewed": "2026-07-16",
   "library": "Material Components Web (MDC) 14.0.0 — Cartrack-themed",
-  "source": "component-specs/buttons.md",
+  "source": "md2-cartrack-library/components/buttons.html",
   "description": "Buttons let operators trigger actions — saving a vehicle, running a report, confirming a change. Emphasis communicates priority: the one most important action on a view is the contained button; everything else steps down.",
   "keyRule": "Use exactly one contained (high-emphasis) button per view. The floating action button (FAB) is excluded — it's a mobile pattern; on desktop the primary action sits in the page toolbar / app bar.",
   "variants": [

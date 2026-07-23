@@ -2,8 +2,9 @@
   "name": "DataTable",
   "category": "Text and data display",
   "status": "stable",
+  "aaReviewed": "2026-07-16",
   "library": "Material Components Web (MDC) 14.0.0 — Cartrack-themed",
-  "source": "component-specs/data-table.md",
+  "source": "md2-cartrack-library/components/data-table.html",
   "description": "Data tables present sets of records across rows and columns — the primary way operators scan, sort, select, and act on fleet data (vehicles, trips, drivers, alerts). This is the most-used component in the portal, so it carries the most behaviour.",
   "keyRule": "When a dataset is large, server-paginated, sortable, or selectable, use the data table — not a basic Table. Reserve the basic table for small, static key/value layouts.",
   "variants": [

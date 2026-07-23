@@ -2,8 +2,9 @@
   "name": "Picker",
   "category": "Forms and inputs",
   "status": "stable",
+  "aaReviewed": "2026-07-16",
   "library": "Material Components Web (MDC) 14.0.0 — Cartrack-themed",
-  "source": "component-specs/pickers.md",
+  "source": "md2-cartrack-library/components/pickers.html",
   "description": "Pickers help operators choose dates and times — a trip window, a report period, a maintenance due date. They pair a typeable field with a calendar or clock surface, and support ranges for from–to selections.",
   "keyRule": "Offer both: let operators type a date in the field and pick from the calendar. Use a range picker for any from–to selection (reports, trip history), and always respect the user's locale and time zone.",
   "variants": [

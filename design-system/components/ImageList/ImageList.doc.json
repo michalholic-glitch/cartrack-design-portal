@@ -2,8 +2,9 @@
   "name": "ImageList",
   "category": "Images and icons",
   "status": "stable",
+  "aaReviewed": "2026-07-16",
   "library": "Material Components Web (MDC) 14.0.0 — Cartrack-themed",
-  "source": "component-specs/image-lists.md",
+  "source": "md2-cartrack-library/components/image-lists.html",
   "description": "Image lists arrange images in a grid — vehicle photos, inspection snapshots, document scans, map thumbnails. They make a set of visuals scannable at a glance.",
   "keyRule": "Use an image list when the visual is the content. If text matters more than the picture, a list or table with a small thumbnail is usually better.",
   "variants": [

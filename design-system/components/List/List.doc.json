@@ -2,8 +2,9 @@
   "name": "List",
   "category": "Text and data display",
   "status": "stable",
+  "aaReviewed": "2026-07-16",
   "library": "Material Components Web (MDC) 14.0.0 — Cartrack-themed",
-  "source": "component-specs/lists.md",
+  "source": "md2-cartrack-library/components/lists.html",
   "description": "Lists present a vertical run of related records — drivers, notifications, recent vehicles. Each row pairs a primary line with optional supporting text, a leading avatar/icon, and trailing actions.",
   "keyRule": "Use a list for simple, scannable records. The moment you need columns, sorting, selection, or pagination, switch to a data table.",
   "variants": [
