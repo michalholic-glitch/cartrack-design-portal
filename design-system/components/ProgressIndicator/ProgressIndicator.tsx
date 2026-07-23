@@ -11,8 +11,11 @@ export interface ProgressIndicatorProps {
   label: string;
   /** Circular size in px (MDC default demo uses 48). Ignored for linear. */
   size?: number;
-  /** Max width in px for the linear track (MDC demo uses 300). Ignored for circular. */
-  maxWidth?: number;
+  /**
+   * Max width for the linear track — px number (MDC demo uses 300) or any CSS length
+   * (e.g. '100%' to span a host region, as DataTable's loading bar does). Ignored for circular.
+   */
+  maxWidth?: number | string;
 }
 
 /**

@@ -9,7 +9,7 @@
   "variants": [
     {
       "name": "With toolbar",
-      "whenToUse": "Almost always — gives the table a title plus search/filter/export entry points."
+      "whenToUse": "Almost always — gives the table a title plus search/filter/export entry points (compose them into toolbarActions from TextField/Button/Menu)."
     },
     {
       "name": "Selectable (checkboxes)",
@@ -17,29 +17,41 @@
     },
     {
       "name": "Paginated",
-      "whenToUse": "Any dataset beyond a single screen; desktop tables paginate (rows-per-page + range), they don't infinite-scroll."
+      "whenToUse": "Any dataset beyond a single screen; desktop tables paginate (rows-per-page + range), they don't infinite-scroll. Works client-side or server-driven — see the Pagination behavior."
     },
     {
       "name": "Dense",
       "whenToUse": "High-volume operator screens where maximizing visible rows matters; reduces row height."
     },
     {
-      "name": "Inline-editable",
-      "whenToUse": "When quick edits (odometer, notes) are common; cells become editable in place."
+      "name": "Sticky header + bounded height",
+      "whenToUse": "Tall tables inside a fixed layout: set maxHeight to bound the body and stickyHeader so column labels stay visible while scrolling."
     },
     {
-      "name": "Expandable rows",
-      "whenToUse": "When a record has secondary detail (sub-trips, line items) worth revealing without leaving the table."
+      "name": "Loading",
+      "whenToUse": "While a page of data is being fetched — an indeterminate linear bar under the toolbar; row interactions are disabled until it resolves."
+    },
+    {
+      "name": "Empty state",
+      "whenToUse": "Zero rows and not loading — a single full-width row with a centered message (customisable via emptyState)."
+    },
+    {
+      "name": "Row actions",
+      "whenToUse": "Secondary per-record actions behind a trailing ⋮ menu (Edit, Duplicate, Delete). Never the record's primary action — that stays a visible control or row click."
     }
   ],
   "anatomy": [
     {
       "name": "Toolbar",
-      "description": "table title + table-level actions (search, filter, more). Becomes the contextual toolbar when rows are selected."
+      "description": "table title + the toolbarActions slot for table-level controls (search, filter, more). Becomes the contextual toolbar when rows are selected."
+    },
+    {
+      "name": "Loading bar",
+      "description": "indeterminate linear ProgressIndicator directly under the toolbar while loading is true."
     },
     {
       "name": "Column header",
-      "description": "the label for each column; sortable headers show a direction arrow and an active state."
+      "description": "the label for each column; sortable headers show a direction arrow and an active state. With stickyHeader, header cells pin to the top of the scroll container."
     },
     {
       "name": "Sort indicator",
@@ -58,8 +70,16 @@
       "description": "one value; text left-aligned, numbers right-aligned with tabular figures."
     },
     {
+      "name": "Row actions column",
+      "description": "optional trailing ⋮ icon-button per row opening a Menu of secondary actions (destructive ones in error colour)."
+    },
+    {
+      "name": "Empty state row",
+      "description": "when there are zero rows and the table isn't loading: one full-width row (real <td colspan>) with a centered message."
+    },
+    {
       "name": "Pagination footer",
-      "description": "rows-per-page, the visible range, and previous/next controls."
+      "description": "rows-per-page, the visible range, and previous/next controls. Sits below the scroll region, never inside it."
     },
     {
       "name": "Contextual toolbar",
@@ -77,15 +97,45 @@
     },
     {
       "name": "Pagination",
-      "description": "The footer shows rows-per-page, the current range, and prev/next. For large/server-driven data, fetch per page rather than loading everything."
+      "description": "The footer shows rows-per-page, the current range, and prev/next. Server-driven pagination is supported today with the same props: pass the current page slice as rows, the full count as totalRows, and fetch the next slice in onPageChange instead of slicing a client-side array. Prefer server-driven past a few thousand rows, or whenever the full dataset isn't practical to hold client-side."
     },
     {
-      "name": "Filtering & search",
-      "description": "A quick-search and a filter entry point live in the toolbar; applied filters show as removable filter chips above or within the toolbar."
+      "name": "Scrolling",
+      "description": "Horizontal scroll is always available when columns exceed the container. Setting maxHeight bounds the body vertically; with stickyHeader the header row stays pinned (surface fill + divider boundary line) while rows scroll beneath. Toolbar and pagination stay outside the scroll region."
     },
     {
-      "name": "Inline editing",
-      "description": "Editable cells show a subtle affordance on hover (dashed underline in the example) and commit on blur/Enter, with validation shown inline."
+      "name": "Loading",
+      "description": "loading renders an indeterminate linear ProgressIndicator under the toolbar, sets aria-busy, and disables sort, selection, row click, row actions, and paging until data arrives — matching the fleet-web convention of blocking interaction during fetch. For content loading into a known layout, a future Skeleton component is the eventual alternative."
+    },
+    {
+      "name": "Empty state",
+      "description": "Zero rows (and not loading) renders a single centered 'No data' row spanning all columns; pass emptyState to add a tailored message or action. This is a minimal placeholder — a dedicated Empty state component is tracked separately and will supersede the default content."
+    },
+    {
+      "name": "Row actions",
+      "description": "rowActions renders a trailing ⋮ button per row (aria-haspopup, Enter/Space to open) showing a Menu of the returned items; Escape or an outside click closes it, and destructive items render in the error colour. Row click handlers don't fire from inside the actions cell."
+    }
+  ],
+  "deferred": [
+    {
+      "name": "Column resizing / reordering / pinning / visibility toggle",
+      "why": "MUI-X DataGrid extensions in fleet-web, not MD2-native; substantial to build without a library. Future work — use the real DataGrid pattern if a screen needs them today."
+    },
+    {
+      "name": "Export (CSV/Excel/PDF)",
+      "why": "Significant scope. Compose an export control into toolbarActions instead — DataTable intentionally doesn't own export."
+    },
+    {
+      "name": "Row expansion / detail panel",
+      "why": "Not part of the MD2 data-table contract; hierarchical 'table tree' rows are tracked as their own future component."
+    },
+    {
+      "name": "Inline cell editing",
+      "why": "Depends on the future dedicated Inline edit component; the previously documented 'Inline-editable' variant had no implementation and has been removed until then."
+    },
+    {
+      "name": "Multi-column sort",
+      "why": "Stays opt-out per the existing don't rule; no change planned."
     }
   ],
   "states": [
@@ -110,8 +160,20 @@
       "treatment": "Label at full on-surface; arrow fully visible."
     },
     {
+      "state": "Header — Sticky (scrolled)",
+      "treatment": "Header cells pinned top with surface fill and a 1px divider boundary line so rows don't show through."
+    },
+    {
       "state": "Checkbox (header) — Indeterminate",
       "treatment": "Filled with a dash when selection is partial."
+    },
+    {
+      "state": "Table — Loading",
+      "treatment": "Indeterminate linear bar under the toolbar; aria-busy set; sort/selection/row/paging interactions disabled."
+    },
+    {
+      "state": "Table — Empty",
+      "treatment": "Single full-width row, centered secondary-text message (default 'No data')."
     }
   ],
   "specs": [
@@ -146,6 +208,14 @@
     {
       "property": "Selected background",
       "value": "primary at ~10% (token --selected)"
+    },
+    {
+      "property": "Sticky header boundary",
+      "value": "surface fill + 1px divider-colour line while pinned"
+    },
+    {
+      "property": "Empty-state padding",
+      "value": "24px, centered, secondary text colour"
     }
   ],
   "tokens": [
@@ -153,6 +223,8 @@
     "semantic.color.text.secondary",
     "semantic.color.border.default",
     "semantic.color.interactive.primarySelected",
+    "semantic.color.surface.paper",
+    "semantic.spacing.sm",
     "semantic.spacing.md",
     "semantic.spacing.lg",
     "semantic.typography.scale.body2"
@@ -174,7 +246,7 @@
       "name": "rows",
       "type": "Row[]",
       "required": true,
-      "description": "Records to display; each row must have a unique id."
+      "description": "Records to display; each row must have a unique id. For server-driven pagination this is just the current page's slice."
     },
     {
       "name": "selectable",
@@ -228,7 +300,7 @@
       "name": "page",
       "type": "number",
       "required": false,
-      "description": "Current zero-based page index; omit to render an unpaginated table."
+      "description": "Current zero-based page index; omit to render an unpaginated table. Client-side or server-driven — the component doesn't care where the page slice came from."
     },
     {
       "name": "rowsPerPage",
@@ -240,19 +312,57 @@
       "name": "totalRows",
       "type": "number",
       "required": false,
-      "description": "Total record count for the visible-range and next/prev disabled state."
+      "description": "Total record count for the visible-range and next/prev disabled state. For server-driven pagination this is the server's full count, not rows.length."
     },
     {
       "name": "onPageChange",
       "type": "(page: number) => void",
       "required": false,
-      "description": "Called when prev/next pagination controls are used."
+      "description": "Called when prev/next pagination controls are used. For server-driven pagination, fetch the new page's slice here and pass it back as rows — that's the whole server-pagination contract; prefer it past a few thousand rows or when the dataset can't be held client-side."
     },
     {
       "name": "onRowClick",
       "type": "(row: Row) => void",
       "required": false,
-      "description": "Handler for clickable rows."
+      "description": "Handler for clickable rows. Not fired from clicks inside the row-actions cell."
+    },
+    {
+      "name": "stickyHeader",
+      "type": "boolean",
+      "required": false,
+      "default": "false",
+      "description": "Keeps the header row pinned to the top of the scroll container while the body scrolls — pair with maxHeight (closes the promise in templates/table-page.md, 'header sticky on scroll')."
+    },
+    {
+      "name": "maxHeight",
+      "type": "number | string",
+      "required": false,
+      "description": "Bounds the table body; vertical scroll appears beyond it. Horizontal scroll on overflow is always available regardless. Toolbar and pagination footer stay outside the scroll region."
+    },
+    {
+      "name": "loading",
+      "type": "boolean",
+      "required": false,
+      "default": "false",
+      "description": "Shows an indeterminate linear ProgressIndicator under the toolbar, sets aria-busy, and disables sort/selection/row-click/row-actions/paging while data loads."
+    },
+    {
+      "name": "emptyState",
+      "type": "React.ReactNode",
+      "required": false,
+      "description": "Custom zero-rows content (message and/or action) rendered in a single full-width row; defaults to 'No data'. Minimal placeholder until the dedicated Empty state component exists."
+    },
+    {
+      "name": "rowActions",
+      "type": "(row: Row) => { label: string; onClick: (row: Row) => void; destructive?: boolean }[]",
+      "required": false,
+      "description": "Per-row overflow actions: renders a trailing ⋮ icon-button that opens a Menu with these items (destructive ones in error colour). The canonical version of the per-row ⋮ pattern from templates/table-page.md — don't hand-roll it per module."
+    },
+    {
+      "name": "toolbarActions",
+      "type": "React.ReactNode",
+      "required": false,
+      "description": "Caller-composed controls rendered beside the title in the default toolbar (search TextField, filter Button, export trigger…). Intentionally generic — DataTable does not implement search, filtering, or export itself."
     }
   ],
   "doThis": [
@@ -260,26 +370,41 @@
     "Right-align numeric columns and use tabular figures so digits line up.",
     "Switch to the contextual toolbar when rows are selected, showing the count + bulk actions.",
     "Map status to the consistent colour chips (Active/Idle/Offline).",
-    "Paginate; fetch per page for large/server data."
+    "Paginate; fetch per page (server-driven) for large data — pass the page slice as rows and the full count as totalRows.",
+    "Pair maxHeight with stickyHeader on tall tables so column labels stay visible while scanning.",
+    "Use rowActions for per-row secondary actions instead of hand-rolling a ⋮ menu in every module."
   ],
   "dontDoThis": [
     "Don't put the primary action inside a row's overflow menu if it's used constantly.",
     "Don't sort more than one column at once unless multi-sort is explicitly needed.",
     "Don't encode status by colour alone — keep the text label on the chip.",
     "Don't infinite-scroll a desktop data table; use pagination.",
-    "Don't hard-code colours/sizes — use the theme tokens and these specs."
+    "Don't hard-code colours/sizes — use the theme tokens and these specs.",
+    "Don't build export/filter/search into DataTable — compose them into toolbarActions from existing components.",
+    "Don't leave a fetching table empty — use loading, and let the empty state appear only when the fetch genuinely returned zero rows."
   ],
   "accessibility": [
     "Use real <table> semantics with <th> headers; sortable headers expose aria-sort.",
     "The select-all checkbox announces its indeterminate state.",
     "Selection changes and the contextual toolbar are announced to assistive tech.",
     "Rows and controls are keyboard navigable; visible focus is preserved.",
-    "Status is never colour-only — the chip carries a text label."
+    "Status is never colour-only — the chip carries a text label.",
+    "loading sets aria-busy on the table and renders a role=progressbar with an accessible label; disabled controls leave the tab order.",
+    "The empty state keeps valid table semantics (a real <tr>/<td colspan>, not a replacement <div>).",
+    "The row-actions trigger is a real <button> (Enter/Space) with aria-haspopup and aria-expanded; the menu closes on Escape or outside click."
   ],
   "related": [
     {
       "name": "Pagination",
       "why": "Always paired — never an unpaginated long table"
+    },
+    {
+      "name": "ProgressIndicator",
+      "why": "Renders the loading state's linear bar"
+    },
+    {
+      "name": "Menu",
+      "why": "Renders the row-actions overflow menu"
     },
     {
       "name": "List",

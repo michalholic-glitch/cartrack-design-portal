@@ -146,6 +146,16 @@ PATTERN_WIREFRAMES = {
         f'<div style="position:absolute;top:{8+i*12}px;right:8px;width:10px;height:6px;border-radius:3px;'
         f'background:{"var(--accent-d)" if i == 0 else "#e6e2da"}"></div>'
         for i in range(3)),
+    "page-header": ('<div style="position:absolute;top:20px;left:8px;width:26px;height:6px;background:var(--ink)"></div>'
+                     '<div style="position:absolute;top:19px;right:8px;width:16px;height:8px;border-radius:3px;background:var(--accent-d)"></div>'),
+    "main-navigation": (
+        '<div style="position:absolute;top:0;left:0;bottom:0;width:18px;background:var(--ink)"></div>'
+        + "".join(
+            f'<div style="position:absolute;top:{8+i*13}px;left:4px;width:10px;height:8px;border-radius:2px;'
+            f'background:{"var(--accent-d)" if i == 0 else "rgba(255,255,255,.35)"}"></div>'
+            for i in range(4)
+        )
+    ),
 }
 PATTERN_WIREFRAME_BG = {"map-tracking-view": "#dbe6ee"}
 
@@ -179,7 +189,6 @@ COMING_SOON = {
     "Images and icons": [
         ("Avatar", "No equivalent — driver/user avatar isn't documented as a component."),
         ("Avatar group", "Depends on Avatar existing first."),
-        ("Icon", "FontAwesome is confirmed as the icon system, but there's no Icon component doc and no icon-size/color token layer."),
         ("Image", "ImageList exists (a layout for multiple images) but there's no single-Image component doc."),
         ("Tile", "No tile/card-icon pattern currently documented."),
     ],
@@ -187,14 +196,11 @@ COMING_SOON = {
         ("Date label", "No dedicated date-status label component."),
         ("Tag group", "No wrapper/layout component for grouped chips — chips are used individually today."),
     ],
-    "Layout and structure": [
-        ("Page header", "Was partially AppBar's role; AppBar was removed for having zero real usage — a confirmed, deliberate gap."),
-    ],
     "Loading": [
         ("Skeleton", "No skeleton-loading component documented."),
     ],
     "Messaging": [
-        ("Empty state", "No \"no data\" placeholder component documented, despite DataTable being the most-used component — worth prioritizing."),
+        ("Empty state", "No dedicated \"no data\" placeholder component yet. DataTable now ships a minimal built-in placeholder (emptyState prop, default \"No data\") — this future component supersedes that default with richer message + action guidance."),
         ("Inline message", "Banner is page/region-level; nothing smaller and inline exists."),
         ("Section message", "Possibly coverable by a Banner variant, but not currently documented as one — flagged rather than assumed."),
         ("Spotlight", "No onboarding/feature-tour component."),
@@ -206,8 +212,8 @@ COMING_SOON = {
     ],
     "Text and data display": [
         ("Code", "No inline/block code-display component — low priority for this product."),
-        ("Inline edit", "No click-to-edit-in-place component."),
-        ("Table tree", "No expandable/hierarchical table variant."),
+        ("Inline edit", "No click-to-edit-in-place component. DataTable's former \"Inline-editable\" variant was documentation-only and has been removed pending this component."),
+        ("Table tree", "No expandable/hierarchical table variant. DataTable's former \"Expandable rows\" variant was documentation-only and has been removed; hierarchical rows are this future component's job."),
         ("Visually hidden", "Accessibility utility, not currently documented as a reusable component."),
     ],
 }
@@ -1419,13 +1425,35 @@ def body_found_tokens():
 </div>'''
 
 def body_found_iconography():
+    tiers = [
+        ("Solid", "fas", "Free", "Default weight for most UI icons — the majority of registered names."),
+        ("Regular", "far", "Free", "Lighter alternative, used selectively (e.g. faCheckSquare, faCommentAlt, faClock)."),
+        ("Light", "fal", "Pro", "Thinnest weight, used for a specific set of vehicle/fleet glyphs (e.g. faSteeringWheel, faBusAlt, faTaxi)."),
+    ]
+    trows = "".join(
+        f'<tr><td><b>{esc(n)}</b></td><td><code>{esc(p)}</code></td><td>{esc(t)}</td><td>{esc(d)}</td></tr>'
+        for n, p, t, d in tiers
+    )
     return f'''<div class="inner pagetop">
 <a class="backlink" href="index.html">← Foundations</a>
 <section id="iconography">
   <h2>Iconography</h2>
-  <p class="sub">This page will cover the icon system: which icon set the product uses, the size and colour tokens icons should reference, and the usage rules (when an icon needs a label, minimum touch targets, decorative vs. meaningful icons).</p>
-  <p class="sub">What's confirmed today: the icon font is <b>{esc(fa_value)}</b>, documented as <code>primitive.fontFamily.fontAwesome</code> in tokens.json. That's the whole token story so far.</p>
-  <div class="warn"><b>Not yet defined:</b> there is no icon size or icon colour token layer in <code>tokens.json</code>, and Icon is not one of the {n_comps} documented components. Completing this page needs that token extraction to happen first — until then this stub states what's known rather than inventing sizes that don't exist in the source.</div>
+  <p class="sub">The icon system: which icon set the product uses, how icons size and colour, and the usage rules — when an icon needs a label, decorative vs. meaningful icons, and which style tier is safe to reuse.</p>
+  <div class="tokgroup"><h4>Principles</h4>
+    <div class="rules">
+      <div class="rule"><b>FontAwesome is the icon system — not Material.</b> fleet-web uses <code>@fortawesome/react-fontawesome</code> (Free + Pro tiers) exclusively, via one wrapper component, <a href="../components/icon.html"><code>Icon</code></a>. There is no Material icon set anywhere in the app, despite MUI powering most other components.</div>
+      <div class="rule"><b>Icons are registered centrally, not imported ad hoc.</b> Every usable icon name is added once to the app-wide library in <code>font-initialization.ts</code>. Adding a new icon to a feature means registering it there first, not importing a <code>fa*</code> module directly in a component.</div>
+      <div class="rule"><b>Size and colour inherit by default.</b> No dedicated icon-size or icon-colour token exists — an icon sizes to 1em (inheriting font-size) and fills with <code>currentColor</code> unless overridden. See <code>tokens.json → semantic.icon</code>.</div>
+      <div class="rule"><b>Pro-tier icons need Cartrack's FontAwesome Pro licence.</b> The Light style and several one-off Pro glyphs won't render for anyone building against this design system without that licence — Free-tier icons (Solid, most of Regular) always will.</div>
+    </div>
+  </div>
+  <h5 style="margin-top:28px">Style tiers</h5>
+  <table class="mini"><thead><tr><th>Tier</th><th>Prefix</th><th>Licence</th><th>When it's used</th></tr></thead><tbody>{trows}</tbody></table>
+  <div class="warn"><b>Correction:</b> an earlier pass at this page pointed to <code>primitive.fontFamily.fontAwesome</code> as "the icon font." That token is real but almost dead — only 2 files in the entire app still use it (a legacy CSS-ligature webfont reference in two map-view resize-handle glyphs). It is not the app's real icon system and shouldn't be cited as such; see the corrected note on that token in <code>tokens.json</code>.</div>
+  <div class="tip"><b>Where to look:</b> the <a href="../components/icon.html">Icon</a> component page has the full prop list (icon, size, color, spin, fixedWidth, rotation…) and do/don't rules. <code>tokens.json → semantic.icon</code> has the size-enum and colour-role references. Icon-only controls still need an accessible name — see <a href="../components/tooltip.html">Tooltip</a> and the <a href="accessibility.html">Accessibility</a> baseline.</div>
+  <div class="tokgroup" style="margin-top:34px"><h4>What's still a real gap</h4>
+    <p class="tnote">No live visual demo renders on the Icon component page today — the static preview file doesn't bundle the FontAwesome webfont/SVG data, and faking a rendered glyph with placeholder SVG would misrepresent what's actually available without a Pro licence. A real demo needs either self-hosted Free-tier SVGs or an explicit decision to ship a licensed Pro asset subset.</p>
+  </div>
 </section>
 </div>'''
 

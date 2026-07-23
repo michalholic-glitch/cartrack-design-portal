@@ -112,9 +112,9 @@
     },
     {
       "name": "maxWidth",
-      "type": "number",
+      "type": "number | string",
       "required": false,
-      "description": "Max width in px for the linear track. Ignored for circular."
+      "description": "Max width for the linear track — px number (default 300) or any CSS length, e.g. '100%' to span a host region (as DataTable's loading bar does). Ignored for circular."
     }
   ],
   "doThis": [
