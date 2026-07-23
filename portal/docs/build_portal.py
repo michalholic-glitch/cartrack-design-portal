@@ -329,6 +329,14 @@ def _scope_css(css, scope=".demo-embed"):
 
 DEMO_CSS = _scope_css(PREVIEW_CSS)
 
+# Live demos need the preview stylesheet too: several components' .tsx render the
+# preview's class contract (badge, crumbsnav, stepper2, pgn, picker grid, rail it…)
+# rather than mdc-* classes — the preview CSS is their de-facto styling layer today.
+# Scoped to .live-demo so it can't collide with the portal's own styles.
+(DOCS / "assets").mkdir(parents=True, exist_ok=True)
+(DOCS / "assets" / "live-preview-scoped.css").write_text(
+    _scope_css(PREVIEW_CSS, ".live-demo"), encoding="utf-8")
+
 def _balanced_div_inner(text, open_idx):
     """Given the index of a '<div ...>' opening tag, return its inner HTML."""
     start = text.index('>', open_idx) + 1
@@ -1862,6 +1870,7 @@ def body_component(c):
                     f'the same code an agent imports. Interactions are real.</div></div>')
         liveassets = (
             '<link rel="stylesheet" href="../assets/mdc.cartrack.css">'
+            '<link rel="stylesheet" href="../assets/live-preview-scoped.css">'
             '<link rel="stylesheet" href="../assets/cartrack-supplement.css">'
             '<style>'
             '.livehero{margin:18px 0 6px;padding:32px 28px;background:#fff;border:1px solid rgba(0,0,0,.12);border-radius:12px}'

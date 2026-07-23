@@ -100,6 +100,19 @@ div.mdc-data-table__header-row--selected button:hover {
 /* Empty state row: alignment/padding/colour are inline in DataTable.tsx (token-bound);
    nothing needed here. */
 
+/* Utility class NavigationDrawer emits that MDC 14 doesn't ship */
+.mdc-visually-hidden {
+  position: absolute; width: 1px; height: 1px; margin: -1px;
+  overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap;
+}
+
+/* SideSheet footer (Cartrack extension of the drawer contract) */
+.mdc-drawer__footer {
+  padding: 8px 16px;                          /* semantic.spacing.sm / .md */
+  border-top: 1px solid rgba(0, 0, 0, 0.12);  /* semantic.color.border.default */
+  display: flex; gap: 8px; justify-content: flex-end;
+}
+
 /* Simplified checkbox markup (div.mdc-checkbox > input) — the components render a
    native input rather than MDC's full checkbox anatomy; give it sane sizing. */
 .mdc-data-table .mdc-checkbox { display: inline-flex; align-items: center; justify-content: center; }

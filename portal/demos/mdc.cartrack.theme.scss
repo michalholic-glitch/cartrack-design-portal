@@ -19,3 +19,8 @@
 );
 
 @use "material-components-web/material-components-web";
+
+// The v14 aggregate above only includes the DEPRECATED chips (`mdc-chip`);
+// the current evolution chips (`mdc-evolution-chip`, what Chip.tsx renders)
+// ship separately and must be pulled in explicitly:
+@use "@material/chips/styles" as chips-styles;
