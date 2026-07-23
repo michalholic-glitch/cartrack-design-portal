@@ -100,6 +100,60 @@ div.mdc-data-table__header-row--selected button:hover {
 /* Empty state row: alignment/padding/colour are inline in DataTable.tsx (token-bound);
    nothing needed here. */
 
+/* --- Chip states (Cartrack) ----------------------------------------------
+   MDC's evolution-chip CSS gives the neutral shell; these bind the Cartrack
+   state colours documented in Chip.doc.json. */
+
+/* Selected filter/choice chip: primary tint + primary.dark label (AA).
+   The tint goes on the ROOT (replacing MDC's grey container fill, not layering
+   over it); the action button goes transparent. */
+/* Two-class selector to out-cascade MDC's own
+   .mdc-evolution-chip--filter.mdc-evolution-chip--selected grey fill */
+.mdc-evolution-chip.mdc-evolution-chip--selected {
+  background-color: rgba(244, 119, 53, 0.08); /* semantic.color.interactive.primarySelected */
+}
+.mdc-evolution-chip--selected .mdc-evolution-chip__action--primary {
+  background-color: transparent;
+  color: #BB4800;                             /* semantic.color.brand.primary.dark */
+  border-radius: 16px;                        /* semantic.radius.chip */
+}
+/* Our checkmark is a static text glyph, not MDC's animated SVG — undo the
+   absolute positioning, fixed 20px box, and -10px,-10px centering transform
+   MDC applies to this class (two-part selector to out-cascade MDC's rules). */
+.mdc-evolution-chip .mdc-evolution-chip__checkmark {
+  position: static;
+  transform: none;
+  width: auto;
+  height: auto;
+  display: inline;
+  font-size: inherit;
+  line-height: inherit;
+  margin-right: 4px;                          /* primitive.spacing.1 */
+}
+
+/* Read-only status chip: 50-tone fill + 900-tone text (semantic.color.statusChip) */
+.mdc-evolution-chip--status {
+  height: 24px;
+  padding: 0 8px;                             /* semantic.spacing.sm */
+  border-radius: 12px;
+  display: inline-flex;
+  align-items: center;
+  font-size: 12px;                            /* semantic.typography.scale.labelSmall */
+  font-weight: 500;
+}
+.mdc-evolution-chip--status[data-status="success"] {
+  background-color: #E8F5E9;                  /* semantic.color.statusChip.success.background */
+  color: #1B5E20;                             /* semantic.color.statusChip.success.text */
+}
+.mdc-evolution-chip--status[data-status="warning"] {
+  background-color: #FFF3E0;                  /* semantic.color.statusChip.warning.background */
+  color: #E65100;                             /* semantic.color.statusChip.warning.text */
+}
+.mdc-evolution-chip--status[data-status="error"] {
+  background-color: #FFEBEE;                  /* semantic.color.statusChip.error.background */
+  color: #B71C1C;                             /* semantic.color.statusChip.error.text */
+}
+
 /* Utility class NavigationDrawer emits that MDC 14 doesn't ship */
 .mdc-visually-hidden {
   position: absolute; width: 1px; height: 1px; margin: -1px;

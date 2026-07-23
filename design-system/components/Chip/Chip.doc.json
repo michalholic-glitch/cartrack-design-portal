@@ -110,7 +110,14 @@
     "semantic.spacing.sm",
     "semantic.color.interactive.primarySelected",
     "semantic.typography.scale.body2",
-    "semantic.typography.scale.labelSmall"
+    "semantic.typography.scale.labelSmall",
+    "semantic.color.statusChip.success.background",
+    "semantic.color.statusChip.success.text",
+    "semantic.color.statusChip.warning.background",
+    "semantic.color.statusChip.warning.text",
+    "semantic.color.statusChip.error.background",
+    "semantic.color.statusChip.error.text",
+    "semantic.color.brand.primary.dark"
   ],
   "props": [
     {

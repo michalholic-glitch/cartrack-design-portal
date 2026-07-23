@@ -60,7 +60,15 @@ export function Chip({
 
   return (
     <span
-      className="mdc-evolution-chip"
+      className={[
+        'mdc-evolution-chip',
+        variant === 'filter' ? 'mdc-evolution-chip--filter' : '',
+        // MDC's own selected modifier — part of the evolution-chip class contract this
+        // component mirrors; the Cartrack selected tint binds to it (see Chip.doc.json tokens).
+        selected ? 'mdc-evolution-chip--selected' : '',
+      ]
+        .filter(Boolean)
+        .join(' ')}
       role="row"
       aria-selected={variant === 'filter' || variant === 'choice' ? selected : undefined}
     >
