@@ -1,0 +1,77 @@
+<!DOCTYPE html><html lang="en"><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cartrack DS — Pagination</title>
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&family=Roboto+Mono&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/ds.css">
+</head><body><main>
+  <div class="crumbs"><a href="index.html">Components</a><span class="s">&rsaquo;</span> Pagination</div>
+  <h1>Pagination</h1>
+  <p class="lede">Pagination breaks a large dataset into pages an operator can move through — the standard way to navigate the thousands of vehicles, trips, and alerts in the portal's data tables.</p>
+  <div class="chiprow"><span class="tag">Category: Data display</span><span class="tag">Desktop</span><span class="tag">Import: <code>TablePagination</code>, <code>Pagination</code></span></div>
+  <div class="callout">Desktop tables paginate — they don't infinite-scroll. For large or server-driven data, fetch one page at a time rather than loading everything.</div>
+
+  <div class="callout"><strong>No standalone MDC Web component.</strong> Pagination in MDC Web lives <em>inside</em> the data table (rows-per-page + range + prev/next). There's no separate pagination component — use the data table's built-in pagination, or build a small custom control. The preview below is a Cartrack-styled approximation.</div>
+
+  <h2>Demo</h2>
+  <div class="lab">
+    <div class="lab-preview"><div class="pgn" id="pv"></div></div>
+    <div class="lab-controls">
+      <h5>Options</h5>
+      <div class="lab-row"><label for="c-size">Rows per page</label><select id="c-size"><option>25</option><option>50</option><option selected>100</option></select></div>
+      <div class="lab-row"><label>Tip</label><span class="muted" style="font-size:.78rem">Click a page number</span></div>
+    </div>
+  </div>
+  <script>(function(){var pv=document.getElementById('pv'),sz=document.getElementById('c-size');var total=100000,cur=1;function u(){var size=+sz.value,start=(cur-1)*size+1,end=cur*size;pv.innerHTML='<span class="lbl">Rows per page: '+size+'</span><span class="lbl">'+start.toLocaleString()+'–'+end.toLocaleString()+' of '+total.toLocaleString()+'</span>';['‹','1','2','3','…','›'].forEach(function(t){var p=document.createElement('span');p.className='p'+(t===String(cur)?' on':'');p.textContent=t;if(/^[0-9]+$/.test(t))p.onclick=function(){cur=+t;u();};pv.appendChild(p);});}sz.addEventListener('change',function(){cur=1;u();});u();})();</script>
+
+  <h2>Live example</h2>
+  <div class="stage col">
+    <div class="pgn"><span class="lbl">Rows per page: 100 &#9662;</span><span class="lbl">1&ndash;100 of 100,000</span><span class="p">&lsaquo;</span><span class="p on">1</span><span class="p">2</span><span class="p">3</span><span class="p">&hellip;</span><span class="p">&rsaquo;</span></div>
+  </div>
+
+  <h2>Anatomy</h2>
+  <div class="anat"><p class="muted">A compact set of controls, usually in a table footer.</p>
+    <ol>
+      <li><b>Rows-per-page</b> — a select for page size (e.g. 25/50/100).</li>
+      <li><b>Range label</b> — the visible window and total ("1–100 of 100,000").</li>
+      <li><b>Previous / next</b> — step one page at a time.</li>
+      <li><b>Page numbers</b> — optional direct jumps with the current page highlighted.</li>
+    </ol></div>
+
+  <h2>Variants</h2>
+  <table class="spec"><tr><th>Variant</th><th>When to use</th></tr>
+    <tr><td>Table footer (range + prev/next)</td><td>Default for data tables; compact, shows totals.</td></tr>
+    <tr><td>Numbered pages</td><td>When operators jump around (page 1, 2, 3…); good for moderate counts.</td></tr>
+    <tr><td>Rows-per-page only</td><td>When the dataset fits a couple of pages.</td></tr>
+  </table>
+
+  <h2>Behaviors</h2>
+  <h3>Server vs client</h3><p class="muted">For small sets, paginate in the browser; for large/remote data, request each page from the server and show a loading state while fetching.</p>
+  <h3>Selection across pages</h3><p class="muted">When rows are selected, keep the selection as the operator pages (and make it clear how many are selected in total).</p>
+  <h3>Resetting</h3><p class="muted">Changing filters or page size resets to page one; preserve sort.</p>
+
+  <h2>States</h2>
+  <table class="spec"><tr><th>State</th><th>Treatment</th></tr>
+    <tr><td>Page enabled</td><td>Default text button.</td></tr>
+    <tr><td>Current page</td><td>Primary-tint highlight.</td></tr>
+    <tr><td>Prev/next at bounds</td><td>Disabled (38% opacity) at first/last page.</td></tr>
+  </table>
+
+  <h2>Specs</h2>
+  <table class="spec"><tr><th>Property</th><th>Value</th></tr>
+    <tr><td>Control height</td><td>~32px</td></tr>
+    <tr><td>Footer height</td><td>~52px</td></tr>
+    <tr><td>Text</td><td>Roboto 12–14px, on-surface-medium</td></tr>
+    <tr><td>Current page</td><td>primary tint (~10%)</td></tr>
+  </table>
+
+  <h2>Do &amp; Don't</h2>
+  <div class="cols">
+    <div class="do"><h4>Do</h4><ul><li>Show the total and current range.</li><li>Offer sensible page sizes (25/50/100).</li><li>Fetch per page for large data.</li></ul></div>
+    <div class="dont"><h4>Don't</h4><ul><li>Don't infinite-scroll a desktop data table.</li><li>Don't lose selection or sort when paging.</li><li>Don't load 100k rows into the browser at once.</li></ul></div>
+  </div>
+
+  <h2>Accessibility</h2>
+  <p class="muted">Pagination is a labelled <code>navigation</code> region; the current page exposes <code>aria-current</code>, and prev/next convey their disabled state. Page-size is a labelled select. Controls are keyboard operable with visible focus.</p>
+
+  <div class="callout" style="margin-top:32px">Part of the shared component detail-page set. <a href="index.html">All components →</a></div>
+</main></body></html>

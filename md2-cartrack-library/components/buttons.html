@@ -1,0 +1,103 @@
+<!DOCTYPE html><html lang="en"><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cartrack DS — Buttons</title>
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&family=Roboto+Mono&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/ds.css">
+<link rel="stylesheet" href="https://unpkg.com/material-components-web@14.0.0/dist/material-components-web.min.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+<style>:root{--mdc-theme-primary:#F47735;--mdc-theme-secondary:#333;--mdc-theme-on-primary:#fff;--mdc-theme-surface:#fff;--mdc-theme-background:#fff;--mdc-theme-error:#BA1A1A}</style>
+</head><body><main>
+  <div class="crumbs"><a href="index.html">Components</a><span class="s">&rsaquo;</span> Buttons</div>
+  <h1>Buttons</h1>
+  <p class="lede">Buttons let operators trigger actions — saving a vehicle, running a report, confirming a change. Emphasis communicates priority: the one most important action on a view is the contained button; everything else steps down.</p>
+  <div class="chiprow"><span class="tag">Category: Actions</span><span class="tag">Desktop</span><span class="tag">Import: <code>Button</code></span></div>
+  <div class="callout">Use exactly one <strong>contained</strong> (high-emphasis) button per view. The floating action button (FAB) is excluded — it's a mobile pattern; on desktop the primary action sits in the page toolbar / app bar.</div>
+
+  <h2>Live component (real MDC)</h2>
+  <p class="muted">The genuine Material Components buttons, Cartrack-themed (loads MDC online).</p>
+  <div class="stage">
+    <button class="mdc-button"><span class="mdc-button__ripple"></span><span class="mdc-button__label">Text</span></button>
+    <button class="mdc-button mdc-button--outlined"><span class="mdc-button__ripple"></span><span class="mdc-button__label">Outlined</span></button>
+    <button class="mdc-button mdc-button--raised"><span class="mdc-button__ripple"></span><span class="mdc-button__label">Save vehicle</span></button>
+    <button class="mdc-button mdc-button--unelevated"><span class="mdc-button__ripple"></span><span class="mdc-button__label">Unelevated</span></button>
+    <button class="mdc-button mdc-button--raised" disabled><span class="mdc-button__ripple"></span><span class="mdc-button__label">Disabled</span></button>
+  </div>
+
+  <h2>Demo</h2>
+  <div class="lab">
+    <div class="lab-preview"><button class="btn contained" id="pv">Save vehicle</button></div>
+    <div class="lab-controls">
+      <h5>Options</h5>
+      <div class="lab-row"><label for="c-var">Variant</label><select id="c-var"><option value="contained">Contained</option><option value="outlined">Outlined</option><option value="text">Text</option><option value="contained sec">Secondary</option></select></div>
+      <div class="lab-row"><label for="c-icon">Leading icon</label><input type="checkbox" id="c-icon"></div>
+      <div class="lab-row"><label for="c-dis">Disabled</label><input type="checkbox" id="c-dis"></div>
+      <div class="lab-row"><label for="c-lab">Label</label><input type="text" id="c-lab" value="Save vehicle"></div>
+    </div>
+  </div>
+  <script>(function(){var b=document.getElementById('pv'),v=document.getElementById('c-var'),ic=document.getElementById('c-icon'),d=document.getElementById('c-dis'),l=document.getElementById('c-lab');function u(){b.className='btn '+v.value;b.disabled=d.checked;b.textContent='';if(ic.checked)b.appendChild(document.createTextNode('＋ '));b.appendChild(document.createTextNode(l.value||'Button'));}[v,ic,d].forEach(function(e){e.addEventListener('change',u)});l.addEventListener('input',u);u();})();</script>
+
+  <h2>Live example</h2>
+  <div class="stage">
+    <button class="btn contained">Save vehicle</button>
+    <button class="btn outlined">Cancel</button>
+    <button class="btn text">View report</button>
+    <button class="btn contained sec">Secondary</button>
+    <button class="btn contained" disabled>Disabled</button>
+    <span class="toggle"><span class="on">Map</span><span>List</span></span>
+  </div>
+
+  <h2>Anatomy</h2>
+  <div class="anat"><p class="muted">A button is a labelled, optionally icon-bearing target.</p>
+    <ol>
+      <li><b>Container</b> — the clickable surface; fill/border depends on emphasis.</li>
+      <li><b>Label</b> — a short, verb-first action (e.g. "Add vehicle"), uppercase in MD2.</li>
+      <li><b>Leading icon</b> — optional, reinforces the action.</li>
+      <li><b>State layer</b> — hover/focus/pressed overlay on the container.</li>
+    </ol></div>
+
+  <h2>Variants</h2>
+  <table class="spec">
+    <tr><th>Variant</th><th>When to use</th></tr>
+    <tr><td>Contained</td><td>The single primary action on a view (Save, Add, Run).</td></tr>
+    <tr><td>Outlined</td><td>Important secondary actions, or "Cancel" next to a contained button.</td></tr>
+    <tr><td>Text</td><td>Low-emphasis actions — in toolbars, cards, and dialog dismissals.</td></tr>
+    <tr><td>Toggle button(s)</td><td>Switch between exclusive views (Map / List); 2–5 options, not navigation.</td></tr>
+  </table>
+
+  <h2>Behaviors</h2>
+  <h3>Emphasis</h3><p class="muted">Use the lowest emphasis that does the job. Multiple contained buttons compete and dilute the primary action.</p>
+  <h3>Loading</h3><p class="muted">For async actions, disable the button and show a small spinner in place of the label; never let it be clicked twice.</p>
+  <h3>Icon + label</h3><p class="muted">Pair a leading icon with the label for frequent actions; keep the label even with an icon (icon-only goes to an icon button with a tooltip).</p>
+
+  <h2>States</h2>
+  <table class="spec"><tr><th>State</th><th>Treatment</th></tr>
+    <tr><td>Enabled</td><td>Default fill/border per variant.</td></tr>
+    <tr><td>Hover</td><td>Contained darkens to primary-dark; outlined/text show a light primary tint.</td></tr>
+    <tr><td>Focus</td><td>Visible focus ring/overlay (keyboard).</td></tr>
+    <tr><td>Disabled</td><td>12% black fill, 38% black label, no shadow, not clickable.</td></tr>
+  </table>
+
+  <h2>Specs</h2>
+  <table class="spec">
+    <tr><th>Property</th><th>Value</th></tr>
+    <tr><td>Height</td><td>36px (standard)</td></tr>
+    <tr><td>Corner radius</td><td>4px</td></tr>
+    <tr><td>Label</td><td>Roboto 14px / 500, uppercase, ~0.05em tracking</td></tr>
+    <tr><td>Padding</td><td>16px sides (8px for text buttons)</td></tr>
+    <tr><td>Contained fill / label</td><td>primary / white — <strong>use primary-dark (#BB4800) for the fill where white text must pass WCAG AA; white on #F47735 is only ~2.79:1</strong></td></tr>
+  </table>
+
+  <h2>Do &amp; Don't</h2>
+  <div class="cols">
+    <div class="do"><h4>Do</h4><ul><li>Keep one contained action per view.</li><li>Use verb-first labels ("Add vehicle", not "New").</li><li>Pair Cancel (outlined/text) beside the primary.</li><li>Darken the orange fill for legible white text.</li></ul></div>
+    <div class="dont"><h4>Don't</h4><ul><li>Don't stack multiple contained buttons.</li><li>Don't use a button for navigation that's really a link.</li><li>Don't ship white-on-orange for important labels.</li><li>Don't hard-code colours/sizes — use tokens + these specs.</li></ul></div>
+  </div>
+
+  <h2>Accessibility</h2>
+  <p class="muted">Buttons are real <code>&lt;button&gt;</code> elements with discernible text; icon-only actions get an <code>aria-label</code>. Focus is always visible. Disabled buttons are conveyed to assistive tech. Labels read as actions, not vague words.</p>
+
+  <div class="callout" style="margin-top:32px">Part of the shared component detail-page set. <a href="index.html">All components →</a></div>
+</main>
+<script src="https://unpkg.com/material-components-web@14.0.0/dist/material-components-web.min.js"></script>
+<script>window.addEventListener('load',function(){function E(s,f){document.querySelectorAll(s).forEach(function(e){try{f(e)}catch(x){}})}try{E('.mdc-button,.mdc-fab,.mdc-icon-button,.mdc-card__primary-action',function(e){mdc.ripple.MDCRipple.attachTo(e)})}catch(x){}E('.mdc-text-field',function(e){mdc.textField.MDCTextField.attachTo(e)});E('.mdc-select',function(e){mdc.select.MDCSelect.attachTo(e)});E('.mdc-checkbox',function(e){mdc.checkbox.MDCCheckbox.attachTo(e)});E('.mdc-radio',function(e){mdc.radio.MDCRadio.attachTo(e)});E('.mdc-form-field',function(e){mdc.formField.MDCFormField.attachTo(e)});E('.mdc-switch',function(e){(mdc.switchControl||mdc['switch']).MDCSwitch.attachTo(e)});E('.mdc-evolution-chip-set',function(e){mdc.chips.MDCChipSet.attachTo(e)});E('.mdc-tab-bar',function(e){mdc.tabBar.MDCTabBar.attachTo(e)});E('.mdc-slider',function(e){mdc.slider.MDCSlider.attachTo(e)});E('.mdc-linear-progress',function(e){var p=mdc.linearProgress.MDCLinearProgress.attachTo(e);p.progress=0.6;p.buffer=1});E('.mdc-circular-progress',function(e){var c=mdc.circularProgress.MDCCircularProgress.attachTo(e);c.determinate=true;c.progress=0.6});E('.mdc-data-table',function(e){mdc.dataTable.MDCDataTable.attachTo(e)});E('.mdc-tooltip',function(e){mdc.tooltip.MDCTooltip.attachTo(e)});E('.mdc-drawer',function(e){mdc.drawer.MDCDrawer.attachTo(e)});E('.mdc-top-app-bar',function(e){mdc.topAppBar.MDCTopAppBar.attachTo(e)});E('.mdc-menu',function(e){new mdc.menu.MDCMenu(e)});E('.mdc-banner',function(e){mdc.banner.MDCBanner.attachTo(e)});E('.mdc-image-list',function(e){});});</script>
+</body></html>

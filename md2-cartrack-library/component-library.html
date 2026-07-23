@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cartrack — Material 2 Component Library</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  /* ===== Cartrack brand tokens (Material 2 styling) ===== */
+  :root{
+    --primary:#F47735;--primary-dark:#BB4800;--primary-light:#FFA863;--on-primary:#FFFFFF;
+    --secondary:#333333;--secondary-light:#5C5C5C;--on-secondary:#FFFFFF;
+    --success:#4CAF50;--error:#F44336;--warning:#FF9800;--info:#2196F3;
+    --bg:#FAFAFA;--surface:#FFFFFF;--field:#F5F5F5;
+    --on-surface:rgba(0,0,0,.87);--on-surface-med:rgba(0,0,0,.6);--on-surface-dis:rgba(0,0,0,.38);
+    --divider:rgba(0,0,0,.12);--hover:rgba(0,0,0,.04);--selected:rgba(244,119,53,.12);
+    --font:'Roboto',Helvetica,Arial,sans-serif;
+    --el1:0 2px 1px -1px rgba(0,0,0,.2),0 1px 1px 0 rgba(0,0,0,.14),0 1px 3px 0 rgba(0,0,0,.12);
+    --el2:0 3px 3px -2px rgba(0,0,0,.2),0 3px 4px 0 rgba(0,0,0,.14),0 1px 8px 0 rgba(0,0,0,.12);
+    --el8:0 5px 5px -3px rgba(0,0,0,.2),0 8px 10px 1px rgba(0,0,0,.14),0 3px 14px 2px rgba(0,0,0,.12);
+  }
+  *{box-sizing:border-box}
+  html{font-size:14px}
+  body{margin:0;font-family:var(--font);background:var(--bg);color:var(--on-surface);font-size:.875rem;line-height:1.5}
+  code{font-family:ui-monospace,Menlo,monospace;background:#eee;padding:1px 5px;border-radius:3px;font-size:.78rem}
+  .layout{display:grid;grid-template-columns:240px 1fr;min-height:100vh}
+  nav.side{position:sticky;top:0;align-self:start;height:100vh;overflow:auto;background:var(--surface);border-right:1px solid var(--divider);padding:18px 14px}
+  nav.side h1{font-size:1rem;margin:0 0 2px}
+  nav.side .sub{color:var(--on-surface-med);font-size:.72rem;margin-bottom:12px}
+  nav.side input{width:100%;font:inherit;font-size:.85rem;padding:7px 10px;border:1px solid var(--divider);border-radius:4px;margin-bottom:8px}
+  nav.side a{display:block;color:var(--on-surface-med);text-decoration:none;padding:5px 8px;border-radius:4px;font-size:.8rem}
+  nav.side a:hover{background:var(--hover);color:var(--on-surface)}
+  main{padding:28px 40px 96px;max-width:1080px}
+  header.hero h2{font-size:1.7rem;font-weight:400;margin:0 0 6px}
+  .lede{color:var(--on-surface-med);max-width:780px}
+  .note{margin:14px 0 0;padding:12px 16px;border-left:4px solid var(--primary);background:#fff;border-radius:6px;font-size:.83rem;color:var(--on-surface-med);box-shadow:var(--el1)}
+  section{margin-top:40px;scroll-margin-top:14px}
+  section>h3{font-size:1.2rem;font-weight:500;margin:0 0 4px;padding-bottom:6px;border-bottom:1px solid var(--divider)}
+  .desc{color:var(--on-surface-med);margin:6px 0 16px;font-size:.85rem;max-width:760px}
+  .block{margin:18px 0}
+  .block h4{font-size:.92rem;font-weight:500;margin:0 0 10px}
+  .demo{display:flex;flex-wrap:wrap;gap:16px;align-items:center;padding:22px;background:var(--surface);border:1px solid var(--divider);border-radius:8px}
+  .demo.col{flex-direction:column;align-items:stretch}
+
+  /* ===== Material 2 components (Cartrack-branded) ===== */
+  /* Buttons — MD2: 4px radius, UPPERCASE, 36px */
+  .btn{font:500 .875rem var(--font);letter-spacing:.05em;text-transform:uppercase;border-radius:4px;padding:0 16px;height:36px;border:none;cursor:pointer;display:inline-flex;align-items:center;gap:8px}
+  .btn.contained{background:var(--primary);color:var(--on-primary);box-shadow:var(--el1)}
+  .btn.contained:hover{background:var(--primary-dark)}
+  .btn.contained.sec{background:var(--secondary)}
+  .btn.outlined{background:transparent;color:var(--primary-dark);border:1px solid rgba(0,0,0,.23)}
+  .btn.outlined:hover{background:var(--selected)}
+  .btn.text{background:transparent;color:var(--primary-dark);padding:0 8px}
+  .btn.text:hover{background:var(--selected)}
+  .btn[disabled]{background:rgba(0,0,0,.12);color:var(--on-surface-dis);box-shadow:none;border:none;cursor:default}
+  .fab{width:56px;height:56px;border-radius:50%;background:var(--primary);color:#fff;border:none;font-size:1.5rem;box-shadow:var(--el2);cursor:pointer}
+  .fab.mini{width:40px;height:40px;font-size:1.2rem}
+  .fab.ext{width:auto;border-radius:24px;height:48px;padding:0 20px;gap:8px;font-size:.875rem;font-weight:500;text-transform:uppercase}
+  .iconbtn{width:40px;height:40px;border-radius:50%;border:none;background:transparent;color:var(--on-surface-med);font-size:1.1rem;cursor:pointer}
+  .iconbtn:hover{background:var(--hover)}
+  .toggle{display:inline-flex;border:1px solid rgba(0,0,0,.23);border-radius:4px;overflow:hidden}
+  .toggle span{padding:8px 14px;color:var(--on-surface-med);cursor:pointer;font-size:.82rem}
+  .toggle span+span{border-left:1px solid rgba(0,0,0,.23)}
+  .toggle span.on{background:var(--selected);color:var(--primary-dark)}
+
+  /* Text fields — MD2 filled + outlined */
+  .tf{position:relative;min-width:200px}
+  .tf.filled .f{background:var(--field);border:none;border-bottom:1px solid rgba(0,0,0,.42);border-radius:4px 4px 0 0;padding:20px 12px 6px}
+  .tf.filled.focus .f{border-bottom:2px solid var(--primary)}
+  .tf.filled .lbl{position:absolute;top:6px;left:12px;font-size:.7rem;color:var(--on-surface-med)}
+  .tf.filled.focus .lbl{color:var(--primary-dark)}
+  .tf.outlined .f{border:1px solid rgba(0,0,0,.23);border-radius:4px;padding:14px 12px}
+  .tf.outlined.focus .f{border:2px solid var(--primary);padding:13px 11px}
+  .tf.outlined .lbl{position:absolute;top:-7px;left:9px;background:var(--surface);padding:0 4px;font-size:.72rem;color:var(--on-surface-med)}
+  .tf.outlined.focus .lbl{color:var(--primary-dark)}
+  .tf .f{font-size:1rem;color:var(--on-surface)}
+  .tf .sup{font-size:.72rem;color:var(--on-surface-med);margin:4px 12px 0}
+  .tf.err .f{border-color:var(--error)!important}.tf.err .lbl,.tf .sup.err{color:var(--error)}
+  .ph{color:var(--on-surface-dis)}
+
+  /* Selection controls — MD2 */
+  .ctl{display:inline-flex;align-items:center;gap:8px;color:var(--on-surface)}
+  .cbox{width:18px;height:18px;border:2px solid var(--on-surface-med);border-radius:2px;position:relative;display:inline-block}
+  .cbox.on{background:var(--primary);border-color:var(--primary)}.cbox.on::after{content:"";position:absolute;left:5px;top:1px;width:5px;height:10px;border:solid #fff;border-width:0 2px 2px 0;transform:rotate(45deg)}
+  .radio{width:18px;height:18px;border:2px solid var(--on-surface-med);border-radius:50%;position:relative;display:inline-block}
+  .radio.on{border-color:var(--primary)}.radio.on::after{content:"";position:absolute;inset:3px;border-radius:50%;background:var(--primary)}
+  .sw{width:34px;height:14px;border-radius:7px;background:rgba(0,0,0,.38);position:relative;display:inline-block}
+  .sw .k{position:absolute;top:-3px;left:0;width:20px;height:20px;border-radius:50%;background:#fafafa;box-shadow:var(--el1)}
+  .sw.on{background:var(--primary-light)}.sw.on .k{left:14px;background:var(--primary)}
+  .slider{width:200px;height:2px;background:rgba(244,119,53,.3);position:relative}.slider .fl{position:absolute;left:0;height:2px;width:55%;background:var(--primary)}.slider .t{position:absolute;left:55%;top:-6px;width:14px;height:14px;border-radius:50%;background:var(--primary);transform:translateX(-50%)}
+  /* chips MD2 pill */
+  .chip{display:inline-flex;align-items:center;gap:6px;height:32px;padding:0 12px;border-radius:16px;background:#e0e0e0;color:var(--on-surface);font-size:.82rem}
+  .chip.out{background:transparent;border:1px solid rgba(0,0,0,.23)}
+  .chip.sel{background:var(--selected);color:var(--primary-dark)}
+
+  /* cards / surfaces */
+  .card{background:var(--surface);border-radius:4px;box-shadow:var(--el1);width:280px;overflow:hidden}
+  .card img.media{height:120px;background:linear-gradient(135deg,var(--primary-light),var(--primary));display:block}
+  .card .ch{padding:16px}.card .ch .t{font-size:1rem;font-weight:500}.card .ch .s{color:var(--on-surface-med);font-size:.82rem}
+  .card .cc{padding:0 16px 16px;color:var(--on-surface-med);font-size:.86rem}
+  .card .ca{padding:8px;display:flex;gap:4px}
+  .dialog{background:var(--surface);border-radius:4px;box-shadow:var(--el8);width:320px}
+  .dialog .dt{padding:20px 24px 0;font-size:1.25rem;font-weight:500}.dialog .dc{padding:12px 24px 20px;color:var(--on-surface-med)}.dialog .da{padding:8px;display:flex;gap:4px;justify-content:flex-end}
+  .accordion{width:340px;background:var(--surface);box-shadow:var(--el1);border-radius:4px;overflow:hidden}
+  .accordion .hd{padding:14px 16px;display:flex;justify-content:space-between}.accordion .bd2{padding:0 16px 16px;color:var(--on-surface-med);font-size:.84rem;border-top:1px solid var(--divider);padding-top:12px}
+  .sheet{width:240px;background:var(--surface);box-shadow:var(--el8);border-radius:12px 12px 0 0;padding:8px 0}
+  .backdrop{width:300px;height:140px;border-radius:8px;background:var(--primary);position:relative;overflow:hidden}
+  .backdrop .front{position:absolute;bottom:0;left:0;right:0;height:90px;background:var(--surface);border-radius:16px 16px 0 0;padding:14px}
+
+  /* app bars & nav */
+  .appbar{display:flex;align-items:center;gap:16px;background:var(--primary);color:#fff;padding:0 16px;height:56px;border-radius:4px}
+  .appbar.bottom{border-radius:4px;justify-content:space-around}
+  .appbar .ti{flex:1;font-size:1.1rem;font-weight:500}
+  .appbar .iconbtn{color:#fff}
+  .bottomnav{display:flex;background:var(--surface);box-shadow:var(--el2);border-radius:4px;justify-content:space-around;padding:8px 0}
+  .bottomnav .it{display:flex;flex-direction:column;align-items:center;gap:3px;color:var(--on-surface-med);font-size:.7rem}
+  .bottomnav .it.on{color:var(--primary)}
+  .drawer{width:240px;background:var(--surface);box-shadow:var(--el1);border-radius:4px;padding:8px 0}
+  .drawer .it{display:flex;align-items:center;gap:16px;padding:10px 16px;color:var(--on-surface-med);font-size:.86rem;font-weight:500}
+  .drawer .it.on{background:var(--selected);color:var(--primary-dark);border-radius:0 24px 24px 0;margin-right:8px}
+  .rail{width:72px;background:var(--surface);box-shadow:var(--el1);border-radius:4px;padding:10px 0;display:flex;flex-direction:column;align-items:center;gap:14px}
+  .rail .it{display:flex;flex-direction:column;align-items:center;gap:3px;font-size:.62rem;color:var(--on-surface-med)}.rail .it.on{color:var(--primary)}
+  .tabs{display:flex;border-bottom:1px solid var(--divider)}.tabs .t{padding:12px 18px;text-transform:uppercase;font-size:.82rem;font-weight:500;color:var(--on-surface-med);border-bottom:2px solid transparent;cursor:pointer}.tabs .t.on{color:var(--primary);border-bottom-color:var(--primary)}
+  .menu{width:200px;background:var(--surface);box-shadow:var(--el8);border-radius:4px;padding:8px 0}.menu .mi{padding:9px 16px;font-size:.9rem}.menu .mi:hover{background:var(--hover)}
+
+  /* data */
+  .table{width:100%;border-collapse:collapse;font-size:.84rem;background:var(--surface)}
+  .table th{text-align:left;padding:14px 16px;color:var(--on-surface-med);font-weight:500;border-bottom:1px solid var(--divider)}
+  .table td{padding:12px 16px;border-bottom:1px solid var(--divider)}
+  .table tr:hover td{background:var(--hover)}
+  .listmd{width:300px;background:var(--surface);box-shadow:var(--el1);border-radius:4px;overflow:hidden}
+  .listmd .li{display:flex;align-items:center;gap:16px;padding:12px 16px;border-bottom:1px solid var(--divider)}.listmd .li:last-child{border:none}
+  .avatar{width:40px;height:40px;border-radius:50%;background:var(--secondary);color:#fff;display:flex;align-items:center;justify-content:center}
+  .imagelist{display:grid;grid-template-columns:repeat(3,1fr);gap:4px;width:240px}.imagelist div{height:70px;background:linear-gradient(135deg,var(--primary-light),var(--primary));border-radius:2px}
+  .badge{position:relative;display:inline-flex}.badge .d{position:absolute;top:-4px;right:-6px;background:var(--error);color:#fff;font-size:.62rem;min-width:18px;height:18px;border-radius:9px;display:flex;align-items:center;justify-content:center;padding:0 4px}
+  .tip{background:rgba(97,97,97,.92);color:#fff;font-size:.7rem;padding:5px 8px;border-radius:4px}
+  .linear{width:240px;height:4px;background:rgba(244,119,53,.3);overflow:hidden;border-radius:2px}.linear .v{height:100%;width:60%;background:var(--primary)}
+  .spin{width:36px;height:36px;border:4px solid rgba(244,119,53,.25);border-top-color:var(--primary);border-radius:50%;animation:sp 1s linear infinite}@keyframes sp{to{transform:rotate(360deg)}}
+  .picker{width:300px;background:var(--surface);box-shadow:var(--el8);border-radius:4px;overflow:hidden}
+  .picker .ph2{background:var(--primary);color:#fff;padding:16px}.picker .ph2 .d{font-size:1.8rem;font-weight:400}
+  .picker .grid{display:grid;grid-template-columns:repeat(7,1fr);gap:2px;padding:12px}
+  .picker .grid span{height:30px;display:flex;align-items:center;justify-content:center;font-size:.78rem;border-radius:50%}
+  .picker .grid span.on{background:var(--primary);color:#fff}
+  .clock{width:200px;height:200px;border-radius:50%;background:var(--field);position:relative;margin:12px auto}
+  .clock .c{position:absolute;top:50%;left:50%;width:2px;height:70px;background:var(--primary);transform-origin:bottom;transform:translate(-50%,-100%) rotate(40deg)}
+  .clock .dot{position:absolute;top:50%;left:50%;width:8px;height:8px;border-radius:50%;background:var(--primary);transform:translate(-50%,-50%)}
+
+  /* status & feedback */
+  .snackbar{display:inline-flex;align-items:center;gap:16px;background:#323232;color:#fff;padding:14px 16px;border-radius:4px;font-size:.86rem}.snackbar a{color:var(--primary-light);text-transform:uppercase;font-weight:500;font-size:.8rem}
+  .banner{display:flex;gap:12px;align-items:center;background:var(--surface);padding:14px 16px;border-bottom:1px solid var(--divider);font-size:.86rem;width:100%}
+  .schip{display:inline-flex;align-items:center;gap:5px;height:24px;padding:0 8px;border-radius:12px;font-size:.74rem;font-weight:500}
+  .schip.ok{background:#E8F5E9;color:#1B5E20}.schip.warn{background:#FFF3E0;color:#E65100}.schip.err{background:#FFEBEE;color:#B71C1C}
+  .divider{height:1px;background:var(--divider);width:240px}
+  .crumbs{font-size:.85rem;color:var(--on-surface-med)}.crumbs a{color:var(--on-surface-med);text-decoration:none}.crumbs a:hover{text-decoration:underline;color:var(--primary-dark)}.crumbs .s{margin:0 8px;opacity:.5}
+  .pgn{display:flex;align-items:center;gap:4px}.pgn .lbl{color:var(--on-surface-med);font-size:.8rem;margin-right:12px}.pgn .p{min-width:32px;height:32px;border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:.82rem;color:var(--on-surface);cursor:pointer}.pgn .p:hover{background:var(--hover)}.pgn .p.on{background:var(--selected);color:var(--primary-dark);font-weight:500}
+  .stepper2{display:flex;align-items:center;gap:8px;flex-wrap:wrap}.st{display:flex;align-items:center;gap:8px;color:var(--on-surface-med);font-size:.85rem}.st .n{width:24px;height:24px;border-radius:50%;background:var(--on-surface-dis);color:#fff;display:flex;align-items:center;justify-content:center;font-size:.72rem}.st.on .n{background:var(--primary)}.st.done .n{background:var(--primary)}.st.on{color:var(--on-surface);font-weight:500}.st .bar{width:36px;height:1px;background:var(--divider)}
+
+  .swatches{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:10px}
+  .sw2{border-radius:6px;overflow:hidden;border:1px solid var(--divider)}.sw2 .cap{height:50px}.sw2 .m{padding:6px 8px;font-size:.7rem}.sw2 .m b{display:block;font-size:.76rem}
+  .pillwarn{display:inline-block;background:#FFEBEE;color:#B71C1C;font-size:.66rem;font-weight:700;padding:2px 7px;border-radius:10px;margin-left:6px}
+  .hidden{display:none!important}
+  @media(max-width:880px){.layout{grid-template-columns:1fr}nav.side{display:none}main{padding:22px 16px 80px}}
+</style>
+</head>
+<body>
+<div class="layout">
+  <nav class="side">
+    <h1>Cartrack · Material 2</h1>
+    <div class="sub">Component library (branded)</div>
+    <input id="q" placeholder="Filter sections…">
+    <a href="#foundations">Foundations</a>
+    <a href="#appbars">App bar (top)</a>
+    <a href="#badges">Badges</a>
+    <a href="#banners">Banners</a>
+    <a href="#buttons">Buttons</a>
+    <a href="#cards">Cards</a>
+    <a href="#chips">Chips</a>
+    <a href="#datatables">Data tables</a>
+    <a href="#pagination">Pagination</a>
+    <a href="#dialogs">Dialogs</a>
+    <a href="#dividers">Dividers</a>
+    <a href="#expansion">Expansion panels</a>
+    <a href="#imagelists">Image lists</a>
+    <a href="#lists">Lists</a>
+    <a href="#menus">Menus</a>
+    <a href="#drawer">Navigation drawer</a>
+    <a href="#rail">Navigation rail</a>
+    <a href="#breadcrumbs">Breadcrumbs</a>
+    <a href="#tabs">Tabs</a>
+    <a href="#stepper">Steppers</a>
+    <a href="#sheets">Side sheet</a>
+    <a href="#pickers">Pickers (date / time)</a>
+    <a href="#progress">Progress indicators</a>
+    <a href="#selection">Selection controls</a>
+    <a href="#sliders">Sliders</a>
+    <a href="#snackbars">Snackbars</a>
+    <a href="#textfields">Text fields</a>
+    <a href="#tooltips">Tooltips</a>
+  </nav>
+
+  <main>
+    <header class="hero">
+      <h2>Cartrack — Material 2 Component Library</h2>
+      <p class="lede"><strong>Scope: desktop web only.</strong> The Material&nbsp;2 components needed for a desktop fleet portal, rendered with Cartrack brand tokens — primary orange <code>#F47735</code>, Roboto, 14px base, classic MD2 styling (4px corners, uppercase buttons, filled text fields). Mobile-only patterns are intentionally excluded; a few desktop-web staples MD2's mobile-first catalogue under-emphasizes (breadcrumbs, pagination, steppers, expansion panels) are added.</p>
+      <div class="note"><strong>Excluded as mobile-only:</strong> bottom app bar, bottom navigation, bottom sheets, backdrop, and the floating action button (FAB). On desktop the primary action lives in the top app bar / page toolbar as a <em>contained</em> button, and primary navigation is the persistent drawer or rail — not bottom nav.<br><br><strong>Accessibility flag:</strong> white text on the orange primary is ~2.79:1 (below WCAG&nbsp;AA); for filled buttons and the app bar carrying text, use <code>primary-dark #BB4800</code> or dark text. Worth a deliberate decision.</div>
+    </header>
+
+    <!-- FOUNDATIONS -->
+    <section id="foundations"><h3>Foundations</h3>
+      <p class="desc">The brand tokens applied throughout: colour and type.</p>
+      <div class="block"><h4>Colour</h4><div class="swatches">
+        <div class="sw2"><div class="cap" style="background:var(--primary)"></div><div class="m"><b>primary</b>#F47735<span class="pillwarn">white ✕ AA</span></div></div>
+        <div class="sw2"><div class="cap" style="background:var(--primary-dark)"></div><div class="m"><b>primary dark</b>#BB4800</div></div>
+        <div class="sw2"><div class="cap" style="background:var(--secondary)"></div><div class="m"><b>secondary</b>#333333</div></div>
+        <div class="sw2"><div class="cap" style="background:var(--success)"></div><div class="m"><b>success</b>#4CAF50</div></div>
+        <div class="sw2"><div class="cap" style="background:var(--error)"></div><div class="m"><b>error</b>#F44336</div></div>
+        <div class="sw2"><div class="cap" style="background:var(--warning)"></div><div class="m"><b>warning</b>#FF9800</div></div>
+        <div class="sw2"><div class="cap" style="background:var(--info)"></div><div class="m"><b>info</b>#2196F3</div></div>
+        <div class="sw2"><div class="cap" style="background:var(--field)"></div><div class="m"><b>field bg</b>#F5F5F5</div></div>
+      </div></div>
+      <div class="block"><h4>Type — Roboto</h4><div class="demo col" style="gap:8px">
+        <span style="font-size:24px;font-weight:400">Headline — Fleet overview</span>
+        <span style="font-size:20px;font-weight:500">Title — Vehicle CA 123-456</span>
+        <span style="font-size:16px">Subtitle — Trips this week</span>
+        <span style="font-size:14px">Body — The vehicle completed 14 trips covering 512 km.</span>
+        <span style="font-size:14px;font-weight:500;text-transform:uppercase;letter-spacing:.05em">Button — View report</span>
+        <span style="font-size:12px;color:var(--on-surface-med)">Caption — Updated 2 minutes ago</span>
+      </div></div>
+    </section>
+
+    <section id="appbars"><h3>App bar (top)</h3><p class="desc">The page header: title, global search, and page-level actions (incl. the primary contained action that would be a FAB on mobile).</p>
+      <div class="block"><div class="demo col">
+        <div class="appbar"><span class="iconbtn">☰</span><span class="ti">Vehicles</span><span class="iconbtn">🔍</span><span class="iconbtn">🔔</span><span class="iconbtn">⋮</span></div>
+      </div></div>
+    </section>
+
+    <section id="badges"><h3>Badges</h3><p class="desc">Small count/status indicator on an icon or element.</p>
+      <div class="block"><div class="demo">
+        <span class="badge"><button class="iconbtn">🔔</button><span class="d">4</span></span>
+        <span class="badge"><button class="iconbtn">✉</button><span class="d">12</span></span>
+        <span class="badge"><button class="iconbtn">🚚</button><span class="d" style="min-width:8px;height:8px;padding:0"></span></span>
+      </div></div>
+    </section>
+
+    <section id="banners"><h3>Banners</h3><p class="desc">A prominent message + actions at the top of content.</p>
+      <div class="block"><div class="demo col">
+        <div class="banner"><span>⚠</span><span style="flex:1">3 vehicles are due for service this week.</span><button class="btn text">Dismiss</button><button class="btn text">View</button></div>
+      </div></div>
+    </section>
+
+    <section id="buttons"><h3>Buttons</h3><p class="desc">Text, outlined, contained (+ toggle). MD2: 4px radius, uppercase label.</p>
+      <div class="block"><div class="demo">
+        <button class="btn contained">Contained</button>
+        <button class="btn outlined">Outlined</button>
+        <button class="btn text">Text</button>
+        <button class="btn contained sec">Secondary</button>
+        <button class="btn contained" disabled>Disabled</button>
+        <span class="toggle"><span class="on">Map</span><span>List</span></span>
+      </div></div>
+    </section>
+
+    <section id="cards"><h3>Cards</h3><p class="desc">A container for related content and actions.</p>
+      <div class="block"><div class="demo" style="align-items:flex-start">
+        <div class="card"><div class="media"></div><div class="ch"><div class="t">CA 123-456</div><div class="s">Jane Cooper</div></div><div class="cc">14 trips · 512 km this week.</div><div class="ca"><button class="btn text">Details</button><button class="btn text">Track</button></div></div>
+      </div></div>
+    </section>
+
+    <section id="chips"><h3>Chips</h3><p class="desc">Compact elements for input, filters, or choices.</p>
+      <div class="block"><div class="demo">
+        <span class="chip">Default</span><span class="chip out">Outlined</span><span class="chip sel">✓ Active</span><span class="chip">Deletable ✕</span>
+      </div></div>
+    </section>
+
+    <section id="datatables"><h3>Data tables</h3><p class="desc">Rows and columns of data with selection &amp; sorting. &nbsp;<a href="components/data-table.html"><strong>View full component details →</strong></a></p>
+      <div class="block"><div class="demo" style="padding:0;overflow:hidden">
+        <table class="table"><thead><tr><th style="width:36px"><span class="cbox"></span></th><th>Registration ▲</th><th>Driver</th><th>Status</th><th>Last trip</th></tr></thead>
+        <tbody>
+          <tr><td><span class="cbox on"></span></td><td>CA 123-456</td><td>Jane Cooper</td><td><span class="schip ok">Active</span></td><td>2 min ago</td></tr>
+          <tr><td><span class="cbox"></span></td><td>CA 789-012</td><td>Frank Kim</td><td><span class="schip warn">Idle</span></td><td>1 h ago</td></tr>
+          <tr><td><span class="cbox"></span></td><td>CA 345-678</td><td>Lena Ortiz</td><td><span class="schip err">Offline</span></td><td>3 d ago</td></tr>
+        </tbody></table>
+      </div></div>
+    </section>
+
+    <section id="pagination"><h3>Pagination</h3><p class="desc">Page through large data tables (desktop tables are paginated, not infinite-scrolled).</p>
+      <div class="block"><div class="demo"><div class="pgn"><span class="lbl">Rows per page: 100 ▾</span><span class="lbl">1–100 of 100,000</span><span class="p">‹</span><span class="p on">1</span><span class="p">2</span><span class="p">3</span><span class="p">…</span><span class="p">›</span></div></div></div>
+    </section>
+
+    <section id="dialogs"><h3>Dialogs</h3><p class="desc">A modal window for a focused task or decision.</p>
+      <div class="block"><div class="demo"><div class="dialog"><div class="dt">Remove vehicle?</div><div class="dc">This removes CA 123-456 from the active fleet. This action can't be undone.</div><div class="da"><button class="btn text">Cancel</button><button class="btn text" style="color:var(--error)">Remove</button></div></div></div></div>
+    </section>
+
+    <section id="dividers"><h3>Dividers</h3><p class="desc">A thin line grouping content in lists and layouts.</p>
+      <div class="block"><div class="demo col"><span>Section one</span><div class="divider"></div><span>Section two</span></div></div>
+    </section>
+
+    <section id="expansion"><h3>Expansion panels</h3><p class="desc">Progressive disclosure of dense detail (common in desktop settings &amp; record pages).</p>
+      <div class="block"><div class="demo col" style="align-items:flex-start">
+        <div class="accordion"><div class="hd"><span style="font-weight:500">Vehicle details</span><span>⌄</span></div><div class="bd2">Make, model, VIN, year, fuel type…</div></div>
+        <div class="accordion"><div class="hd"><span>Maintenance history</span><span>›</span></div></div>
+      </div></div>
+    </section>
+
+    <section id="imagelists"><h3>Image lists</h3><p class="desc">A grid of images (thumbnails, vehicle photos).</p>
+      <div class="block"><div class="demo"><div class="imagelist"><div></div><div></div><div></div><div></div><div></div><div></div></div></div></div>
+    </section>
+
+    <section id="lists"><h3>Lists</h3><p class="desc">Vertical groups of related items.</p>
+      <div class="block"><div class="demo"><div class="listmd"><div class="li"><span class="avatar">JC</span><div><div>Jane Cooper</div><div style="color:var(--on-surface-med);font-size:.8rem">CA 123-456</div></div></div><div class="li"><span class="avatar" style="background:var(--primary)">FK</span><div><div>Frank Kim</div><div style="color:var(--on-surface-med);font-size:.8rem">CA 789-012</div></div></div></div></div></div>
+    </section>
+
+    <section id="menus"><h3>Menus</h3><p class="desc">A temporary list of choices on a surface.</p>
+      <div class="block"><div class="demo"><div class="menu"><div class="mi">Edit</div><div class="mi">Duplicate</div><div class="mi">Export</div><div class="mi" style="color:var(--error)">Delete</div></div></div></div>
+    </section>
+
+    <section id="drawer"><h3>Navigation drawer</h3><p class="desc">Primary navigation anchored to the side.</p>
+      <div class="block"><div class="demo"><div class="drawer"><div class="it on">🗺 Map</div><div class="it">🚚 Assets</div><div class="it">👤 Drivers</div><div class="it">📊 Reports</div><div class="it">⚙ Settings</div></div></div></div>
+    </section>
+
+    <section id="rail"><h3>Navigation rail</h3><p class="desc">Compact side navigation for larger screens.</p>
+      <div class="block"><div class="demo"><div class="rail"><div class="it on"><span>🗺</span>Map</div><div class="it"><span>🚚</span>Assets</div><div class="it"><span>📊</span>Reports</div></div></div></div>
+    </section>
+
+    <section id="breadcrumbs"><h3>Breadcrumbs</h3><p class="desc">Show and navigate location in deep hierarchies — a desktop-web staple.</p>
+      <div class="block"><div class="demo"><div class="crumbs"><a href="#">Fleet</a><span class="s">›</span><a href="#">Vehicles</a><span class="s">›</span>CA 123-456</div></div></div>
+    </section>
+
+    <section id="stepper"><h3>Steppers</h3><p class="desc">Guide a user through a multi-step task (onboarding a vehicle, a report wizard).</p>
+      <div class="block"><div class="demo"><div class="stepper2">
+        <span class="st done"><span class="n">✓</span> Details</span><span class="bar"></span>
+        <span class="st on"><span class="n">2</span> Assign driver</span><span class="bar"></span>
+        <span class="st"><span class="n">3</span> Confirm</span>
+      </div></div></div>
+    </section>
+
+    <section id="sheets"><h3>Side sheet</h3><p class="desc">A surface anchored to the right edge for contextual detail beside a list (kept; bottom sheets are mobile-only and excluded).</p>
+      <div class="block"><div class="demo" style="align-items:flex-start">
+        <div class="sheet" style="border-radius:0;width:260px"><div style="padding:0 16px 8px;font-weight:500">CA 123-456</div><div class="listmd" style="box-shadow:none;border-radius:0"><div class="li">Overview</div><div class="li">Recent trips</div><div class="li">Maintenance</div></div></div>
+      </div></div>
+    </section>
+
+    <section id="pickers"><h3>Pickers — date &amp; time</h3><p class="desc">Select dates and times.</p>
+      <div class="block"><div class="demo" style="align-items:flex-start">
+        <div class="picker"><div class="ph2"><div style="font-size:.8rem">JUN 2026</div><div class="d">Sat, Jun 20</div></div><div class="grid"><span>S</span><span>M</span><span>T</span><span>W</span><span>T</span><span>F</span><span>S</span><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span><span>7</span><span>8</span><span>9</span><span>10</span><span>11</span><span>12</span><span>13</span><span class="on">20</span></div></div>
+        <div class="picker" style="width:220px"><div class="ph2"><div class="d">14:30</div></div><div class="clock"><div class="c"></div><div class="dot"></div></div></div>
+      </div></div>
+    </section>
+
+    <section id="progress"><h3>Progress indicators</h3><p class="desc">Linear and circular, determinate or indeterminate.</p>
+      <div class="block"><div class="demo"><span class="linear"><span class="v"></span></span><span class="spin"></span></div></div>
+    </section>
+
+    <section id="selection"><h3>Selection controls</h3><p class="desc">Checkboxes, radio buttons, switches.</p>
+      <div class="block"><div class="demo">
+        <span class="ctl"><span class="cbox on"></span> Checkbox</span><span class="ctl"><span class="cbox"></span> Unchecked</span>
+        <span class="ctl"><span class="radio on"></span> Radio</span><span class="ctl"><span class="radio"></span> Off</span>
+        <span class="ctl"><span class="sw on"><span class="k"></span></span> Switch on</span><span class="ctl"><span class="sw"><span class="k"></span></span> off</span>
+      </div></div>
+    </section>
+
+    <section id="sliders"><h3>Sliders</h3><p class="desc">Select a value from a range.</p>
+      <div class="block"><div class="demo"><span class="slider"><span class="fl"></span><span class="t"></span></span></div></div>
+    </section>
+
+    <section id="snackbars"><h3>Snackbars</h3><p class="desc">Brief feedback at the bottom of the screen.</p>
+      <div class="block"><div class="demo"><span class="snackbar">Vehicle saved <a href="#">Undo</a></span></div></div>
+    </section>
+
+    <section id="tabs"><h3>Tabs</h3><p class="desc">Switch between related views.</p>
+      <div class="block"><div class="demo" style="padding:0"><div class="tabs" style="width:100%"><span class="t on">Overview</span><span class="t">Trips</span><span class="t">Maintenance</span><span class="t">Alerts</span></div></div></div>
+    </section>
+
+    <section id="textfields"><h3>Text fields</h3><p class="desc">Filled (default) and outlined; with label, helper, error.</p>
+      <div class="block"><div class="demo">
+        <span class="tf filled"><span class="lbl">Registration</span><div class="f">CA 123-456</div></span>
+        <span class="tf filled focus"><span class="lbl">Driver</span><div class="f">Jane Cooper</div><div class="sup">Required</div></span>
+        <span class="tf outlined"><span class="lbl">Status</span><div class="f">Active ▾</div></span>
+        <span class="tf outlined err"><span class="lbl">Odometer</span><div class="f ph">—</div><div class="sup err">Enter a value</div></span>
+      </div></div>
+    </section>
+
+    <section id="tooltips"><h3>Tooltips</h3><p class="desc">A label on hover/focus.</p>
+      <div class="block"><div class="demo"><span class="tip">Track vehicle</span></div></div>
+    </section>
+
+    <p class="note" style="margin-top:44px">Material&nbsp;2 catalogue, Cartrack-branded. Built as the visual target — when these become real coded components, Storybook renders the interactive versions.</p>
+  </main>
+</div>
+<script>
+  const q=document.getElementById('q');
+  q.addEventListener('input',()=>{const t=q.value.trim().toLowerCase();
+    document.querySelectorAll('main section').forEach(s=>{const h=s.querySelector('h3');const hit=!t||(h&&h.textContent.toLowerCase().includes(t));s.classList.toggle('hidden',!hit);});});
+</script>
+</body>
+</html>

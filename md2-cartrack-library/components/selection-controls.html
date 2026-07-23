@@ -1,0 +1,99 @@
+<!DOCTYPE html><html lang="en"><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cartrack DS — Selection controls</title>
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&family=Roboto+Mono&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/ds.css">
+<link rel="stylesheet" href="https://unpkg.com/material-components-web@14.0.0/dist/material-components-web.min.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+<style>:root{--mdc-theme-primary:#F47735;--mdc-theme-secondary:#333;--mdc-theme-on-primary:#fff;--mdc-theme-surface:#fff;--mdc-theme-background:#fff;--mdc-theme-error:#BA1A1A}</style>
+</head><body><main>
+  <div class="crumbs"><a href="index.html">Components</a><span class="s">&rsaquo;</span> Selection controls</div>
+  <h1>Selection controls</h1>
+  <p class="lede">Selection controls capture choices: checkboxes for multi-select, radio buttons for one-of-many, and switches for instant on/off settings. Choosing the right one tells the operator how the choice behaves.</p>
+  <div class="chiprow"><span class="tag">Category: Inputs &amp; forms</span><span class="tag">Desktop</span><span class="tag">Import: <code>Checkbox</code>, <code>Radio</code>, <code>Switch</code></span></div>
+  <div class="callout">Checkbox = select none/some/all and apply on submit. Radio = pick exactly one from a small set. Switch = toggle a setting that takes effect immediately.</div>
+
+  <h2>Live component (real MDC)</h2>
+  <p class="muted">Genuine MDC checkbox, radio, and the v14 switch (loads MDC online).</p>
+  <div class="stage">
+    <div class="mdc-form-field"><div class="mdc-checkbox"><input type="checkbox" class="mdc-checkbox__native-control" id="m-cb" checked/><div class="mdc-checkbox__background"><svg class="mdc-checkbox__checkmark" viewBox="0 0 24 24"><path class="mdc-checkbox__checkmark-path" fill="none" d="M1.73,12.91 8.1,19.28 22.79,4.59"/></svg><div class="mdc-checkbox__mixedmark"></div></div><div class="mdc-checkbox__ripple"></div></div><label for="m-cb">Checkbox</label></div>
+    <div class="mdc-form-field"><div class="mdc-radio"><input class="mdc-radio__native-control" type="radio" id="m-rd" name="m-r" checked><div class="mdc-radio__background"><div class="mdc-radio__outer-circle"></div><div class="mdc-radio__inner-circle"></div></div><div class="mdc-radio__ripple"></div></div><label for="m-rd">Radio</label></div>
+    <button id="m-sw" class="mdc-switch mdc-switch--selected" type="button" role="switch" aria-checked="true"><div class="mdc-switch__track"></div><div class="mdc-switch__handle-track"><div class="mdc-switch__handle"><div class="mdc-switch__shadow"><div class="mdc-elevation-overlay"></div></div><div class="mdc-switch__ripple"></div><div class="mdc-switch__icons"><svg class="mdc-switch__icon mdc-switch__icon--on" viewBox="0 0 24 24"><path d="M19.69,5.23L8.96,15.96l-4.23-4.23L2.96,13.5l6,6L21.46,7L19.69,5.23z"/></svg><svg class="mdc-switch__icon mdc-switch__icon--off" viewBox="0 0 24 24"><path d="M20 13H4v-2h16v2z"/></svg></div></div></div></button><label for="m-sw" style="margin-left:8px">Notify on alert</label>
+  </div>
+
+  <h2>Demo</h2>
+  <div class="lab">
+    <div class="lab-preview"><span class="ctl" id="pv"></span></div>
+    <div class="lab-controls">
+      <h5>Options</h5>
+      <div class="lab-row"><label for="c-type">Control</label><select id="c-type"><option value="checkbox">Checkbox</option><option value="radio">Radio</option><option value="switch">Switch</option></select></div>
+      <div class="lab-row"><label for="c-on">Selected</label><input type="checkbox" id="c-on" checked></div>
+      <div class="lab-row"><label for="c-lab">Label</label><input type="text" id="c-lab" value="Notify on alert"></div>
+    </div>
+  </div>
+  <script>(function(){var pv=document.getElementById('pv'),t=document.getElementById('c-type'),on=document.getElementById('c-on'),l=document.getElementById('c-lab');function u(){var c='',k=on.checked?' on':'';if(t.value==='checkbox')c='<span class="cbx'+k+'"></span>';else if(t.value==='radio')c='<span class="radio'+k+'"></span>';else c='<span class="sw'+k+'"><span class="k"></span></span>';pv.innerHTML=c+' '+(l.value||'Label');}[t,on].forEach(function(e){e.addEventListener('change',u)});l.addEventListener('input',u);u();})();</script>
+
+  <h2>Live example</h2>
+  <div class="stage">
+    <span class="ctl"><span class="cbx on"></span> Checkbox</span>
+    <span class="ctl"><span class="cbx"></span> Unchecked</span>
+    <span class="ctl"><span class="cbx ind"></span> Indeterminate</span>
+    <span class="ctl"><span class="radio on"></span> Radio</span>
+    <span class="ctl"><span class="radio"></span> Off</span>
+    <span class="ctl"><span class="sw on"><span class="k"></span></span> Switch on</span>
+    <span class="ctl"><span class="sw"><span class="k"></span></span> off</span>
+  </div>
+
+  <h2>Anatomy</h2>
+  <div class="anat"><p class="muted">Each control is a small target plus a label.</p>
+    <ol>
+      <li><b>Control</b> — the box, circle, or track/thumb.</li>
+      <li><b>Selected mark</b> — checkmark, inner dot, or thumb position.</li>
+      <li><b>Indeterminate mark</b> — a dash on a checkbox when a group is partially selected.</li>
+      <li><b>Label</b> — what the choice means; the whole label is a click target.</li>
+      <li><b>State layer</b> — hover/focus ripple around the control.</li>
+    </ol></div>
+
+  <h2>Variants</h2>
+  <table class="spec"><tr><th>Control</th><th>Use for</th></tr>
+    <tr><td>Checkbox</td><td>Independent multi-select (table row selection, opt-in lists). Header checkbox does select-all + indeterminate.</td></tr>
+    <tr><td>Radio button</td><td>One choice from a short, mutually exclusive set (2–5).</td></tr>
+    <tr><td>Switch</td><td>An immediate on/off setting (e.g. enable notifications).</td></tr>
+  </table>
+
+  <h2>Behaviors</h2>
+  <h3>Indeterminate</h3><p class="muted">When some-but-not-all of a group is checked, the parent checkbox shows a dash; clicking it selects or clears the whole group.</p>
+  <h3>Apply timing</h3><p class="muted">Checkboxes/radios usually apply when the form is submitted; switches apply instantly. Don't mix the metaphors.</p>
+  <h3>Grouping</h3><p class="muted">Radios share a name so only one is active; provide a group label.</p>
+
+  <h2>States</h2>
+  <table class="spec"><tr><th>State</th><th>Treatment</th></tr>
+    <tr><td>Unselected</td><td>Outline only (checkbox/radio) or grey track (switch).</td></tr>
+    <tr><td>Selected</td><td>Primary fill + mark; switch track/thumb primary.</td></tr>
+    <tr><td>Hover/focus</td><td>State-layer ring around the control.</td></tr>
+    <tr><td>Disabled</td><td>38% opacity, not focusable.</td></tr>
+  </table>
+
+  <h2>Specs</h2>
+  <table class="spec"><tr><th>Property</th><th>Value</th></tr>
+    <tr><td>Checkbox / radio size</td><td>18px control, 40px touch/click target</td></tr>
+    <tr><td>Switch</td><td>~34&times;14 track, 20px thumb</td></tr>
+    <tr><td>Default size</td><td>small (Cartrack theme sets dense controls)</td></tr>
+    <tr><td>Selected colour</td><td>primary (#F47735); mark/thumb contrast handled by the control</td></tr>
+    <tr><td>Label</td><td>Roboto 14px / 400, 8px gap from control</td></tr>
+  </table>
+
+  <h2>Do &amp; Don't</h2>
+  <div class="cols">
+    <div class="do"><h4>Do</h4><ul><li>Use a switch only for instant-effect settings.</li><li>Use the indeterminate state for partial group selection.</li><li>Make the label clickable.</li></ul></div>
+    <div class="dont"><h4>Don't</h4><ul><li>Don't use radios for more than ~5 options — use a select.</li><li>Don't use a switch where users expect to Save.</li><li>Don't rely on colour alone to show selection.</li></ul></div>
+  </div>
+
+  <h2>Accessibility</h2>
+  <p class="muted">Native inputs with associated labels; groups use <code>fieldset</code>/<code>legend</code> or <code>radiogroup</code>. The indeterminate checkbox sets the <code>indeterminate</code> property. State is conveyed by the mark and to assistive tech, not by colour alone; focus is visible.</p>
+
+  <div class="callout" style="margin-top:32px">Part of the shared component detail-page set. <a href="index.html">All components →</a></div>
+</main>
+<script src="https://unpkg.com/material-components-web@14.0.0/dist/material-components-web.min.js"></script>
+<script>window.addEventListener('load',function(){function E(s,f){document.querySelectorAll(s).forEach(function(e){try{f(e)}catch(x){}})}E('.mdc-checkbox',function(e){mdc.checkbox.MDCCheckbox.attachTo(e)});E('.mdc-radio',function(e){mdc.radio.MDCRadio.attachTo(e)});E('.mdc-form-field',function(e){mdc.formField.MDCFormField.attachTo(e)});E('.mdc-switch',function(e){(mdc.switchControl||mdc['switch']).MDCSwitch.attachTo(e)});});</script>
+</body></html>

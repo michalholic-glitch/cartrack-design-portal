@@ -1,0 +1,261 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pickers — date &amp; time — Cartrack Components</title>
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&family=Roboto+Mono&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/site.css">
+</head>
+<body class="detail">
+<aside class="sidebar"><a class="side-home" href="../index.html">&larr; All components</a>
+<nav class="side-nav">
+<div class="side-cat">Actions</div>
+<a class="side-link " href="./buttons.html">Buttons</a>
+<a class="side-link " href="./menus.html">Menus</a>
+<div class="side-cat">Inputs &amp; forms</div>
+<a class="side-link " href="./chips.html">Chips</a>
+<a class="side-link active" href="./pickers.html">Pickers — date &amp; time</a>
+<a class="side-link " href="./selection-controls.html">Selection controls</a>
+<a class="side-link " href="./sliders.html">Sliders</a>
+<a class="side-link " href="./text-fields.html">Text fields</a>
+<div class="side-cat">Navigation</div>
+<a class="side-link " href="./app-bar.html">App bar (top)</a>
+<a class="side-link " href="./breadcrumbs.html">Breadcrumbs</a>
+<a class="side-link " href="./navigation-drawer.html">Navigation drawer</a>
+<a class="side-link " href="./navigation-rail.html">Navigation rail</a>
+<a class="side-link " href="./steppers.html">Steppers</a>
+<a class="side-link " href="./tabs.html">Tabs</a>
+<div class="side-cat">Data display</div>
+<a class="side-link " href="./badges.html">Badges</a>
+<a class="side-link " href="./data-table.html">Data table</a>
+<a class="side-link " href="./dividers.html">Dividers</a>
+<a class="side-link " href="./image-lists.html">Image lists</a>
+<a class="side-link " href="./lists.html">Lists</a>
+<a class="side-link " href="./pagination.html">Pagination</a>
+<a class="side-link " href="./progress.html">Progress indicators</a>
+<a class="side-link " href="./tooltips.html">Tooltips</a>
+<div class="side-cat">Feedback</div>
+<a class="side-link " href="./banners.html">Banners</a>
+<a class="side-link " href="./snackbars.html">Snackbars</a>
+<div class="side-cat">Surfaces</div>
+<a class="side-link " href="./cards.html">Cards</a>
+<a class="side-link " href="./dialogs.html">Dialogs</a>
+<a class="side-link " href="./expansion-panels.html">Expansion panels</a>
+<a class="side-link " href="./side-sheet.html">Side sheet</a>
+</nav></aside>
+<main class="content">
+  <header class="detail-head">
+    <h1>Pickers — date &amp; time</h1>
+    <div class="meta"><span class="chip">Inputs &amp; forms</span><span class="chip mono">DatePicker, DateRangePicker, TimePicker</span><span class="chip mono">pickers.md</span></div>
+    <p class="lede">Pickers help operators choose dates and times — a trip window, a report period, a maintenance due date. They pair a typeable field with a calendar or clock surface, and support ranges for from–to selections.</p>
+  </header>
+  
+      <div class="preview-card">
+        <div class="preview-head">Live render</div>
+        <iframe class="js-preview" style="height:220px" srcdoc="<!doctype html><html lang=&quot;en&quot;><head><meta charset=&quot;utf-8&quot;>
+<link href=&quot;https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&family=Roboto+Mono&display=swap&quot; rel=&quot;stylesheet&quot;><link href=&quot;https://fonts.googleapis.com/icon?family=Material+Icons&quot; rel=&quot;stylesheet&quot;>
+<link rel=&quot;stylesheet&quot; href=&quot;https://unpkg.com/material-components-web@14.0.0/dist/material-components-web.min.css&quot;><link rel=&quot;stylesheet&quot; href=&quot;../assets/ds.css&quot;>
+<style>:root{--mdc-theme-primary:#F47735;--mdc-theme-secondary:#333;--mdc-theme-on-primary:#fff;--mdc-theme-surface:#fff;--mdc-theme-background:#fff;--mdc-theme-error:#BA1A1A}
+html,body{margin:0;padding:0}body{background:#F0F0F2;font-family:'Roboto',sans-serif}
+.simple-stage{padding:28px 22px;display:flex;flex-wrap:wrap;gap:18px;align-items:center;justify-content:center}
+</style></head>
+<body><div class=&quot;simple-stage&quot;><div class=&quot;picker&quot;><div class=&quot;ph2&quot;><div style=&quot;font-size:.8rem&quot;>JUN 2026</div><div class=&quot;d&quot;>Sat, Jun 20</div></div>
+<div class=&quot;grid&quot;><span>S</span><span>M</span><span>T</span><span>W</span><span>T</span><span>F</span><span>S</span><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span><span>7</span><span>8</span><span>9</span><span>10</span><span>11</span><span>12</span><span>13</span><span class=&quot;on&quot;>20</span></div>
+</div>
+<div class=&quot;picker&quot; style=&quot;width:220px&quot;><div class=&quot;ph2&quot;><div class=&quot;d&quot;>14:30</div></div><div class=&quot;clock&quot;><div class=&quot;c&quot;></div><div class=&quot;dot&quot;></div></div></div>
+<span class=&quot;tf outlined&quot;><span class=&quot;lbl&quot;>Date range</span><div class=&quot;f&quot;>1 Jun – 30 Jun 📅</div></span></div>
+<script src=&quot;https://unpkg.com/material-components-web@14.0.0/dist/material-components-web.min.js&quot;></script>
+<script>
+window.addEventListener('load',function(){function E(s,f){document.querySelectorAll(s).forEach(function(e){try{f(e)}catch(x){}})}
+try{E('.mdc-button,.mdc-fab,.mdc-icon-button,.mdc-card__primary-action',function(e){mdc.ripple.MDCRipple.attachTo(e)})}catch(x){}
+E('.mdc-text-field',function(e){mdc.textField.MDCTextField.attachTo(e)});
+E('.mdc-select',function(e){mdc.select.MDCSelect.attachTo(e)});
+E('.mdc-checkbox',function(e){mdc.checkbox.MDCCheckbox.attachTo(e)});
+E('.mdc-radio',function(e){mdc.radio.MDCRadio.attachTo(e)});
+E('.mdc-form-field',function(e){mdc.formField.MDCFormField.attachTo(e)});
+E('.mdc-switch',function(e){(mdc.switchControl||mdc['switch']).MDCSwitch.attachTo(e)});
+E('.mdc-evolution-chip-set',function(e){mdc.chips.MDCChipSet.attachTo(e)});
+E('.mdc-tab-bar',function(e){mdc.tabBar.MDCTabBar.attachTo(e)});
+E('.mdc-slider',function(e){mdc.slider.MDCSlider.attachTo(e)});
+E('.mdc-linear-progress',function(e){var p=mdc.linearProgress.MDCLinearProgress.attachTo(e);p.progress=0.6;p.buffer=1});
+E('.mdc-circular-progress',function(e){var c=mdc.circularProgress.MDCCircularProgress.attachTo(e);c.determinate=true;c.progress=0.6});
+E('.mdc-data-table',function(e){mdc.dataTable.MDCDataTable.attachTo(e)});
+E('.mdc-tooltip',function(e){mdc.tooltip.MDCTooltip.attachTo(e)});
+E('.mdc-drawer',function(e){mdc.drawer.MDCDrawer.attachTo(e)});
+E('.mdc-top-app-bar',function(e){mdc.topAppBar.MDCTopAppBar.attachTo(e)});
+E('.mdc-menu',function(e){new mdc.menu.MDCMenu(e)});
+E('.mdc-banner',function(e){mdc.banner.MDCBanner.attachTo(e)});});
+</script>
+<script></script>
+<script>
+(function(){function ph(){try{var h=document.documentElement.scrollHeight;parent.postMessage({__previewHeight:true,h:h},'*');}catch(e){}}
+window.addEventListener('load',ph);window.addEventListener('resize',ph);
+if(window.ResizeObserver){new ResizeObserver(ph).observe(document.body);}
+setTimeout(ph,200);setTimeout(ph,800);setTimeout(ph,1600);})();
+</script>
+</body></html>" loading="lazy"></iframe>
+      </div>
+  <article class="spec"><h2>What it is</h2>
+<p>Pickers help operators choose dates and times — a trip window, a report period, a maintenance due date. They pair a typeable field with a calendar or clock surface, and support ranges for from–to selections.</p>
+<h2>Key rule</h2>
+<blockquote>
+<p>Offer both: let operators type a date in the field and pick from the calendar. Use a range picker for any from–to selection (reports, trip history), and always respect the user's locale and time zone.</p>
+</blockquote>
+<h2>When to use</h2>
+<ul>
+<li><strong>Date picker</strong> — A single date (due date, start date).</li>
+<li><strong>Date range picker</strong> — A from–to span (report period, trip history).</li>
+<li><strong>Time picker</strong> — A time of day (schedule, cut-off).</li>
+<li><strong>Date-time / date-time range</strong> — When both date and time matter (precise trip windows).</li>
+<li><strong>Field-only</strong> — Keyboard entry without a popup (power users).</li>
+<li><strong>Static / inline</strong> — Always-open calendar embedded in a panel.</li>
+</ul>
+<h2>When NOT to use (and what to do instead)</h2>
+<ul>
+<li>Don't force calendar-only entry for power users.</li>
+<li>Don't ignore time zones on a global fleet.</li>
+<li>Don't use white text on the orange header.</li>
+</ul>
+<h2>Variants</h2>
+<table>
+<thead>
+<tr>
+<th>Variant</th>
+<th>When to use</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Date picker</td>
+<td>A single date (due date, start date).</td>
+</tr>
+<tr>
+<td>Date range picker</td>
+<td>A from–to span (report period, trip history).</td>
+</tr>
+<tr>
+<td>Time picker</td>
+<td>A time of day (schedule, cut-off).</td>
+</tr>
+<tr>
+<td>Date-time / date-time range</td>
+<td>When both date and time matter (precise trip windows).</td>
+</tr>
+<tr>
+<td>Field-only</td>
+<td>Keyboard entry without a popup (power users).</td>
+</tr>
+<tr>
+<td>Static / inline</td>
+<td>Always-open calendar embedded in a panel.</td>
+</tr>
+</tbody>
+</table>
+<h2>Anatomy</h2>
+<ul>
+<li>Input field — typeable date/time with a calendar/clock trigger.</li>
+<li>Header — the current selection summary on the surface.</li>
+<li>Calendar grid — selectable days; navigates by month/year.</li>
+<li>Clock dial — hours/minutes for time selection.</li>
+<li>Range highlight — the span between start and end on a range picker.</li>
+<li>Actions — confirm/cancel where selection isn't immediate.</li>
+</ul>
+<h2>Behaviors</h2>
+<ul>
+<li><strong>Type or pick</strong> — The field accepts typed input in the locale format; the calendar/clock offers visual selection. Both stay in sync.</li>
+<li><strong>Ranges</strong> — Selecting a start then an end highlights the span; presets ("Last 7 days", "This month") speed up common choices.</li>
+<li><strong>Constraints</strong> — Min/max and disabled dates prevent invalid choices (e.g. no future service date in the past); validation shows in the field's supporting text.</li>
+<li><strong>Locale &amp; time zone</strong> — Formats, first-day-of-week, and time zone follow the operator's settings — important for a global fleet.</li>
+</ul>
+<h2>States</h2>
+<table>
+<thead>
+<tr>
+<th>State</th>
+<th>Treatment</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Day enabled</td>
+<td>Default text in the grid.</td>
+</tr>
+<tr>
+<td>Day hover/focus</td>
+<td>State-layer circle.</td>
+</tr>
+<tr>
+<td>Day selected</td>
+<td>Primary filled circle.</td>
+</tr>
+<tr>
+<td>In-range</td>
+<td>Light primary band between endpoints.</td>
+</tr>
+<tr>
+<td>Disabled / out-of-range</td>
+<td>38% opacity, not selectable.</td>
+</tr>
+</tbody>
+</table>
+<h2>Specs</h2>
+<table>
+<thead>
+<tr>
+<th>Property</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Surface radius / elevation</td>
+<td>4px, overlay elevation</td>
+</tr>
+<tr>
+<td>Header</td>
+<td>primary background — use dark text or primary-dark; white on #F47735 fails AA</td>
+</tr>
+<tr>
+<td>Day cell</td>
+<td>~36px, circular selection</td>
+</tr>
+<tr>
+<td>Selected colour</td>
+<td>primary (#F47735)</td>
+</tr>
+</tbody>
+</table>
+<h2>Correct usage (themed MDC markup)</h2>
+<pre><code class="language-html">&lt;div class=&quot;picker&quot;&gt;&lt;div class=&quot;ph2&quot;&gt;&lt;div style=&quot;font-size:.8rem&quot;&gt;JUN 2026&lt;/div&gt;&lt;div class=&quot;d&quot;&gt;Sat, Jun 20&lt;/div&gt;&lt;/div&gt;
+&lt;div class=&quot;grid&quot;&gt;&lt;span&gt;S&lt;/span&gt;&lt;span&gt;M&lt;/span&gt;&lt;span&gt;T&lt;/span&gt;&lt;span&gt;W&lt;/span&gt;&lt;span&gt;T&lt;/span&gt;&lt;span&gt;F&lt;/span&gt;&lt;span&gt;S&lt;/span&gt;&lt;span&gt;1&lt;/span&gt;&lt;span&gt;2&lt;/span&gt;&lt;span&gt;3&lt;/span&gt;&lt;span&gt;4&lt;/span&gt;&lt;span&gt;5&lt;/span&gt;&lt;span&gt;6&lt;/span&gt;&lt;span&gt;7&lt;/span&gt;&lt;span&gt;8&lt;/span&gt;&lt;span&gt;9&lt;/span&gt;&lt;span&gt;10&lt;/span&gt;&lt;span&gt;11&lt;/span&gt;&lt;span&gt;12&lt;/span&gt;&lt;span&gt;13&lt;/span&gt;&lt;span class=&quot;on&quot;&gt;20&lt;/span&gt;&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;picker&quot; style=&quot;width:220px&quot;&gt;&lt;div class=&quot;ph2&quot;&gt;&lt;div class=&quot;d&quot;&gt;14:30&lt;/div&gt;&lt;/div&gt;&lt;div class=&quot;clock&quot;&gt;&lt;div class=&quot;c&quot;&gt;&lt;/div&gt;&lt;div class=&quot;dot&quot;&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;span class=&quot;tf outlined&quot;&gt;&lt;span class=&quot;lbl&quot;&gt;Date range&lt;/span&gt;&lt;div class=&quot;f&quot;&gt;1 Jun – 30 Jun 📅&lt;/div&gt;&lt;/span&gt;
+</code></pre>
+<h2>Do</h2>
+<ul>
+<li>Allow typing and picking.</li>
+<li>Offer presets for common ranges.</li>
+<li>Respect locale &amp; time zone.</li>
+<li>Disable invalid dates rather than erroring after.</li>
+</ul>
+<h2>Don't</h2>
+<ul>
+<li>Don't force calendar-only entry for power users.</li>
+<li>Don't ignore time zones on a global fleet.</li>
+<li>Don't use white text on the orange header.</li>
+</ul>
+<h2>Accessibility</h2>
+<ul>
+<li>The field is labelled and announces the selected value; the calendar is keyboard navigable (arrows move days, Page changes months) with aria grid semantics. Selected and disabled days are conveyed to assistive tech, not by colour alone.</li>
+</ul></article>
+</main>
+<script>
+// each preview reports its exact content height; match the iframe to it
+window.addEventListener('message',function(e){
+  if(!e.data||!e.data.__previewHeight)return;
+  document.querySelectorAll('iframe.js-preview').forEach(function(f){
+    if(f.contentWindow===e.source){f.style.height=e.data.h+'px';}
+  });
+});
+</script>
+</body></html>

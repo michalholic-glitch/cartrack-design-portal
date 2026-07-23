@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cartrack DS — Component detail pages</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/ds.css">
+<style>
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px;margin:14px 0 30px}
+  .ccard{display:block;text-decoration:none;color:inherit;background:var(--surface);border:1px solid var(--divider);border-radius:8px;padding:14px 16px;box-shadow:var(--el1)}
+  .ccard:hover{border-color:var(--primary);box-shadow:var(--el2)}
+  .ccard .n{font-weight:500;font-size:.95rem;color:var(--on-surface)}
+  .ccard .d{color:var(--on-surface-med);font-size:.78rem;margin-top:3px}
+  .grp{font-size:.72rem;text-transform:uppercase;letter-spacing:.08em;color:var(--on-surface-med);font-weight:700;margin-top:24px}
+  .done{font-size:.6rem;background:#E8F5E9;color:#1B5E20;border-radius:8px;padding:1px 6px;margin-left:6px;vertical-align:middle}
+</style>
+</head>
+<body>
+<main>
+  <div class="crumbs"><a href="../component-library.html">Component library</a><span class="s">›</span>Detail pages</div>
+  <h1>Component detail pages</h1>
+  <p class="lede">Deep reference for each component group — overview, anatomy, variants, behaviors, states, specs, do/don't, and accessibility, branded for Cartrack (desktop web). Each page follows the same template as <a href="data-table.html">Data table</a>.</p>
+
+  <div class="grp">Actions</div>
+  <div class="grid">
+    <a class="ccard" href="buttons.html"><div class="n">Buttons</div><div class="d">Text, outlined, contained, toggle.</div></a>
+    <a class="ccard" href="menus.html"><div class="n">Menus</div><div class="d">Temporary lists of choices.</div></a>
+  </div>
+
+  <div class="grp">Inputs &amp; forms</div>
+  <div class="grid">
+    <a class="ccard" href="text-fields.html"><div class="n">Text fields</div><div class="d">Filled &amp; outlined entry.</div></a>
+    <a class="ccard" href="selection-controls.html"><div class="n">Selection controls</div><div class="d">Checkbox, radio, switch.</div></a>
+    <a class="ccard" href="chips.html"><div class="n">Chips</div><div class="d">Input, filter, choice.</div></a>
+    <a class="ccard" href="sliders.html"><div class="n">Sliders</div><div class="d">Select a value in a range.</div></a>
+    <a class="ccard" href="pickers.html"><div class="n">Pickers</div><div class="d">Date &amp; time selection.</div></a>
+  </div>
+
+  <div class="grp">Data display</div>
+  <div class="grid">
+    <a class="ccard" href="data-table.html"><div class="n">Data table <span class="done">done</span></div><div class="d">Sort, select, paginate, edit.</div></a>
+    <a class="ccard" href="pagination.html"><div class="n">Pagination</div><div class="d">Page through table data.</div></a>
+    <a class="ccard" href="lists.html"><div class="n">Lists</div><div class="d">Vertical record groups.</div></a>
+    <a class="ccard" href="image-lists.html"><div class="n">Image lists</div><div class="d">Grids of thumbnails.</div></a>
+    <a class="ccard" href="badges.html"><div class="n">Badges</div><div class="d">Counts &amp; indicators.</div></a>
+    <a class="ccard" href="progress.html"><div class="n">Progress indicators</div><div class="d">Linear &amp; circular.</div></a>
+    <a class="ccard" href="tooltips.html"><div class="n">Tooltips</div><div class="d">Hover/focus labels.</div></a>
+    <a class="ccard" href="dividers.html"><div class="n">Dividers</div><div class="d">Group content with lines.</div></a>
+  </div>
+
+  <div class="grp">Surfaces</div>
+  <div class="grid">
+    <a class="ccard" href="cards.html"><div class="n">Cards</div><div class="d">Containers for content.</div></a>
+    <a class="ccard" href="dialogs.html"><div class="n">Dialogs</div><div class="d">Modal focused tasks.</div></a>
+    <a class="ccard" href="expansion-panels.html"><div class="n">Expansion panels</div><div class="d">Progressive disclosure.</div></a>
+    <a class="ccard" href="side-sheet.html"><div class="n">Side sheet</div><div class="d">Edge-anchored detail.</div></a>
+  </div>
+
+  <div class="grp">Navigation</div>
+  <div class="grid">
+    <a class="ccard" href="app-bar.html"><div class="n">App bar (top)</div><div class="d">Page header &amp; actions.</div></a>
+    <a class="ccard" href="navigation-drawer.html"><div class="n">Navigation drawer</div><div class="d">Primary side navigation.</div></a>
+    <a class="ccard" href="navigation-rail.html"><div class="n">Navigation rail</div><div class="d">Compact side nav.</div></a>
+    <a class="ccard" href="breadcrumbs.html"><div class="n">Breadcrumbs</div><div class="d">Location in hierarchy.</div></a>
+    <a class="ccard" href="tabs.html"><div class="n">Tabs</div><div class="d">Switch related views.</div></a>
+    <a class="ccard" href="steppers.html"><div class="n">Steppers</div><div class="d">Multi-step flows.</div></a>
+  </div>
+
+  <div class="grp">Feedback</div>
+  <div class="grid">
+    <a class="ccard" href="banners.html"><div class="n">Banners</div><div class="d">Prominent inline message.</div></a>
+    <a class="ccard" href="snackbars.html"><div class="n">Snackbars</div><div class="d">Transient confirmation.</div></a>
+  </div>
+</main>
+</body>
+</html>

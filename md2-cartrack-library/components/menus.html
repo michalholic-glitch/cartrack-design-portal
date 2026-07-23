@@ -1,0 +1,102 @@
+<!DOCTYPE html><html lang="en"><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cartrack DS — Menus</title>
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&family=Roboto+Mono&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/ds.css">
+<link rel="stylesheet" href="https://unpkg.com/material-components-web@14.0.0/dist/material-components-web.min.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+<style>:root{--mdc-theme-primary:#F47735;--mdc-theme-secondary:#333;--mdc-theme-on-primary:#fff;--mdc-theme-surface:#fff;--mdc-theme-background:#fff;--mdc-theme-error:#BA1A1A}</style>
+</head><body><main>
+  <div class="crumbs"><a href="index.html">Components</a><span class="s">&rsaquo;</span> Menus</div>
+  <h1>Menus</h1>
+  <p class="lede">Menus show a temporary list of choices on a surface — overflow actions behind a ⋮ button, row actions in a data table, or a list of options from a control. They appear on demand and dismiss on selection or outside click.</p>
+  <div class="chiprow"><span class="tag">Category: Actions</span><span class="tag">Desktop</span><span class="tag">Import: <code>Menu</code>, <code>MenuItem</code></span></div>
+  <div class="callout">Use a menu for secondary or overflow actions. Don't hide a view's primary action in a menu — promote it to a button in the toolbar.</div>
+
+  <h2>Live component (real MDC)</h2>
+  <p class="muted">The genuine MDC menu surface (shown open), Cartrack-themed (loads MDC online).</p>
+  <div class="stage" style="min-height:200px;align-items:flex-start">
+    <div style="position:relative;width:220px">
+      <div class="mdc-menu mdc-menu-surface mdc-menu-surface--open" style="position:relative">
+        <ul class="mdc-deprecated-list" role="menu" aria-orientation="vertical">
+          <li class="mdc-deprecated-list-item" role="menuitem"><span class="mdc-deprecated-list-item__ripple"></span><span class="mdc-deprecated-list-item__text">Edit</span></li>
+          <li class="mdc-deprecated-list-item" role="menuitem"><span class="mdc-deprecated-list-item__ripple"></span><span class="mdc-deprecated-list-item__text">Duplicate</span></li>
+          <li class="mdc-deprecated-list-item" role="menuitem"><span class="mdc-deprecated-list-item__ripple"></span><span class="mdc-deprecated-list-item__text">Export</span></li>
+          <li class="mdc-deprecated-list-divider" role="separator"></li>
+          <li class="mdc-deprecated-list-item" role="menuitem"><span class="mdc-deprecated-list-item__ripple"></span><span class="mdc-deprecated-list-item__text" style="color:var(--mdc-theme-error)">Delete</span></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <h2>Demo</h2>
+  <div class="lab">
+    <div class="lab-preview"><div class="menu" id="pv" style="width:200px"></div></div>
+    <div class="lab-controls">
+      <h5>Options</h5>
+      <div class="lab-row"><label for="c-count">Items</label><select id="c-count"><option>3</option><option selected>4</option><option>5</option></select></div>
+      <div class="lab-row"><label for="c-div">Divider before delete</label><input type="checkbox" id="c-div" checked></div>
+    </div>
+  </div>
+  <script>(function(){var pv=document.getElementById('pv'),c=document.getElementById('c-count'),dv=document.getElementById('c-div');var items=['Edit','Duplicate','Export…','Rename'];function u(){var n=+c.value;pv.innerHTML='';for(var i=0;i<n-1;i++){var mi=document.createElement('div');mi.className='mi';mi.textContent=items[i%items.length];pv.appendChild(mi);}if(dv.checked){var d=document.createElement('div');d.className='divider';d.style.cssText='width:auto;margin:6px 0';pv.appendChild(d);}var del=document.createElement('div');del.className='mi';del.style.color='var(--error)';del.textContent='Delete';pv.appendChild(del);}c.addEventListener('change',u);dv.addEventListener('change',u);u();})();</script>
+
+  <h2>Live example</h2>
+  <div class="stage">
+    <div class="menu"><div class="mi">Edit</div><div class="mi">Duplicate</div><div class="mi">Export…</div><div class="divider" style="width:auto;margin:6px 0"></div><div class="mi" style="color:var(--error)">Delete</div></div>
+    <button class="icb" title="More actions">⋮</button>
+  </div>
+
+  <h2>Anatomy</h2>
+  <div class="anat"><p class="muted">A menu is a surface of selectable items anchored to a trigger.</p>
+    <ol>
+      <li><b>Trigger</b> — the control that opens the menu (overflow ⋮, a button, or a field).</li>
+      <li><b>Surface</b> — an elevated container holding the items.</li>
+      <li><b>Menu item</b> — one choice; may carry a leading icon and a trailing shortcut/meta.</li>
+      <li><b>Divider</b> — groups items (e.g. separates destructive actions).</li>
+      <li><b>Selected / disabled item</b> — current choice or unavailable option.</li>
+    </ol></div>
+
+  <h2>Variants</h2>
+  <table class="spec"><tr><th>Variant</th><th>When to use</th></tr>
+    <tr><td>Overflow menu</td><td>Secondary actions behind a ⋮ in toolbars, cards, and table rows.</td></tr>
+    <tr><td>Dropdown (exposed) menu</td><td>A field that opens a list to choose one value (see also Select on the Text fields page).</td></tr>
+    <tr><td>Context menu</td><td>Right-click actions on a desktop row or item.</td></tr>
+    <tr><td>Cascading submenu</td><td>Grouped choices that expand to a second level (use sparingly).</td></tr>
+  </table>
+
+  <h2>Behaviors</h2>
+  <h3>Open &amp; dismiss</h3><p class="muted">Opens at the trigger; closes on selection, Escape, or an outside click. It should never cover its own trigger if avoidable.</p>
+  <h3>Selection</h3><p class="muted">Selecting an item performs the action and closes the menu; a stateful menu marks the current choice.</p>
+  <h3>Keyboard</h3><p class="muted">Arrow keys move focus, Enter activates, Escape closes; typing jumps to a matching item.</p>
+
+  <h2>States</h2>
+  <table class="spec"><tr><th>State</th><th>Treatment</th></tr>
+    <tr><td>Item enabled</td><td>Default text on surface.</td></tr>
+    <tr><td>Item hover/focus</td><td>4% overlay.</td></tr>
+    <tr><td>Item selected</td><td>Light primary tint / check.</td></tr>
+    <tr><td>Item disabled</td><td>38% black text, not selectable.</td></tr>
+  </table>
+
+  <h2>Specs</h2>
+  <table class="spec"><tr><th>Property</th><th>Value</th></tr>
+    <tr><td>Surface radius / elevation</td><td>4px, high elevation (overlay)</td></tr>
+    <tr><td>Item height</td><td>~36–48px</td></tr>
+    <tr><td>Item text</td><td>Roboto 14–16px / 400</td></tr>
+    <tr><td>Item padding</td><td>16px sides</td></tr>
+    <tr><td>Min width</td><td>~112px; grows to content</td></tr>
+  </table>
+
+  <h2>Do &amp; Don't</h2>
+  <div class="cols">
+    <div class="do"><h4>Do</h4><ul><li>Group destructive actions and set them apart with a divider.</li><li>Keep labels short and verb-first.</li><li>Use a menu for overflow, not for a view's primary action.</li></ul></div>
+    <div class="dont"><h4>Don't</h4><ul><li>Don't bury frequently-used actions in an overflow menu.</li><li>Don't nest more than one submenu level.</li><li>Don't use a menu where a few options fit better as visible buttons or tabs.</li></ul></div>
+  </div>
+
+  <h2>Accessibility</h2>
+  <p class="muted">The trigger exposes <code>aria-haspopup</code> and expanded state; the surface uses a <code>menu</code> role with <code>menuitem</code> children. Focus moves into the menu on open and returns to the trigger on close. Full keyboard support (arrows, Enter, Escape, type-ahead).</p>
+
+  <div class="callout" style="margin-top:32px">Part of the shared component detail-page set. <a href="index.html">All components →</a></div>
+</main>
+<script src="https://unpkg.com/material-components-web@14.0.0/dist/material-components-web.min.js"></script>
+<script>window.addEventListener('load',function(){document.querySelectorAll('.mdc-deprecated-list-item').forEach(function(e){try{mdc.ripple.MDCRipple.attachTo(e)}catch(x){}});});</script>
+</body></html>

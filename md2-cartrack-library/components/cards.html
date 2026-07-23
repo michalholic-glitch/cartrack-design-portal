@@ -1,0 +1,100 @@
+<!DOCTYPE html><html lang="en"><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cartrack DS — Cards</title>
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&family=Roboto+Mono&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/ds.css">
+<link rel="stylesheet" href="https://unpkg.com/material-components-web@14.0.0/dist/material-components-web.min.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+<style>:root{--mdc-theme-primary:#F47735;--mdc-theme-secondary:#333;--mdc-theme-on-primary:#fff;--mdc-theme-surface:#fff;--mdc-theme-background:#fff;--mdc-theme-error:#BA1A1A}</style>
+</head><body><main>
+  <div class="crumbs"><a href="index.html">Components</a><span class="s">&rsaquo;</span> Cards</div>
+  <h1>Cards</h1>
+  <p class="lede">A card groups related content and actions about a single subject — a vehicle summary, a KPI, an alert. Cards make a dashboard scannable by giving each thing its own contained surface.</p>
+  <div class="chiprow"><span class="tag">Category: Surfaces</span><span class="tag">Desktop</span><span class="tag">Import: <code>Card</code>, <code>CardHeader</code>, <code>CardContent</code></span></div>
+  <div class="callout">Use a card to collect everything about one entity. If you're listing many comparable records, a data table is usually clearer than a wall of cards.</div>
+
+  <h2>Live component (real MDC)</h2>
+  <p class="muted">The genuine MDC card surface, Cartrack-themed (loads MDC online).</p>
+  <div class="stage">
+    <div class="mdc-card" style="width:280px;padding:16px">
+      <div style="font-size:1rem;font-weight:500">CA 123-456</div>
+      <div style="color:rgba(0,0,0,.6);font-size:.85rem;margin-bottom:8px">Jane Cooper · Active</div>
+      <div style="color:rgba(0,0,0,.6);font-size:.86rem">14 trips · 512 km this week.</div>
+      <div class="mdc-card__actions"><button class="mdc-button mdc-card__action"><span class="mdc-button__ripple"></span><span class="mdc-button__label">Details</span></button><button class="mdc-button mdc-card__action"><span class="mdc-button__ripple"></span><span class="mdc-button__label">Track</span></button></div>
+    </div>
+  </div>
+
+  <h2>Demo</h2>
+  <div class="lab">
+    <div class="lab-preview"><div class="card" id="pv"><div class="media" id="pv-media"></div><div class="ch"><div class="t" id="pv-t">CA 123-456</div><div class="s">Jane Cooper · Active</div></div><div class="cc">14 trips · 512 km this week.</div><div class="ca"><button class="btn text">Details</button><button class="btn text">Track</button></div></div></div>
+    <div class="lab-controls">
+      <h5>Options</h5>
+      <div class="lab-row"><label for="c-var">Variant</label><select id="c-var"><option value="elevated">Elevated</option><option value="outlined">Outlined</option><option value="filled">Filled</option></select></div>
+      <div class="lab-row"><label for="c-media">Show media</label><input type="checkbox" id="c-media" checked></div>
+      <div class="lab-row"><label for="c-t">Title</label><input type="text" id="c-t" value="CA 123-456"></div>
+    </div>
+  </div>
+  <script>(function(){var pv=document.getElementById('pv'),md=document.getElementById('pv-media'),t=document.getElementById('pv-t'),v=document.getElementById('c-var'),m=document.getElementById('c-media'),ti=document.getElementById('c-t');function u(){pv.style.boxShadow=v.value==='elevated'?'var(--el1)':'none';pv.style.border=v.value==='outlined'?'1px solid var(--divider)':'none';pv.style.background=v.value==='filled'?'var(--field)':'var(--surface)';md.style.display=m.checked?'block':'none';t.textContent=ti.value||'Title';}[v,m].forEach(function(e){e.addEventListener('change',u)});ti.addEventListener('input',u);u();})();</script>
+
+  <h2>Live example</h2>
+  <div class="stage">
+    <div class="card">
+      <div class="media"></div>
+      <div class="ch"><div class="t">CA 123-456</div><div class="s">Jane Cooper &middot; Active</div></div>
+      <div class="cc">14 trips &middot; 512 km this week. Last seen 2 minutes ago near the depot.</div>
+      <div class="ca"><button class="btn text">Details</button><button class="btn text">Track</button></div>
+    </div>
+  </div>
+
+  <h2>Anatomy</h2>
+  <div class="anat"><p class="muted">A surface composed of optional regions.</p>
+    <ol>
+      <li><b>Container</b> — the elevated/outlined surface (4px radius).</li>
+      <li><b>Media</b> — optional image/map thumbnail.</li>
+      <li><b>Header</b> — title, subtitle, optional avatar and overflow ⋮.</li>
+      <li><b>Content</b> — supporting text, KPIs, or a small table.</li>
+      <li><b>Actions</b> — a row of buttons (usually text/outlined).</li>
+    </ol></div>
+
+  <h2>Variants</h2>
+  <table class="spec"><tr><th>Variant</th><th>When to use</th></tr>
+    <tr><td>Elevated</td><td>Default — a subtle shadow lifts the card off the page.</td></tr>
+    <tr><td>Outlined</td><td>Flatter surfaces / dense dashboards where shadows add noise.</td></tr>
+    <tr><td>With media</td><td>When an image/map adds context (vehicle photo, location).</td></tr>
+    <tr><td>Actionable (whole-card)</td><td>The entire card navigates to detail.</td></tr>
+  </table>
+
+  <h2>Behaviors</h2>
+  <h3>Actions</h3><p class="muted">Keep card actions low-emphasis (text/outlined); reserve the contained button for the page's primary action.</p>
+  <h3>Whole-card click</h3><p class="muted">If the card is clickable, show hover/focus and don't bury separate interactive controls that compete with the card click.</p>
+  <h3>Density</h3><p class="muted">On dashboards, prefer compact cards in a grid; align heights for a tidy grid.</p>
+
+  <h2>States</h2>
+  <table class="spec"><tr><th>State</th><th>Treatment</th></tr>
+    <tr><td>Resting</td><td>Elevation 1 (or outline).</td></tr>
+    <tr><td>Hover (actionable)</td><td>Raised elevation / overlay.</td></tr>
+    <tr><td>Focus (actionable)</td><td>Visible focus ring.</td></tr>
+  </table>
+
+  <h2>Specs</h2>
+  <table class="spec"><tr><th>Property</th><th>Value</th></tr>
+    <tr><td>Corner radius</td><td>4px</td></tr>
+    <tr><td>Elevation</td><td>1 (resting); raises on hover if actionable</td></tr>
+    <tr><td>Content padding</td><td>16px</td></tr>
+    <tr><td>Title / subtitle</td><td>Roboto 16px/500 &middot; 14px/400 on-surface-medium</td></tr>
+  </table>
+
+  <h2>Do &amp; Don't</h2>
+  <div class="cols">
+    <div class="do"><h4>Do</h4><ul><li>Keep one subject per card.</li><li>Use low-emphasis actions inside cards.</li><li>Align cards into a tidy grid on dashboards.</li></ul></div>
+    <div class="dont"><h4>Don't</h4><ul><li>Don't replace a comparable-records table with many cards.</li><li>Don't stack multiple contained buttons in a card.</li><li>Don't nest cards within cards.</li></ul></div>
+  </div>
+
+  <h2>Accessibility</h2>
+  <p class="muted">The card's title is a heading; an actionable card is a single link/button with an accessible name, or it exposes its inner controls clearly — not both in a confusing way. Focus is visible and order is logical.</p>
+
+  <div class="callout" style="margin-top:32px">Part of the shared component detail-page set. <a href="index.html">All components →</a></div>
+</main>
+<script src="https://unpkg.com/material-components-web@14.0.0/dist/material-components-web.min.js"></script>
+<script>window.addEventListener('load',function(){document.querySelectorAll('.mdc-button,.mdc-card__primary-action').forEach(function(e){try{mdc.ripple.MDCRipple.attachTo(e)}catch(x){}});});</script>
+</body></html>

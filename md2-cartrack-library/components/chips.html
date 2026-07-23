@@ -1,0 +1,101 @@
+<!DOCTYPE html><html lang="en"><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cartrack DS — Chips</title>
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&family=Roboto+Mono&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/ds.css">
+<link rel="stylesheet" href="https://unpkg.com/material-components-web@14.0.0/dist/material-components-web.min.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+<style>:root{--mdc-theme-primary:#F47735;--mdc-theme-secondary:#333;--mdc-theme-on-primary:#fff;--mdc-theme-surface:#fff;--mdc-theme-background:#fff;--mdc-theme-error:#BA1A1A}</style>
+</head><body><main>
+  <div class="crumbs"><a href="index.html">Components</a><span class="s">&rsaquo;</span> Chips</div>
+  <h1>Chips</h1>
+  <p class="lede">Chips are compact elements that represent an input, a filter, or a choice — a selected driver, an active filter on a vehicle list, a quick action. They pack a lot of interaction into a small footprint.</p>
+  <div class="chiprow"><span class="tag">Category: Inputs &amp; forms</span><span class="tag">Desktop</span><span class="tag">Import: <code>Chip</code></span></div>
+  <div class="callout">Use chips for selections and filters the operator manipulates. For read-only status (Active/Idle/Offline) use a status chip with a consistent colour mapping.</div>
+
+  <h2>Live component (real MDC)</h2>
+  <p class="muted">The genuine MDC chip set, Cartrack-themed (loads MDC online).</p>
+  <div class="stage">
+    <span class="mdc-evolution-chip-set" role="grid"><span class="mdc-evolution-chip-set__chips" role="presentation">
+      <span class="mdc-evolution-chip" role="row"><span class="mdc-evolution-chip__cell mdc-evolution-chip__cell--primary" role="gridcell"><button class="mdc-evolution-chip__action mdc-evolution-chip__action--primary" type="button"><span class="mdc-evolution-chip__ripple mdc-evolution-chip__ripple--primary"></span><span class="mdc-evolution-chip__text-label">Active</span></button></span></span>
+      <span class="mdc-evolution-chip" role="row"><span class="mdc-evolution-chip__cell mdc-evolution-chip__cell--primary" role="gridcell"><button class="mdc-evolution-chip__action mdc-evolution-chip__action--primary" type="button"><span class="mdc-evolution-chip__ripple mdc-evolution-chip__ripple--primary"></span><span class="mdc-evolution-chip__text-label">Idle</span></button></span></span>
+      <span class="mdc-evolution-chip" role="row"><span class="mdc-evolution-chip__cell mdc-evolution-chip__cell--primary" role="gridcell"><button class="mdc-evolution-chip__action mdc-evolution-chip__action--primary" type="button"><span class="mdc-evolution-chip__ripple mdc-evolution-chip__ripple--primary"></span><span class="mdc-evolution-chip__text-label">Offline</span></button></span></span>
+    </span></span>
+  </div>
+
+  <h2>Demo</h2>
+  <div class="lab">
+    <div class="lab-preview"><span class="chip" id="pv">Driver</span></div>
+    <div class="lab-controls">
+      <h5>Options</h5>
+      <div class="lab-row"><label for="c-type">Type</label><select id="c-type"><option value="">Filled</option><option value="out">Outlined</option><option value="sel">Selected</option></select></div>
+      <div class="lab-row"><label for="c-rm">Removable</label><input type="checkbox" id="c-rm"></div>
+      <div class="lab-row"><label for="c-lab">Label</label><input type="text" id="c-lab" value="Driver"></div>
+    </div>
+  </div>
+  <script>(function(){var c=document.getElementById('pv'),t=document.getElementById('c-type'),rm=document.getElementById('c-rm'),l=document.getElementById('c-lab');function u(){c.className='chip'+(t.value?' '+t.value:'');c.textContent='';if(t.value==='sel')c.appendChild(document.createTextNode('✓ '));c.appendChild(document.createTextNode(l.value||'Chip'));if(rm.checked)c.appendChild(document.createTextNode(' ✕'));}[t,rm].forEach(function(e){e.addEventListener('change',u)});l.addEventListener('input',u);u();})();</script>
+
+  <h2>Live example</h2>
+  <div class="stage">
+    <span class="chip">Default</span>
+    <span class="chip out">Outlined</span>
+    <span class="chip sel">&#10003; Active filter</span>
+    <span class="chip">Jane Cooper &#10005;</span>
+    <span class="schip ok">Active</span><span class="schip warn">Idle</span><span class="schip err">Offline</span>
+  </div>
+
+  <h2>Anatomy</h2>
+  <div class="anat"><p class="muted">A rounded container holding a label and optional icons.</p>
+    <ol>
+      <li><b>Container</b> — pill-shaped surface; filled or outlined.</li>
+      <li><b>Label</b> — the value or option text.</li>
+      <li><b>Leading icon / avatar</b> — optional (e.g. a driver avatar).</li>
+      <li><b>Trailing action</b> — optional remove (&times;) or dropdown affordance.</li>
+      <li><b>Selected state</b> — check/tint indicating the chip is on.</li>
+    </ol></div>
+
+  <h2>Variants</h2>
+  <table class="spec"><tr><th>Variant</th><th>When to use</th></tr>
+    <tr><td>Input chip</td><td>Represents a discrete entered value (selected drivers, tags) — usually removable.</td></tr>
+    <tr><td>Filter chip</td><td>Toggles a filter on a list; shows a selected state.</td></tr>
+    <tr><td>Choice chip</td><td>Single selection from a small inline set.</td></tr>
+    <tr><td>Action chip</td><td>Triggers a contextual action.</td></tr>
+    <tr><td>Status chip (read-only)</td><td>Conveys record status with the consistent colour mapping.</td></tr>
+  </table>
+
+  <h2>Behaviors</h2>
+  <h3>Selection &amp; removal</h3><p class="muted">Filter/choice chips toggle on click; input chips can be removed via the trailing &times; or Backspace when focused.</p>
+  <h3>Overflow</h3><p class="muted">When many chips are present, wrap to multiple lines or provide a "+N more" affordance.</p>
+  <h3>Status mapping</h3><p class="muted">Status chips map state to colour consistently (Active=success, Idle=warning, Offline=error) and always keep the text label.</p>
+
+  <h2>States</h2>
+  <table class="spec"><tr><th>State</th><th>Treatment</th></tr>
+    <tr><td>Enabled</td><td>Filled grey or outlined.</td></tr>
+    <tr><td>Hover/focus</td><td>State-layer overlay.</td></tr>
+    <tr><td>Selected</td><td>Primary tint + check.</td></tr>
+    <tr><td>Disabled</td><td>38% opacity.</td></tr>
+  </table>
+
+  <h2>Specs</h2>
+  <table class="spec"><tr><th>Property</th><th>Value</th></tr>
+    <tr><td>Height</td><td>32px</td></tr>
+    <tr><td>Corner radius</td><td>16px (pill)</td></tr>
+    <tr><td>Label</td><td>Roboto 14px / 400 (status chip 12px / 500)</td></tr>
+    <tr><td>Padding</td><td>12px sides; 8px gap to icons</td></tr>
+    <tr><td>Selected tint</td><td>primary at ~10%</td></tr>
+  </table>
+
+  <h2>Do &amp; Don't</h2>
+  <div class="cols">
+    <div class="do"><h4>Do</h4><ul><li>Use chips for filters/selections the user controls.</li><li>Keep status chips read-only with consistent colours + labels.</li><li>Make removable chips clearly removable.</li></ul></div>
+    <div class="dont"><h4>Don't</h4><ul><li>Don't use a chip as a primary button.</li><li>Don't encode status by colour alone.</li><li>Don't cram long text into a chip — keep labels short.</li></ul></div>
+  </div>
+
+  <h2>Accessibility</h2>
+  <p class="muted">Interactive chips are focusable with clear roles; selected state is exposed (e.g. <code>aria-pressed</code>) and removal is keyboard-operable. Status chips include text, never colour alone. Targets meet minimum size.</p>
+
+  <div class="callout" style="margin-top:32px">Part of the shared component detail-page set. <a href="index.html">All components →</a></div>
+</main>
+<script src="https://unpkg.com/material-components-web@14.0.0/dist/material-components-web.min.js"></script>
+<script>window.addEventListener('load',function(){document.querySelectorAll('.mdc-evolution-chip-set').forEach(function(e){try{mdc.chips.MDCChipSet.attachTo(e)}catch(x){}});});</script>
+</body></html>

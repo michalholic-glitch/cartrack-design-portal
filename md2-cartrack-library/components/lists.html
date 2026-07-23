@@ -1,0 +1,99 @@
+<!DOCTYPE html><html lang="en"><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cartrack DS — Lists</title>
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&family=Roboto+Mono&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/ds.css">
+<link rel="stylesheet" href="https://unpkg.com/material-components-web@14.0.0/dist/material-components-web.min.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+<style>:root{--mdc-theme-primary:#F47735;--mdc-theme-secondary:#333;--mdc-theme-on-primary:#fff;--mdc-theme-surface:#fff;--mdc-theme-background:#fff;--mdc-theme-error:#BA1A1A}</style>
+</head><body><main>
+  <div class="crumbs"><a href="index.html">Components</a><span class="s">&rsaquo;</span> Lists</div>
+  <h1>Lists</h1>
+  <p class="lede">Lists present a vertical run of related records — drivers, notifications, recent vehicles. Each row pairs a primary line with optional supporting text, a leading avatar/icon, and trailing actions.</p>
+  <div class="chiprow"><span class="tag">Category: Data display</span><span class="tag">Desktop</span><span class="tag">Import: <code>List</code>, <code>ListItem</code></span></div>
+  <div class="callout">Use a list for simple, scannable records. The moment you need columns, sorting, selection, or pagination, switch to a data table.</div>
+
+  <h2>Live component (real MDC)</h2>
+  <p class="muted">The genuine MDC list, Cartrack-themed (loads MDC online).</p>
+  <div class="stage" style="display:block;padding:0;border:none">
+    <ul class="mdc-deprecated-list mdc-deprecated-list--two-line" style="border:1px solid rgba(0,0,0,.12);border-radius:4px;max-width:360px">
+      <li class="mdc-deprecated-list-item" tabindex="0"><span class="mdc-deprecated-list-item__ripple"></span><span class="mdc-deprecated-list-item__text"><span class="mdc-deprecated-list-item__primary-text">Jane Cooper</span><span class="mdc-deprecated-list-item__secondary-text">CA 123-456 · Active</span></span></li>
+      <li class="mdc-deprecated-list-item"><span class="mdc-deprecated-list-item__ripple"></span><span class="mdc-deprecated-list-item__text"><span class="mdc-deprecated-list-item__primary-text">Frank Kim</span><span class="mdc-deprecated-list-item__secondary-text">CA 789-012 · Idle</span></span></li>
+      <li class="mdc-deprecated-list-item"><span class="mdc-deprecated-list-item__ripple"></span><span class="mdc-deprecated-list-item__text"><span class="mdc-deprecated-list-item__primary-text">Lena Ortiz</span><span class="mdc-deprecated-list-item__secondary-text">CA 345-678 · Offline</span></span></li>
+    </ul>
+  </div>
+
+  <h2>Demo</h2>
+  <div class="lab">
+    <div class="lab-preview"><div class="listmd" id="pv"></div></div>
+    <div class="lab-controls">
+      <h5>Options</h5>
+      <div class="lab-row"><label for="c-lines">Lines</label><select id="c-lines"><option>1</option><option selected>2</option><option>3</option></select></div>
+      <div class="lab-row"><label for="c-av">Leading avatar</label><input type="checkbox" id="c-av" checked></div>
+    </div>
+  </div>
+  <script>(function(){var pv=document.getElementById('pv'),ln=document.getElementById('c-lines'),av=document.getElementById('c-av');var rows=[['JC','Jane Cooper','CA 123-456 · Active','Depot North · last trip 2 min ago'],['FK','Frank Kim','CA 789-012 · Idle','Route 4 · last trip 1 h ago']];function u(){var n=+ln.value;pv.innerHTML='';rows.forEach(function(r){var li=document.createElement('div');li.className='li';var lead=av.checked?'<span class="avatar">'+r[0]+'</span>':'';var body='<div><div>'+r[1]+'</div>';if(n>=2)body+='<div class="muted" style="font-size:.8rem">'+r[2]+'</div>';if(n>=3)body+='<div class="muted" style="font-size:.8rem">'+r[3]+'</div>';body+='</div>';li.innerHTML=lead+body;pv.appendChild(li);});}ln.addEventListener('change',u);av.addEventListener('change',u);u();})();</script>
+
+  <h2>Live example</h2>
+  <div class="stage">
+    <div class="listmd">
+      <div class="li"><span class="avatar">JC</span><div><div>Jane Cooper</div><div class="muted" style="font-size:.8rem">CA 123-456 &middot; Active</div></div></div>
+      <div class="li"><span class="avatar" style="background:var(--primary)">FK</span><div><div>Frank Kim</div><div class="muted" style="font-size:.8rem">CA 789-012 &middot; Idle</div></div></div>
+      <div class="li"><span class="avatar" style="background:var(--secondary-light)">LO</span><div><div>Lena Ortiz</div><div class="muted" style="font-size:.8rem">CA 345-678 &middot; Offline</div></div></div>
+    </div>
+  </div>
+
+  <h2>Anatomy</h2>
+  <div class="anat"><p class="muted">A container of repeated rows.</p>
+    <ol>
+      <li><b>List container</b> — holds the items; may be divided or grouped.</li>
+      <li><b>List item</b> — one record (a row target).</li>
+      <li><b>Leading element</b> — avatar, icon, or checkbox.</li>
+      <li><b>Primary &amp; secondary text</b> — the title and supporting line.</li>
+      <li><b>Trailing element</b> — a meta value, action, or overflow ⋮.</li>
+      <li><b>Subheader / divider</b> — optional group label or separator.</li>
+    </ol></div>
+
+  <h2>Variants</h2>
+  <table class="spec"><tr><th>Variant</th><th>When to use</th></tr>
+    <tr><td>Single-line</td><td>Short records (names, options).</td></tr>
+    <tr><td>Two-line</td><td>A title plus one supporting detail (most common).</td></tr>
+    <tr><td>Three-line</td><td>Title plus two lines of context.</td></tr>
+    <tr><td>With controls</td><td>Leading checkbox (multi-select) or trailing switch/action.</td></tr>
+  </table>
+
+  <h2>Behaviors</h2>
+  <h3>Activation</h3><p class="muted">A clickable row navigates or opens detail; show hover and focus so it reads as interactive.</p>
+  <h3>Selection</h3><p class="muted">For multi-select, use leading checkboxes (and consider whether a data table is the better tool).</p>
+  <h3>Grouping</h3><p class="muted">Use subheaders + dividers to group long lists; avoid deep nesting.</p>
+
+  <h2>States</h2>
+  <table class="spec"><tr><th>State</th><th>Treatment</th></tr>
+    <tr><td>Enabled</td><td>Default row.</td></tr>
+    <tr><td>Hover/focus</td><td>4% overlay.</td></tr>
+    <tr><td>Selected</td><td>Primary tint.</td></tr>
+    <tr><td>Disabled</td><td>38% opacity.</td></tr>
+  </table>
+
+  <h2>Specs</h2>
+  <table class="spec"><tr><th>Property</th><th>Value</th></tr>
+    <tr><td>Row height</td><td>48px (1-line), 64px (2-line), 88px (3-line)</td></tr>
+    <tr><td>Primary text</td><td>Roboto 14–16px / 400</td></tr>
+    <tr><td>Secondary text</td><td>14px, on-surface-medium</td></tr>
+    <tr><td>Side padding</td><td>16px; 16px gap to leading element</td></tr>
+  </table>
+
+  <h2>Do &amp; Don't</h2>
+  <div class="cols">
+    <div class="do"><h4>Do</h4><ul><li>Keep the primary line scannable.</li><li>Use two-line items for record + context.</li><li>Switch to a data table when columns/sorting appear.</li></ul></div>
+    <div class="dont"><h4>Don't</h4><ul><li>Don't cram tabular data into a list.</li><li>Don't nest lists deeply.</li><li>Don't hide the only action in a hover-only control without a focus path.</li></ul></div>
+  </div>
+
+  <h2>Accessibility</h2>
+  <p class="muted">Use real list semantics (<code>ul/li</code> or <code>role=list</code>); interactive rows are links/buttons with accessible names and visible focus. Leading checkboxes are labelled by the item text.</p>
+
+  <div class="callout" style="margin-top:32px">Part of the shared component detail-page set. <a href="index.html">All components →</a></div>
+</main>
+<script src="https://unpkg.com/material-components-web@14.0.0/dist/material-components-web.min.js"></script>
+<script>window.addEventListener('load',function(){document.querySelectorAll('.mdc-deprecated-list-item').forEach(function(e){try{mdc.ripple.MDCRipple.attachTo(e)}catch(x){}});});</script>
+</body></html>

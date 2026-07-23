@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cartrack DS — Data table (component detail)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&family=Roboto+Mono&display=swap" rel="stylesheet">
+<!-- Real Material Components Web (v14, Apache-2.0 © Google), themed to Cartrack via --mdc-theme-* -->
+<link rel="stylesheet" href="https://unpkg.com/material-components-web@14.0.0/dist/material-components-web.min.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+<style>
+  :root{--mdc-theme-primary:#F47735;--mdc-theme-secondary:#333333;--mdc-theme-on-primary:#fff;--mdc-theme-surface:#fff;--mdc-theme-background:#fff;--mdc-theme-error:#BA1A1A;}
+  :root{
+    --primary:#F47735;--primary-dark:#BB4800;--primary-light:#FFA863;--on-primary:#FFFFFF;
+    --secondary:#333333;--success:#4CAF50;--error:#F44336;--warning:#FF9800;--info:#2196F3;
+    --bg:#FAFAFA;--surface:#FFFFFF;--field:#F5F5F5;
+    --on-surface:rgba(0,0,0,.87);--on-surface-med:rgba(0,0,0,.6);--on-surface-dis:rgba(0,0,0,.38);
+    --divider:rgba(0,0,0,.12);--hover:rgba(0,0,0,.04);--selected:rgba(244,119,53,.10);
+    --font:'Roboto',Helvetica,Arial,sans-serif;--mono:'Roboto Mono',monospace;
+    --el1:0 2px 1px -1px rgba(0,0,0,.2),0 1px 1px 0 rgba(0,0,0,.14),0 1px 3px 0 rgba(0,0,0,.12);
+    --el8:0 5px 5px -3px rgba(0,0,0,.2),0 8px 10px 1px rgba(0,0,0,.14),0 3px 14px 2px rgba(0,0,0,.12);
+  }
+  *{box-sizing:border-box}
+  html{font-size:14px}
+  body{margin:0;font-family:var(--font);background:var(--bg);color:var(--on-surface);font-size:.875rem;line-height:1.55}
+  a{color:var(--primary-dark)}
+  code{font-family:var(--mono);background:#eee;padding:1px 5px;border-radius:3px;font-size:.78rem}
+  main{max-width:920px;margin:0 auto;padding:32px 28px 96px}
+  .crumbs{font-size:.8rem;color:var(--on-surface-med);margin-bottom:14px}.crumbs a{text-decoration:none}.crumbs .s{margin:0 8px;opacity:.5}
+  h1{font-size:2rem;font-weight:400;margin:0 0 8px}
+  .lede{color:var(--on-surface-med);font-size:1rem;max-width:720px}
+  h2{font-size:1.3rem;font-weight:500;margin:48px 0 6px;padding-bottom:8px;border-bottom:1px solid var(--divider)}
+  h3{font-size:1rem;font-weight:500;margin:26px 0 8px}
+  p{margin:8px 0}
+  .muted{color:var(--on-surface-med)}
+  .stage{padding:28px;background:#F0F0F2;border-radius:10px;margin:14px 0;display:flex;justify-content:center}
+  .callout{border-left:4px solid var(--primary);background:var(--surface);box-shadow:var(--el1);border-radius:6px;padding:12px 16px;margin:14px 0;font-size:.85rem}
+  table.spec{width:100%;border-collapse:collapse;font-size:.85rem;margin:10px 0}
+  table.spec th{text-align:left;background:var(--field);padding:8px 12px;border-bottom:1px solid var(--divider);font-weight:500}
+  table.spec td{padding:8px 12px;border-bottom:1px solid var(--divider);vertical-align:top}
+  .cols{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+  .do,.dont{border-radius:8px;padding:14px 16px;font-size:.85rem}
+  .do{background:#E8F5E9}.dont{background:#FFEBEE}
+  .do h4,.dont h4{margin:0 0 8px;font-size:.85rem;text-transform:uppercase;letter-spacing:.04em}
+  .do h4{color:#1B5E20}.dont h4{color:#B71C1C}
+  .do ul,.dont ul{margin:0;padding-left:18px}.do li,.dont li{margin:4px 0}
+  .anat{position:relative;font-size:.78rem}
+  .anat ol{columns:2;font-size:.82rem;color:var(--on-surface-med);margin-top:12px}
+  .anat ol b{color:var(--on-surface)}
+  .chiprow{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0}
+  .tag{font-size:.7rem;border:1px solid var(--divider);border-radius:12px;padding:3px 10px;color:var(--on-surface-med)}
+
+  /* ===== Data table (MD2, Cartrack-branded) ===== */
+  .dt{background:var(--surface);border-radius:4px;box-shadow:var(--el1);overflow:hidden;width:100%;max-width:760px}
+  /* toolbar */
+  .dt-tb{height:64px;display:flex;align-items:center;gap:8px;padding:0 16px 0 24px}
+  .dt-tb .ti{font-size:1.1rem;font-weight:500;flex:1}
+  .dt-tb.ctx{background:var(--selected)}
+  .dt-tb.ctx .ti{color:var(--primary-dark);font-size:.95rem;font-weight:500}
+  .icb{width:40px;height:40px;border-radius:50%;border:none;background:transparent;color:var(--on-surface-med);font-size:1.05rem;cursor:pointer}
+  .icb:hover{background:var(--hover)}
+  /* table */
+  .dt table{width:100%;border-collapse:collapse}
+  .dt thead th{height:56px;padding:0 16px;text-align:left;font-size:.82rem;font-weight:500;color:var(--on-surface-med);border-bottom:1px solid var(--divider);white-space:nowrap;user-select:none}
+  .dt thead th:first-child,.dt tbody td:first-child{padding-left:24px}
+  .dt thead th:last-child,.dt tbody td:last-child{padding-right:24px}
+  .dt thead th.sortable{cursor:pointer}
+  .dt thead th .arr{display:inline-block;opacity:0;transition:opacity .15s;margin-right:4px;color:var(--on-surface);font-size:.72rem}
+  .dt thead th.sorted{color:var(--on-surface)}
+  .dt thead th.sorted .arr{opacity:1}
+  .dt thead th:hover .arr{opacity:.5}
+  .dt thead th.num,.dt tbody td.num{text-align:right;font-variant-numeric:tabular-nums}
+  .dt tbody td{height:52px;padding:0 16px;font-size:.875rem;color:var(--on-surface);border-bottom:1px solid var(--divider)}
+  .dt tbody tr:hover td{background:var(--hover)}
+  .dt tbody tr.sel td{background:var(--selected)}
+  .dt tbody tr:last-child td{border-bottom:none}
+  .dt.dense thead th{height:40px}.dt.dense tbody td{height:36px}
+  .selcol{width:24px}
+  .cbx{width:18px;height:18px;border:2px solid var(--on-surface-med);border-radius:2px;position:relative;display:inline-block;cursor:pointer;vertical-align:middle}
+  .cbx.on{background:var(--primary);border-color:var(--primary)}
+  .cbx.on::after{content:"";position:absolute;left:5px;top:1px;width:5px;height:10px;border:solid #fff;border-width:0 2px 2px 0;transform:rotate(45deg)}
+  .cbx.ind{background:var(--primary);border-color:var(--primary)}.cbx.ind::after{content:"";position:absolute;left:3px;top:7px;width:10px;height:2px;background:#fff}
+  .schip{display:inline-flex;align-items:center;gap:5px;height:24px;padding:0 8px;border-radius:12px;font-size:.74rem;font-weight:500}
+  .schip.ok{background:#E8F5E9;color:#1B5E20}.schip.warn{background:#FFF3E0;color:#E65100}.schip.err{background:#FFEBEE;color:#B71C1C}
+  /* footer / pagination */
+  .dt-ft{height:52px;display:flex;align-items:center;justify-content:flex-end;gap:24px;padding:0 16px;font-size:.78rem;color:var(--on-surface-med)}
+  .dt-ft .sel{padding:0 18px;display:flex;align-items:center;gap:8px}
+  .editcell{border-bottom:1px dashed var(--primary);cursor:text}
+  .btn{font:500 .8125rem var(--font);text-transform:uppercase;letter-spacing:.05em;border-radius:4px;padding:0 12px;height:34px;border:none;cursor:pointer;background:transparent;color:var(--primary-dark)}
+  .btn.contained{background:var(--primary-dark);color:#fff;padding:0 16px}
+</style>
+</head>
+<body>
+<main>
+  <div class="crumbs"><a href="../component-library.html">Components</a><span class="s">›</span>Data table</div>
+  <h1>Data table</h1>
+  <p class="lede">Data tables present sets of records across rows and columns — the primary way operators scan, sort, select, and act on fleet data (vehicles, trips, drivers, alerts). This is the most-used component in the portal, so it carries the most behaviour.</p>
+
+  <div class="chiprow">
+    <span class="tag">Category: Data display</span><span class="tag">Desktop</span><span class="tag">Import: <code>DataGrid</code> from <code>@karoo-ui/core</code></span>
+  </div>
+
+  <div class="callout">When a dataset is large, server-paginated, sortable, or selectable, use the <strong>data table</strong> — not a basic <code>Table</code>. Reserve the basic table for small, static key/value layouts.</div>
+
+  <h2>Live component (real MDC)</h2>
+  <p class="muted">The genuine Material Components Web data table, themed to Cartrack — this is exactly how the real component renders (requires an internet connection to load MDC).</p>
+  <div class="stage" style="display:block;padding:0;border:none">
+    <div class="mdc-data-table">
+      <div class="mdc-data-table__table-container">
+        <table class="mdc-data-table__table" aria-label="Vehicles">
+          <thead><tr class="mdc-data-table__header-row">
+            <th class="mdc-data-table__header-cell" role="columnheader" scope="col">Registration</th>
+            <th class="mdc-data-table__header-cell" role="columnheader" scope="col">Driver</th>
+            <th class="mdc-data-table__header-cell" role="columnheader" scope="col">Status</th>
+            <th class="mdc-data-table__header-cell mdc-data-table__header-cell--numeric" role="columnheader" scope="col">Odometer (km)</th>
+            <th class="mdc-data-table__header-cell" role="columnheader" scope="col">Last trip</th>
+          </tr></thead>
+          <tbody class="mdc-data-table__content">
+            <tr class="mdc-data-table__row"><th class="mdc-data-table__cell" scope="row">CA 123-456</th><td class="mdc-data-table__cell">Jane Cooper</td><td class="mdc-data-table__cell">Active</td><td class="mdc-data-table__cell mdc-data-table__cell--numeric">84,210</td><td class="mdc-data-table__cell">2 min ago</td></tr>
+            <tr class="mdc-data-table__row"><th class="mdc-data-table__cell" scope="row">CA 789-012</th><td class="mdc-data-table__cell">Frank Kim</td><td class="mdc-data-table__cell">Idle</td><td class="mdc-data-table__cell mdc-data-table__cell--numeric">120,540</td><td class="mdc-data-table__cell">1 h ago</td></tr>
+            <tr class="mdc-data-table__row"><th class="mdc-data-table__cell" scope="row">CA 345-678</th><td class="mdc-data-table__cell">Lena Ortiz</td><td class="mdc-data-table__cell">Offline</td><td class="mdc-data-table__cell mdc-data-table__cell--numeric">58,900</td><td class="mdc-data-table__cell">3 d ago</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+  <p class="muted" style="font-size:.8rem">The block below is a lightweight hand-built mock kept for offline reference; the real component above is the source of truth.</p>
+
+  <h2>Interactive example</h2>
+  <p class="muted">Click row checkboxes to see the contextual selection toolbar; click a sortable header to sort; toggle density.</p>
+  <div style="margin:10px 0"><button class="btn" id="densityBtn">Density: Standard ▾</button></div>
+  <div class="stage">
+    <div class="dt" id="demo">
+      <!-- default toolbar -->
+      <div class="dt-tb" id="tb"><span class="ti">Vehicles</span><button class="icb" title="Search">🔍</button><button class="icb" title="Filter">⛃</button><button class="icb" title="More">⋮</button></div>
+      <table>
+        <thead><tr>
+          <th class="selcol"><span class="cbx" id="all"></span></th>
+          <th class="sortable sorted" data-c="reg"><span class="arr">▲</span>Registration</th>
+          <th class="sortable" data-c="driver"><span class="arr">▲</span>Driver</th>
+          <th class="sortable" data-c="status"><span class="arr">▲</span>Status</th>
+          <th class="sortable num" data-c="odo"><span class="arr">▲</span>Odometer (km)</th>
+          <th class="sortable" data-c="trip"><span class="arr">▲</span>Last trip</th>
+        </tr></thead>
+        <tbody id="rows">
+          <tr><td class="selcol"><span class="cbx rcb"></span></td><td>CA 123-456</td><td>Jane Cooper</td><td><span class="schip ok">Active</span></td><td class="num">84,210</td><td>2 min ago</td></tr>
+          <tr><td class="selcol"><span class="cbx rcb"></span></td><td>CA 789-012</td><td>Frank Kim</td><td><span class="schip warn">Idle</span></td><td class="num"><span class="editcell">120,540</span></td><td>1 h ago</td></tr>
+          <tr><td class="selcol"><span class="cbx rcb"></span></td><td>CA 345-678</td><td>Lena Ortiz</td><td><span class="schip err">Offline</span></td><td class="num">58,900</td><td>3 d ago</td></tr>
+          <tr><td class="selcol"><span class="cbx rcb"></span></td><td>CA 901-234</td><td>Sam Patel</td><td><span class="schip ok">Active</span></td><td class="num">12,030</td><td>just now</td></tr>
+        </tbody>
+      </table>
+      <div class="dt-ft"><span>Rows per page: 100 ▾</span><span>1–4 of 12,480</span><span><button class="icb">‹</button><button class="icb">›</button></span></div>
+    </div>
+  </div>
+
+  <h2>Anatomy</h2>
+  <div class="anat">
+    <p class="muted">A data table is built from a fixed set of parts. Not all are always present — the toolbar, selection column, and pagination are optional.</p>
+    <ol>
+      <li><b>Toolbar</b> — table title + table-level actions (search, filter, more). Becomes the contextual toolbar when rows are selected.</li>
+      <li><b>Column header</b> — the label for each column; sortable headers show a direction arrow and an active state.</li>
+      <li><b>Sort indicator</b> — arrow showing ascending/descending on the active sort column.</li>
+      <li><b>Selection column</b> — optional leading checkboxes; the header checkbox selects/clears all (indeterminate when partial).</li>
+      <li><b>Row</b> — one record; supports hover, selected, and (optionally) clickable states.</li>
+      <li><b>Cell</b> — one value; text left-aligned, numbers right-aligned with tabular figures.</li>
+      <li><b>Pagination footer</b> — rows-per-page, the visible range, and previous/next controls.</li>
+      <li><b>Contextual toolbar</b> — replaces the title bar while rows are selected, showing the count and bulk actions.</li>
+    </ol>
+  </div>
+
+  <h2>Variants</h2>
+  <table class="spec">
+    <tr><th>Variant</th><th>When to use</th></tr>
+    <tr><td>With toolbar</td><td>Almost always — gives the table a title plus search/filter/export entry points.</td></tr>
+    <tr><td>Selectable (checkboxes)</td><td>When users perform bulk actions (assign, export, delete) on multiple records.</td></tr>
+    <tr><td>Paginated</td><td>Any dataset beyond a single screen; desktop tables paginate (rows-per-page + range), they don't infinite-scroll.</td></tr>
+    <tr><td>Dense</td><td>High-volume operator screens where maximizing visible rows matters; reduces row height.</td></tr>
+    <tr><td>Inline-editable</td><td>When quick edits (odometer, notes) are common; cells become editable in place.</td></tr>
+    <tr><td>Expandable rows</td><td>When a record has secondary detail (sub-trips, line items) worth revealing without leaving the table.</td></tr>
+  </table>
+
+  <h2>Behaviors</h2>
+  <h3>Sorting</h3>
+  <p class="muted">Clicking a sortable header sorts by that column; clicking again reverses direction. The active column shows a filled label and a direction arrow; only one column sorts at a time (unless multi-sort is explicitly enabled).</p>
+  <h3>Selection</h3>
+  <p class="muted">Row checkboxes select individual records; the header checkbox selects all on the page and shows an indeterminate state when the selection is partial. While anything is selected, the toolbar switches to the <strong>contextual toolbar</strong> — showing the count and bulk actions (e.g. Export, Delete) — and selected rows take the selected background.</p>
+  <h3>Pagination</h3>
+  <p class="muted">The footer shows rows-per-page, the current range, and prev/next. For large/server-driven data, fetch per page rather than loading everything.</p>
+  <h3>Filtering &amp; search</h3>
+  <p class="muted">A quick-search and a filter entry point live in the toolbar; applied filters show as removable filter chips above or within the toolbar.</p>
+  <h3>Inline editing</h3>
+  <p class="muted">Editable cells show a subtle affordance on hover (dashed underline in the example) and commit on blur/Enter, with validation shown inline.</p>
+
+  <h2>States</h2>
+  <table class="spec">
+    <tr><th>Element</th><th>State</th><th>Treatment</th></tr>
+    <tr><td>Row</td><td>Enabled</td><td>Surface background, 1px bottom divider.</td></tr>
+    <tr><td>Row</td><td>Hover</td><td>4% on-surface overlay.</td></tr>
+    <tr><td>Row</td><td>Selected</td><td>Primary tint (~10%) background; checkbox checked.</td></tr>
+    <tr><td>Header</td><td>Sortable / hover</td><td>Arrow fades in at ~50%; cursor pointer.</td></tr>
+    <tr><td>Header</td><td>Sorted (active)</td><td>Label at full on-surface; arrow fully visible.</td></tr>
+    <tr><td>Checkbox (header)</td><td>Indeterminate</td><td>Filled with a dash when selection is partial.</td></tr>
+  </table>
+
+  <h2>Specs</h2>
+  <table class="spec">
+    <tr><th>Property</th><th>Standard</th><th>Dense</th></tr>
+    <tr><td>Header row height</td><td>56px</td><td>40px</td></tr>
+    <tr><td>Data row height</td><td>52px</td><td>36px</td></tr>
+    <tr><td>Column padding</td><td>16px (first/last 24px)</td><td>16px (first/last 24px)</td></tr>
+    <tr><td>Toolbar height</td><td>64px</td><td>64px</td></tr>
+    <tr><td>Header label</td><td colspan="2">Roboto 14px / 500, color on-surface-medium (full on-surface when sorted)</td></tr>
+    <tr><td>Cell text</td><td colspan="2">Roboto 14px / 400, color on-surface; numbers right-aligned, tabular figures</td></tr>
+    <tr><td>Row divider</td><td colspan="2">1px, divider color (rgba(0,0,0,.12))</td></tr>
+    <tr><td>Selected background</td><td colspan="2">primary at ~10% (token <code>--selected</code>)</td></tr>
+  </table>
+
+  <h2>Do &amp; Don't</h2>
+  <div class="cols">
+    <div class="do"><h4>Do</h4><ul>
+      <li>Use the data table (not a basic table) for any sortable, selectable, or large dataset.</li>
+      <li>Right-align numeric columns and use tabular figures so digits line up.</li>
+      <li>Switch to the contextual toolbar when rows are selected, showing the count + bulk actions.</li>
+      <li>Map status to the consistent colour chips (Active/Idle/Offline).</li>
+      <li>Paginate; fetch per page for large/server data.</li>
+    </ul></div>
+    <div class="dont"><h4>Don't</h4><ul>
+      <li>Don't put the primary action inside a row's overflow menu if it's used constantly.</li>
+      <li>Don't sort more than one column at once unless multi-sort is explicitly needed.</li>
+      <li>Don't encode status by colour alone — keep the text label on the chip.</li>
+      <li>Don't infinite-scroll a desktop data table; use pagination.</li>
+      <li>Don't hard-code colours/sizes — use the theme tokens and these specs.</li>
+    </ul></div>
+  </div>
+
+  <h2>Accessibility</h2>
+  <p class="muted">Use real <code>&lt;table&gt;</code> semantics with <code>&lt;th&gt;</code> headers; sortable headers expose <code>aria-sort</code>. The select-all checkbox announces its indeterminate state. Selection changes and the contextual toolbar are announced to assistive tech. Rows and controls are keyboard navigable; visible focus is preserved. Status is never colour-only — the chip carries a text label.</p>
+
+  <div class="callout" style="margin-top:32px"><strong>This page is the template.</strong> Every component group (Buttons, Text fields, Dialogs, …) would get a detail page with the same sections: Overview → Anatomy → Variants → Behaviors → States → Specs → Do/Don't → Accessibility. The component gallery links out to these.</div>
+</main>
+
+<script>
+  // selection → contextual toolbar
+  const rows=[...document.querySelectorAll('#rows tr')];
+  const all=document.getElementById('all');
+  const tb=document.getElementById('tb');
+  function render(){
+    const sel=rows.filter(r=>r.classList.contains('sel'));
+    if(sel.length){
+      tb.classList.add('ctx');
+      tb.innerHTML='<span class="ti">'+sel.length+' selected</span><button class="icb" title="Export">⤓</button><button class="icb" title="Assign">👤</button><button class="icb" title="Delete">🗑</button>';
+    }else{
+      tb.classList.remove('ctx');
+      tb.innerHTML='<span class="ti">Vehicles</span><button class="icb" title="Search">🔍</button><button class="icb" title="Filter">⛃</button><button class="icb" title="More">⋮</button>';
+    }
+    all.className='cbx'+(sel.length===rows.length?' on':(sel.length?' ind':''));
+  }
+  rows.forEach(r=>{const cb=r.querySelector('.rcb');cb.addEventListener('click',()=>{r.classList.toggle('sel');cb.classList.toggle('on');render();});});
+  all.addEventListener('click',()=>{const on=!(all.classList.contains('on'));rows.forEach(r=>{r.classList.toggle('sel',on);r.querySelector('.rcb').classList.toggle('on',on);});render();});
+  // sorting indicator
+  document.querySelectorAll('th.sortable').forEach(th=>th.addEventListener('click',()=>{
+    const wasSorted=th.classList.contains('sorted');const arr=th.querySelector('.arr');
+    document.querySelectorAll('th.sortable').forEach(o=>o.classList.remove('sorted'));
+    th.classList.add('sorted');
+    if(wasSorted){arr.textContent=arr.textContent==='▲'?'▼':'▲';}else{arr.textContent='▲';}
+  }));
+  // density
+  const db=document.getElementById('densityBtn');const dt=document.getElementById('demo');
+  db.addEventListener('click',()=>{dt.classList.toggle('dense');db.textContent='Density: '+(dt.classList.contains('dense')?'Compact':'Standard')+' ▾';});
+</script>
+<script src="https://unpkg.com/material-components-web@14.0.0/dist/material-components-web.min.js"></script>
+<script>window.addEventListener('load',function(){document.querySelectorAll('.mdc-data-table').forEach(function(el){try{mdc.dataTable.MDCDataTable.attachTo(el);}catch(e){}});});</script>
+</body>
+</html>

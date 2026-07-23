@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Spec preview — Buttons & Data table</title>
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&family=Roboto+Mono&display=swap" rel="stylesheet">
+<style>
+:root{
+  --primary:#F47735;--primary-dark:#BB4800;--primary-light:#FFA863;--on-primary:#FFFFFF;
+  --secondary:#333333;--success:#4CAF50;--error:#F44336;--warning:#FF9800;
+  --bg:#FAFAFA;--surface:#FFFFFF;--field:#F5F5F5;
+  --on-surface:rgba(0,0,0,.87);--on-surface-med:rgba(0,0,0,.6);--on-surface-dis:rgba(0,0,0,.38);
+  --divider:rgba(0,0,0,.12);--hover:rgba(0,0,0,.04);--selected:rgba(244,119,53,.10);
+  --font:'Roboto',Helvetica,Arial,sans-serif;--mono:'Roboto Mono',monospace;
+  --el1:0 2px 1px -1px rgba(0,0,0,.2),0 1px 1px 0 rgba(0,0,0,.14),0 1px 3px 0 rgba(0,0,0,.12);
+}
+*{box-sizing:border-box}
+body{margin:0;font-family:var(--font);background:var(--bg);color:var(--on-surface);font-size:14px;line-height:1.55}
+main{max-width:1040px;margin:0 auto;padding:32px 28px 96px}
+h1{font-size:1.9rem;font-weight:400;margin:0 0 6px}
+.sub{color:var(--on-surface-med);max-width:760px;margin:0 0 8px}
+.legend{display:flex;gap:18px;flex-wrap:wrap;font-size:.8rem;color:var(--on-surface-med);margin:14px 0 8px}
+.legend .k{display:inline-flex;align-items:center;gap:6px}
+.swatch{width:12px;height:12px;border-radius:3px;display:inline-block}
+.s-live{background:#F0F0F2;border:1px solid var(--divider)}
+.s-ctx{background:var(--surface);border:1px solid var(--primary)}
+
+section.comp{background:var(--surface);border:1px solid var(--divider);border-radius:12px;box-shadow:var(--el1);margin:26px 0;overflow:hidden}
+.comp-head{padding:18px 22px;border-bottom:1px solid var(--divider)}
+.comp-head h2{margin:0;font-size:1.4rem;font-weight:500}
+.meta{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+.tag{font-size:.7rem;border:1px solid var(--divider);border-radius:12px;padding:3px 10px;color:var(--on-surface-med)}
+.tag.code{font-family:var(--mono)}
+.lede{color:var(--on-surface-med);margin:10px 0 0;max-width:760px}
+
+/* live render stage */
+.stage{padding:30px 22px;background:#F0F0F2;display:flex;justify-content:center;flex-wrap:wrap;gap:18px;align-items:center}
+.stage.col{flex-direction:column;align-items:stretch}
+.stage .stage-label{width:100%;text-align:center;font-size:.7rem;text-transform:uppercase;letter-spacing:.06em;color:var(--on-surface-med);margin-bottom:4px}
+
+/* buttons */
+.btn{font:500 .875rem var(--font);letter-spacing:.05em;text-transform:uppercase;border-radius:4px;padding:0 16px;height:36px;border:none;cursor:pointer;display:inline-flex;align-items:center;gap:8px}
+.btn.contained{background:var(--primary);color:var(--on-primary);box-shadow:var(--el1)}
+.btn.contained:hover{background:var(--primary-dark)}
+.btn.contained.sec{background:var(--secondary)}
+.btn.outlined{background:transparent;color:var(--primary-dark);border:1px solid rgba(0,0,0,.23)}
+.btn.outlined:hover{background:var(--selected)}
+.btn.text{background:transparent;color:var(--primary-dark);padding:0 8px}
+.btn.text:hover{background:var(--selected)}
+.btn[disabled]{background:rgba(0,0,0,.12);color:var(--on-surface-dis);box-shadow:none;border:none;cursor:default}
+.toggle{display:inline-flex;border:1px solid rgba(0,0,0,.23);border-radius:4px;overflow:hidden}
+.toggle span{padding:8px 14px;color:var(--on-surface-med);cursor:pointer;font-size:.82rem}
+.toggle span+span{border-left:1px solid rgba(0,0,0,.23)}
+.toggle span.on{background:var(--selected);color:var(--primary-dark)}
+
+/* table */
+.table{width:100%;border-collapse:collapse;font-size:.84rem;background:var(--surface)}
+.table th{text-align:left;padding:14px 16px;color:var(--on-surface-med);font-weight:500;border-bottom:1px solid var(--divider);white-space:nowrap}
+.table th.num,.table td.num{text-align:right;font-variant-numeric:tabular-nums}
+.table td{padding:12px 16px;border-bottom:1px solid var(--divider)}
+.table tr:hover td{background:var(--hover)}
+.tablewrap{width:100%;max-width:760px;background:var(--surface);border-radius:8px;box-shadow:var(--el1);overflow:hidden}
+.tbar{display:flex;align-items:center;gap:12px;padding:14px 16px;border-bottom:1px solid var(--divider)}
+.tbar .t{font-size:1rem;font-weight:500;flex:1}
+.icb{width:36px;height:36px;border-radius:50%;border:none;background:transparent;color:var(--on-surface-med);cursor:pointer;font-size:1.05rem}
+.icb:hover{background:var(--hover)}
+.schip{display:inline-flex;align-items:center;gap:5px;height:24px;padding:0 10px;border-radius:12px;font-size:.74rem;font-weight:500}
+.schip.ok{background:#E8F5E9;color:#1B5E20}.schip.warn{background:#FFF3E0;color:#E65100}.schip.err{background:#FFEBEE;color:#B71C1C}
+.tfoot{display:flex;align-items:center;justify-content:flex-end;gap:18px;padding:10px 16px;color:var(--on-surface-med);font-size:.8rem}
+
+/* context grid */
+.ctx{padding:20px 22px}
+.ctx-title{font-size:.72rem;text-transform:uppercase;letter-spacing:.06em;color:var(--primary-dark);margin:0 0 4px;font-weight:700}
+.ctx-note{font-size:.8rem;color:var(--on-surface-med);margin:0 0 16px}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.card{border:1px solid var(--divider);border-radius:8px;padding:14px 16px;background:var(--surface)}
+.card h4{margin:0 0 8px;font-size:.78rem;text-transform:uppercase;letter-spacing:.04em;color:var(--on-surface-med)}
+.card ul{margin:0;padding-left:18px}.card li{margin:5px 0;font-size:.85rem}
+.card.full{grid-column:1/-1}
+.callout{border-left:4px solid var(--primary);background:var(--field);border-radius:6px;padding:10px 14px;font-size:.85rem;margin:0 0 16px}
+table.spec{width:100%;border-collapse:collapse;font-size:.82rem}
+table.spec th{text-align:left;background:var(--field);padding:7px 10px;border-bottom:1px solid var(--divider);font-weight:500}
+table.spec td{padding:7px 10px;border-bottom:1px solid var(--divider);vertical-align:top}
+.do h4{color:#1B5E20}.dont h4{color:#B71C1C}
+.do{background:#E8F5E9;border-color:#C8E6C9}.dont{background:#FFEBEE;border-color:#FFCDD2}
+pre{background:#1e1e1e;color:#e6e6e6;border-radius:8px;padding:14px 16px;overflow:auto;font-family:var(--mono);font-size:.74rem;line-height:1.5;margin:0}
+pre .c{color:#9aa0a6}
+.filechip{display:inline-flex;align-items:center;gap:6px;font-family:var(--mono);font-size:.72rem;background:#eee;border-radius:4px;padding:2px 8px;color:var(--on-surface)}
+@media(max-width:720px){.grid{grid-template-columns:1fr}}
+
+/* ---- interactive demo ---- */
+.demo-head{display:flex;align-items:baseline;justify-content:space-between;padding:18px 22px 0}
+.demo-head h3{margin:0;font-size:1rem;font-weight:500}
+.demo-head .hint{font-size:.78rem;color:var(--on-surface-med)}
+.lab{display:grid;grid-template-columns:1fr 270px;border-top:1px solid var(--divider);margin-top:14px}
+.lab-preview{padding:34px 22px;display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:18px;background:#F0F0F2;min-height:150px}
+.lab-controls{background:var(--surface);border-left:1px solid var(--divider);padding:16px 18px}
+.lab-controls h5{margin:0 0 12px;font-size:.7rem;text-transform:uppercase;letter-spacing:.06em;color:var(--on-surface-med)}
+.lab-row{display:flex;align-items:center;gap:10px;margin:11px 0;font-size:.85rem}
+.lab-row label{flex:1;color:var(--on-surface)}
+.lab-row select,.lab-row input[type=text],.lab-row input[type=number]{font:inherit;font-size:.82rem;padding:6px 8px;border:1px solid rgba(0,0,0,.23);border-radius:4px;background:var(--surface)}
+.lab-row input[type=text]{width:130px}
+.lab-row input[type=number]{width:64px}
+.lab-row input[type=checkbox]{width:16px;height:16px;accent-color:var(--primary)}
+.lab-code{font-family:var(--mono);font-size:.72rem;color:#e6e6e6;background:#1e1e1e;padding:12px 16px;white-space:pre-wrap;word-break:break-word;border-top:1px solid var(--divider)}
+.lab-code .lbl{color:#9aa0a6;display:block;margin-bottom:6px;font-family:var(--font);font-size:.66rem;text-transform:uppercase;letter-spacing:.06em}
+
+/* full gallery (every variant × state) */
+.gallery{padding:18px 22px 4px}
+.gallery h4{margin:0 0 10px;font-size:.78rem;text-transform:uppercase;letter-spacing:.04em;color:var(--on-surface-med)}
+.matrix{width:100%;border-collapse:collapse;font-size:.82rem;margin-bottom:18px}
+.matrix th{text-align:left;background:var(--field);padding:8px 12px;border:1px solid var(--divider);font-weight:500;color:var(--on-surface-med)}
+.matrix td{padding:12px;border:1px solid var(--divider);text-align:center;background:var(--surface)}
+.matrix td .cap{display:block;font-size:.68rem;color:var(--on-surface-med);margin-top:6px}
+
+/* table demo extras */
+.table.dense th{padding:9px 16px}
+.table.dense td{padding:7px 16px}
+.table td.sel,.table th.sel{width:40px;text-align:center;padding-left:16px}
+.cbx{width:18px;height:18px;border:2px solid var(--on-surface-med);border-radius:2px;position:relative;display:inline-block;cursor:pointer;vertical-align:middle}
+.cbx.on{background:var(--primary);border-color:var(--primary)}
+.cbx.on::after{content:"";position:absolute;left:5px;top:1px;width:5px;height:10px;border:solid #fff;border-width:0 2px 2px 0;transform:rotate(45deg)}
+.cbx.ind{background:var(--primary);border-color:var(--primary)}
+.cbx.ind::after{content:"";position:absolute;left:3px;top:7px;width:10px;height:2px;background:#fff}
+.table tr.selected td{background:var(--selected)}
+.tbar.context{background:var(--selected)}
+.tbar.context .t{color:var(--primary-dark)}
+.expander{cursor:pointer;color:var(--on-surface-med);user-select:none}
+tr.detail td{background:var(--field);color:var(--on-surface-med);font-size:.8rem}
+@media(max-width:720px){.lab{grid-template-columns:1fr}.lab-controls{border-left:none;border-top:1px solid var(--divider)}}
+</style>
+</head>
+<body>
+<main>
+  <h1>Spec preview — Buttons &amp; Data table</h1>
+  <p class="sub">How each component looks rendered, and the context that lives in its <code>.md</code> spec file. The grey blocks are the live component; the bordered cards below mirror exactly what an AI reads from <span class="filechip">buttons.md</span> / <span class="filechip">data-table.md</span>.</p>
+  <div class="legend">
+    <span class="k"><span class="swatch s-live"></span> Live render (themed component)</span>
+    <span class="k"><span class="swatch s-ctx"></span> Context from the spec file</span>
+  </div>
+
+  <!-- ===================== BUTTONS ===================== -->
+  <section class="comp">
+    <div class="comp-head">
+      <h2>Buttons</h2>
+      <div class="meta">
+        <span class="tag">Status: stable</span>
+        <span class="tag">Category: Actions</span>
+        <span class="tag code">MDC: mdc-button</span>
+        <span class="tag code">buttons.md</span>
+      </div>
+      <p class="lede">Buttons let operators trigger actions — saving a vehicle, running a report, confirming a change. Emphasis communicates priority: the one most important action on a view is the contained button; everything else steps down.</p>
+    </div>
+
+    <div class="stage">
+      <span class="stage-label">Live render</span>
+      <button class="btn contained">Save vehicle</button>
+      <button class="btn outlined">Cancel</button>
+      <button class="btn text">View report</button>
+      <button class="btn contained sec">Secondary</button>
+      <button class="btn contained" disabled>Disabled</button>
+      <span class="toggle"><span class="on">Map</span><span>List</span></span>
+    </div>
+
+    <div class="demo-head">
+      <h3>Interactive demo</h3>
+      <span class="hint">Configure the button and watch it + its markup update.</span>
+    </div>
+    <div class="lab">
+      <div class="lab-preview"><button class="btn contained" id="btnPreview">Save vehicle</button></div>
+      <div class="lab-controls">
+        <h5>Options</h5>
+        <div class="lab-row"><label for="bVar">Variant</label>
+          <select id="bVar">
+            <option value="contained">Contained</option>
+            <option value="outlined">Outlined</option>
+            <option value="text">Text</option>
+            <option value="contained sec">Secondary</option>
+          </select></div>
+        <div class="lab-row"><label for="bIcon">Leading icon</label><input type="checkbox" id="bIcon"></div>
+        <div class="lab-row"><label for="bDisabled">Disabled</label><input type="checkbox" id="bDisabled"></div>
+        <div class="lab-row"><label for="bLabel">Label</label><input type="text" id="bLabel" value="Save vehicle"></div>
+      </div>
+    </div>
+    <div class="lab-code" id="btnCode"></div>
+
+    <div class="gallery">
+      <h4>All variants × states</h4>
+      <table class="matrix">
+        <thead><tr><th>Variant</th><th>Enabled</th><th>Hover (sim.)</th><th>Disabled</th><th>With icon</th></tr></thead>
+        <tbody id="btnMatrix"></tbody>
+      </table>
+    </div>
+
+    <div class="ctx">
+      <p class="ctx-title">Context included in buttons.md</p>
+      <p class="ctx-note">This is the structured guidance the AI uses to decide when and how to use the component.</p>
+
+      <div class="callout"><strong>Key rule:</strong> Use exactly one contained (high-emphasis) button per view. The FAB is excluded — it's a mobile pattern; on desktop the primary action sits in the page toolbar / app bar.</div>
+
+      <div class="grid">
+        <div class="card">
+          <h4>When to use</h4>
+          <ul>
+            <li><strong>Contained</strong> — the single primary action (Save, Add, Run).</li>
+            <li><strong>Outlined</strong> — important secondary actions, or Cancel beside a contained button.</li>
+            <li><strong>Text</strong> — low-emphasis actions in toolbars, cards, dialog dismissals.</li>
+            <li><strong>Toggle</strong> — switch between exclusive views (Map / List); 2–5 options, not navigation.</li>
+          </ul>
+        </div>
+        <div class="card">
+          <h4>When NOT to use</h4>
+          <ul>
+            <li>Not for navigation that's really a link → use a Link.</li>
+            <li>Not stacked as multiple contained buttons.</li>
+            <li>Not white-on-orange for important labels (fails AA).</li>
+          </ul>
+        </div>
+
+        <div class="card full">
+          <h4>Specs</h4>
+          <table class="spec">
+            <tr><th>Property</th><th>Value</th></tr>
+            <tr><td>Height</td><td>36px (standard)</td></tr>
+            <tr><td>Corner radius</td><td>4px</td></tr>
+            <tr><td>Label</td><td>Roboto 14px / 500, uppercase, ~0.05em tracking</td></tr>
+            <tr><td>Contained fill / label</td><td>primary / white — use <strong>primary-dark (#BB4800)</strong> where white text must pass WCAG AA (white on #F47735 is only ~2.79:1)</td></tr>
+          </table>
+        </div>
+
+        <div class="card do">
+          <h4>Do</h4>
+          <ul>
+            <li>Keep one contained action per view.</li>
+            <li>Use verb-first labels ("Add vehicle", not "New").</li>
+            <li>Pair Cancel (outlined/text) beside the primary.</li>
+          </ul>
+        </div>
+        <div class="card dont">
+          <h4>Don't</h4>
+          <ul>
+            <li>Don't stack multiple contained buttons.</li>
+            <li>Don't ship white-on-orange for important labels.</li>
+            <li>Don't hard-code colours/sizes — use tokens.</li>
+          </ul>
+        </div>
+
+        <div class="card full">
+          <h4>Correct usage (themed MDC markup)</h4>
+<pre><span class="c">&lt;!-- one primary (raised) action, secondary as outlined --&gt;</span>
+&lt;button class="mdc-button mdc-button--raised"&gt;
+  &lt;span class="mdc-button__ripple"&gt;&lt;/span&gt;
+  &lt;span class="mdc-button__label"&gt;Save vehicle&lt;/span&gt;
+&lt;/button&gt;
+&lt;button class="mdc-button mdc-button--outlined"&gt;
+  &lt;span class="mdc-button__ripple"&gt;&lt;/span&gt;
+  &lt;span class="mdc-button__label"&gt;Cancel&lt;/span&gt;
+&lt;/button&gt;</pre>
+        </div>
+
+        <div class="card full">
+          <h4>Accessibility</h4>
+          <ul>
+            <li>Real <code>&lt;button&gt;</code> elements with discernible text; icon-only actions get an <code>aria-label</code>.</li>
+            <li>Focus is always visible; disabled state is conveyed to assistive tech.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== DATA TABLE ===================== -->
+  <section class="comp">
+    <div class="comp-head">
+      <h2>Data table</h2>
+      <div class="meta">
+        <span class="tag">Status: stable</span>
+        <span class="tag">Category: Data display</span>
+        <span class="tag code">MDC: mdc-data-table</span>
+        <span class="tag code">data-table.md</span>
+      </div>
+      <p class="lede">Data tables present sets of records across rows and columns — the primary way operators scan, sort, select, and act on fleet data. The most-used component in the portal, so it carries the most behaviour.</p>
+    </div>
+
+    <div class="stage col">
+      <span class="stage-label">Live render</span>
+      <div class="tablewrap">
+        <div class="tbar">
+          <span class="t">Vehicles</span>
+          <button class="icb" title="Search">⌕</button>
+          <button class="icb" title="Filter">⛃</button>
+          <button class="icb" title="More">⋮</button>
+        </div>
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Registration ▲</th>
+              <th>Driver</th>
+              <th>Status</th>
+              <th class="num">Odometer (km)</th>
+              <th>Last trip</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>CA 123-456</td><td>Jane Cooper</td><td><span class="schip ok">Active</span></td><td class="num">84,210</td><td>2 min ago</td></tr>
+            <tr><td>CA 789-012</td><td>Frank Kim</td><td><span class="schip warn">Idle</span></td><td class="num">120,540</td><td>1 h ago</td></tr>
+            <tr><td>CA 345-678</td><td>Lena Ortiz</td><td><span class="schip err">Offline</span></td><td class="num">58,900</td><td>3 d ago</td></tr>
+          </tbody>
+        </table>
+        <div class="tfoot"><span>Rows per page: 10</span><span>1–3 of 128</span><span>‹ ›</span></div>
+      </div>
+    </div>
+
+    <div class="demo-head">
+      <h3>Interactive demo</h3>
+      <span class="hint">Toggle the table's variants; select rows to see the contextual toolbar.</span>
+    </div>
+    <div class="lab">
+      <div class="lab-preview" style="padding:24px 18px"><div id="dtDemo" style="width:100%;max-width:680px"></div></div>
+      <div class="lab-controls">
+        <h5>Variants</h5>
+        <div class="lab-row"><label for="dToolbar">Toolbar</label><input type="checkbox" id="dToolbar" checked></div>
+        <div class="lab-row"><label for="dSelect">Selectable (checkboxes)</label><input type="checkbox" id="dSelect"></div>
+        <div class="lab-row"><label for="dDense">Dense</label><input type="checkbox" id="dDense"></div>
+        <div class="lab-row"><label for="dStatus">Status chips</label><input type="checkbox" id="dStatus" checked></div>
+        <div class="lab-row"><label for="dExpand">Expandable rows</label><input type="checkbox" id="dExpand"></div>
+        <div class="lab-row"><label for="dPage">Pagination footer</label><input type="checkbox" id="dPage" checked></div>
+      </div>
+    </div>
+
+    <div class="ctx">
+      <p class="ctx-title">Context included in data-table.md</p>
+      <p class="ctx-note">This is the structured guidance the AI uses to decide when and how to use the component.</p>
+
+      <div class="callout"><strong>Key rule:</strong> When a dataset is large, server-paginated, sortable, or selectable, use the data table — not a basic Table. Reserve the basic table for small, static key/value layouts.</div>
+
+      <div class="grid">
+        <div class="card">
+          <h4>When to use</h4>
+          <ul>
+            <li><strong>With toolbar</strong> — almost always; title + search/filter/export.</li>
+            <li><strong>Selectable</strong> — bulk actions on multiple records.</li>
+            <li><strong>Paginated</strong> — any dataset beyond one screen.</li>
+            <li><strong>Dense / inline-edit / expandable</strong> — high-volume or detail-rich screens.</li>
+          </ul>
+        </div>
+        <div class="card">
+          <h4>When NOT to use</h4>
+          <ul>
+            <li>Not infinite-scroll on desktop → paginate.</li>
+            <li>Not multi-column sort unless explicitly needed.</li>
+            <li>Not status by colour alone → keep the text label.</li>
+          </ul>
+        </div>
+
+        <div class="card full">
+          <h4>Behaviors</h4>
+          <ul>
+            <li><strong>Sorting</strong> — click a header to sort; click again to reverse; one column at a time.</li>
+            <li><strong>Selection</strong> — row checkboxes + select-all (indeterminate when partial); toolbar switches to a contextual toolbar showing count + bulk actions.</li>
+            <li><strong>Pagination</strong> — footer with rows-per-page + range; fetch per page for server data.</li>
+          </ul>
+        </div>
+
+        <div class="card full">
+          <h4>Specs</h4>
+          <table class="spec">
+            <tr><th>Property</th><th>Standard</th><th>Dense</th></tr>
+            <tr><td>Header row height</td><td>56px</td><td>40px</td></tr>
+            <tr><td>Data row height</td><td>52px</td><td>36px</td></tr>
+            <tr><td>Selected background</td><td colspan="2">primary @ ~10% (token <code>--selected</code>)</td></tr>
+            <tr><td>Cell text</td><td colspan="2">Roboto 14px / 400; numbers right-aligned, tabular figures</td></tr>
+          </table>
+        </div>
+
+        <div class="card do">
+          <h4>Do</h4>
+          <ul>
+            <li>Right-align numeric columns with tabular figures.</li>
+            <li>Map status to consistent colour chips (Active/Idle/Offline).</li>
+            <li>Paginate; fetch per page for large data.</li>
+          </ul>
+        </div>
+        <div class="card dont">
+          <h4>Don't</h4>
+          <ul>
+            <li>Don't bury constantly-used actions in a row overflow menu.</li>
+            <li>Don't infinite-scroll a desktop data table.</li>
+            <li>Don't encode status by colour alone.</li>
+          </ul>
+        </div>
+
+        <div class="card full">
+          <h4>Correct usage (themed MDC markup)</h4>
+<pre>&lt;div class="mdc-data-table"&gt;
+  &lt;table class="mdc-data-table__table" aria-label="Vehicles"&gt;
+    &lt;thead&gt;&lt;tr class="mdc-data-table__header-row"&gt;
+      &lt;th class="mdc-data-table__header-cell" scope="col"&gt;Registration&lt;/th&gt;
+      &lt;th class="mdc-data-table__header-cell mdc-data-table__header-cell--numeric"&gt;Odometer (km)&lt;/th&gt;
+    &lt;/tr&gt;&lt;/thead&gt;
+    &lt;tbody class="mdc-data-table__content"&gt;
+      &lt;tr class="mdc-data-table__row"&gt;
+        &lt;th class="mdc-data-table__cell" scope="row"&gt;CA 123-456&lt;/th&gt;
+        &lt;td class="mdc-data-table__cell mdc-data-table__cell--numeric"&gt;84,210&lt;/td&gt;
+      &lt;/tr&gt;
+    &lt;/tbody&gt;
+  &lt;/table&gt;
+&lt;/div&gt;</pre>
+        </div>
+
+        <div class="card full">
+          <h4>Accessibility</h4>
+          <ul>
+            <li>Real <code>&lt;table&gt;</code> semantics with <code>&lt;th&gt;</code> headers; sortable headers expose <code>aria-sort</code>.</li>
+            <li>Select-all announces its indeterminate state; status is never colour-only.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <p class="sub" style="margin-top:8px">Each spec file also includes Anatomy, full Variants and States tables, and the complete markup — trimmed here for the preview.</p>
+</main>
+
+<script>
+/* ---------------- Buttons playground ---------------- */
+(function(){
+  var preview=document.getElementById('btnPreview'),
+      vVar=document.getElementById('bVar'),
+      vIcon=document.getElementById('bIcon'),
+      vDis=document.getElementById('bDisabled'),
+      vLab=document.getElementById('bLabel'),
+      code=document.getElementById('btnCode');
+  var MDC={'contained':'mdc-button mdc-button--raised','outlined':'mdc-button mdc-button--outlined','text':'mdc-button','contained sec':'mdc-button mdc-button--unelevated'};
+  function update(){
+    var variant=vVar.value, label=vLab.value||'Button';
+    preview.className='btn '+variant;
+    preview.disabled=vDis.checked;
+    preview.textContent='';
+    if(vIcon.checked){var i=document.createElement('span');i.textContent='＋';i.style.fontWeight='700';preview.appendChild(i);}
+    preview.appendChild(document.createTextNode(label));
+    var cls=MDC[variant]||'mdc-button';
+    var icon=vIcon.checked?'\n  <i class="material-icons mdc-button__icon">add</i>':'';
+    var dis=vDis.checked?' disabled':'';
+    var markup='<button class="'+cls+'"'+dis+'>\n  <span class="mdc-button__ripple"></span>'+icon+'\n  <span class="mdc-button__label">'+label+'</span>\n</button>';
+    var esc=markup.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+    code.innerHTML='<span class="lbl">Generated markup</span>'+esc;
+  }
+  [vVar,vIcon,vDis].forEach(function(e){e.addEventListener('change',update)});
+  vLab.addEventListener('input',update);
+  update();
+
+  /* matrix: every variant in every state */
+  var variants=[['contained','Contained'],['outlined','Outlined'],['text','Text'],['contained sec','Secondary']];
+  var body=document.getElementById('btnMatrix');
+  variants.forEach(function(v){
+    var tr=document.createElement('tr');
+    tr.innerHTML='<th>'+v[1]+'</th>';
+    // enabled
+    tr.innerHTML+='<td><button class="btn '+v[0]+'">Action</button></td>';
+    // hover (simulate by using darker for contained / tint otherwise via inline)
+    var hov=document.createElement('td');
+    var hb=document.createElement('button');hb.className='btn '+v[0];hb.textContent='Action';
+    if(v[0].indexOf('contained')===0 && v[0].indexOf('sec')===-1){hb.style.background='var(--primary-dark)';}
+    else if(v[0]==='contained sec'){hb.style.background='#000';hb.style.opacity='.85';}
+    else{hb.style.background='var(--selected)';}
+    hov.appendChild(hb);hov.innerHTML+='<span class="cap">hover state</span>';tr.appendChild(hov);
+    // disabled
+    tr.innerHTML+='<td><button class="btn '+v[0]+'" disabled>Action</button></td>';
+    // with icon
+    tr.innerHTML+='<td><button class="btn '+v[0]+'"><span style="font-weight:700">＋</span> Add</button></td>';
+    body.appendChild(tr);
+  });
+})();
+
+/* ---------------- Data table playground ---------------- */
+(function(){
+  var rows=[
+    {reg:'CA 123-456',driver:'Jane Cooper',status:'Active',cls:'ok',odo:'84,210',trip:'2 min ago',detail:'3 trips today · 142 km · last service 12 Mar'},
+    {reg:'CA 789-012',driver:'Frank Kim',status:'Idle',cls:'warn',odo:'120,540',trip:'1 h ago',detail:'Parked at depot · battery 78%'},
+    {reg:'CA 345-678',driver:'Lena Ortiz',status:'Offline',cls:'err',odo:'58,900',trip:'3 d ago',detail:'No signal since 18 Jun · last known: N1 hwy'},
+    {reg:'CA 901-234',driver:'Marcus Lee',status:'Active',cls:'ok',odo:'31,705',trip:'just now',detail:'En route · ETA 14:25 · 62 km/h'}
+  ];
+  var sel={}, expanded={};
+  var host=document.getElementById('dtDemo');
+  var c={toolbar:'dToolbar',select:'dSelect',dense:'dDense',status:'dStatus',expand:'dExpand',page:'dPage'};
+  function on(k){return document.getElementById(c[k]).checked;}
+
+  function render(){
+    var selCount=Object.keys(sel).filter(function(k){return sel[k]}).length;
+    var allOn=selCount===rows.length, partial=selCount>0&&!allOn;
+    var html='<div class="tablewrap">';
+    if(on('toolbar')){
+      if(on('select')&&selCount>0){
+        html+='<div class="tbar context"><span class="t">'+selCount+' selected</span>'+
+          '<button class="icb" title="Export">⭳</button><button class="icb" title="Delete">🗑</button></div>';
+      } else {
+        html+='<div class="tbar"><span class="t">Vehicles</span>'+
+          '<button class="icb" title="Search">⌕</button><button class="icb" title="Filter">⛃</button><button class="icb" title="More">⋮</button></div>';
+      }
+    }
+    html+='<table class="table'+(on('dense')?' dense':'')+'"><thead><tr>';
+    if(on('expand'))html+='<th class="sel"></th>';
+    if(on('select'))html+='<th class="sel"><span class="cbx'+(allOn?' on':partial?' ind':'')+'" data-all="1"></span></th>';
+    html+='<th>Registration ▲</th><th>Driver</th>';
+    if(on('status'))html+='<th>Status</th>';
+    html+='<th class="num">Odometer (km)</th><th>Last trip</th></tr></thead><tbody>';
+    rows.forEach(function(r,i){
+      var isSel=!!sel[i];
+      html+='<tr'+(isSel?' class="selected"':'')+'>';
+      if(on('expand'))html+='<td class="sel"><span class="expander" data-exp="'+i+'">'+(expanded[i]?'▾':'▸')+'</span></td>';
+      if(on('select'))html+='<td class="sel"><span class="cbx'+(isSel?' on':'')+'" data-row="'+i+'"></span></td>';
+      html+='<td>'+r.reg+'</td><td>'+r.driver+'</td>';
+      if(on('status'))html+='<td><span class="schip '+r.cls+'">'+r.status+'</span></td>';
+      html+='<td class="num">'+r.odo+'</td><td>'+r.trip+'</td></tr>';
+      if(on('expand')&&expanded[i]){
+        var span=2+(on('status')?1:0)+(on('expand')?1:0)+(on('select')?1:0);
+        html+='<tr class="detail"><td></td><td colspan="'+(span)+'">'+r.detail+'</td></tr>';
+      }
+    });
+    html+='</tbody></table>';
+    if(on('page'))html+='<div class="tfoot"><span>Rows per page: 10</span><span>1–'+rows.length+' of 128</span><span>‹ ›</span></div>';
+    html+='</div>';
+    host.innerHTML=html;
+    // wire interactions
+    host.querySelectorAll('[data-row]').forEach(function(el){
+      el.addEventListener('click',function(){var i=el.getAttribute('data-row');sel[i]=!sel[i];render();});
+    });
+    var all=host.querySelector('[data-all]');
+    if(all)all.addEventListener('click',function(){
+      var target=!allOn; rows.forEach(function(_,i){sel[i]=target;}); render();
+    });
+    host.querySelectorAll('[data-exp]').forEach(function(el){
+      el.addEventListener('click',function(){var i=el.getAttribute('data-exp');expanded[i]=!expanded[i];render();});
+    });
+  }
+  Object.keys(c).forEach(function(k){document.getElementById(c[k]).addEventListener('change',render);});
+  render();
+})();
+</script>
+</body>
+</html>

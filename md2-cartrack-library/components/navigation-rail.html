@@ -1,0 +1,82 @@
+<!DOCTYPE html><html lang="en"><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cartrack DS — Navigation rail</title>
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&family=Roboto+Mono&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/ds.css">
+</head><body><main>
+  <div class="crumbs"><a href="index.html">Components</a><span class="s">&rsaquo;</span> Navigation rail</div>
+  <h1>Navigation rail</h1>
+  <p class="lede">The navigation rail is a compact, icon-first side navigation. It's the collapsed form of the drawer — used on narrower desktop widths or when an operator wants more room for a dense map or table.</p>
+  <div class="chiprow"><span class="tag">Category: Navigation</span><span class="tag">Desktop</span><span class="tag">Import: <code>Drawer</code> (rail)</span></div>
+  <div class="callout">Use the rail as the space-saving alternative to the drawer, not as a second navigation. The two are the same destinations at different widths.</div>
+
+  <div class="callout"><strong>No stock MDC Web component.</strong> The navigation rail is a Material 3 concept that Material Components Web (v14) does not ship. Build it as a narrow custom rail, or use a compact MDC drawer / MDC list. The preview below is a Cartrack-styled approximation, not a real MDC component.</div>
+
+  <h2>Demo</h2>
+  <div class="lab">
+    <div class="lab-preview"><div class="rail" id="pv"></div></div>
+    <div class="lab-controls">
+      <h5>Options</h5>
+      <div class="lab-row"><label for="c-lbl">Show labels</label><input type="checkbox" id="c-lbl" checked></div>
+      <div class="lab-row"><label>Tip</label><span class="muted" style="font-size:.78rem">Click an item to select</span></div>
+    </div>
+  </div>
+  <script>(function(){var pv=document.getElementById('pv'),lb=document.getElementById('c-lbl');var items=[['🗺','Map'],['🚚','Assets'],['📊','Reports']];function u(){pv.innerHTML='';items.forEach(function(it,i){var d=document.createElement('div');d.className='it'+(i===0?' on':'');d.innerHTML='<span style="font-size:1.2rem">'+it[0]+'</span>'+(lb.checked?it[1]:'');d.onclick=function(){pv.querySelectorAll('.it').forEach(function(x){x.classList.remove('on')});d.classList.add('on');};pv.appendChild(d);});}lb.addEventListener('change',u);u();})();</script>
+
+  <h2>Live example</h2>
+  <div class="stage">
+    <div class="rail">
+      <div class="it on"><span style="font-size:1.2rem">&#128506;</span>Map</div>
+      <div class="it"><span style="font-size:1.2rem">&#128666;</span>Assets</div>
+      <div class="it"><span style="font-size:1.2rem">&#128100;</span>People</div>
+      <div class="it"><span style="font-size:1.2rem">&#128202;</span>Reports</div>
+    </div>
+  </div>
+
+  <h2>Anatomy</h2>
+  <div class="anat"><p class="muted">A narrow vertical strip of icon destinations.</p>
+    <ol>
+      <li><b>Container</b> — the fixed narrow strip (~72–80px).</li>
+      <li><b>Item</b> — an icon with a short label beneath it.</li>
+      <li><b>Active indicator</b> — highlight on the selected item.</li>
+      <li><b>Menu / expand control</b> — optional toggle back to the full drawer.</li>
+    </ol></div>
+
+  <h2>Variants</h2>
+  <table class="spec"><tr><th>Variant</th><th>When to use</th></tr>
+    <tr><td>Labelled</td><td>Icon + short label (recommended for clarity).</td></tr>
+    <tr><td>Icon-only</td><td>Maximum density; labels via tooltip on hover.</td></tr>
+    <tr><td>Expandable</td><td>Toggles to the full navigation drawer.</td></tr>
+  </table>
+
+  <h2>Behaviors</h2>
+  <h3>Selection</h3><p class="muted">Selecting an item navigates and moves the active indicator; only one is active.</p>
+  <h3>Expand</h3><p class="muted">An optional control expands the rail into the full drawer and back.</p>
+  <h3>Tooltips</h3><p class="muted">Icon-only items reveal their label on hover/focus so meaning isn't lost.</p>
+
+  <h2>States</h2>
+  <table class="spec"><tr><th>State</th><th>Treatment</th></tr>
+    <tr><td>Item enabled</td><td>Medium-emphasis icon + label.</td></tr>
+    <tr><td>Item hover/focus</td><td>4% overlay.</td></tr>
+    <tr><td>Item active</td><td>Primary icon/label (+ indicator).</td></tr>
+  </table>
+
+  <h2>Specs</h2>
+  <table class="spec"><tr><th>Property</th><th>Value</th></tr>
+    <tr><td>Width</td><td>72–80px</td></tr>
+    <tr><td>Icon size</td><td>24px</td></tr>
+    <tr><td>Label</td><td>Roboto ~11–12px / 500</td></tr>
+    <tr><td>Item target</td><td>≥48px tall</td></tr>
+  </table>
+
+  <h2>Do &amp; Don't</h2>
+  <div class="cols">
+    <div class="do"><h4>Do</h4><ul><li>Keep labels even in the compact form where possible.</li><li>Mirror the drawer's destinations exactly.</li><li>Provide tooltips for icon-only items.</li></ul></div>
+    <div class="dont"><h4>Don't</h4><ul><li>Don't show different destinations than the drawer.</li><li>Don't pack more than ~7 items.</li><li>Don't rely on icon alone without an accessible name.</li></ul></div>
+  </div>
+
+  <h2>Accessibility</h2>
+  <p class="muted">A <code>navigation</code> landmark of links; the active item exposes <code>aria-current</code>. Every item has an accessible name even when icon-only. Keyboard reachable with visible focus.</p>
+
+  <div class="callout" style="margin-top:32px">Part of the shared component detail-page set. <a href="index.html">All components →</a></div>
+</main></body></html>

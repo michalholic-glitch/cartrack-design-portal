@@ -1,0 +1,89 @@
+<!DOCTYPE html><html lang="en"><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cartrack DS — Snackbars</title>
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&family=Roboto+Mono&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/ds.css">
+<link rel="stylesheet" href="https://unpkg.com/material-components-web@14.0.0/dist/material-components-web.min.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+<style>:root{--mdc-theme-primary:#F47735;--mdc-theme-secondary:#333;--mdc-theme-on-primary:#fff;--mdc-theme-surface:#fff;--mdc-theme-background:#fff;--mdc-theme-error:#BA1A1A}</style>
+</head><body><main>
+  <div class="crumbs"><a href="index.html">Components</a><span class="s">&rsaquo;</span> Snackbars</div>
+  <h1>Snackbars</h1>
+  <p class="lede">A snackbar gives brief, low-priority feedback about an action just taken — "Vehicle saved", "Export started" — usually with a single optional action like Undo. It appears briefly and dismisses on its own.</p>
+  <div class="chiprow"><span class="tag">Category: Feedback</span><span class="tag">Desktop</span><span class="tag">Import: <code>Snackbar</code> (notistack)</span></div>
+  <div class="callout">Use a snackbar for transient confirmation that doesn't need acknowledgement. For a message that must persist until acted on, use a banner; for a blocking choice, a dialog.</div>
+
+  <h2>Live component (real MDC)</h2>
+  <p class="muted">The genuine MDC snackbar — click to trigger it (loads MDC online).</p>
+  <div class="stage">
+    <button class="mdc-button mdc-button--raised" id="m-open-snack"><span class="mdc-button__ripple"></span><span class="mdc-button__label">Show snackbar</span></button>
+    <aside class="mdc-snackbar" id="m-snackbar"><div class="mdc-snackbar__surface" role="status" aria-relevant="additions"><div class="mdc-snackbar__label" aria-atomic="false">Vehicle saved</div><div class="mdc-snackbar__actions" aria-atomic="true"><button type="button" class="mdc-button mdc-snackbar__action"><div class="mdc-button__ripple"></div><span class="mdc-button__label">Undo</span></button></div></div></aside>
+  </div>
+
+  <h2>Demo</h2>
+  <div class="lab">
+    <div class="lab-preview"><span class="snackbar" id="pv">Vehicle saved <a href="#" id="pv-a">Undo</a></span></div>
+    <div class="lab-controls">
+      <h5>Options</h5>
+      <div class="lab-row"><label for="c-act">Show action</label><input type="checkbox" id="c-act" checked></div>
+      <div class="lab-row"><label for="c-msg">Message</label><input type="text" id="c-msg" value="Vehicle saved"></div>
+    </div>
+  </div>
+  <script>(function(){var pv=document.getElementById('pv'),a=document.getElementById('c-act'),m=document.getElementById('c-msg');function u(){pv.textContent=m.value||'Message';if(a.checked){var lnk=document.createElement('a');lnk.href='#';lnk.textContent='Undo';pv.appendChild(document.createTextNode(' '));pv.appendChild(lnk);}}a.addEventListener('change',u);m.addEventListener('input',u);u();})();</script>
+
+  <h2>Live example</h2>
+  <div class="stage">
+    <span class="snackbar">Vehicle saved <a href="#">Undo</a></span>
+  </div>
+
+  <h2>Anatomy</h2>
+  <div class="anat"><p class="muted">A small surface, usually bottom-left/bottom-center.</p>
+    <ol>
+      <li><b>Container</b> — dark surface, low elevation.</li>
+      <li><b>Message</b> — one concise line of text.</li>
+      <li><b>Action</b> — at most one (e.g. Undo).</li>
+      <li><b>Dismiss</b> — optional close; otherwise auto-hides.</li>
+    </ol></div>
+
+  <h2>Variants</h2>
+  <table class="spec"><tr><th>Variant</th><th>When to use</th></tr>
+    <tr><td>Message only</td><td>Simple confirmation ("Changes saved").</td></tr>
+    <tr><td>With action</td><td>Offer a quick follow-up (Undo, View).</td></tr>
+    <tr><td>Error toast</td><td>A brief failure notice; pair persistent errors with a banner instead.</td></tr>
+  </table>
+
+  <h2>Behaviors</h2>
+  <h3>Auto-dismiss</h3><p class="muted">Auto-hides after a few seconds; an action or hover can pause/extend it so it isn't missed.</p>
+  <h3>One at a time</h3><p class="muted">Show a single snackbar; queue subsequent ones rather than stacking.</p>
+  <h3>Single action</h3><p class="muted">At most one action; don't put critical, irreversible choices in a transient surface.</p>
+
+  <h2>States</h2>
+  <table class="spec"><tr><th>State</th><th>Treatment</th></tr>
+    <tr><td>Shown</td><td>Dark surface, light text, optional action.</td></tr>
+    <tr><td>Action hover/focus</td><td>Highlighted action; visible focus.</td></tr>
+    <tr><td>Hidden</td><td>Slides/fades out after the timeout.</td></tr>
+  </table>
+
+  <h2>Specs</h2>
+  <table class="spec"><tr><th>Property</th><th>Value</th></tr>
+    <tr><td>Background / text</td><td>Dark grey (#323232) / white (passes AA)</td></tr>
+    <tr><td>Action colour</td><td>primary-light (#FFA863) — light enough to read on the dark surface</td></tr>
+    <tr><td>Message text</td><td>Roboto 14px</td></tr>
+    <tr><td>Duration</td><td>~4–6s (longer if there's an action)</td></tr>
+    <tr><td>Position</td><td>Bottom-left or bottom-center</td></tr>
+  </table>
+
+  <h2>Do &amp; Don't</h2>
+  <div class="cols">
+    <div class="do"><h4>Do</h4><ul><li>Keep the message to one short line.</li><li>Offer at most one action (e.g. Undo).</li><li>Queue snackbars; show one at a time.</li></ul></div>
+    <div class="dont"><h4>Don't</h4><ul><li>Don't use a snackbar for errors that need action — use a banner/dialog.</li><li>Don't stack multiple snackbars.</li><li>Don't auto-dismiss something the user must act on.</li></ul></div>
+  </div>
+
+  <h2>Accessibility</h2>
+  <p class="muted">Announce via a polite live region (assertive only for important messages); if there's an action, give enough time or pause on hover/focus so it's reachable. The action is a real button with an accessible name.</p>
+
+  <div class="callout" style="margin-top:32px">Part of the shared component detail-page set. <a href="index.html">All components →</a></div>
+</main>
+<script src="https://unpkg.com/material-components-web@14.0.0/dist/material-components-web.min.js"></script>
+<script>window.addEventListener('load',function(){try{var s=mdc.snackbar.MDCSnackbar.attachTo(document.getElementById('m-snackbar'));document.getElementById('m-open-snack').addEventListener('click',function(){s.open()});}catch(x){}document.querySelectorAll('.mdc-button').forEach(function(e){try{mdc.ripple.MDCRipple.attachTo(e)}catch(x){}});});</script>
+</body></html>

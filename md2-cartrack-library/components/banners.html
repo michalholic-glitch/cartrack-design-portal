@@ -1,0 +1,99 @@
+<!DOCTYPE html><html lang="en"><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cartrack DS — Banners</title>
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&family=Roboto+Mono&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/ds.css">
+<link rel="stylesheet" href="https://unpkg.com/material-components-web@14.0.0/dist/material-components-web.min.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+<style>:root{--mdc-theme-primary:#F47735;--mdc-theme-secondary:#333;--mdc-theme-on-primary:#fff;--mdc-theme-surface:#fff;--mdc-theme-background:#fff;--mdc-theme-error:#BA1A1A}</style>
+</head><body><main>
+  <div class="crumbs"><a href="index.html">Components</a><span class="s">&rsaquo;</span> Banners</div>
+  <h1>Banners</h1>
+  <p class="lede">A banner is a prominent message with one or two actions, shown at the top of a region. It surfaces something important but non-blocking — vehicles due for service, a sync issue, a new feature — and stays until the operator acts.</p>
+  <div class="chiprow"><span class="tag">Category: Feedback</span><span class="tag">Desktop</span><span class="tag">Import: <code>Alert</code> / banner</span></div>
+  <div class="callout">Use a banner for a persistent, moderate-priority message that needs acknowledgement. For transient confirmation use a snackbar; for a blocking decision use a dialog.</div>
+
+  <h2>Live component (real MDC)</h2>
+  <p class="muted">The genuine MDC banner — click to reveal it (loads MDC online).</p>
+  <div class="stage" style="display:block;padding:0;border:none">
+    <div class="mdc-banner" role="banner" id="m-banner">
+      <div class="mdc-banner__content" role="alertdialog" aria-live="assertive">
+        <div class="mdc-banner__graphic-text-wrapper"><div class="mdc-banner__text">3 vehicles are due for service this week.</div></div>
+        <div class="mdc-banner__actions">
+          <button type="button" class="mdc-banner__secondary-action mdc-button"><div class="mdc-button__ripple"></div><div class="mdc-button__label">Dismiss</div></button>
+          <button type="button" class="mdc-banner__primary-action mdc-button"><div class="mdc-button__ripple"></div><div class="mdc-button__label">Review</div></button>
+        </div>
+      </div>
+    </div>
+    <div style="padding:16px"><button class="mdc-button mdc-button--outlined" id="m-open-banner"><span class="mdc-button__ripple"></span><span class="mdc-button__label">Show banner</span></button></div>
+  </div>
+
+  <h2>Demo</h2>
+  <div class="lab">
+    <div class="lab-preview"><div class="banner" id="pv" style="border-radius:8px"><span id="pv-i">&#9888;</span><span style="flex:1" id="pv-m">3 vehicles are due for service this week.</span><button class="btn text" id="pv-a2">Dismiss</button><button class="btn text">Review</button></div></div>
+    <div class="lab-controls">
+      <h5>Options</h5>
+      <div class="lab-row"><label for="c-sev">Severity</label><select id="c-sev"><option value="warn">Warning</option><option value="info">Info</option><option value="err">Error</option><option value="ok">Success</option></select></div>
+      <div class="lab-row"><label for="c-two">Two actions</label><input type="checkbox" id="c-two" checked></div>
+      <div class="lab-row"><label for="c-msg">Message</label><input type="text" id="c-msg" value="3 vehicles are due for service this week."></div>
+    </div>
+  </div>
+  <script>(function(){var pv=document.getElementById('pv'),ic=document.getElementById('pv-i'),m=document.getElementById('pv-m'),dis=document.getElementById('pv-a2'),sev=document.getElementById('c-sev'),two=document.getElementById('c-two'),msg=document.getElementById('c-msg');var map={warn:['#FFF3E0','#E65100','⚠'],info:['#E3F2FD','#0D47A1','ℹ'],err:['#FFEBEE','#B71C1C','✕'],ok:['#E8F5E9','#1B5E20','✓']};function u(){var s=map[sev.value];pv.style.background=s[0];pv.style.color=s[1];ic.textContent=s[2];m.textContent=msg.value||'Message';dis.style.display=two.checked?'':'none';}[sev,two].forEach(function(e){e.addEventListener('change',u)});msg.addEventListener('input',u);u();})();</script>
+
+  <h2>Live example</h2>
+  <div class="stage col">
+    <div class="banner"><span>&#9888;</span><span style="flex:1">3 vehicles are due for service this week.</span><button class="btn text">Dismiss</button><button class="btn text">Review</button></div>
+    <div class="banner" style="background:#FFEBEE"><span style="color:var(--error)">&#10005;</span><span style="flex:1">Live positions failed to sync. Some locations may be stale.</span><button class="btn text">Retry</button></div>
+  </div>
+
+  <h2>Anatomy</h2>
+  <div class="anat"><p class="muted">A full-width message bar within a region.</p>
+    <ol>
+      <li><b>Container</b> — spans the region width, sits at the top.</li>
+      <li><b>Leading icon</b> — optional status/identity icon.</li>
+      <li><b>Message</b> — the supporting text.</li>
+      <li><b>Actions</b> — one or two text buttons (e.g. Dismiss + Review).</li>
+    </ol></div>
+
+  <h2>Variants</h2>
+  <table class="spec"><tr><th>Variant</th><th>When to use</th></tr>
+    <tr><td>Informational</td><td>Neutral notice (a new export format, a tip).</td></tr>
+    <tr><td>Warning</td><td>Something needs attention soon (service due).</td></tr>
+    <tr><td>Error</td><td>A problem affecting the data on screen (sync failed).</td></tr>
+    <tr><td>Success</td><td>Confirmation of a longer-running result.</td></tr>
+  </table>
+
+  <h2>Behaviors</h2>
+  <h3>Persistence</h3><p class="muted">A banner stays until dismissed or resolved — unlike a snackbar, it doesn't auto-hide.</p>
+  <h3>Placement</h3><p class="muted">Anchor it at the top of the relevant region (page or section), above the content it concerns.</p>
+  <h3>One at a time</h3><p class="muted">Show a single banner per region; queue or combine rather than stacking several.</p>
+
+  <h2>States</h2>
+  <table class="spec"><tr><th>State</th><th>Treatment</th></tr>
+    <tr><td>Visible</td><td>Tinted background per severity; message + actions.</td></tr>
+    <tr><td>Action hover/focus</td><td>Button state layers; visible focus.</td></tr>
+    <tr><td>Dismissed</td><td>Removed; layout reflows.</td></tr>
+  </table>
+
+  <h2>Specs</h2>
+  <table class="spec"><tr><th>Property</th><th>Value</th></tr>
+    <tr><td>Padding</td><td>14–16px</td></tr>
+    <tr><td>Message text</td><td>Roboto 14px / 400</td></tr>
+    <tr><td>Severity tint</td><td>success/warning/error/info container colours; text meets AA</td></tr>
+    <tr><td>Actions</td><td>Text buttons, right-aligned</td></tr>
+  </table>
+
+  <h2>Do &amp; Don't</h2>
+  <div class="cols">
+    <div class="do"><h4>Do</h4><ul><li>Use for persistent, moderate-priority messages.</li><li>Offer a clear action (Review/Retry/Dismiss).</li><li>Match the tint to severity and keep text legible.</li></ul></div>
+    <div class="dont"><h4>Don't</h4><ul><li>Don't use a banner for transient confirmations (use a snackbar).</li><li>Don't stack multiple banners.</li><li>Don't use error styling for non-errors.</li></ul></div>
+  </div>
+
+  <h2>Accessibility</h2>
+  <p class="muted">Expose the banner via an appropriate live region (assertive for errors, polite for info) so it's announced; actions are real buttons with accessible names. Severity is conveyed by icon + text, not colour alone, and tints meet AA contrast.</p>
+
+  <div class="callout" style="margin-top:32px">Part of the shared component detail-page set. <a href="index.html">All components →</a></div>
+</main>
+<script src="https://unpkg.com/material-components-web@14.0.0/dist/material-components-web.min.js"></script>
+<script>window.addEventListener('load',function(){try{var b=mdc.banner.MDCBanner.attachTo(document.getElementById('m-banner'));document.getElementById('m-open-banner').addEventListener('click',function(){b.open()});setTimeout(function(){try{b.open()}catch(x){}},300);}catch(x){}document.querySelectorAll('.mdc-button').forEach(function(e){try{mdc.ripple.MDCRipple.attachTo(e)}catch(x){}});});</script>
+</body></html>

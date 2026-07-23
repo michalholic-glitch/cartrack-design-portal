@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cartrack — Material Components (real MDC, themed)</title>
+<!--
+  Renders the GENUINE Material Components Web (MDC) v14 components — real prebuilt CSS + behavior JS —
+  recoloured to Cartrack via MDC's --mdc-theme-* custom properties. Material Components Web is
+  Apache-2.0 (© Google). This page loads MDC from a CDN; open it online so the browser fetches them.
+-->
+<link rel="stylesheet" href="https://unpkg.com/material-components-web@14.0.0/dist/material-components-web.min.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+<style>
+  /* ---- Cartrack theme: recolour the real MDC components ---- */
+  :root{
+    --mdc-theme-primary:#F47735;
+    --mdc-theme-secondary:#333333;
+    --mdc-theme-on-primary:#ffffff;
+    --mdc-theme-on-secondary:#ffffff;
+    --mdc-theme-surface:#ffffff;
+    --mdc-theme-background:#ffffff;
+    --mdc-theme-error:#BA1A1A;
+  }
+  /* page chrome (intentionally light so MDC styling dominates) */
+  body{margin:0;font-family:Roboto,Arial,sans-serif;background:#FAFAFA;color:rgba(0,0,0,.87)}
+  .top{background:#F47735;color:#fff;padding:18px 28px}
+  .top h1{margin:0;font-size:1.3rem;font-weight:500}
+  .top p{margin:4px 0 0;opacity:.95;font-size:.85rem}
+  main{max-width:1040px;margin:0 auto;padding:8px 28px 96px}
+  .note{background:#fff;border-left:4px solid #F47735;border-radius:6px;padding:12px 16px;margin:20px 0;font-size:.85rem;color:rgba(0,0,0,.6);box-shadow:0 1px 3px rgba(0,0,0,.12)}
+  section{margin-top:40px}
+  section>h2{font-size:1.2rem;font-weight:500;border-bottom:1px solid rgba(0,0,0,.12);padding-bottom:8px;margin:0 0 6px}
+  section>.d{color:rgba(0,0,0,.6);font-size:.85rem;margin:0 0 16px}
+  .stage{display:flex;flex-wrap:wrap;gap:20px;align-items:center;padding:24px;background:#fff;border:1px solid rgba(0,0,0,.12);border-radius:8px}
+  .stage.top-align{align-items:flex-start}
+  .lbl{font-size:.7rem;text-transform:uppercase;letter-spacing:.06em;color:rgba(0,0,0,.5);width:100%;margin-bottom:-6px}
+</style>
+</head>
+<body>
+<div class="top"><h1>Cartrack — Material Components (real MDC)</h1><p>The genuine Material Components Web v14, recoloured to Cartrack. This is what the components actually look like.</p></div>
+<main>
+  <div class="note">These are the <strong>real MDC components</strong> (their actual compiled CSS + behaviour JS), themed via <code>--mdc-theme-primary</code> etc. — not hand-built approximations. Open online so the browser can load MDC from the CDN. ⚠️ White on the orange primary is ~2.79:1 (below WCAG AA); set <code>--mdc-theme-on-primary</code> to a dark value, or use a darker primary, for legible text.</div>
+
+  <!-- BUTTONS -->
+  <section><h2>Buttons</h2><p class="d">Text, outlined, raised, unelevated. Real ripple on click.</p>
+    <div class="stage">
+      <button class="mdc-button"><span class="mdc-button__ripple"></span><span class="mdc-button__label">Text</span></button>
+      <button class="mdc-button mdc-button--outlined"><span class="mdc-button__ripple"></span><span class="mdc-button__label">Outlined</span></button>
+      <button class="mdc-button mdc-button--raised"><span class="mdc-button__ripple"></span><span class="mdc-button__label">Save vehicle</span></button>
+      <button class="mdc-button mdc-button--unelevated"><span class="mdc-button__ripple"></span><span class="mdc-button__label">Unelevated</span></button>
+      <button class="mdc-button mdc-button--raised" disabled><span class="mdc-button__ripple"></span><span class="mdc-button__label">Disabled</span></button>
+    </div>
+  </section>
+
+  <!-- FAB + ICON BUTTON -->
+  <section><h2>FAB &amp; icon button</h2><p class="d">Floating action button (regular / mini / extended) and icon button.</p>
+    <div class="stage">
+      <button class="mdc-fab" aria-label="Add"><div class="mdc-fab__ripple"></div><span class="mdc-fab__icon material-icons">add</span></button>
+      <button class="mdc-fab mdc-fab--mini" aria-label="Add"><div class="mdc-fab__ripple"></div><span class="mdc-fab__icon material-icons">add</span></button>
+      <button class="mdc-fab mdc-fab--extended"><div class="mdc-fab__ripple"></div><span class="mdc-fab__icon material-icons">add</span><span class="mdc-fab__label">Add vehicle</span></button>
+      <button class="mdc-icon-button material-icons" aria-label="Edit">edit</button>
+      <button class="mdc-icon-button material-icons" aria-label="More">more_vert</button>
+    </div>
+  </section>
+
+  <!-- TEXT FIELDS -->
+  <section><h2>Text fields</h2><p class="d">Filled and outlined, with floating labels (real label-float behaviour).</p>
+    <div class="stage">
+      <label class="mdc-text-field mdc-text-field--filled">
+        <span class="mdc-text-field__ripple"></span>
+        <span class="mdc-floating-label" id="tf1">Registration</span>
+        <input class="mdc-text-field__input" type="text" aria-labelledby="tf1" value="CA 123-456">
+        <span class="mdc-line-ripple"></span>
+      </label>
+      <label class="mdc-text-field mdc-text-field--outlined">
+        <span class="mdc-notched-outline">
+          <span class="mdc-notched-outline__leading"></span>
+          <span class="mdc-notched-outline__notch"><span class="mdc-floating-label" id="tf2">Driver</span></span>
+          <span class="mdc-notched-outline__trailing"></span>
+        </span>
+        <input class="mdc-text-field__input" type="text" aria-labelledby="tf2">
+      </label>
+    </div>
+  </section>
+
+  <!-- SELECT -->
+  <section><h2>Select</h2><p class="d">Dropdown select with the real menu surface.</p>
+    <div class="stage">
+      <div class="mdc-select mdc-select--filled" style="min-width:240px">
+        <div class="mdc-select__anchor" role="button" aria-haspopup="listbox" aria-expanded="false" aria-labelledby="sl-l sl-s">
+          <span class="mdc-select__ripple"></span>
+          <span id="sl-l" class="mdc-floating-label">Status</span>
+          <span class="mdc-select__selected-text-container"><span id="sl-s" class="mdc-select__selected-text"></span></span>
+          <span class="mdc-select__dropdown-icon"><svg class="mdc-select__dropdown-icon-graphic" viewBox="7 10 10 5" focusable="false"><polygon class="mdc-select__dropdown-icon-inactive" stroke="none" fill-rule="evenodd" points="7 10 12 15 17 10"></polygon><polygon class="mdc-select__dropdown-icon-active" stroke="none" fill-rule="evenodd" points="7 15 12 10 17 15"></polygon></svg></span>
+          <span class="mdc-line-ripple"></span>
+        </div>
+        <div class="mdc-select__menu mdc-menu mdc-menu-surface mdc-menu-surface--fullwidth">
+          <ul class="mdc-deprecated-list" role="listbox" aria-label="Status">
+            <li class="mdc-deprecated-list-item mdc-deprecated-list-item--selected" aria-selected="true" data-value="active" role="option"><span class="mdc-deprecated-list-item__ripple"></span><span class="mdc-deprecated-list-item__text">Active</span></li>
+            <li class="mdc-deprecated-list-item" aria-selected="false" data-value="idle" role="option"><span class="mdc-deprecated-list-item__ripple"></span><span class="mdc-deprecated-list-item__text">Idle</span></li>
+            <li class="mdc-deprecated-list-item" aria-selected="false" data-value="offline" role="option"><span class="mdc-deprecated-list-item__ripple"></span><span class="mdc-deprecated-list-item__text">Offline</span></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SELECTION CONTROLS -->
+  <section><h2>Selection controls</h2><p class="d">Checkbox, radio, and the v14 switch.</p>
+    <div class="stage">
+      <div class="mdc-form-field">
+        <div class="mdc-checkbox"><input type="checkbox" class="mdc-checkbox__native-control" id="cb1" checked/><div class="mdc-checkbox__background"><svg class="mdc-checkbox__checkmark" viewBox="0 0 24 24"><path class="mdc-checkbox__checkmark-path" fill="none" d="M1.73,12.91 8.1,19.28 22.79,4.59"/></svg><div class="mdc-checkbox__mixedmark"></div></div><div class="mdc-checkbox__ripple"></div></div>
+        <label for="cb1">Checkbox</label>
+      </div>
+      <div class="mdc-form-field">
+        <div class="mdc-radio"><input class="mdc-radio__native-control" type="radio" id="rd1" name="r" checked><div class="mdc-radio__background"><div class="mdc-radio__outer-circle"></div><div class="mdc-radio__inner-circle"></div></div><div class="mdc-radio__ripple"></div></div>
+        <label for="rd1">Radio</label>
+      </div>
+      <button id="sw1" class="mdc-switch mdc-switch--selected" type="button" role="switch" aria-checked="true">
+        <div class="mdc-switch__track"></div>
+        <div class="mdc-switch__handle-track"><div class="mdc-switch__handle"><div class="mdc-switch__shadow"><div class="mdc-elevation-overlay"></div></div><div class="mdc-switch__ripple"></div><div class="mdc-switch__icons"><svg class="mdc-switch__icon mdc-switch__icon--on" viewBox="0 0 24 24"><path d="M19.69,5.23L8.96,15.96l-4.23-4.23L2.96,13.5l6,6L21.46,7L19.69,5.23z"/></svg><svg class="mdc-switch__icon mdc-switch__icon--off" viewBox="0 0 24 24"><path d="M20 13H4v-2h16v2z"/></svg></div></div></div>
+      </button>
+      <label for="sw1">Notify on alert</label>
+    </div>
+  </section>
+
+  <!-- CHIPS -->
+  <section><h2>Chips</h2><p class="d">Filter / input chips (the evolution chip set).</p>
+    <div class="stage">
+      <span class="mdc-evolution-chip-set" role="grid">
+        <span class="mdc-evolution-chip-set__chips" role="presentation">
+          <span class="mdc-evolution-chip" role="row" id="ch0"><span class="mdc-evolution-chip__cell mdc-evolution-chip__cell--primary" role="gridcell"><button class="mdc-evolution-chip__action mdc-evolution-chip__action--primary" type="button"><span class="mdc-evolution-chip__ripple mdc-evolution-chip__ripple--primary"></span><span class="mdc-evolution-chip__text-label">Active</span></button></span></span>
+          <span class="mdc-evolution-chip" role="row" id="ch1"><span class="mdc-evolution-chip__cell mdc-evolution-chip__cell--primary" role="gridcell"><button class="mdc-evolution-chip__action mdc-evolution-chip__action--primary" type="button"><span class="mdc-evolution-chip__ripple mdc-evolution-chip__ripple--primary"></span><span class="mdc-evolution-chip__text-label">Idle</span></button></span></span>
+          <span class="mdc-evolution-chip" role="row" id="ch2"><span class="mdc-evolution-chip__cell mdc-evolution-chip__cell--primary" role="gridcell"><button class="mdc-evolution-chip__action mdc-evolution-chip__action--primary" type="button"><span class="mdc-evolution-chip__ripple mdc-evolution-chip__ripple--primary"></span><span class="mdc-evolution-chip__text-label">Offline</span></button></span></span>
+        </span>
+      </span>
+    </div>
+  </section>
+
+  <!-- CARD + LIST -->
+  <section><h2>Card &amp; list</h2><p class="d">A card surface and a list.</p>
+    <div class="stage top-align">
+      <div class="mdc-card" style="width:280px;padding:16px">
+        <div style="font-size:1rem;font-weight:500">CA 123-456</div>
+        <div style="color:rgba(0,0,0,.6);font-size:.85rem;margin-bottom:8px">Jane Cooper · Active</div>
+        <div style="color:rgba(0,0,0,.6);font-size:.86rem">14 trips · 512 km this week.</div>
+        <div class="mdc-card__actions"><button class="mdc-button mdc-card__action"><span class="mdc-button__ripple"></span><span class="mdc-button__label">Details</span></button><button class="mdc-button mdc-card__action"><span class="mdc-button__ripple"></span><span class="mdc-button__label">Track</span></button></div>
+      </div>
+      <ul class="mdc-deprecated-list" style="width:300px;border:1px solid rgba(0,0,0,.12);border-radius:4px">
+        <li class="mdc-deprecated-list-item" tabindex="0"><span class="mdc-deprecated-list-item__ripple"></span><span class="mdc-deprecated-list-item__text">Jane Cooper — CA 123-456</span></li>
+        <li class="mdc-deprecated-list-item"><span class="mdc-deprecated-list-item__ripple"></span><span class="mdc-deprecated-list-item__text">Frank Kim — CA 789-012</span></li>
+        <li class="mdc-deprecated-list-item"><span class="mdc-deprecated-list-item__ripple"></span><span class="mdc-deprecated-list-item__text">Lena Ortiz — CA 345-678</span></li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- TABS -->
+  <section><h2>Tabs</h2><p class="d">Tab bar with the active indicator.</p>
+    <div class="stage" style="padding:0;display:block">
+      <div class="mdc-tab-bar" role="tablist">
+        <div class="mdc-tab-scroller"><div class="mdc-tab-scroller__scroll-area"><div class="mdc-tab-scroller__scroll-content">
+          <button class="mdc-tab mdc-tab--active" role="tab" aria-selected="true" tabindex="0"><span class="mdc-tab__content"><span class="mdc-tab__text-label">Overview</span></span><span class="mdc-tab-indicator mdc-tab-indicator--active"><span class="mdc-tab-indicator__content mdc-tab-indicator__content--underline"></span></span><span class="mdc-tab__ripple"></span></button>
+          <button class="mdc-tab" role="tab" aria-selected="false" tabindex="-1"><span class="mdc-tab__content"><span class="mdc-tab__text-label">Trips</span></span><span class="mdc-tab-indicator"><span class="mdc-tab-indicator__content mdc-tab-indicator__content--underline"></span></span><span class="mdc-tab__ripple"></span></button>
+          <button class="mdc-tab" role="tab" aria-selected="false" tabindex="-1"><span class="mdc-tab__content"><span class="mdc-tab__text-label">Maintenance</span></span><span class="mdc-tab-indicator"><span class="mdc-tab-indicator__content mdc-tab-indicator__content--underline"></span></span><span class="mdc-tab__ripple"></span></button>
+          <button class="mdc-tab" role="tab" aria-selected="false" tabindex="-1"><span class="mdc-tab__content"><span class="mdc-tab__text-label">Alerts</span></span><span class="mdc-tab-indicator"><span class="mdc-tab-indicator__content mdc-tab-indicator__content--underline"></span></span><span class="mdc-tab__ripple"></span></button>
+        </div></div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SLIDER + LINEAR PROGRESS -->
+  <section><h2>Slider &amp; progress</h2><p class="d">Continuous slider and a determinate linear progress bar.</p>
+    <div class="stage top-align" style="flex-direction:column;align-items:stretch;gap:28px">
+      <div class="mdc-slider" style="max-width:360px">
+        <input class="mdc-slider__input" type="range" min="0" max="100" value="55" name="radius" aria-label="Radius">
+        <div class="mdc-slider__track"><div class="mdc-slider__track--inactive"></div><div class="mdc-slider__track--active"><div class="mdc-slider__track--active_fill"></div></div></div>
+        <div class="mdc-slider__thumb"><div class="mdc-slider__thumb-knob"></div></div>
+      </div>
+      <div role="progressbar" class="mdc-linear-progress" aria-label="Loading" aria-valuemin="0" aria-valuemax="1" aria-valuenow="0" style="max-width:360px">
+        <div class="mdc-linear-progress__buffer"><div class="mdc-linear-progress__buffer-bar"></div><div class="mdc-linear-progress__buffer-dots"></div></div>
+        <div class="mdc-linear-progress__bar mdc-linear-progress__primary-bar"><span class="mdc-linear-progress__bar-inner"></span></div>
+        <div class="mdc-linear-progress__bar mdc-linear-progress__secondary-bar"><span class="mdc-linear-progress__bar-inner"></span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- DATA TABLE -->
+  <section><h2>Data table</h2><p class="d">The genuine MDC data table — the component you flagged as looking wrong before.</p>
+    <div class="stage" style="display:block;padding:0;border:none">
+      <div class="mdc-data-table">
+        <div class="mdc-data-table__table-container">
+          <table class="mdc-data-table__table" aria-label="Vehicles">
+            <thead><tr class="mdc-data-table__header-row">
+              <th class="mdc-data-table__header-cell" role="columnheader" scope="col">Registration</th>
+              <th class="mdc-data-table__header-cell" role="columnheader" scope="col">Driver</th>
+              <th class="mdc-data-table__header-cell" role="columnheader" scope="col">Status</th>
+              <th class="mdc-data-table__header-cell mdc-data-table__header-cell--numeric" role="columnheader" scope="col">Odometer (km)</th>
+              <th class="mdc-data-table__header-cell" role="columnheader" scope="col">Last trip</th>
+            </tr></thead>
+            <tbody class="mdc-data-table__content">
+              <tr class="mdc-data-table__row"><th class="mdc-data-table__cell" scope="row">CA 123-456</th><td class="mdc-data-table__cell">Jane Cooper</td><td class="mdc-data-table__cell">Active</td><td class="mdc-data-table__cell mdc-data-table__cell--numeric">84,210</td><td class="mdc-data-table__cell">2 min ago</td></tr>
+              <tr class="mdc-data-table__row"><th class="mdc-data-table__cell" scope="row">CA 789-012</th><td class="mdc-data-table__cell">Frank Kim</td><td class="mdc-data-table__cell">Idle</td><td class="mdc-data-table__cell mdc-data-table__cell--numeric">120,540</td><td class="mdc-data-table__cell">1 h ago</td></tr>
+              <tr class="mdc-data-table__row"><th class="mdc-data-table__cell" scope="row">CA 345-678</th><td class="mdc-data-table__cell">Lena Ortiz</td><td class="mdc-data-table__cell">Offline</td><td class="mdc-data-table__cell mdc-data-table__cell--numeric">58,900</td><td class="mdc-data-table__cell">3 d ago</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- DIALOG / MENU / SNACKBAR triggers -->
+  <section><h2>Dialog · Menu · Snackbar</h2><p class="d">Click to trigger the real overlays.</p>
+    <div class="stage">
+      <button class="mdc-button mdc-button--raised" id="open-dialog"><span class="mdc-button__ripple"></span><span class="mdc-button__label">Open dialog</span></button>
+      <div id="menu-anchor" class="mdc-menu-surface--anchor">
+        <button class="mdc-button mdc-button--outlined" id="open-menu"><span class="mdc-button__ripple"></span><span class="mdc-button__label">Open menu</span></button>
+        <div class="mdc-menu mdc-menu-surface" id="the-menu">
+          <ul class="mdc-deprecated-list" role="menu" aria-hidden="true" aria-orientation="vertical" tabindex="-1">
+            <li class="mdc-deprecated-list-item" role="menuitem"><span class="mdc-deprecated-list-item__ripple"></span><span class="mdc-deprecated-list-item__text">Edit</span></li>
+            <li class="mdc-deprecated-list-item" role="menuitem"><span class="mdc-deprecated-list-item__ripple"></span><span class="mdc-deprecated-list-item__text">Export</span></li>
+            <li class="mdc-deprecated-list-item" role="menuitem"><span class="mdc-deprecated-list-item__ripple"></span><span class="mdc-deprecated-list-item__text">Delete</span></li>
+          </ul>
+        </div>
+      </div>
+      <button class="mdc-button mdc-button--outlined" id="open-snackbar"><span class="mdc-button__ripple"></span><span class="mdc-button__label">Show snackbar</span></button>
+    </div>
+  </section>
+
+  <div class="note" style="margin-top:40px">Built on Material Components Web v14 (Apache-2.0, © Google), loaded from CDN and recoloured with Cartrack tokens. This is the authentic-look source of truth — the hand-built gallery/detail pages were approximations.</div>
+</main>
+
+<!-- the real MDC dialog + snackbar elements -->
+<div class="mdc-dialog" id="dialog">
+  <div class="mdc-dialog__container"><div class="mdc-dialog__surface" role="alertdialog" aria-modal="true" aria-labelledby="dt" aria-describedby="dc">
+    <h2 class="mdc-dialog__title" id="dt">Remove vehicle?</h2>
+    <div class="mdc-dialog__content" id="dc">This removes CA 123-456 from the active fleet. This action can't be undone.</div>
+    <div class="mdc-dialog__actions">
+      <button class="mdc-button mdc-dialog__button" data-mdc-dialog-action="cancel"><span class="mdc-button__ripple"></span><span class="mdc-button__label">Cancel</span></button>
+      <button class="mdc-button mdc-dialog__button" data-mdc-dialog-action="accept"><span class="mdc-button__ripple"></span><span class="mdc-button__label">Remove</span></button>
+    </div>
+  </div></div>
+  <div class="mdc-dialog__scrim"></div>
+</div>
+<aside class="mdc-snackbar" id="snackbar"><div class="mdc-snackbar__surface" role="status" aria-relevant="additions"><div class="mdc-snackbar__label" aria-atomic="false">Vehicle saved</div><div class="mdc-snackbar__actions" aria-atomic="true"><button type="button" class="mdc-button mdc-snackbar__action"><div class="mdc-button__ripple"></div><span class="mdc-button__label">Undo</span></button></div></div></aside>
+
+<script src="https://unpkg.com/material-components-web@14.0.0/dist/material-components-web.min.js"></script>
+<script>
+  window.addEventListener('load', function(){
+    function each(sel, fn){ document.querySelectorAll(sel).forEach(function(el){ try{ fn(el); }catch(e){} }); }
+    try{ each('.mdc-button,.mdc-fab,.mdc-icon-button,.mdc-card__primary-action', function(el){ mdc.ripple.MDCRipple.attachTo(el); }); }catch(e){}
+    each('.mdc-text-field', function(el){ mdc.textField.MDCTextField.attachTo(el); });
+    each('.mdc-select', function(el){ mdc.select.MDCSelect.attachTo(el); });
+    each('.mdc-checkbox', function(el){ mdc.checkbox.MDCCheckbox.attachTo(el); });
+    each('.mdc-radio', function(el){ mdc.radio.MDCRadio.attachTo(el); });
+    each('.mdc-form-field', function(el){ mdc.formField.MDCFormField.attachTo(el); });
+    each('.mdc-switch', function(el){ (mdc.switchControl||mdc['switch']).MDCSwitch.attachTo(el); });
+    each('.mdc-evolution-chip-set', function(el){ mdc.chips.MDCChipSet.attachTo(el); });
+    each('.mdc-tab-bar', function(el){ mdc.tabBar.MDCTabBar.attachTo(el); });
+    each('.mdc-slider', function(el){ mdc.slider.MDCSlider.attachTo(el); });
+    each('.mdc-linear-progress', function(el){ var p=mdc.linearProgress.MDCLinearProgress.attachTo(el); p.progress=0.6; p.buffer=1; });
+    each('.mdc-data-table', function(el){ mdc.dataTable.MDCDataTable.attachTo(el); });
+    // dialog
+    try{ var dlg=mdc.dialog.MDCDialog.attachTo(document.getElementById('dialog')); document.getElementById('open-dialog').addEventListener('click', function(){ dlg.open(); }); }catch(e){}
+    // menu
+    try{ var m=new mdc.menu.MDCMenu(document.getElementById('the-menu')); document.getElementById('open-menu').addEventListener('click', function(){ m.open=!m.open; }); }catch(e){}
+    // snackbar
+    try{ var sb=mdc.snackbar.MDCSnackbar.attachTo(document.getElementById('snackbar')); document.getElementById('open-snackbar').addEventListener('click', function(){ sb.open(); }); }catch(e){}
+  });
+</script>
+</body>
+</html>

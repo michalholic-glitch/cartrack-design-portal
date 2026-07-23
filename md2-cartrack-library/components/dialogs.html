@@ -1,0 +1,105 @@
+<!DOCTYPE html><html lang="en"><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cartrack DS — Dialogs</title>
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&family=Roboto+Mono&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/ds.css">
+<link rel="stylesheet" href="https://unpkg.com/material-components-web@14.0.0/dist/material-components-web.min.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+<style>:root{--mdc-theme-primary:#F47735;--mdc-theme-secondary:#333;--mdc-theme-on-primary:#fff;--mdc-theme-surface:#fff;--mdc-theme-background:#fff;--mdc-theme-error:#BA1A1A}</style>
+</head><body><main>
+  <div class="crumbs"><a href="index.html">Components</a><span class="s">&rsaquo;</span> Dialogs</div>
+  <h1>Dialogs</h1>
+  <p class="lede">A dialog is a modal window for a focused task or decision that interrupts the operator on purpose — confirming a deletion, capturing a few fields, or surfacing something that needs a choice before continuing.</p>
+  <div class="chiprow"><span class="tag">Category: Surfaces</span><span class="tag">Desktop</span><span class="tag">Import: <code>Dialog</code>, <code>DialogTitle</code>, <code>DialogActions</code></span></div>
+  <div class="callout">Use a dialog only when the task genuinely needs to interrupt. For routine detail, prefer a side sheet or a detail page. For transient confirmation, prefer a snackbar.</div>
+
+  <h2>Live component (real MDC)</h2>
+  <p class="muted">The genuine MDC dialog — click to open the real modal (loads MDC online).</p>
+  <div class="stage">
+    <button class="mdc-button mdc-button--raised" id="m-open-dialog"><span class="mdc-button__ripple"></span><span class="mdc-button__label">Remove vehicle…</span></button>
+    <div class="mdc-dialog" id="m-dialog">
+      <div class="mdc-dialog__container"><div class="mdc-dialog__surface" role="alertdialog" aria-modal="true" aria-labelledby="m-dt" aria-describedby="m-dc">
+        <h2 class="mdc-dialog__title" id="m-dt">Remove vehicle?</h2>
+        <div class="mdc-dialog__content" id="m-dc">This removes CA 123-456 from the active fleet. This action can't be undone.</div>
+        <div class="mdc-dialog__actions">
+          <button class="mdc-button mdc-dialog__button" data-mdc-dialog-action="cancel"><span class="mdc-button__ripple"></span><span class="mdc-button__label">Cancel</span></button>
+          <button class="mdc-button mdc-dialog__button" data-mdc-dialog-action="accept"><span class="mdc-button__ripple"></span><span class="mdc-button__label">Remove</span></button>
+        </div>
+      </div></div>
+      <div class="mdc-dialog__scrim"></div>
+    </div>
+  </div>
+
+  <h2>Demo</h2>
+  <div class="lab">
+    <div class="lab-preview"><div class="dialog" id="pv"><div class="dt" id="pv-t">Remove vehicle?</div><div class="dc" id="pv-c">This removes CA 123-456 from the active fleet. This action can't be undone.</div><div class="da"><button class="btn text">Cancel</button><button class="btn text" id="pv-a">Remove</button></div></div></div>
+    <div class="lab-controls">
+      <h5>Options</h5>
+      <div class="lab-row"><label for="c-dest">Destructive action</label><input type="checkbox" id="c-dest" checked></div>
+      <div class="lab-row"><label for="c-title">Title</label><input type="text" id="c-title" value="Remove vehicle?"></div>
+      <div class="lab-row"><label for="c-conf">Confirm label</label><input type="text" id="c-conf" value="Remove"></div>
+    </div>
+  </div>
+  <script>(function(){var t=document.getElementById('pv-t'),a=document.getElementById('pv-a'),dest=document.getElementById('c-dest'),title=document.getElementById('c-title'),conf=document.getElementById('c-conf');function u(){t.textContent=title.value||'Title';a.textContent=conf.value||'Confirm';a.style.color=dest.checked?'var(--error)':'var(--primary-dark)';}dest.addEventListener('change',u);title.addEventListener('input',u);conf.addEventListener('input',u);u();})();</script>
+
+  <h2>Live example</h2>
+  <div class="stage">
+    <div class="dialog">
+      <div class="dt">Remove vehicle?</div>
+      <div class="dc">This removes CA 123-456 from the active fleet. This action can't be undone.</div>
+      <div class="da"><button class="btn text">Cancel</button><button class="btn text" style="color:var(--error)">Remove</button></div>
+    </div>
+  </div>
+
+  <h2>Anatomy</h2>
+  <div class="anat"><p class="muted">A centered surface over a scrim.</p>
+    <ol>
+      <li><b>Scrim</b> — dimmed overlay that blocks the page behind.</li>
+      <li><b>Container</b> — the dialog surface (4px radius, high elevation).</li>
+      <li><b>Title</b> — a short, specific question or task name.</li>
+      <li><b>Content</b> — supporting text and/or fields.</li>
+      <li><b>Actions</b> — confirm + dismiss, right-aligned; confirm last.</li>
+    </ol></div>
+
+  <h2>Variants</h2>
+  <table class="spec"><tr><th>Variant</th><th>When to use</th></tr>
+    <tr><td>Alert / confirmation</td><td>Confirm a consequential action (delete, discard).</td></tr>
+    <tr><td>Form dialog</td><td>Capture a few fields without leaving the page.</td></tr>
+    <tr><td>Full-screen (rare on desktop)</td><td>A larger task that benefits from focus; usually a page is better.</td></tr>
+  </table>
+
+  <h2>Behaviors</h2>
+  <h3>Modality</h3><p class="muted">The dialog traps focus and blocks the page; Escape and the scrim dismiss non-destructive dialogs.</p>
+  <h3>Action order</h3><p class="muted">Dismiss on the left, confirm on the right; destructive confirms use the error colour and clear labels ("Remove", not "OK").</p>
+  <h3>Keep it short</h3><p class="muted">One decision or a handful of fields; longer tasks belong on a page.</p>
+
+  <h2>States</h2>
+  <table class="spec"><tr><th>State</th><th>Treatment</th></tr>
+    <tr><td>Open</td><td>Surface over scrim; focus trapped inside.</td></tr>
+    <tr><td>Action hover/focus</td><td>Button state layers; visible focus.</td></tr>
+    <tr><td>Closing</td><td>Returns focus to the trigger.</td></tr>
+  </table>
+
+  <h2>Specs</h2>
+  <table class="spec"><tr><th>Property</th><th>Value</th></tr>
+    <tr><td>Corner radius</td><td>4px</td></tr>
+    <tr><td>Elevation</td><td>High (overlay)</td></tr>
+    <tr><td>Title</td><td>Roboto ~20px / 500</td></tr>
+    <tr><td>Width</td><td>~320–560px; content scrolls if long</td></tr>
+    <tr><td>Destructive action</td><td>error colour (#F44336)</td></tr>
+  </table>
+
+  <h2>Do &amp; Don't</h2>
+  <div class="cols">
+    <div class="do"><h4>Do</h4><ul><li>Use a specific title that states the decision.</li><li>Label actions with verbs (Remove/Save), not OK.</li><li>Trap focus and return it on close.</li></ul></div>
+    <div class="dont"><h4>Don't</h4><ul><li>Don't use a dialog for routine detail — use a side sheet/page.</li><li>Don't stack dialogs.</li><li>Don't let the scrim dismiss a destructive, unsaved action silently.</li></ul></div>
+  </div>
+
+  <h2>Accessibility</h2>
+  <p class="muted">Use <code>role=dialog</code> with <code>aria-modal</code> and a labelled title; trap focus while open and restore it to the trigger on close. Escape closes non-destructive dialogs. Action buttons have clear, discernible names.</p>
+
+  <div class="callout" style="margin-top:32px">Part of the shared component detail-page set. <a href="index.html">All components →</a></div>
+</main>
+<script src="https://unpkg.com/material-components-web@14.0.0/dist/material-components-web.min.js"></script>
+<script>window.addEventListener('load',function(){try{var d=mdc.dialog.MDCDialog.attachTo(document.getElementById('m-dialog'));document.getElementById('m-open-dialog').addEventListener('click',function(){d.open()});}catch(x){}document.querySelectorAll('.mdc-button').forEach(function(e){try{mdc.ripple.MDCRipple.attachTo(e)}catch(x){}});});</script>
+</body></html>

@@ -1,0 +1,94 @@
+<!DOCTYPE html><html lang="en"><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cartrack DS — Sliders</title>
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&family=Roboto+Mono&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/ds.css">
+<link rel="stylesheet" href="https://unpkg.com/material-components-web@14.0.0/dist/material-components-web.min.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+<style>:root{--mdc-theme-primary:#F47735;--mdc-theme-secondary:#333;--mdc-theme-on-primary:#fff;--mdc-theme-surface:#fff;--mdc-theme-background:#fff;--mdc-theme-error:#BA1A1A}</style>
+</head><body><main>
+  <div class="crumbs"><a href="index.html">Components</a><span class="s">&rsaquo;</span> Sliders</div>
+  <h1>Sliders</h1>
+  <p class="lede">Sliders let an operator choose a value, or a range, by dragging along a track — useful for soft, approximate settings like a geofence radius or a map's time window. When precision matters, prefer a number field.</p>
+  <div class="chiprow"><span class="tag">Category: Inputs &amp; forms</span><span class="tag">Desktop</span><span class="tag">Import: <code>Slider</code></span></div>
+  <div class="callout">Use a slider when the exact number is less important than the relative position, or when immediate visual feedback helps. For exact entry (e.g. an odometer), use a text field.</div>
+
+  <h2>Live component (real MDC)</h2>
+  <p class="muted">The genuine MDC continuous slider, Cartrack-themed (loads MDC online).</p>
+  <div class="stage" style="display:block;padding:24px">
+    <div class="mdc-slider" style="max-width:360px">
+      <input class="mdc-slider__input" type="range" min="0" max="100" value="55" name="radius" aria-label="Radius">
+      <div class="mdc-slider__track"><div class="mdc-slider__track--inactive"></div><div class="mdc-slider__track--active"><div class="mdc-slider__track--active_fill"></div></div></div>
+      <div class="mdc-slider__thumb"><div class="mdc-slider__thumb-knob"></div></div>
+    </div>
+  </div>
+
+  <h2>Demo</h2>
+  <div class="lab">
+    <div class="lab-preview col" style="flex-direction:column;gap:10px"><span class="slider" id="pv" style="width:240px"><span class="fl" id="pv-f"></span><span class="t" id="pv-t"></span></span><span class="muted" id="pv-v" style="font-size:.8rem">Radius: 55 m</span></div>
+    <div class="lab-controls">
+      <h5>Options</h5>
+      <div class="lab-row"><label for="c-val">Value</label><input type="range" id="c-val" min="0" max="100" value="55"></div>
+      <div class="lab-row"><label for="c-dis">Disabled</label><input type="checkbox" id="c-dis"></div>
+    </div>
+  </div>
+  <script>(function(){var f=document.getElementById('pv-f'),t=document.getElementById('pv-t'),v=document.getElementById('c-val'),d=document.getElementById('c-dis'),lbl=document.getElementById('pv-v'),pv=document.getElementById('pv');function u(){var p=v.value;f.style.width=p+'%';t.style.left=p+'%';lbl.textContent='Radius: '+p+' m';pv.style.opacity=d.checked?'.38':'1';v.disabled=d.checked;}v.addEventListener('input',u);d.addEventListener('change',u);u();})();</script>
+
+  <h2>Live example</h2>
+  <div class="stage col">
+    <span class="slider"><span class="fl"></span><span class="t"></span></span>
+    <span class="muted" style="font-size:.8rem">Continuous slider at ~55%</span>
+  </div>
+
+  <h2>Anatomy</h2>
+  <div class="anat"><p class="muted">A track the thumb moves along.</p>
+    <ol>
+      <li><b>Track</b> — the full range (inactive portion).</li>
+      <li><b>Active track</b> — the filled portion from start to the thumb.</li>
+      <li><b>Thumb</b> — the draggable handle at the current value.</li>
+      <li><b>Value indicator</b> — optional bubble showing the value while dragging.</li>
+      <li><b>Tick marks</b> — optional stops on a discrete slider.</li>
+    </ol></div>
+
+  <h2>Variants</h2>
+  <table class="spec"><tr><th>Variant</th><th>When to use</th></tr>
+    <tr><td>Continuous</td><td>Any value across the range (e.g. opacity, radius).</td></tr>
+    <tr><td>Discrete</td><td>Snaps to steps with tick marks (e.g. 5/10/15 km).</td></tr>
+    <tr><td>Range (two thumbs)</td><td>Select a from–to span (e.g. a date/time window).</td></tr>
+  </table>
+
+  <h2>Behaviors</h2>
+  <h3>Dragging &amp; keys</h3><p class="muted">Drag the thumb, click the track to jump, or use arrow keys for fine steps and Page keys for larger ones.</p>
+  <h3>Value feedback</h3><p class="muted">Show the current value (bubble or adjacent text) so the operator isn't guessing.</p>
+  <h3>Pairing</h3><p class="muted">For values that also need exact entry, pair the slider with a synced number field.</p>
+
+  <h2>States</h2>
+  <table class="spec"><tr><th>State</th><th>Treatment</th></tr>
+    <tr><td>Enabled</td><td>Primary active track + thumb; grey inactive track.</td></tr>
+    <tr><td>Hover/focus</td><td>State-layer halo around the thumb.</td></tr>
+    <tr><td>Dragging</td><td>Enlarged thumb / value bubble.</td></tr>
+    <tr><td>Disabled</td><td>38% opacity, not interactive.</td></tr>
+  </table>
+
+  <h2>Specs</h2>
+  <table class="spec"><tr><th>Property</th><th>Value</th></tr>
+    <tr><td>Track height</td><td>2px (inactive), active emphasized</td></tr>
+    <tr><td>Thumb</td><td>~12–14px (grows on interaction)</td></tr>
+    <tr><td>Active colour</td><td>primary (#F47735)</td></tr>
+    <tr><td>Hit target</td><td>≥40px tall interaction area</td></tr>
+  </table>
+
+  <h2>Do &amp; Don't</h2>
+  <div class="cols">
+    <div class="do"><h4>Do</h4><ul><li>Show the current value.</li><li>Use discrete steps when only certain values are valid.</li><li>Pair with a field when exact entry is needed.</li></ul></div>
+    <div class="dont"><h4>Don't</h4><ul><li>Don't use a slider for precise or wide-range numeric entry.</li><li>Don't hide the value.</li><li>Don't make the thumb hard to grab (keep a generous hit area).</li></ul></div>
+  </div>
+
+  <h2>Accessibility</h2>
+  <p class="muted">Use a <code>slider</code> role with <code>aria-valuemin/max/now</code> (and text for ranges). Fully keyboard operable with visible focus; the value is announced as it changes.</p>
+
+  <div class="callout" style="margin-top:32px">Part of the shared component detail-page set. <a href="index.html">All components →</a></div>
+</main>
+<script src="https://unpkg.com/material-components-web@14.0.0/dist/material-components-web.min.js"></script>
+<script>window.addEventListener('load',function(){document.querySelectorAll('.mdc-slider').forEach(function(e){try{mdc.slider.MDCSlider.attachTo(e)}catch(x){}});});</script>
+</body></html>

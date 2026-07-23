@@ -1,0 +1,82 @@
+<!DOCTYPE html><html lang="en"><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cartrack DS — Steppers</title>
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&family=Roboto+Mono&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/ds.css">
+</head><body><main>
+  <div class="crumbs"><a href="index.html">Components</a><span class="s">&rsaquo;</span> Steppers</div>
+  <h1>Steppers</h1>
+  <p class="lede">A stepper guides an operator through a task in ordered steps — onboarding a new vehicle, building a report, running a bulk assignment. It shows progress and what's left to do.</p>
+  <div class="chiprow"><span class="tag">Category: Navigation</span><span class="tag">Desktop</span><span class="tag">Import: <code>Stepper</code>, <code>Step</code></span></div>
+  <div class="callout">Use a stepper for a sequence that benefits from being broken up and tracked. For peer views with no order, use tabs instead.</div>
+
+  <div class="callout"><strong>No stock MDC Web component.</strong> MDC Web has no stepper component (it's a Material guideline pattern). Build a custom stepper, or use a third-party. The preview below is a Cartrack-styled approximation.</div>
+
+  <h2>Demo</h2>
+  <div class="lab">
+    <div class="lab-preview"><div class="stepper2" id="pv"></div></div>
+    <div class="lab-controls">
+      <h5>Options</h5>
+      <div class="lab-row"><label for="c-active">Active step</label><select id="c-active"><option>1</option><option selected>2</option><option>3</option></select></div>
+    </div>
+  </div>
+  <script>(function(){var pv=document.getElementById('pv'),a=document.getElementById('c-active');var labels=['Details','Assign driver','Confirm'];function u(){var act=+a.value;pv.innerHTML='';labels.forEach(function(lbl,i){var n=i+1,cls='st',mark=n;if(n<act){cls+=' done';mark='✓';}else if(n===act){cls+=' on';}var st=document.createElement('span');st.className=cls;st.innerHTML='<span class="n">'+mark+'</span> '+lbl;pv.appendChild(st);if(i<labels.length-1){var b=document.createElement('span');b.className='bar';pv.appendChild(b);}});}a.addEventListener('change',u);u();})();</script>
+
+  <h2>Live example</h2>
+  <div class="stage">
+    <div class="stepper2">
+      <span class="st done"><span class="n">&#10003;</span> Details</span><span class="bar"></span>
+      <span class="st on"><span class="n">2</span> Assign driver</span><span class="bar"></span>
+      <span class="st"><span class="n">3</span> Confirm</span>
+    </div>
+  </div>
+
+  <h2>Anatomy</h2>
+  <div class="anat"><p class="muted">A connected sequence of steps.</p>
+    <ol>
+      <li><b>Step indicator</b> — a numbered/checked circle per step.</li>
+      <li><b>Step label</b> — the step's name (and optional sub-text).</li>
+      <li><b>Connector</b> — the line linking steps.</li>
+      <li><b>Step content</b> — the fields/actions for the active step.</li>
+      <li><b>Navigation</b> — Back / Next (and Finish) controls.</li>
+    </ol></div>
+
+  <h2>Variants</h2>
+  <table class="spec"><tr><th>Variant</th><th>When to use</th></tr>
+    <tr><td>Horizontal</td><td>A few steps with short labels; fits across the top.</td></tr>
+    <tr><td>Vertical</td><td>Steps with more content; content expands under each.</td></tr>
+    <tr><td>Linear</td><td>Steps must be completed in order.</td></tr>
+    <tr><td>Non-linear</td><td>Operators may jump between steps freely.</td></tr>
+  </table>
+
+  <h2>Behaviors</h2>
+  <h3>Progress</h3><p class="muted">Completed steps show a check; the active step is highlighted; upcoming steps are muted.</p>
+  <h3>Validation</h3><p class="muted">In a linear stepper, a step must be valid before Next; show errors on the step that needs attention.</p>
+  <h3>Back/skip</h3><p class="muted">Allow going back; mark optional steps as skippable where appropriate.</p>
+
+  <h2>States</h2>
+  <table class="spec"><tr><th>State</th><th>Treatment</th></tr>
+    <tr><td>Completed</td><td>Primary circle with a check.</td></tr>
+    <tr><td>Active</td><td>Primary circle with the step number; bold label.</td></tr>
+    <tr><td>Upcoming</td><td>Muted circle/label.</td></tr>
+    <tr><td>Error</td><td>Error-colour indicator on the affected step.</td></tr>
+  </table>
+
+  <h2>Specs</h2>
+  <table class="spec"><tr><th>Property</th><th>Value</th></tr>
+    <tr><td>Indicator</td><td>24px circle; primary when active/done</td></tr>
+    <tr><td>Label</td><td>Roboto 14px / 500 (active) / 400 (other)</td></tr>
+    <tr><td>Connector</td><td>1px divider line</td></tr>
+  </table>
+
+  <h2>Do &amp; Don't</h2>
+  <div class="cols">
+    <div class="do"><h4>Do</h4><ul><li>Keep steps few and clearly named.</li><li>Validate before advancing in a linear flow.</li><li>Let users go back.</li></ul></div>
+    <div class="dont"><h4>Don't</h4><ul><li>Don't use a stepper for unordered, peer views.</li><li>Don't bury errors — surface them on the relevant step.</li><li>Don't create long, dozen-step flows; split the task.</li></ul></div>
+  </div>
+
+  <h2>Accessibility</h2>
+  <p class="muted">Convey the current step and total ("Step 2 of 3") to assistive tech; the active step uses <code>aria-current="step"</code>. Steps are keyboard reachable (where navigable) with visible focus; errors are announced on their step.</p>
+
+  <div class="callout" style="margin-top:32px">Part of the shared component detail-page set. <a href="index.html">All components →</a></div>
+</main></body></html>

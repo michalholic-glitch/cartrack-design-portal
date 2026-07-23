@@ -1,0 +1,83 @@
+<!DOCTYPE html><html lang="en"><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cartrack DS — Tooltips</title>
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&family=Roboto+Mono&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/ds.css">
+<link rel="stylesheet" href="https://unpkg.com/material-components-web@14.0.0/dist/material-components-web.min.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+<style>:root{--mdc-theme-primary:#F47735;--mdc-theme-secondary:#333;--mdc-theme-on-primary:#fff;--mdc-theme-surface:#fff;--mdc-theme-background:#fff;--mdc-theme-error:#BA1A1A}</style>
+</head><body><main>
+  <div class="crumbs"><a href="index.html">Components</a><span class="s">&rsaquo;</span> Tooltips</div>
+  <h1>Tooltips</h1>
+  <p class="lede">Tooltips reveal a short text label on hover or focus — naming an icon-only button, or showing a value that's been truncated in a dense table. They're especially valuable on desktop, where hover exists.</p>
+  <div class="chiprow"><span class="tag">Category: Data display</span><span class="tag">Desktop</span><span class="tag">Import: <code>Tooltip</code></span></div>
+  <div class="callout">Use a tooltip for brief, supplementary text — an icon's name, a truncated cell's full value. Never put essential information or actions only in a tooltip.</div>
+
+  <h2>Live component (real MDC)</h2>
+  <p class="muted">The genuine MDC tooltip — hover or focus the icon button to show it (loads MDC online).</p>
+  <div class="stage">
+    <button class="mdc-icon-button material-icons" aria-describedby="m-tt" aria-label="Track vehicle">my_location</button>
+    <div id="m-tt" class="mdc-tooltip" role="tooltip" aria-hidden="true"><div class="mdc-tooltip__surface mdc-tooltip__surface-animation">Track vehicle</div></div>
+  </div>
+
+  <h2>Demo</h2>
+  <div class="lab">
+    <div class="lab-preview col" style="flex-direction:column;gap:10px"><span class="tip" id="pv" style="display:inline-block">Track vehicle</span><button class="icb" style="font-size:1.2rem">&#9678;</button></div>
+    <div class="lab-controls">
+      <h5>Options</h5>
+      <div class="lab-row"><label for="c-show">Show tooltip</label><input type="checkbox" id="c-show" checked></div>
+      <div class="lab-row"><label for="c-lab">Label</label><input type="text" id="c-lab" value="Track vehicle"></div>
+    </div>
+  </div>
+  <script>(function(){var pv=document.getElementById('pv'),s=document.getElementById('c-show'),l=document.getElementById('c-lab');function u(){pv.style.visibility=s.checked?'visible':'hidden';pv.textContent=l.value||'Tooltip';}s.addEventListener('change',u);l.addEventListener('input',u);u();})();</script>
+
+  <h2>Live example</h2>
+  <div class="stage"><span class="tip">Track vehicle</span><button class="icb" title="Filter">&#9051;</button></div>
+
+  <h2>Anatomy</h2>
+  <div class="anat"><p class="muted">A small label anchored to a trigger.</p>
+    <ol>
+      <li><b>Trigger</b> — the element being described (icon button, truncated text).</li>
+      <li><b>Container</b> — the small dark surface.</li>
+      <li><b>Label</b> — concise text (ideally a few words).</li>
+    </ol></div>
+
+  <h2>Variants</h2>
+  <table class="spec"><tr><th>Variant</th><th>When to use</th></tr>
+    <tr><td>Plain</td><td>A short label naming or clarifying the trigger.</td></tr>
+    <tr><td>Truncation reveal</td><td>Shows the full value when text is clipped in a cell/label.</td></tr>
+  </table>
+
+  <h2>Behaviors</h2>
+  <h3>Trigger</h3><p class="muted">Appears on hover and on keyboard focus; dismisses on blur/mouse-out or Escape.</p>
+  <h3>Delay</h3><p class="muted">A short enter delay avoids tooltip noise as the pointer moves across a toolbar.</p>
+  <h3>Positioning</h3><p class="muted">Flips to stay within the viewport; never covers its own trigger.</p>
+
+  <h2>States</h2>
+  <table class="spec"><tr><th>State</th><th>Treatment</th></tr>
+    <tr><td>Hidden</td><td>Not rendered until triggered.</td></tr>
+    <tr><td>Shown</td><td>Dark surface, light text, near the trigger.</td></tr>
+  </table>
+
+  <h2>Specs</h2>
+  <table class="spec"><tr><th>Property</th><th>Value</th></tr>
+    <tr><td>Background</td><td>Dark grey (~92% opacity), white text (passes AA)</td></tr>
+    <tr><td>Text</td><td>Roboto ~10–12px</td></tr>
+    <tr><td>Padding / radius</td><td>~6px / 4px</td></tr>
+    <tr><td>Enter delay</td><td>~150–500ms</td></tr>
+  </table>
+
+  <h2>Do &amp; Don't</h2>
+  <div class="cols">
+    <div class="do"><h4>Do</h4><ul><li>Label every icon-only button with a tooltip.</li><li>Keep text to a few words.</li><li>Trigger on focus too, not just hover.</li></ul></div>
+    <div class="dont"><h4>Don't</h4><ul><li>Don't put actions or essential info only in a tooltip.</li><li>Don't write long paragraphs.</li><li>Don't rely on hover alone (touch/keyboard need an alternative).</li></ul></div>
+  </div>
+
+  <h2>Accessibility</h2>
+  <p class="muted">Associate the tooltip with its trigger (e.g. <code>aria-describedby</code>); show on focus as well as hover, and allow Escape to dismiss. The icon button still needs its own accessible name.</p>
+
+  <div class="callout" style="margin-top:32px">Part of the shared component detail-page set. <a href="index.html">All components →</a></div>
+</main>
+<script src="https://unpkg.com/material-components-web@14.0.0/dist/material-components-web.min.js"></script>
+<script>window.addEventListener('load',function(){document.querySelectorAll('.mdc-tooltip').forEach(function(e){try{mdc.tooltip.MDCTooltip.attachTo(e)}catch(x){}});document.querySelectorAll('.mdc-icon-button').forEach(function(e){try{mdc.ripple.MDCRipple.attachTo(e).unbounded=true}catch(x){}});});</script>
+</body></html>

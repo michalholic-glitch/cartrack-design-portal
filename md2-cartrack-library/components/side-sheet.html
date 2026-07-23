@@ -1,0 +1,106 @@
+<!DOCTYPE html><html lang="en"><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cartrack DS — Side sheet</title>
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&family=Roboto+Mono&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/ds.css">
+<link rel="stylesheet" href="https://unpkg.com/material-components-web@14.0.0/dist/material-components-web.min.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+<style>:root{--mdc-theme-primary:#F47735;--mdc-theme-secondary:#333;--mdc-theme-on-primary:#fff;--mdc-theme-surface:#fff;--mdc-theme-background:#fff;--mdc-theme-error:#BA1A1A}</style>
+</head><body><main>
+  <div class="crumbs"><a href="index.html">Components</a><span class="s">&rsaquo;</span> Side sheet</div>
+  <h1>Side sheet</h1>
+  <p class="lede">A side sheet is a surface anchored to the right edge that shows contextual detail beside the main content — the selected vehicle's summary next to the list, or a filters panel — without navigating away.</p>
+  <div class="chiprow"><span class="tag">Category: Surfaces</span><span class="tag">Desktop</span><span class="tag">Import: <code>Drawer</code> (right)</span></div>
+  <div class="callout">Use a side sheet to keep context: the operator sees a record's detail while the list stays visible. (Bottom sheets are a mobile pattern and are excluded from this desktop set.)</div>
+
+  <h2>Live component (real MDC)</h2>
+  <p class="muted">MDC Web has no dedicated "side sheet" — the closest primitive is the <strong>drawer</strong>. Here is the genuine MDC drawer used as a record-detail side panel (a right-anchored side sheet flips the drawer). Loads MDC online.</p>
+  <div class="stage" style="display:block;padding:16px">
+    <aside class="mdc-drawer" style="position:relative;height:300px;border-radius:4px">
+      <div class="mdc-drawer__header"><h3 class="mdc-drawer__title">CA 123-456</h3><h6 class="mdc-drawer__subtitle">Jane Cooper · Active</h6></div>
+      <div class="mdc-drawer__content">
+        <nav class="mdc-deprecated-list">
+          <a class="mdc-deprecated-list-item mdc-deprecated-list-item--activated" href="#" aria-current="page"><span class="mdc-deprecated-list-item__ripple"></span><span class="mdc-deprecated-list-item__text">Overview</span></a>
+          <a class="mdc-deprecated-list-item" href="#"><span class="mdc-deprecated-list-item__ripple"></span><span class="mdc-deprecated-list-item__text">Recent trips</span></a>
+          <a class="mdc-deprecated-list-item" href="#"><span class="mdc-deprecated-list-item__ripple"></span><span class="mdc-deprecated-list-item__text">Maintenance</span></a>
+        </nav>
+      </div>
+    </aside>
+  </div>
+
+  <h2>Demo</h2>
+  <div class="lab">
+    <div class="lab-preview" id="pv-wrap" style="padding:0;align-items:stretch">
+      <div style="display:flex;width:100%;min-height:200px" id="pv">
+        <div style="flex:1;padding:16px;color:var(--on-surface-med)">List content…</div>
+        <div class="sheet" id="pv-sheet" style="width:240px;border-radius:0;box-shadow:var(--el8)"><div style="padding:0 16px 8px;font-weight:500">CA 123-456</div><div class="listmd" style="box-shadow:none;border-radius:0"><div class="li">Overview</div><div class="li">Recent trips</div><div class="li">Maintenance</div></div></div>
+      </div>
+    </div>
+    <div class="lab-controls">
+      <h5>Options</h5>
+      <div class="lab-row"><label for="c-var">Variant</label><select id="c-var"><option value="standard">Standard (docked)</option><option value="modal">Modal (scrim)</option></select></div>
+      <div class="lab-row"><label for="c-open">Open</label><input type="checkbox" id="c-open" checked></div>
+    </div>
+  </div>
+  <script>(function(){var wrap=document.getElementById('pv'),sheet=document.getElementById('pv-sheet'),v=document.getElementById('c-var'),o=document.getElementById('c-open');function u(){sheet.style.display=o.checked?'':'none';wrap.style.background=(v.value==='modal'&&o.checked)?'rgba(0,0,0,.32)':'transparent';}v.addEventListener('change',u);o.addEventListener('change',u);u();})();</script>
+
+  <h2>Live example</h2>
+  <div class="stage">
+    <div class="sheet" style="width:280px;border-radius:0">
+      <div style="padding:0 16px 8px;font-weight:500">CA 123-456</div>
+      <div class="listmd" style="box-shadow:none;border-radius:0">
+        <div class="li">Overview</div><div class="li">Recent trips</div><div class="li">Maintenance</div><div class="li">Alerts</div>
+      </div>
+    </div>
+  </div>
+
+  <h2>Anatomy</h2>
+  <div class="anat"><p class="muted">An edge-anchored panel beside the content.</p>
+    <ol>
+      <li><b>Container</b> — the panel docked to the right edge.</li>
+      <li><b>Header</b> — the subject/title + close affordance.</li>
+      <li><b>Content</b> — detail, tabs, or a form.</li>
+      <li><b>Optional footer</b> — actions for the sheet's content.</li>
+    </ol></div>
+
+  <h2>Variants</h2>
+  <table class="spec"><tr><th>Variant</th><th>When to use</th></tr>
+    <tr><td>Standard (pushes content)</td><td>Detail beside a list where keeping context matters; content reflows.</td></tr>
+    <tr><td>Modal (over a scrim)</td><td>When the sheet's task should hold focus (e.g. an editing flow).</td></tr>
+    <tr><td>Filters panel</td><td>Hosts the advanced filters for a data table.</td></tr>
+  </table>
+
+  <h2>Behaviors</h2>
+  <h3>Open with context</h3><p class="muted">Selecting a record opens the sheet with its detail; the list stays visible and the selection is highlighted.</p>
+  <h3>Persistent vs modal</h3><p class="muted">A standard sheet coexists with the page; a modal sheet dims and blocks until dismissed.</p>
+  <h3>Dismiss</h3><p class="muted">Close via the header control or Escape (modal); the standard sheet can stay docked.</p>
+
+  <h2>States</h2>
+  <table class="spec"><tr><th>State</th><th>Treatment</th></tr>
+    <tr><td>Closed</td><td>Off-canvas; content full width.</td></tr>
+    <tr><td>Open (standard)</td><td>Docked; content reflows to make room.</td></tr>
+    <tr><td>Open (modal)</td><td>Over a scrim; focus trapped.</td></tr>
+  </table>
+
+  <h2>Specs</h2>
+  <table class="spec"><tr><th>Property</th><th>Value</th></tr>
+    <tr><td>Width</td><td>~320–400px (content-dependent)</td></tr>
+    <tr><td>Elevation</td><td>Raised (modal) / flush with a divider (standard)</td></tr>
+    <tr><td>Header title</td><td>Roboto 16–20px / 500</td></tr>
+    <tr><td>Padding</td><td>16px</td></tr>
+  </table>
+
+  <h2>Do &amp; Don't</h2>
+  <div class="cols">
+    <div class="do"><h4>Do</h4><ul><li>Use it to keep list context while viewing detail.</li><li>Highlight the selected record in the list.</li><li>Give it a clear close control.</li></ul></div>
+    <div class="dont"><h4>Don't</h4><ul><li>Don't use a bottom sheet on desktop.</li><li>Don't stuff a full multi-step task into a narrow sheet — use a page.</li><li>Don't block the page with a modal sheet for read-only detail.</li></ul></div>
+  </div>
+
+  <h2>Accessibility</h2>
+  <p class="muted">A modal side sheet uses <code>role=dialog</code> + <code>aria-modal</code>, traps focus, and restores it on close; a standard sheet is a labelled <code>complementary</code> region. The close control has an accessible name; Escape closes modal sheets.</p>
+
+  <div class="callout" style="margin-top:32px">Part of the shared component detail-page set. <a href="index.html">All components →</a></div>
+</main>
+<script src="https://unpkg.com/material-components-web@14.0.0/dist/material-components-web.min.js"></script>
+<script>window.addEventListener('load',function(){document.querySelectorAll('.mdc-deprecated-list-item').forEach(function(e){try{mdc.ripple.MDCRipple.attachTo(e)}catch(x){}});});</script>
+</body></html>

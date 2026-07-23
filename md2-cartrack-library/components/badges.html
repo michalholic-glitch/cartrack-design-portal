@@ -1,0 +1,78 @@
+<!DOCTYPE html><html lang="en"><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cartrack DS — Badges</title>
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&family=Roboto+Mono&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/ds.css">
+</head><body><main>
+  <div class="crumbs"><a href="index.html">Components</a><span class="s">&rsaquo;</span> Badges</div>
+  <h1>Badges</h1>
+  <p class="lede">A badge is a small indicator placed on another element to show a count or status — the number of unread alerts on the notifications bell, or a dot marking a vehicle that needs attention.</p>
+  <div class="chiprow"><span class="tag">Category: Data display</span><span class="tag">Desktop</span><span class="tag">Import: <code>Badge</code></span></div>
+  <div class="callout">Use a badge to draw attention to a count or new state on an icon or item. Keep it glanceable — for detailed status use a status chip instead.</div>
+
+  <div class="callout"><strong>No stock MDC Web component.</strong> MDC Web (v14) has no badge component. Build a small custom badge element positioned on its host (e.g. the notifications icon), or adopt an MD3 badge from another library. The preview below is a Cartrack-styled approximation.</div>
+
+  <h2>Demo</h2>
+  <div class="lab">
+    <div class="lab-preview"><span class="badge"><button class="icb" style="font-size:1.4rem">&#128276;</button><span class="d" id="pv-d">4</span></span></div>
+    <div class="lab-controls">
+      <h5>Options</h5>
+      <div class="lab-row"><label for="c-type">Type</label><select id="c-type"><option value="num">Numeric</option><option value="dot">Dot</option></select></div>
+      <div class="lab-row"><label for="c-count">Count</label><input type="range" id="c-count" min="0" max="150" value="4"></div>
+    </div>
+  </div>
+  <script>(function(){var d=document.getElementById('pv-d'),t=document.getElementById('c-type'),c=document.getElementById('c-count');function u(){var n=+c.value;if(t.value==='dot'){d.style.minWidth='8px';d.style.height='8px';d.style.padding='0';d.textContent='';d.style.display=n>0?'block':'none';}else{d.style.minWidth='18px';d.style.height='18px';d.style.padding='0 4px';d.textContent=n>99?'99+':n;d.style.display=n>0?'flex':'none';}}t.addEventListener('change',u);c.addEventListener('input',u);u();})();</script>
+
+  <h2>Live example</h2>
+  <div class="stage">
+    <span class="badge"><button class="icb">&#128276;</button><span class="d">4</span></span>
+    <span class="badge"><button class="icb">&#9993;</button><span class="d">99+</span></span>
+    <span class="badge"><button class="icb">&#128666;</button><span class="d" style="min-width:8px;height:8px;padding:0"></span></span>
+  </div>
+
+  <h2>Anatomy</h2>
+  <div class="anat"><p class="muted">A small mark anchored to a host element.</p>
+    <ol>
+      <li><b>Host</b> — the icon/element the badge sits on.</li>
+      <li><b>Badge</b> — the small count or dot indicator (usually top-right).</li>
+      <li><b>Content</b> — a number, capped value ("99+"), or empty dot.</li>
+    </ol></div>
+
+  <h2>Variants</h2>
+  <table class="spec"><tr><th>Variant</th><th>When to use</th></tr>
+    <tr><td>Numeric</td><td>Show a count (unread alerts, pending tasks).</td></tr>
+    <tr><td>Dot</td><td>Indicate "new"/attention without a number.</td></tr>
+    <tr><td>Capped</td><td>Large counts shown as "99+".</td></tr>
+  </table>
+
+  <h2>Behaviors</h2>
+  <h3>Capping</h3><p class="muted">Cap large counts (e.g. 99+) so the badge stays small and readable.</p>
+  <h3>Zero</h3><p class="muted">Hide the badge at zero unless "0" is meaningful.</p>
+  <h3>Live updates</h3><p class="muted">When the count changes, update it promptly and announce it to assistive tech.</p>
+
+  <h2>States</h2>
+  <table class="spec"><tr><th>State</th><th>Treatment</th></tr>
+    <tr><td>Visible</td><td>Error-colour pill/dot on the host.</td></tr>
+    <tr><td>Empty (dot)</td><td>Small filled dot, no number.</td></tr>
+    <tr><td>Hidden</td><td>Removed at zero/none.</td></tr>
+  </table>
+
+  <h2>Specs</h2>
+  <table class="spec"><tr><th>Property</th><th>Value</th></tr>
+    <tr><td>Numeric badge</td><td>~16–18px tall pill</td></tr>
+    <tr><td>Dot</td><td>~8px</td></tr>
+    <tr><td>Colour</td><td>error (#F44336) with white text (passes AA)</td></tr>
+    <tr><td>Text</td><td>Roboto ~11–12px / 500</td></tr>
+  </table>
+
+  <h2>Do &amp; Don't</h2>
+  <div class="cols">
+    <div class="do"><h4>Do</h4><ul><li>Cap large counts (99+).</li><li>Use a dot when a number isn't needed.</li><li>Announce count changes.</li></ul></div>
+    <div class="dont"><h4>Don't</h4><ul><li>Don't put long text in a badge.</li><li>Don't show "0" unless it matters.</li><li>Don't rely on the badge alone to convey critical detail.</li></ul></div>
+  </div>
+
+  <h2>Accessibility</h2>
+  <p class="muted">The host's accessible name includes the badge meaning (e.g. "Notifications, 4 unread"); changes are announced via a live region. The dot/number is not the only signal of an important state.</p>
+
+  <div class="callout" style="margin-top:32px">Part of the shared component detail-page set. <a href="index.html">All components →</a></div>
+</main></body></html>

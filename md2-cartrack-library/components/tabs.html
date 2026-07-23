@@ -1,0 +1,94 @@
+<!DOCTYPE html><html lang="en"><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cartrack DS — Tabs</title>
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&family=Roboto+Mono&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/ds.css">
+<link rel="stylesheet" href="https://unpkg.com/material-components-web@14.0.0/dist/material-components-web.min.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+<style>:root{--mdc-theme-primary:#F47735;--mdc-theme-secondary:#333;--mdc-theme-on-primary:#fff;--mdc-theme-surface:#fff;--mdc-theme-background:#fff;--mdc-theme-error:#BA1A1A}</style>
+</head><body><main>
+  <div class="crumbs"><a href="index.html">Components</a><span class="s">&rsaquo;</span> Tabs</div>
+  <h1>Tabs</h1>
+  <p class="lede">Tabs switch between related views of the same subject — a vehicle's Overview, Trips, Maintenance, and Alerts — without leaving the page. They keep peer views one click apart.</p>
+  <div class="chiprow"><span class="tag">Category: Navigation</span><span class="tag">Desktop</span><span class="tag">Import: <code>Tabs</code>, <code>Tab</code></span></div>
+  <div class="callout">Use tabs for peer views of one record or population. They're not top-level navigation (that's the drawer) and not a wizard (that's a stepper).</div>
+
+  <h2>Live component (real MDC)</h2>
+  <p class="muted">The genuine MDC tab bar with the sliding active indicator, Cartrack-themed (loads MDC online).</p>
+  <div class="stage" style="display:block;padding:0;border:none">
+    <div class="mdc-tab-bar" role="tablist">
+      <div class="mdc-tab-scroller"><div class="mdc-tab-scroller__scroll-area"><div class="mdc-tab-scroller__scroll-content">
+        <button class="mdc-tab mdc-tab--active" role="tab" aria-selected="true" tabindex="0"><span class="mdc-tab__content"><span class="mdc-tab__text-label">Overview</span></span><span class="mdc-tab-indicator mdc-tab-indicator--active"><span class="mdc-tab-indicator__content mdc-tab-indicator__content--underline"></span></span><span class="mdc-tab__ripple"></span></button>
+        <button class="mdc-tab" role="tab" aria-selected="false" tabindex="-1"><span class="mdc-tab__content"><span class="mdc-tab__text-label">Trips</span></span><span class="mdc-tab-indicator"><span class="mdc-tab-indicator__content mdc-tab-indicator__content--underline"></span></span><span class="mdc-tab__ripple"></span></button>
+        <button class="mdc-tab" role="tab" aria-selected="false" tabindex="-1"><span class="mdc-tab__content"><span class="mdc-tab__text-label">Maintenance</span></span><span class="mdc-tab-indicator"><span class="mdc-tab-indicator__content mdc-tab-indicator__content--underline"></span></span><span class="mdc-tab__ripple"></span></button>
+        <button class="mdc-tab" role="tab" aria-selected="false" tabindex="-1"><span class="mdc-tab__content"><span class="mdc-tab__text-label">Alerts</span></span><span class="mdc-tab-indicator"><span class="mdc-tab-indicator__content mdc-tab-indicator__content--underline"></span></span><span class="mdc-tab__ripple"></span></button>
+      </div></div></div>
+    </div>
+  </div>
+
+  <h2>Demo</h2>
+  <div class="lab">
+    <div class="lab-preview" style="align-items:stretch"><div class="tabs" id="pv" style="width:100%"></div></div>
+    <div class="lab-controls">
+      <h5>Options</h5>
+      <div class="lab-row"><label for="c-count">Number of tabs</label><select id="c-count"><option>2</option><option>3</option><option selected>4</option></select></div>
+      <div class="lab-row"><label>Tip</label><span class="muted" style="font-size:.78rem">Click a tab to activate</span></div>
+    </div>
+  </div>
+  <script>(function(){var pv=document.getElementById('pv'),c=document.getElementById('c-count');var labels=['Overview','Trips','Maintenance','Alerts'];function u(){var n=+c.value;pv.innerHTML='';for(var i=0;i<n;i++){(function(i){var t=document.createElement('span');t.className='t'+(i===0?' on':'');t.textContent=labels[i];t.onclick=function(){pv.querySelectorAll('.t').forEach(function(x){x.classList.remove('on')});t.classList.add('on');};pv.appendChild(t);})(i);}}c.addEventListener('change',u);u();})();</script>
+
+  <h2>Live example</h2>
+  <div class="stage col" style="align-items:stretch">
+    <div class="tabs"><span class="t on">Overview</span><span class="t">Trips</span><span class="t">Maintenance</span><span class="t">Alerts</span></div>
+  </div>
+
+  <h2>Anatomy</h2>
+  <div class="anat"><p class="muted">A row of tabs over a shared content area.</p>
+    <ol>
+      <li><b>Tab bar</b> — the row of selectable labels.</li>
+      <li><b>Tab</b> — one view label, optionally with an icon or count.</li>
+      <li><b>Active indicator</b> — the underline marking the selected tab.</li>
+      <li><b>Panel</b> — the content for the active tab.</li>
+    </ol></div>
+
+  <h2>Variants</h2>
+  <table class="spec"><tr><th>Variant</th><th>When to use</th></tr>
+    <tr><td>Fixed</td><td>A small, known set of tabs that fit the width.</td></tr>
+    <tr><td>Scrollable</td><td>Many tabs that overflow; the bar scrolls.</td></tr>
+    <tr><td>With icon / count</td><td>Reinforce a tab or show a count (e.g. "Alerts 3").</td></tr>
+  </table>
+
+  <h2>Behaviors</h2>
+  <h3>Selection</h3><p class="muted">Selecting a tab swaps the panel and moves the indicator; one tab is always active.</p>
+  <h3>Overflow</h3><p class="muted">When tabs exceed the width, the bar scrolls rather than wrapping.</p>
+  <h3>Deep linking</h3><p class="muted">The active tab can be reflected in the URL so a view is shareable.</p>
+
+  <h2>States</h2>
+  <table class="spec"><tr><th>State</th><th>Treatment</th></tr>
+    <tr><td>Inactive</td><td>On-surface-medium label.</td></tr>
+    <tr><td>Active</td><td>Primary label + primary underline indicator.</td></tr>
+    <tr><td>Hover/focus</td><td>State layer; visible focus.</td></tr>
+  </table>
+
+  <h2>Specs</h2>
+  <table class="spec"><tr><th>Property</th><th>Value</th></tr>
+    <tr><td>Tab height</td><td>48px</td></tr>
+    <tr><td>Label</td><td>Roboto 14px / 500, uppercase</td></tr>
+    <tr><td>Indicator</td><td>2px primary underline</td></tr>
+    <tr><td>Min tab width</td><td>~90px; padding 16px sides</td></tr>
+  </table>
+
+  <h2>Do &amp; Don't</h2>
+  <div class="cols">
+    <div class="do"><h4>Do</h4><ul><li>Use tabs for peer views of one subject.</li><li>Keep labels short and parallel.</li><li>Reflect the active tab in the URL.</li></ul></div>
+    <div class="dont"><h4>Don't</h4><ul><li>Don't use tabs as primary site navigation.</li><li>Don't use tabs for a sequential, must-complete flow (use a stepper).</li><li>Don't overload with too many tabs — consider a different structure.</li></ul></div>
+  </div>
+
+  <h2>Accessibility</h2>
+  <p class="muted">Use the <code>tablist</code>/<code>tab</code>/<code>tabpanel</code> pattern; the active tab exposes <code>aria-selected</code> and arrow keys move between tabs. Each panel is associated with its tab; focus is visible.</p>
+
+  <div class="callout" style="margin-top:32px">Part of the shared component detail-page set. <a href="index.html">All components →</a></div>
+</main>
+<script src="https://unpkg.com/material-components-web@14.0.0/dist/material-components-web.min.js"></script>
+<script>window.addEventListener('load',function(){document.querySelectorAll('.mdc-tab-bar').forEach(function(e){try{mdc.tabBar.MDCTabBar.attachTo(e)}catch(x){}});});</script>
+</body></html>

@@ -1,0 +1,78 @@
+<!DOCTYPE html><html lang="en"><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cartrack DS — Expansion panels</title>
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&family=Roboto+Mono&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/ds.css">
+</head><body><main>
+  <div class="crumbs"><a href="index.html">Components</a><span class="s">&rsaquo;</span> Expansion panels</div>
+  <h1>Expansion panels</h1>
+  <p class="lede">Expansion panels (accordions) let operators reveal detail on demand — collapsing a long record or settings page into named sections that open one at a time, so the screen stays manageable.</p>
+  <div class="chiprow"><span class="tag">Category: Surfaces</span><span class="tag">Desktop</span><span class="tag">Import: <code>Accordion</code></span></div>
+  <div class="callout">Use expansion panels to tame dense detail (vehicle specs, settings groups). For switching between peer views of one record, prefer tabs.</div>
+
+  <div class="callout"><strong>No stock MDC Web component.</strong> MDC Web has no accordion / expansion-panel component. Build it from an MDC list + a custom expand/collapse toggle, or use a third-party. The preview below is a Cartrack-styled approximation.</div>
+
+  <h2>Demo</h2>
+  <div class="lab">
+    <div class="lab-preview col" style="flex-direction:column;gap:8px" id="pv"></div>
+    <div class="lab-controls">
+      <h5>Options</h5>
+      <div class="lab-row"><label for="c-single">Single-open</label><input type="checkbox" id="c-single" checked></div>
+      <div class="lab-row"><label>Tip</label><span class="muted" style="font-size:.78rem">Click a header to expand</span></div>
+    </div>
+  </div>
+  <script>(function(){var pv=document.getElementById('pv'),single=document.getElementById('c-single');var data=[['Vehicle details','Make, model, VIN, year, fuel type.'],['Maintenance history','Last service 2,400 km ago; next due in 600 km.'],['Assigned driver','Jane Cooper · since Jan 2026.']];function build(){pv.innerHTML='';data.forEach(function(d,i){var ac=document.createElement('div');ac.className='accordion';ac.style.width='320px';var open=i===0;ac.innerHTML='<div class="hd"><span style="font-weight:500">'+d[0]+'</span><span class="chev">'+(open?'⌄':'›')+'</span></div>'+(open?'<div class="bd2">'+d[1]+'</div>':'');ac.dataset.body=d[1];ac.querySelector('.hd').onclick=function(){toggle(ac);};pv.appendChild(ac);});}function toggle(ac){var isOpen=ac.querySelector('.bd2');if(single.checked)pv.querySelectorAll('.accordion').forEach(close);if(isOpen){close(ac);}else{ac.querySelector('.chev').textContent='⌄';var b=document.createElement('div');b.className='bd2';b.textContent=ac.dataset.body;ac.appendChild(b);}}function close(ac){var b=ac.querySelector('.bd2');if(b)b.remove();ac.querySelector('.chev').textContent='›';}build();single.addEventListener('change',build);})();</script>
+
+  <h2>Live example</h2>
+  <div class="stage col">
+    <div class="accordion"><div class="hd"><span style="font-weight:500">Vehicle details</span><span>&#9662;</span></div><div class="bd2">Make, model, VIN, year, fuel type, and registration.</div></div>
+    <div class="accordion"><div class="hd"><span>Maintenance history</span><span>&#8250;</span></div></div>
+  </div>
+
+  <h2>Anatomy</h2>
+  <div class="anat"><p class="muted">A stack of collapsible sections.</p>
+    <ol>
+      <li><b>Header</b> — the always-visible section title + expand/collapse affordance.</li>
+      <li><b>Expand icon</b> — chevron indicating open/closed.</li>
+      <li><b>Panel body</b> — the content revealed when expanded.</li>
+      <li><b>Summary meta</b> — optional preview value shown on the collapsed header.</li>
+    </ol></div>
+
+  <h2>Variants</h2>
+  <table class="spec"><tr><th>Variant</th><th>When to use</th></tr>
+    <tr><td>Single-open</td><td>Only one section open at a time (guided reading).</td></tr>
+    <tr><td>Multi-open</td><td>Several sections open at once (reference scanning).</td></tr>
+    <tr><td>With summary</td><td>Show a key value on the collapsed header.</td></tr>
+  </table>
+
+  <h2>Behaviors</h2>
+  <h3>Expand/collapse</h3><p class="muted">Clicking the header toggles the panel; the chevron rotates to reflect state.</p>
+  <h3>Single vs multi</h3><p class="muted">Decide whether opening one closes others; keep it consistent within a group.</p>
+  <h3>Deep linking</h3><p class="muted">A section can open automatically when linked to, so operators land on the right detail.</p>
+
+  <h2>States</h2>
+  <table class="spec"><tr><th>State</th><th>Treatment</th></tr>
+    <tr><td>Collapsed</td><td>Header only; chevron pointing right/down.</td></tr>
+    <tr><td>Expanded</td><td>Body visible; chevron rotated.</td></tr>
+    <tr><td>Header hover/focus</td><td>State layer; visible focus.</td></tr>
+  </table>
+
+  <h2>Specs</h2>
+  <table class="spec"><tr><th>Property</th><th>Value</th></tr>
+    <tr><td>Header height</td><td>~48px</td></tr>
+    <tr><td>Header title</td><td>Roboto 14–16px / 500</td></tr>
+    <tr><td>Body padding</td><td>16px; divider above body</td></tr>
+    <tr><td>Radius / elevation</td><td>4px; elevation 1</td></tr>
+  </table>
+
+  <h2>Do &amp; Don't</h2>
+  <div class="cols">
+    <div class="do"><h4>Do</h4><ul><li>Name sections clearly so collapsed headers are scannable.</li><li>Show a summary value where it helps.</li><li>Keep single-vs-multi behavior consistent.</li></ul></div>
+    <div class="dont"><h4>Don't</h4><ul><li>Don't nest accordions deeply.</li><li>Don't hide critical, always-needed info behind a collapse.</li><li>Don't use accordions where tabs fit better.</li></ul></div>
+  </div>
+
+  <h2>Accessibility</h2>
+  <p class="muted">The header is a button exposing <code>aria-expanded</code> and controlling its panel via <code>aria-controls</code>; it's keyboard operable with visible focus. The chevron is decorative — state is conveyed programmatically.</p>
+
+  <div class="callout" style="margin-top:32px">Part of the shared component detail-page set. <a href="index.html">All components →</a></div>
+</main></body></html>

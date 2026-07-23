@@ -1,0 +1,102 @@
+<!DOCTYPE html><html lang="en"><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cartrack DS — App bar (top)</title>
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&family=Roboto+Mono&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/ds.css">
+<link rel="stylesheet" href="https://unpkg.com/material-components-web@14.0.0/dist/material-components-web.min.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+<style>:root{--mdc-theme-primary:#F47735;--mdc-theme-secondary:#333;--mdc-theme-on-primary:#fff;--mdc-theme-surface:#fff;--mdc-theme-background:#fff;--mdc-theme-error:#BA1A1A}</style>
+</head><body><main>
+  <div class="crumbs"><a href="index.html">Components</a><span class="s">&rsaquo;</span> App bar (top)</div>
+  <h1>App bar (top)</h1>
+  <p class="lede">The top app bar is the page header — it names where the operator is and holds page-level actions: global search, notifications, account, and the page's primary action. On desktop it also hosts the action a phone would put in a FAB.</p>
+  <div class="chiprow"><span class="tag">Category: Navigation</span><span class="tag">Desktop</span><span class="tag">Import: <code>AppBar</code>, <code>Toolbar</code></span></div>
+  <div class="callout">Keep the top bar light — most navigation belongs in the left drawer/rail. The bar carries the title, global tools, and the one primary action for the page.</div>
+
+  <h2>Live component (real MDC)</h2>
+  <p class="muted">The genuine MDC top app bar, Cartrack-themed (loads MDC online). ⚠️ White on the orange bar is below AA — set <code>--mdc-theme-on-primary</code> dark, or use a surface-coloured bar, in production.</p>
+  <div class="stage" style="display:block;padding:0;border:none">
+    <header class="mdc-top-app-bar" style="position:relative">
+      <div class="mdc-top-app-bar__row">
+        <section class="mdc-top-app-bar__section mdc-top-app-bar__section--align-start">
+          <button class="material-icons mdc-top-app-bar__navigation-icon mdc-icon-button" aria-label="Open menu">menu</button>
+          <span class="mdc-top-app-bar__title">Vehicles</span>
+        </section>
+        <section class="mdc-top-app-bar__section mdc-top-app-bar__section--align-end" role="toolbar">
+          <button class="material-icons mdc-top-app-bar__action-item mdc-icon-button" aria-label="Search">search</button>
+          <button class="material-icons mdc-top-app-bar__action-item mdc-icon-button" aria-label="Notifications">notifications</button>
+          <button class="material-icons mdc-top-app-bar__action-item mdc-icon-button" aria-label="More">more_vert</button>
+        </section>
+      </div>
+    </header>
+  </div>
+
+  <h2>Demo</h2>
+  <div class="lab">
+    <div class="lab-preview"><div class="appbar" id="pv" style="width:100%;max-width:560px"></div></div>
+    <div class="lab-controls">
+      <h5>Options</h5>
+      <div class="lab-row"><label for="c-ctx">Contextual (selection)</label><input type="checkbox" id="c-ctx"></div>
+      <div class="lab-row"><label for="c-t">Title</label><input type="text" id="c-t" value="Vehicles"></div>
+    </div>
+  </div>
+  <script>(function(){var pv=document.getElementById('pv'),ctx=document.getElementById('c-ctx'),t=document.getElementById('c-t');function u(){if(ctx.checked){pv.style.background='var(--selected)';pv.style.color='var(--primary-dark)';pv.innerHTML='<span class="icb" style="color:var(--primary-dark)">✕</span><span class="ti" style="font-size:.95rem">3 selected</span><span class="icb" style="color:var(--primary-dark)">⤓</span><span class="icb" style="color:var(--primary-dark)">🗑</span>';}else{pv.style.background='var(--primary)';pv.style.color='#fff';pv.innerHTML='<span class="icb" style="color:#fff">☰</span><span class="ti">'+(t.value||'Title')+'</span><span class="icb" style="color:#fff">🔍</span><span class="icb" style="color:#fff">🔔</span>';}}ctx.addEventListener('change',u);t.addEventListener('input',u);u();})();</script>
+
+  <h2>Live example</h2>
+  <div class="stage col">
+    <div class="appbar" style="max-width:620px;width:100%"><span class="icb">&#9776;</span><span class="ti">Vehicles</span><span class="icb">&#128269;</span><span class="icb">&#128276;</span><span class="icb">&#8942;</span></div>
+    <div class="appbar" style="max-width:620px;width:100%;background:var(--selected);color:var(--primary-dark)"><span class="icb" style="color:var(--primary-dark)">&#10005;</span><span class="ti" style="font-size:.95rem">3 selected</span><span class="icb" style="color:var(--primary-dark)">&#10515;</span><span class="icb" style="color:var(--primary-dark)">&#128465;</span></div>
+  </div>
+  <p class="muted">Top: standard bar. Bottom: the contextual bar shown while table rows are selected.</p>
+
+  <h2>Anatomy</h2>
+  <div class="anat"><p class="muted">A horizontal bar pinned to the top of the content area.</p>
+    <ol>
+      <li><b>Leading element</b> — nav toggle or back arrow.</li>
+      <li><b>Title</b> — the current page/section name.</li>
+      <li><b>Action items</b> — search, notifications, the primary action, and overflow ⋮.</li>
+      <li><b>Contextual bar</b> — a variant that replaces the title with a selection count + bulk actions.</li>
+    </ol></div>
+
+  <h2>Variants</h2>
+  <table class="spec"><tr><th>Variant</th><th>When to use</th></tr>
+    <tr><td>Standard</td><td>Default page header with title + actions.</td></tr>
+    <tr><td>With primary action</td><td>Hosts the page's contained primary action (the desktop replacement for a FAB).</td></tr>
+    <tr><td>Contextual / selection</td><td>Appears when items are selected; shows count + bulk actions.</td></tr>
+    <tr><td>With search</td><td>Expands an inline global search field.</td></tr>
+  </table>
+
+  <h2>Behaviors</h2>
+  <h3>Scroll</h3><p class="muted">The bar stays fixed while content scrolls beneath it; it may gain a subtle shadow once content scrolls under it.</p>
+  <h3>Contextual switch</h3><p class="muted">Entering a selection mode swaps the standard bar for the contextual bar and back when selection clears.</p>
+  <h3>Responsive</h3><p class="muted">On narrower widths, secondary actions collapse into the overflow menu; the title truncates before the actions do.</p>
+
+  <h2>States</h2>
+  <table class="spec"><tr><th>Element</th><th>State</th><th>Treatment</th></tr>
+    <tr><td>Action icon</td><td>Hover/focus</td><td>4% overlay circle.</td></tr>
+    <tr><td>Bar</td><td>Scrolled</td><td>Elevation shadow appears.</td></tr>
+    <tr><td>Bar</td><td>Contextual</td><td>Primary-tint background; count + bulk actions.</td></tr>
+  </table>
+
+  <h2>Specs</h2>
+  <table class="spec"><tr><th>Property</th><th>Value</th></tr>
+    <tr><td>Height</td><td>56–64px</td></tr>
+    <tr><td>Title</td><td>Roboto ~20px / 500</td></tr>
+    <tr><td>Side padding</td><td>16px</td></tr>
+    <tr><td>Background</td><td>Often primary; <strong>if filled with orange, use dark text/icons or primary-dark — white on #F47735 fails AA. A white bar with dark text is the safer default for dense data screens.</strong></td></tr>
+  </table>
+
+  <h2>Do &amp; Don't</h2>
+  <div class="cols">
+    <div class="do"><h4>Do</h4><ul><li>Show the current location as the title.</li><li>Host one primary action here per page.</li><li>Switch to the contextual bar during selection.</li><li>Prefer a white bar + dark content for legibility.</li></ul></div>
+    <div class="dont"><h4>Don't</h4><ul><li>Don't crowd the bar with primary navigation — that's the drawer's job.</li><li>Don't place a FAB on desktop; use the bar's primary action.</li><li>Don't ship an orange bar with white text without checking contrast.</li></ul></div>
+  </div>
+
+  <h2>Accessibility</h2>
+  <p class="muted">Use a <code>banner</code>/<code>header</code> landmark; the title is a heading. Icon actions carry <code>aria-label</code>s and visible focus. The contextual bar announces the selection count. Contrast of text/icons on the bar background must meet AA.</p>
+
+  <div class="callout" style="margin-top:32px">Part of the shared component detail-page set. <a href="index.html">All components →</a></div>
+</main>
+<script src="https://unpkg.com/material-components-web@14.0.0/dist/material-components-web.min.js"></script>
+<script>window.addEventListener('load',function(){document.querySelectorAll('.mdc-icon-button').forEach(function(e){try{mdc.ripple.MDCRipple.attachTo(e).unbounded=true}catch(x){}});});</script>
+</body></html>

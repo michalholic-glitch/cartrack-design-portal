@@ -1,0 +1,105 @@
+<!DOCTYPE html><html lang="en"><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cartrack DS — Navigation drawer</title>
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&family=Roboto+Mono&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/ds.css">
+<link rel="stylesheet" href="https://unpkg.com/material-components-web@14.0.0/dist/material-components-web.min.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+<style>:root{--mdc-theme-primary:#F47735;--mdc-theme-secondary:#333;--mdc-theme-on-primary:#fff;--mdc-theme-surface:#fff;--mdc-theme-background:#fff;--mdc-theme-error:#BA1A1A}</style>
+</head><body><main>
+  <div class="crumbs"><a href="index.html">Components</a><span class="s">&rsaquo;</span> Navigation drawer</div>
+  <h1>Navigation drawer</h1>
+  <p class="lede">The navigation drawer is the portal's primary, persistent navigation — anchored to the left edge and grouped by purpose. It's how operators move between the map, assets, and the domain pillars throughout a session.</p>
+  <div class="chiprow"><span class="tag">Category: Navigation</span><span class="tag">Desktop</span><span class="tag">Import: <code>Drawer</code>, <code>List</code></span></div>
+  <div class="callout">On desktop the drawer is <strong>permanent</strong> (always visible) — not a temporary overlay. Group items by purpose so the model stays legible; default new features into a pillar, not the top level.</div>
+
+  <h2>Live component (real MDC)</h2>
+  <p class="muted">The genuine MDC navigation drawer, Cartrack-themed (loads MDC online).</p>
+  <div class="stage" style="display:block;padding:16px">
+    <aside class="mdc-drawer" style="position:relative;height:300px;border-radius:4px">
+      <div class="mdc-drawer__content">
+        <nav class="mdc-deprecated-list">
+          <a class="mdc-deprecated-list-item mdc-deprecated-list-item--activated" href="#" aria-current="page"><span class="mdc-deprecated-list-item__ripple"></span><i class="material-icons mdc-deprecated-list-item__graphic" aria-hidden="true">map</i><span class="mdc-deprecated-list-item__text">Map</span></a>
+          <a class="mdc-deprecated-list-item" href="#"><span class="mdc-deprecated-list-item__ripple"></span><i class="material-icons mdc-deprecated-list-item__graphic" aria-hidden="true">local_shipping</i><span class="mdc-deprecated-list-item__text">Assets</span></a>
+          <a class="mdc-deprecated-list-item" href="#"><span class="mdc-deprecated-list-item__ripple"></span><i class="material-icons mdc-deprecated-list-item__graphic" aria-hidden="true">person</i><span class="mdc-deprecated-list-item__text">People &amp; Drivers</span></a>
+          <a class="mdc-deprecated-list-item" href="#"><span class="mdc-deprecated-list-item__ripple"></span><i class="material-icons mdc-deprecated-list-item__graphic" aria-hidden="true">insights</i><span class="mdc-deprecated-list-item__text">Reports</span></a>
+        </nav>
+      </div>
+    </aside>
+  </div>
+
+  <h2>Demo</h2>
+  <div class="lab">
+    <div class="lab-preview"><div class="drawer" id="pv"></div></div>
+    <div class="lab-controls">
+      <h5>Options</h5>
+      <div class="lab-row"><label for="c-hdr">Section headers</label><input type="checkbox" id="c-hdr" checked></div>
+      <div class="lab-row"><label>Tip</label><span class="muted" style="font-size:.78rem">Click an item to select</span></div>
+    </div>
+  </div>
+  <script>(function(){var pv=document.getElementById('pv'),hdr=document.getElementById('c-hdr');var groups=[['Quick access',['🗺 Map','🚚 Assets','👤 People & Drivers']],['Pillars',['🛡 Drive Safer','🔧 Maintain & Uptime']]];function u(){pv.innerHTML='';var first=true;groups.forEach(function(g){if(hdr.checked){var h=document.createElement('div');h.className='grp';h.style.cssText='font-size:.66rem;text-transform:uppercase;letter-spacing:.08em;color:var(--on-surface-med);padding:8px 16px 4px';h.textContent=g[0];pv.appendChild(h);}g[1].forEach(function(lbl){var it=document.createElement('div');it.className='it'+(first?' on':'');first=false;it.textContent=lbl;it.onclick=function(){pv.querySelectorAll('.it').forEach(function(x){x.classList.remove('on')});it.classList.add('on');};pv.appendChild(it);});});}hdr.addEventListener('change',u);u();})();</script>
+
+  <h2>Live example</h2>
+  <div class="stage">
+    <div class="drawer">
+      <div class="it on">&#128506; Map</div>
+      <div class="it">&#128666; Assets</div>
+      <div class="it">&#128100; People &amp; Drivers</div>
+      <div class="it">&#128737; Drive Safer</div>
+      <div class="it">&#128295; Maintain &amp; Uptime</div>
+      <div class="it">&#128202; Reports</div>
+    </div>
+  </div>
+
+  <h2>Anatomy</h2>
+  <div class="anat"><p class="muted">A vertical panel of destinations, optionally grouped into sections.</p>
+    <ol>
+      <li><b>Container</b> — the fixed left panel.</li>
+      <li><b>Section header</b> — optional group label (Quick access, Pillars, Workflow).</li>
+      <li><b>Item</b> — a destination with an icon + label.</li>
+      <li><b>Active indicator</b> — the selected item's highlighted/pill state.</li>
+      <li><b>Badge</b> — optional count on an item (e.g. unread alerts).</li>
+    </ol></div>
+
+  <h2>Variants</h2>
+  <table class="spec"><tr><th>Variant</th><th>When to use</th></tr>
+    <tr><td>Permanent</td><td>Default on desktop — always visible alongside content.</td></tr>
+    <tr><td>Collapsible</td><td>Can collapse to a rail (icons only) to reclaim width.</td></tr>
+    <tr><td>Grouped</td><td>Sections by purpose (Quick access / Pillars / Workflow &amp; comms).</td></tr>
+  </table>
+
+  <h2>Behaviors</h2>
+  <h3>Selection</h3><p class="muted">The current destination shows the active indicator; selecting an item navigates and updates it.</p>
+  <h3>Collapse</h3><p class="muted">Collapsing hides labels and narrows to a rail; tooltips reveal labels on hover.</p>
+  <h3>Permissions</h3><p class="muted">Items the operator can't access are hidden; a pillar with no accessible sub-pages collapses away rather than showing dead ends.</p>
+
+  <h2>States</h2>
+  <table class="spec"><tr><th>State</th><th>Treatment</th></tr>
+    <tr><td>Item enabled</td><td>Medium-emphasis icon + label.</td></tr>
+    <tr><td>Item hover/focus</td><td>4% overlay.</td></tr>
+    <tr><td>Item active</td><td>Primary-tint pill, primary-dark label/icon.</td></tr>
+  </table>
+
+  <h2>Specs</h2>
+  <table class="spec"><tr><th>Property</th><th>Value</th></tr>
+    <tr><td>Width</td><td>~240–256px (expanded)</td></tr>
+    <tr><td>Item height</td><td>48px</td></tr>
+    <tr><td>Item text</td><td>Roboto 14px / 500</td></tr>
+    <tr><td>Active indicator</td><td>primary tint (~10%); rounded pill</td></tr>
+    <tr><td>Icon size</td><td>24px, 16px gap to label</td></tr>
+  </table>
+
+  <h2>Do &amp; Don't</h2>
+  <div class="cols">
+    <div class="do"><h4>Do</h4><ul><li>Group items by purpose; keep the top level short.</li><li>Show one clear active destination.</li><li>Hide items the user can't access.</li></ul></div>
+    <div class="dont"><h4>Don't</h4><ul><li>Don't make it a flat dump of every feature.</li><li>Don't use brand/codenames as labels — name by job.</li><li>Don't put transient page actions in the drawer.</li></ul></div>
+  </div>
+
+  <h2>Accessibility</h2>
+  <p class="muted">Use a <code>navigation</code> landmark with a list of links; the active item exposes <code>aria-current</code>. Items are keyboard reachable with visible focus; collapsed (icon-only) items keep accessible names via tooltip/label.</p>
+
+  <div class="callout" style="margin-top:32px">Part of the shared component detail-page set. <a href="index.html">All components →</a></div>
+</main>
+<script src="https://unpkg.com/material-components-web@14.0.0/dist/material-components-web.min.js"></script>
+<script>window.addEventListener('load',function(){document.querySelectorAll('.mdc-deprecated-list-item').forEach(function(e){try{mdc.ripple.MDCRipple.attachTo(e)}catch(x){}});});</script>
+</body></html>

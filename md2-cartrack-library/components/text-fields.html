@@ -1,0 +1,101 @@
+<!DOCTYPE html><html lang="en"><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cartrack DS — Text fields</title>
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&family=Roboto+Mono&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/ds.css">
+<link rel="stylesheet" href="https://unpkg.com/material-components-web@14.0.0/dist/material-components-web.min.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+<style>:root{--mdc-theme-primary:#F47735;--mdc-theme-secondary:#333;--mdc-theme-on-primary:#fff;--mdc-theme-surface:#fff;--mdc-theme-background:#fff;--mdc-theme-error:#BA1A1A}</style>
+</head><body><main>
+  <div class="crumbs"><a href="index.html">Components</a><span class="s">&rsaquo;</span> Text fields</div>
+  <h1>Text fields</h1>
+  <p class="lede">Text fields let operators enter and edit text — a registration number, a driver's name, an odometer reading, a note. They come in filled and outlined styles and always carry a label so the field's purpose stays visible once filled.</p>
+  <div class="chiprow"><span class="tag">Category: Inputs &amp; forms</span><span class="tag">Desktop</span><span class="tag">Import: <code>TextField</code></span></div>
+  <div class="callout">Pick one style and use it consistently across a form. In the Cartrack portal, outlined is the default for forms; filled suits dense, list-like settings.</div>
+
+  <h2>Live component (real MDC)</h2>
+  <p class="muted">Genuine MDC text fields with real floating-label behaviour (loads MDC online).</p>
+  <div class="stage">
+    <label class="mdc-text-field mdc-text-field--filled"><span class="mdc-text-field__ripple"></span><span class="mdc-floating-label" id="m-tf1">Registration</span><input class="mdc-text-field__input" type="text" aria-labelledby="m-tf1" value="CA 123-456"><span class="mdc-line-ripple"></span></label>
+    <label class="mdc-text-field mdc-text-field--outlined"><span class="mdc-notched-outline"><span class="mdc-notched-outline__leading"></span><span class="mdc-notched-outline__notch"><span class="mdc-floating-label" id="m-tf2">Driver</span></span><span class="mdc-notched-outline__trailing"></span></span><input class="mdc-text-field__input" type="text" aria-labelledby="m-tf2"></label>
+  </div>
+
+  <h2>Demo</h2>
+  <div class="lab">
+    <div class="lab-preview"><span class="tf outlined" id="pv"><span class="lbl" id="pv-l">Registration</span><div class="f" id="pv-f">CA 123-456</div><div class="sup" id="pv-s">Helper text</div></span></div>
+    <div class="lab-controls">
+      <h5>Options</h5>
+      <div class="lab-row"><label for="c-style">Style</label><select id="c-style"><option value="outlined">Outlined</option><option value="filled">Filled</option></select></div>
+      <div class="lab-row"><label for="c-state">State</label><select id="c-state"><option value="">Enabled</option><option value="focus">Focused</option><option value="err">Error</option></select></div>
+      <div class="lab-row"><label for="c-help">Show helper text</label><input type="checkbox" id="c-help" checked></div>
+      <div class="lab-row"><label for="c-lab">Label</label><input type="text" id="c-lab" value="Registration"></div>
+    </div>
+  </div>
+  <script>(function(){var w=document.getElementById('pv'),l=document.getElementById('pv-l'),s=document.getElementById('pv-s'),st=document.getElementById('c-style'),sta=document.getElementById('c-state'),h=document.getElementById('c-help'),lab=document.getElementById('c-lab');function u(){w.className='tf '+st.value+(sta.value?' '+sta.value:'');l.textContent=lab.value||'Label';s.style.display=h.checked?'block':'none';s.className='sup'+(sta.value==='err'?' err':'');s.textContent=sta.value==='err'?'Enter a valid value':'Helper text';}[st,sta,h].forEach(function(e){e.addEventListener('change',u)});lab.addEventListener('input',u);u();})();</script>
+
+  <h2>Live example</h2>
+  <div class="stage">
+    <span class="tf filled"><span class="lbl">Registration</span><div class="f">CA 123-456</div></span>
+    <span class="tf filled focus"><span class="lbl">Driver</span><div class="f">Jane Cooper</div><div class="sup">Required</div></span>
+    <span class="tf outlined"><span class="lbl">Status</span><div class="f">Active &#9662;</div></span>
+    <span class="tf outlined err"><span class="lbl">Odometer</span><div class="f ph">&mdash;</div><div class="sup err">Enter a value</div></span>
+  </div>
+
+  <h2>Anatomy</h2>
+  <div class="anat"><p class="muted">A field combines a label, the input area, and optional helpers.</p>
+    <ol>
+      <li><b>Container</b> — filled (shaded box, bottom line) or outlined (border box).</li>
+      <li><b>Label</b> — floats above the value; stays visible when filled.</li>
+      <li><b>Input text</b> — the value the operator types.</li>
+      <li><b>Supporting text</b> — helper or error message below the field.</li>
+      <li><b>Leading / trailing icon</b> — optional adornment (search, clear, visibility, unit).</li>
+      <li><b>Activation line / border</b> — turns primary on focus, error on invalid.</li>
+    </ol></div>
+
+  <h2>Variants</h2>
+  <table class="spec"><tr><th>Variant</th><th>When to use</th></tr>
+    <tr><td>Filled</td><td>Dense, settings-style lists; strong visual grouping.</td></tr>
+    <tr><td>Outlined</td><td>Default for forms; clear field boundaries.</td></tr>
+    <tr><td>With adornments</td><td>Search (leading magnifier + trailing clear), password (visibility toggle), units (trailing "km").</td></tr>
+    <tr><td>Select / dropdown field</td><td>A field that opens a menu to choose one value.</td></tr>
+    <tr><td>Multiline / textarea</td><td>Longer notes; grows with content.</td></tr>
+  </table>
+
+  <h2>Behaviors</h2>
+  <h3>Label float</h3><p class="muted">The label sits in the field when empty and floats up on focus or when a value is present, so it never hides the content.</p>
+  <h3>Validation</h3><p class="muted">Validate on blur or submit; show a concise error in the supporting text and turn the field's line/border to the error colour. Keep the label.</p>
+  <h3>Read-only &amp; disabled</h3><p class="muted">Read-only shows a value that can't be edited but can be copied; disabled dims the whole field and removes it from tab order.</p>
+
+  <h2>States</h2>
+  <table class="spec"><tr><th>State</th><th>Treatment</th></tr>
+    <tr><td>Enabled</td><td>Default container; medium-emphasis label.</td></tr>
+    <tr><td>Hover</td><td>Border/line darkens slightly.</td></tr>
+    <tr><td>Focused</td><td>Primary 2px border (outlined) or 2px underline (filled); primary label.</td></tr>
+    <tr><td>Error</td><td>Error colour border/line, label, and supporting text.</td></tr>
+    <tr><td>Disabled</td><td>38% opacity; not focusable.</td></tr>
+  </table>
+
+  <h2>Specs</h2>
+  <table class="spec"><tr><th>Property</th><th>Value</th></tr>
+    <tr><td>Height</td><td>~56px (filled), ~56px (outlined) standard</td></tr>
+    <tr><td>Input text</td><td>Roboto 16px / 400</td></tr>
+    <tr><td>Label (resting / floated)</td><td>16px → 12px</td></tr>
+    <tr><td>Supporting text</td><td>12px</td></tr>
+    <tr><td>Corner radius</td><td>4px</td></tr>
+    <tr><td>Focus / error colour</td><td>primary-dark (#BB4800) / error (#F44336) — primary-dark keeps the focus line legible on white</td></tr>
+  </table>
+
+  <h2>Do &amp; Don't</h2>
+  <div class="cols">
+    <div class="do"><h4>Do</h4><ul><li>Always show a label; keep it visible when filled.</li><li>Write specific, helpful error text ("Enter a value", not "Invalid").</li><li>Use one field style per form.</li><li>Right-size width to the expected content.</li></ul></div>
+    <div class="dont"><h4>Don't</h4><ul><li>Don't use placeholder text as the only label.</li><li>Don't mix filled and outlined in the same form.</li><li>Don't rely on colour alone for errors — include text.</li></ul></div>
+  </div>
+
+  <h2>Accessibility</h2>
+  <p class="muted">Every field has a programmatic <code>&lt;label&gt;</code>; errors are linked via <code>aria-describedby</code> and announced. Focus is clearly visible. Required and invalid states use <code>aria-required</code>/<code>aria-invalid</code>, not colour alone.</p>
+
+  <div class="callout" style="margin-top:32px">Part of the shared component detail-page set. <a href="index.html">All components →</a></div>
+</main>
+<script src="https://unpkg.com/material-components-web@14.0.0/dist/material-components-web.min.js"></script>
+<script>window.addEventListener('load',function(){function E(s,f){document.querySelectorAll(s).forEach(function(e){try{f(e)}catch(x){}})}try{E('.mdc-button,.mdc-fab,.mdc-icon-button,.mdc-card__primary-action',function(e){mdc.ripple.MDCRipple.attachTo(e)})}catch(x){}E('.mdc-text-field',function(e){mdc.textField.MDCTextField.attachTo(e)});E('.mdc-select',function(e){mdc.select.MDCSelect.attachTo(e)});E('.mdc-checkbox',function(e){mdc.checkbox.MDCCheckbox.attachTo(e)});E('.mdc-radio',function(e){mdc.radio.MDCRadio.attachTo(e)});E('.mdc-form-field',function(e){mdc.formField.MDCFormField.attachTo(e)});E('.mdc-switch',function(e){(mdc.switchControl||mdc['switch']).MDCSwitch.attachTo(e)});E('.mdc-evolution-chip-set',function(e){mdc.chips.MDCChipSet.attachTo(e)});E('.mdc-tab-bar',function(e){mdc.tabBar.MDCTabBar.attachTo(e)});E('.mdc-slider',function(e){mdc.slider.MDCSlider.attachTo(e)});E('.mdc-linear-progress',function(e){var p=mdc.linearProgress.MDCLinearProgress.attachTo(e);p.progress=0.6;p.buffer=1});E('.mdc-circular-progress',function(e){var c=mdc.circularProgress.MDCCircularProgress.attachTo(e);c.determinate=true;c.progress=0.6});E('.mdc-data-table',function(e){mdc.dataTable.MDCDataTable.attachTo(e)});E('.mdc-tooltip',function(e){mdc.tooltip.MDCTooltip.attachTo(e)});E('.mdc-drawer',function(e){mdc.drawer.MDCDrawer.attachTo(e)});E('.mdc-top-app-bar',function(e){mdc.topAppBar.MDCTopAppBar.attachTo(e)});E('.mdc-menu',function(e){new mdc.menu.MDCMenu(e)});E('.mdc-banner',function(e){mdc.banner.MDCBanner.attachTo(e)});});</script>
+</body></html>

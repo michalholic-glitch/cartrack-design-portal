@@ -1,0 +1,96 @@
+<!DOCTYPE html><html lang="en"><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cartrack DS — Progress indicators</title>
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&family=Roboto+Mono&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/ds.css">
+<link rel="stylesheet" href="https://unpkg.com/material-components-web@14.0.0/dist/material-components-web.min.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+<style>:root{--mdc-theme-primary:#F47735;--mdc-theme-secondary:#333;--mdc-theme-on-primary:#fff;--mdc-theme-surface:#fff;--mdc-theme-background:#fff;--mdc-theme-error:#BA1A1A}</style>
+</head><body><main>
+  <div class="crumbs"><a href="index.html">Components</a><span class="s">&rsaquo;</span> Progress indicators</div>
+  <h1>Progress indicators</h1>
+  <p class="lede">Progress indicators show that the app is working — loading a report, exporting trips, fetching a page of vehicles. They reassure the operator that something is happening and, when possible, how far along it is.</p>
+  <div class="chiprow"><span class="tag">Category: Data display</span><span class="tag">Desktop</span><span class="tag">Import: <code>LinearProgress</code>, <code>CircularProgress</code></span></div>
+  <div class="callout">Use determinate progress when you know the percentage; indeterminate when you don't. For content that's loading into a known layout (tables, cards), prefer skeletons over spinners.</div>
+
+  <h2>Live component (real MDC)</h2>
+  <p class="muted">The genuine MDC linear (determinate) and circular (indeterminate) progress, Cartrack-themed (loads MDC online).</p>
+  <div class="stage" style="gap:32px">
+    <div role="progressbar" class="mdc-linear-progress" aria-label="Loading" aria-valuemin="0" aria-valuemax="1" aria-valuenow="0" style="max-width:300px">
+      <div class="mdc-linear-progress__buffer"><div class="mdc-linear-progress__buffer-bar"></div><div class="mdc-linear-progress__buffer-dots"></div></div>
+      <div class="mdc-linear-progress__bar mdc-linear-progress__primary-bar"><span class="mdc-linear-progress__bar-inner"></span></div>
+      <div class="mdc-linear-progress__bar mdc-linear-progress__secondary-bar"><span class="mdc-linear-progress__bar-inner"></span></div>
+    </div>
+    <div class="mdc-circular-progress mdc-circular-progress--indeterminate" style="width:48px;height:48px" role="progressbar" aria-label="Loading" aria-valuemin="0" aria-valuemax="1">
+      <div class="mdc-circular-progress__indeterminate-container">
+        <div class="mdc-circular-progress__spinner-layer">
+          <div class="mdc-circular-progress__circle-clipper mdc-circular-progress__circle-left"><svg class="mdc-circular-progress__indeterminate-circle-graphic" viewBox="0 0 48 48"><circle cx="24" cy="24" r="18" stroke-dasharray="113.097" stroke-dashoffset="56.549" stroke-width="4"/></svg></div>
+          <div class="mdc-circular-progress__gap-patch"><svg class="mdc-circular-progress__indeterminate-circle-graphic" viewBox="0 0 48 48"><circle cx="24" cy="24" r="18" stroke-dasharray="113.097" stroke-dashoffset="56.549" stroke-width="3.2"/></svg></div>
+          <div class="mdc-circular-progress__circle-clipper mdc-circular-progress__circle-right"><svg class="mdc-circular-progress__indeterminate-circle-graphic" viewBox="0 0 48 48"><circle cx="24" cy="24" r="18" stroke-dasharray="113.097" stroke-dashoffset="56.549" stroke-width="4"/></svg></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <h2>Demo</h2>
+  <div class="lab">
+    <div class="lab-preview" id="pv"></div>
+    <div class="lab-controls">
+      <h5>Options</h5>
+      <div class="lab-row"><label for="c-type">Type</label><select id="c-type"><option value="linear">Linear</option><option value="circular">Circular</option></select></div>
+      <div class="lab-row"><label for="c-val">Value</label><input type="range" id="c-val" min="0" max="100" value="60"></div>
+    </div>
+  </div>
+  <script>(function(){var pv=document.getElementById('pv'),t=document.getElementById('c-type'),v=document.getElementById('c-val');function u(){if(t.value==='linear'){pv.innerHTML='<span class="linear" style="width:260px"><span class="v" id="lv"></span></span>';document.getElementById('lv').style.width=v.value+'%';v.disabled=false;}else{pv.innerHTML='<span class="spin"></span>';}}t.addEventListener('change',u);v.addEventListener('input',u);u();})();</script>
+
+  <h2>Live example</h2>
+  <div class="stage"><span class="linear"><span class="v"></span></span><span class="spin"></span></div>
+
+  <h2>Anatomy</h2>
+  <div class="anat"><p class="muted">A track and an active fill (linear) or an arc (circular).</p>
+    <ol>
+      <li><b>Track</b> — the full extent (linear) or the unfilled ring.</li>
+      <li><b>Active indicator</b> — the filled/animated portion showing progress.</li>
+      <li><b>Optional label</b> — a percentage or status text.</li>
+    </ol></div>
+
+  <h2>Variants</h2>
+  <table class="spec"><tr><th>Variant</th><th>When to use</th></tr>
+    <tr><td>Linear determinate</td><td>A known-percentage task with a layout to sit above/below (uploads, exports).</td></tr>
+    <tr><td>Linear indeterminate</td><td>Loading where duration is unknown; spans a region's width.</td></tr>
+    <tr><td>Circular determinate</td><td>A compact known-percentage indicator.</td></tr>
+    <tr><td>Circular indeterminate</td><td>A small inline "working" spinner.</td></tr>
+  </table>
+
+  <h2>Behaviors</h2>
+  <h3>Determinate vs indeterminate</h3><p class="muted">Switch to determinate as soon as a real percentage is available; don't fake progress.</p>
+  <h3>Delay</h3><p class="muted">For fast operations, delay showing a spinner briefly to avoid a flicker (the portal has delayed-spinner variants for this).</p>
+  <h3>Skeletons</h3><p class="muted">When loading into a known structure, skeleton placeholders feel faster and less jarring than a spinner.</p>
+
+  <h2>States</h2>
+  <table class="spec"><tr><th>State</th><th>Treatment</th></tr>
+    <tr><td>Active</td><td>Primary fill/arc; animates for indeterminate.</td></tr>
+    <tr><td>Complete</td><td>Hide, or show 100% briefly before dismissing.</td></tr>
+  </table>
+
+  <h2>Specs</h2>
+  <table class="spec"><tr><th>Property</th><th>Value</th></tr>
+    <tr><td>Linear height</td><td>4px</td></tr>
+    <tr><td>Circular size</td><td>~24–48px; ~4px stroke</td></tr>
+    <tr><td>Colour</td><td>primary (#F47735) on a light track</td></tr>
+  </table>
+
+  <h2>Do &amp; Don't</h2>
+  <div class="cols">
+    <div class="do"><h4>Do</h4><ul><li>Use determinate progress when you know the percentage.</li><li>Prefer skeletons for content loads.</li><li>Delay spinners on fast operations.</li></ul></div>
+    <div class="dont"><h4>Don't</h4><ul><li>Don't fake a percentage.</li><li>Don't block the whole screen for a small async action.</li><li>Don't flash a spinner for sub-second waits.</li></ul></div>
+  </div>
+
+  <h2>Accessibility</h2>
+  <p class="muted">Use <code>progressbar</code> role with <code>aria-valuenow</code> (determinate) or busy state (indeterminate); give it an accessible label describing what's loading. Don't rely on motion alone.</p>
+
+  <div class="callout" style="margin-top:32px">Part of the shared component detail-page set. <a href="index.html">All components →</a></div>
+</main>
+<script src="https://unpkg.com/material-components-web@14.0.0/dist/material-components-web.min.js"></script>
+<script>window.addEventListener('load',function(){document.querySelectorAll('.mdc-linear-progress').forEach(function(e){try{var p=mdc.linearProgress.MDCLinearProgress.attachTo(e);p.progress=0.6;p.buffer=1}catch(x){}});document.querySelectorAll('.mdc-circular-progress').forEach(function(e){try{mdc.circularProgress.MDCCircularProgress.attachTo(e)}catch(x){}});});</script>
+</body></html>

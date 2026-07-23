@@ -1,0 +1,87 @@
+<!DOCTYPE html><html lang="en"><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cartrack DS — Image lists</title>
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&family=Roboto+Mono&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/ds.css">
+<link rel="stylesheet" href="https://unpkg.com/material-components-web@14.0.0/dist/material-components-web.min.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+<style>:root{--mdc-theme-primary:#F47735;--mdc-theme-secondary:#333;--mdc-theme-on-primary:#fff;--mdc-theme-surface:#fff;--mdc-theme-background:#fff;--mdc-theme-error:#BA1A1A}</style>
+</head><body><main>
+  <div class="crumbs"><a href="index.html">Components</a><span class="s">&rsaquo;</span> Image lists</div>
+  <h1>Image lists</h1>
+  <p class="lede">Image lists arrange images in a grid — vehicle photos, inspection snapshots, document scans, map thumbnails. They make a set of visuals scannable at a glance.</p>
+  <div class="chiprow"><span class="tag">Category: Data display</span><span class="tag">Desktop</span><span class="tag">Import: <code>ImageList</code></span></div>
+  <div class="callout">Use an image list when the visual <em>is</em> the content. If text matters more than the picture, a list or table with a small thumbnail is usually better.</div>
+
+  <h2>Live component (real MDC)</h2>
+  <p class="muted">The genuine MDC image list, Cartrack-themed (loads MDC online).</p>
+  <div class="stage" style="display:block">
+    <ul class="mdc-image-list" style="max-width:360px">
+      <li class="mdc-image-list__item" style="width:calc(100% / 3 - 4px);margin:2px"><div class="mdc-image-list__image-aspect-container"><div class="mdc-image-list__image" style="background:linear-gradient(135deg,#FFA863,#F47735);height:80px;border-radius:2px"></div></div></li>
+      <li class="mdc-image-list__item" style="width:calc(100% / 3 - 4px);margin:2px"><div class="mdc-image-list__image-aspect-container"><div class="mdc-image-list__image" style="background:linear-gradient(135deg,#FFA863,#BB4800);height:80px;border-radius:2px"></div></div></li>
+      <li class="mdc-image-list__item" style="width:calc(100% / 3 - 4px);margin:2px"><div class="mdc-image-list__image-aspect-container"><div class="mdc-image-list__image" style="background:linear-gradient(135deg,#F47735,#333);height:80px;border-radius:2px"></div></div></li>
+    </ul>
+  </div>
+
+  <h2>Demo</h2>
+  <div class="lab">
+    <div class="lab-preview"><div class="imagelist" id="pv" style="width:280px"></div></div>
+    <div class="lab-controls">
+      <h5>Options</h5>
+      <div class="lab-row"><label for="c-cols">Columns</label><select id="c-cols"><option>2</option><option selected>3</option><option>4</option></select></div>
+      <div class="lab-row"><label for="c-tiles">Tiles</label><select id="c-tiles"><option>6</option><option selected>9</option><option>12</option></select></div>
+    </div>
+  </div>
+  <script>(function(){var pv=document.getElementById('pv'),c=document.getElementById('c-cols'),t=document.getElementById('c-tiles');function u(){pv.style.gridTemplateColumns='repeat('+c.value+',1fr)';pv.innerHTML='';for(var i=0;i<+t.value;i++)pv.appendChild(document.createElement('div'));}c.addEventListener('change',u);t.addEventListener('change',u);u();})();</script>
+
+  <h2>Live example</h2>
+  <div class="stage"><div class="imagelist"><div></div><div></div><div></div><div></div><div></div><div></div></div></div>
+
+  <h2>Anatomy</h2>
+  <div class="anat"><p class="muted">A grid of image tiles.</p>
+    <ol>
+      <li><b>Grid</b> — the arrangement of tiles (equal or varied sizes).</li>
+      <li><b>Image tile</b> — one image, optionally clickable.</li>
+      <li><b>Label overlay</b> — optional caption/title bar on a tile.</li>
+      <li><b>Action</b> — optional icon on a tile (e.g. favourite, info).</li>
+    </ol></div>
+
+  <h2>Variants</h2>
+  <table class="spec"><tr><th>Variant</th><th>When to use</th></tr>
+    <tr><td>Standard</td><td>Equal-size tiles in a uniform grid.</td></tr>
+    <tr><td>Quilted / woven</td><td>Emphasize some images with varied tile sizes.</td></tr>
+    <tr><td>With text overlay</td><td>When each image needs a short caption or action.</td></tr>
+    <tr><td>Masonry</td><td>Images of differing aspect ratios.</td></tr>
+  </table>
+
+  <h2>Behaviors</h2>
+  <h3>Activation</h3><p class="muted">A tile can open a larger view or detail; show hover/focus affordance.</p>
+  <h3>Responsive columns</h3><p class="muted">Column count adapts to width; tiles keep their aspect ratio.</p>
+  <h3>Loading</h3><p class="muted">Show placeholders while images load; lazy-load long grids.</p>
+
+  <h2>States</h2>
+  <table class="spec"><tr><th>State</th><th>Treatment</th></tr>
+    <tr><td>Enabled</td><td>Image tile.</td></tr>
+    <tr><td>Hover/focus</td><td>Overlay/scale affordance.</td></tr>
+    <tr><td>Loading</td><td>Placeholder/skeleton tile.</td></tr>
+  </table>
+
+  <h2>Specs</h2>
+  <table class="spec"><tr><th>Property</th><th>Value</th></tr>
+    <tr><td>Gap</td><td>4–8px between tiles</td></tr>
+    <tr><td>Tile radius</td><td>2–4px</td></tr>
+    <tr><td>Overlay label</td><td>Roboto 12–14px on a scrim</td></tr>
+    <tr><td>Columns</td><td>Responsive to container width</td></tr>
+  </table>
+
+  <h2>Do &amp; Don't</h2>
+  <div class="cols">
+    <div class="do"><h4>Do</h4><ul><li>Use when the image is the primary content.</li><li>Keep gaps consistent.</li><li>Provide alt text and a larger view.</li></ul></div>
+    <div class="dont"><h4>Don't</h4><ul><li>Don't use an image list for text-heavy records.</li><li>Don't load hundreds of full-size images at once.</li><li>Don't put essential info only in an overlay that may be hard to read.</li></ul></div>
+  </div>
+
+  <h2>Accessibility</h2>
+  <p class="muted">Every image has meaningful <code>alt</code> text; clickable tiles are buttons/links with accessible names and visible focus. Overlay text meets contrast against the scrim.</p>
+
+  <div class="callout" style="margin-top:32px">Part of the shared component detail-page set. <a href="index.html">All components →</a></div>
+</main></body></html>

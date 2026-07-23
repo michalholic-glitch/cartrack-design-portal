@@ -1,0 +1,88 @@
+<!DOCTYPE html><html lang="en"><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cartrack DS — Pickers (date &amp; time)</title>
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&family=Roboto+Mono&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/ds.css">
+</head><body><main>
+  <div class="crumbs"><a href="index.html">Components</a><span class="s">&rsaquo;</span> Pickers (date &amp; time)</div>
+  <h1>Pickers — date &amp; time</h1>
+  <p class="lede">Pickers help operators choose dates and times — a trip window, a report period, a maintenance due date. They pair a typeable field with a calendar or clock surface, and support ranges for from–to selections.</p>
+  <div class="chiprow"><span class="tag">Category: Inputs &amp; forms</span><span class="tag">Desktop</span><span class="tag">Import: <code>DatePicker</code>, <code>DateRangePicker</code>, <code>TimePicker</code></span></div>
+  <div class="callout">Offer both: let operators type a date in the field <em>and</em> pick from the calendar. Use a range picker for any from–to selection (reports, trip history), and always respect the user's locale and time zone.</div>
+
+  <div class="callout"><strong>No stock MDC Web component.</strong> Material Components Web ships no date or time picker. Options: a third-party Material date-picker library, or build on an MDC text field + a calendar surface. This is a real gap to fill as a Cartrack-custom component. The preview below is a Cartrack-styled approximation.</div>
+
+  <h2>Demo</h2>
+  <div class="lab">
+    <div class="lab-preview" id="pv"></div>
+    <div class="lab-controls">
+      <h5>Options</h5>
+      <div class="lab-row"><label for="c-type">Type</label><select id="c-type"><option value="date">Date</option><option value="time">Time</option><option value="range">Date range</option></select></div>
+    </div>
+  </div>
+  <script>(function(){var pv=document.getElementById('pv'),t=document.getElementById('c-type');function cal(){var days='';for(var i=1;i<=21;i++)days+='<span'+(i===20?' class="on"':'')+'>'+i+'</span>';return '<div class="picker"><div class="ph2"><div style="font-size:.8rem">JUN 2026</div><div class="d">Sat, Jun 20</div></div><div class="grid"><span>S</span><span>M</span><span>T</span><span>W</span><span>T</span><span>F</span><span>S</span>'+days+'</div></div>';}function u(){if(t.value==='date')pv.innerHTML=cal();else if(t.value==='time')pv.innerHTML='<div class="picker" style="width:220px"><div class="ph2"><div class="d">14:30</div></div><div class="clock"><div class="c"></div><div class="dot"></div></div></div>';else pv.innerHTML='<span class="tf outlined"><span class="lbl">Date range</span><div class="f">1 Jun – 30 Jun 📅</div></span>';}t.addEventListener('change',u);u();})();</script>
+
+  <h2>Live example</h2>
+  <div class="stage">
+    <div class="picker"><div class="ph2"><div style="font-size:.8rem">JUN 2026</div><div class="d">Sat, Jun 20</div></div>
+      <div class="grid"><span>S</span><span>M</span><span>T</span><span>W</span><span>T</span><span>F</span><span>S</span><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span><span>7</span><span>8</span><span>9</span><span>10</span><span>11</span><span>12</span><span>13</span><span class="on">20</span></div>
+    </div>
+    <div class="picker" style="width:220px"><div class="ph2"><div class="d">14:30</div></div><div class="clock"><div class="c"></div><div class="dot"></div></div></div>
+    <span class="tf outlined"><span class="lbl">Date range</span><div class="f">1 Jun &ndash; 30 Jun &#128197;</div></span>
+  </div>
+
+  <h2>Anatomy</h2>
+  <div class="anat"><p class="muted">A field plus a selection surface.</p>
+    <ol>
+      <li><b>Input field</b> — typeable date/time with a calendar/clock trigger.</li>
+      <li><b>Header</b> — the current selection summary on the surface.</li>
+      <li><b>Calendar grid</b> — selectable days; navigates by month/year.</li>
+      <li><b>Clock dial</b> — hours/minutes for time selection.</li>
+      <li><b>Range highlight</b> — the span between start and end on a range picker.</li>
+      <li><b>Actions</b> — confirm/cancel where selection isn't immediate.</li>
+    </ol></div>
+
+  <h2>Variants</h2>
+  <table class="spec"><tr><th>Variant</th><th>When to use</th></tr>
+    <tr><td>Date picker</td><td>A single date (due date, start date).</td></tr>
+    <tr><td>Date range picker</td><td>A from–to span (report period, trip history).</td></tr>
+    <tr><td>Time picker</td><td>A time of day (schedule, cut-off).</td></tr>
+    <tr><td>Date-time / date-time range</td><td>When both date and time matter (precise trip windows).</td></tr>
+    <tr><td>Field-only</td><td>Keyboard entry without a popup (power users).</td></tr>
+    <tr><td>Static / inline</td><td>Always-open calendar embedded in a panel.</td></tr>
+  </table>
+
+  <h2>Behaviors</h2>
+  <h3>Type or pick</h3><p class="muted">The field accepts typed input in the locale format; the calendar/clock offers visual selection. Both stay in sync.</p>
+  <h3>Ranges</h3><p class="muted">Selecting a start then an end highlights the span; presets ("Last 7 days", "This month") speed up common choices.</p>
+  <h3>Constraints</h3><p class="muted">Min/max and disabled dates prevent invalid choices (e.g. no future service date in the past); validation shows in the field's supporting text.</p>
+  <h3>Locale &amp; time zone</h3><p class="muted">Formats, first-day-of-week, and time zone follow the operator's settings — important for a global fleet.</p>
+
+  <h2>States</h2>
+  <table class="spec"><tr><th>State</th><th>Treatment</th></tr>
+    <tr><td>Day enabled</td><td>Default text in the grid.</td></tr>
+    <tr><td>Day hover/focus</td><td>State-layer circle.</td></tr>
+    <tr><td>Day selected</td><td>Primary filled circle.</td></tr>
+    <tr><td>In-range</td><td>Light primary band between endpoints.</td></tr>
+    <tr><td>Disabled / out-of-range</td><td>38% opacity, not selectable.</td></tr>
+  </table>
+
+  <h2>Specs</h2>
+  <table class="spec"><tr><th>Property</th><th>Value</th></tr>
+    <tr><td>Surface radius / elevation</td><td>4px, overlay elevation</td></tr>
+    <tr><td>Header</td><td>primary background — <strong>use dark text or primary-dark; white on #F47735 fails AA</strong></td></tr>
+    <tr><td>Day cell</td><td>~36px, circular selection</td></tr>
+    <tr><td>Selected colour</td><td>primary (#F47735)</td></tr>
+  </table>
+
+  <h2>Do &amp; Don't</h2>
+  <div class="cols">
+    <div class="do"><h4>Do</h4><ul><li>Allow typing and picking.</li><li>Offer presets for common ranges.</li><li>Respect locale &amp; time zone.</li><li>Disable invalid dates rather than erroring after.</li></ul></div>
+    <div class="dont"><h4>Don't</h4><ul><li>Don't force calendar-only entry for power users.</li><li>Don't ignore time zones on a global fleet.</li><li>Don't use white text on the orange header.</li></ul></div>
+  </div>
+
+  <h2>Accessibility</h2>
+  <p class="muted">The field is labelled and announces the selected value; the calendar is keyboard navigable (arrows move days, Page changes months) with <code>aria</code> grid semantics. Selected and disabled days are conveyed to assistive tech, not by colour alone.</p>
+
+  <div class="callout" style="margin-top:32px">Part of the shared component detail-page set. <a href="index.html">All components →</a></div>
+</main></body></html>

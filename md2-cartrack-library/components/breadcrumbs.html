@@ -1,0 +1,74 @@
+<!DOCTYPE html><html lang="en"><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cartrack DS — Breadcrumbs</title>
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&family=Roboto+Mono&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/ds.css">
+</head><body><main>
+  <div class="crumbs"><a href="index.html">Components</a><span class="s">&rsaquo;</span> Breadcrumbs</div>
+  <h1>Breadcrumbs</h1>
+  <p class="lede">Breadcrumbs show where the operator is within the portal's hierarchy and let them step back up it — from a single vehicle, to the vehicle list, to the fleet. They orient users in deep desktop navigation.</p>
+  <div class="chiprow"><span class="tag">Category: Navigation</span><span class="tag">Desktop</span><span class="tag">Import: <code>Breadcrumbs</code></span></div>
+  <div class="callout">Use breadcrumbs when content sits more than one level deep. They complement — not replace — the left navigation drawer.</div>
+
+  <div class="callout"><strong>No stock MDC Web component.</strong> MDC Web has no breadcrumbs component. Build a small custom component — links separated by a glyph, with the current page as plain text and <code>aria-current="page"</code>. The preview below is a Cartrack-styled approximation.</div>
+
+  <h2>Demo</h2>
+  <div class="lab">
+    <div class="lab-preview"><div class="crumbsnav" id="pv"></div></div>
+    <div class="lab-controls">
+      <h5>Options</h5>
+      <div class="lab-row"><label for="c-depth">Depth</label><select id="c-depth"><option>2</option><option selected>3</option><option>4</option></select></div>
+    </div>
+  </div>
+  <script>(function(){var pv=document.getElementById('pv'),d=document.getElementById('c-depth');var trail=['Fleet','Vehicles','CA 123-456','Trips'];function u(){var n=+d.value,html='';for(var i=0;i<n;i++){if(i<n-1)html+='<a href="#">'+trail[i]+'</a><span class="s">›</span>';else html+=trail[i];}pv.innerHTML=html;}d.addEventListener('change',u);u();})();</script>
+
+  <h2>Live example</h2>
+  <div class="stage">
+    <div class="crumbsnav"><a href="#">Fleet</a><span class="s">&rsaquo;</span><a href="#">Vehicles</a><span class="s">&rsaquo;</span>CA 123-456</div>
+  </div>
+
+  <h2>Anatomy</h2>
+  <div class="anat"><p class="muted">A horizontal trail of links.</p>
+    <ol>
+      <li><b>Crumb link</b> — an ancestor level (navigates up).</li>
+      <li><b>Separator</b> — a divider glyph between crumbs.</li>
+      <li><b>Current page</b> — the last crumb, not a link.</li>
+      <li><b>Overflow</b> — optional collapse ("…") for very deep paths.</li>
+    </ol></div>
+
+  <h2>Variants</h2>
+  <table class="spec"><tr><th>Variant</th><th>When to use</th></tr>
+    <tr><td>Standard</td><td>Show the full path for shallow hierarchies.</td></tr>
+    <tr><td>Collapsed</td><td>Hide middle levels behind "…" for deep paths.</td></tr>
+    <tr><td>With menu crumb</td><td>A crumb opens a menu of sibling pages.</td></tr>
+  </table>
+
+  <h2>Behaviors</h2>
+  <h3>Navigation</h3><p class="muted">Each crumb except the last navigates to that ancestor; the current page is plain text.</p>
+  <h3>Truncation</h3><p class="muted">Long labels truncate with a tooltip; deep paths collapse the middle.</p>
+
+  <h2>States</h2>
+  <table class="spec"><tr><th>State</th><th>Treatment</th></tr>
+    <tr><td>Link</td><td>On-surface-medium; underlines on hover.</td></tr>
+    <tr><td>Current</td><td>On-surface, not a link.</td></tr>
+    <tr><td>Focus</td><td>Visible focus on each link.</td></tr>
+  </table>
+
+  <h2>Specs</h2>
+  <table class="spec"><tr><th>Property</th><th>Value</th></tr>
+    <tr><td>Text</td><td>Roboto 14px / 400</td></tr>
+    <tr><td>Separator spacing</td><td>~8px each side</td></tr>
+    <tr><td>Link colour</td><td>on-surface-medium → primary-dark on hover</td></tr>
+  </table>
+
+  <h2>Do &amp; Don't</h2>
+  <div class="cols">
+    <div class="do"><h4>Do</h4><ul><li>Make the current page the non-link last crumb.</li><li>Collapse very deep paths.</li><li>Mirror the real IA hierarchy.</li></ul></div>
+    <div class="dont"><h4>Don't</h4><ul><li>Don't use breadcrumbs as the primary navigation.</li><li>Don't show a one-level trail (no value).</li><li>Don't make the current page a link to itself.</li></ul></div>
+  </div>
+
+  <h2>Accessibility</h2>
+  <p class="muted">Wrap in a <code>nav</code> labelled "Breadcrumb" with an ordered list; the current page uses <code>aria-current="page"</code>. Separators are decorative (hidden from assistive tech). Links are keyboard reachable with visible focus.</p>
+
+  <div class="callout" style="margin-top:32px">Part of the shared component detail-page set. <a href="index.html">All components →</a></div>
+</main></body></html>

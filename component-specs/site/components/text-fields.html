@@ -1,0 +1,257 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Text fields — Cartrack Components</title>
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&family=Roboto+Mono&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/site.css">
+</head>
+<body class="detail">
+<aside class="sidebar"><a class="side-home" href="../index.html">&larr; All components</a>
+<nav class="side-nav">
+<div class="side-cat">Actions</div>
+<a class="side-link " href="./buttons.html">Buttons</a>
+<a class="side-link " href="./menus.html">Menus</a>
+<div class="side-cat">Inputs &amp; forms</div>
+<a class="side-link " href="./chips.html">Chips</a>
+<a class="side-link " href="./pickers.html">Pickers — date &amp; time</a>
+<a class="side-link " href="./selection-controls.html">Selection controls</a>
+<a class="side-link " href="./sliders.html">Sliders</a>
+<a class="side-link active" href="./text-fields.html">Text fields</a>
+<div class="side-cat">Navigation</div>
+<a class="side-link " href="./app-bar.html">App bar (top)</a>
+<a class="side-link " href="./breadcrumbs.html">Breadcrumbs</a>
+<a class="side-link " href="./navigation-drawer.html">Navigation drawer</a>
+<a class="side-link " href="./navigation-rail.html">Navigation rail</a>
+<a class="side-link " href="./steppers.html">Steppers</a>
+<a class="side-link " href="./tabs.html">Tabs</a>
+<div class="side-cat">Data display</div>
+<a class="side-link " href="./badges.html">Badges</a>
+<a class="side-link " href="./data-table.html">Data table</a>
+<a class="side-link " href="./dividers.html">Dividers</a>
+<a class="side-link " href="./image-lists.html">Image lists</a>
+<a class="side-link " href="./lists.html">Lists</a>
+<a class="side-link " href="./pagination.html">Pagination</a>
+<a class="side-link " href="./progress.html">Progress indicators</a>
+<a class="side-link " href="./tooltips.html">Tooltips</a>
+<div class="side-cat">Feedback</div>
+<a class="side-link " href="./banners.html">Banners</a>
+<a class="side-link " href="./snackbars.html">Snackbars</a>
+<div class="side-cat">Surfaces</div>
+<a class="side-link " href="./cards.html">Cards</a>
+<a class="side-link " href="./dialogs.html">Dialogs</a>
+<a class="side-link " href="./expansion-panels.html">Expansion panels</a>
+<a class="side-link " href="./side-sheet.html">Side sheet</a>
+</nav></aside>
+<main class="content">
+  <header class="detail-head">
+    <h1>Text fields</h1>
+    <div class="meta"><span class="chip">Inputs &amp; forms</span><span class="chip mono">TextField</span><span class="chip mono">text-fields.md</span></div>
+    <p class="lede">Text fields let operators enter and edit text — a registration number, a driver&#x27;s name, an odometer reading, a note. They come in filled and outlined styles and always carry a label so the field&#x27;s purpose stays visible once filled.</p>
+  </header>
+  
+      <div class="preview-card">
+        <div class="preview-head">Live render</div>
+        <iframe class="js-preview" style="height:220px" srcdoc="<!doctype html><html lang=&quot;en&quot;><head><meta charset=&quot;utf-8&quot;>
+<link href=&quot;https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&family=Roboto+Mono&display=swap&quot; rel=&quot;stylesheet&quot;><link href=&quot;https://fonts.googleapis.com/icon?family=Material+Icons&quot; rel=&quot;stylesheet&quot;>
+<link rel=&quot;stylesheet&quot; href=&quot;https://unpkg.com/material-components-web@14.0.0/dist/material-components-web.min.css&quot;><link rel=&quot;stylesheet&quot; href=&quot;../assets/ds.css&quot;>
+<style>:root{--mdc-theme-primary:#F47735;--mdc-theme-secondary:#333;--mdc-theme-on-primary:#fff;--mdc-theme-surface:#fff;--mdc-theme-background:#fff;--mdc-theme-error:#BA1A1A}
+html,body{margin:0;padding:0}body{background:#F0F0F2;font-family:'Roboto',sans-serif}
+.simple-stage{padding:28px 22px;display:flex;flex-wrap:wrap;gap:18px;align-items:center;justify-content:center}
+</style></head>
+<body><div class=&quot;simple-stage&quot;><label class=&quot;mdc-text-field mdc-text-field--filled&quot;><span class=&quot;mdc-text-field__ripple&quot;></span><span class=&quot;mdc-floating-label&quot; id=&quot;m-tf1&quot;>Registration</span><input aria-labelledby=&quot;m-tf1&quot; class=&quot;mdc-text-field__input&quot; type=&quot;text&quot; value=&quot;CA 123-456&quot;/><span class=&quot;mdc-line-ripple&quot;></span></label>
+<label class=&quot;mdc-text-field mdc-text-field--outlined&quot;><span class=&quot;mdc-notched-outline&quot;><span class=&quot;mdc-notched-outline__leading&quot;></span><span class=&quot;mdc-notched-outline__notch&quot;><span class=&quot;mdc-floating-label&quot; id=&quot;m-tf2&quot;>Driver</span></span><span class=&quot;mdc-notched-outline__trailing&quot;></span></span><input aria-labelledby=&quot;m-tf2&quot; class=&quot;mdc-text-field__input&quot; type=&quot;text&quot;/></label></div>
+<script src=&quot;https://unpkg.com/material-components-web@14.0.0/dist/material-components-web.min.js&quot;></script>
+<script>
+window.addEventListener('load',function(){function E(s,f){document.querySelectorAll(s).forEach(function(e){try{f(e)}catch(x){}})}
+try{E('.mdc-button,.mdc-fab,.mdc-icon-button,.mdc-card__primary-action',function(e){mdc.ripple.MDCRipple.attachTo(e)})}catch(x){}
+E('.mdc-text-field',function(e){mdc.textField.MDCTextField.attachTo(e)});
+E('.mdc-select',function(e){mdc.select.MDCSelect.attachTo(e)});
+E('.mdc-checkbox',function(e){mdc.checkbox.MDCCheckbox.attachTo(e)});
+E('.mdc-radio',function(e){mdc.radio.MDCRadio.attachTo(e)});
+E('.mdc-form-field',function(e){mdc.formField.MDCFormField.attachTo(e)});
+E('.mdc-switch',function(e){(mdc.switchControl||mdc['switch']).MDCSwitch.attachTo(e)});
+E('.mdc-evolution-chip-set',function(e){mdc.chips.MDCChipSet.attachTo(e)});
+E('.mdc-tab-bar',function(e){mdc.tabBar.MDCTabBar.attachTo(e)});
+E('.mdc-slider',function(e){mdc.slider.MDCSlider.attachTo(e)});
+E('.mdc-linear-progress',function(e){var p=mdc.linearProgress.MDCLinearProgress.attachTo(e);p.progress=0.6;p.buffer=1});
+E('.mdc-circular-progress',function(e){var c=mdc.circularProgress.MDCCircularProgress.attachTo(e);c.determinate=true;c.progress=0.6});
+E('.mdc-data-table',function(e){mdc.dataTable.MDCDataTable.attachTo(e)});
+E('.mdc-tooltip',function(e){mdc.tooltip.MDCTooltip.attachTo(e)});
+E('.mdc-drawer',function(e){mdc.drawer.MDCDrawer.attachTo(e)});
+E('.mdc-top-app-bar',function(e){mdc.topAppBar.MDCTopAppBar.attachTo(e)});
+E('.mdc-menu',function(e){new mdc.menu.MDCMenu(e)});
+E('.mdc-banner',function(e){mdc.banner.MDCBanner.attachTo(e)});});
+</script>
+<script></script>
+<script>
+(function(){function ph(){try{var h=document.documentElement.scrollHeight;parent.postMessage({__previewHeight:true,h:h},'*');}catch(e){}}
+window.addEventListener('load',ph);window.addEventListener('resize',ph);
+if(window.ResizeObserver){new ResizeObserver(ph).observe(document.body);}
+setTimeout(ph,200);setTimeout(ph,800);setTimeout(ph,1600);})();
+</script>
+</body></html>" loading="lazy"></iframe>
+      </div>
+  <article class="spec"><h2>What it is</h2>
+<p>Text fields let operators enter and edit text — a registration number, a driver's name, an odometer reading, a note. They come in filled and outlined styles and always carry a label so the field's purpose stays visible once filled.</p>
+<h2>Key rule</h2>
+<blockquote>
+<p>Pick one style and use it consistently across a form. In the Cartrack portal, outlined is the default for forms; filled suits dense, list-like settings.</p>
+</blockquote>
+<h2>When to use</h2>
+<ul>
+<li><strong>Filled</strong> — Dense, settings-style lists; strong visual grouping.</li>
+<li><strong>Outlined</strong> — Default for forms; clear field boundaries.</li>
+<li><strong>With adornments</strong> — Search (leading magnifier + trailing clear), password (visibility toggle), units (trailing "km").</li>
+<li><strong>Select / dropdown field</strong> — A field that opens a menu to choose one value.</li>
+<li><strong>Multiline / textarea</strong> — Longer notes; grows with content.</li>
+</ul>
+<h2>When NOT to use (and what to do instead)</h2>
+<ul>
+<li>Don't use placeholder text as the only label.</li>
+<li>Don't mix filled and outlined in the same form.</li>
+<li>Don't rely on colour alone for errors — include text.</li>
+</ul>
+<h2>Variants</h2>
+<table>
+<thead>
+<tr>
+<th>Variant</th>
+<th>When to use</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Filled</td>
+<td>Dense, settings-style lists; strong visual grouping.</td>
+</tr>
+<tr>
+<td>Outlined</td>
+<td>Default for forms; clear field boundaries.</td>
+</tr>
+<tr>
+<td>With adornments</td>
+<td>Search (leading magnifier + trailing clear), password (visibility toggle), units (trailing "km").</td>
+</tr>
+<tr>
+<td>Select / dropdown field</td>
+<td>A field that opens a menu to choose one value.</td>
+</tr>
+<tr>
+<td>Multiline / textarea</td>
+<td>Longer notes; grows with content.</td>
+</tr>
+</tbody>
+</table>
+<h2>Anatomy</h2>
+<ul>
+<li>Container — filled (shaded box, bottom line) or outlined (border box).</li>
+<li>Label — floats above the value; stays visible when filled.</li>
+<li>Input text — the value the operator types.</li>
+<li>Supporting text — helper or error message below the field.</li>
+<li>Leading / trailing icon — optional adornment (search, clear, visibility, unit).</li>
+<li>Activation line / border — turns primary on focus, error on invalid.</li>
+</ul>
+<h2>Behaviors</h2>
+<ul>
+<li><strong>Label float</strong> — The label sits in the field when empty and floats up on focus or when a value is present, so it never hides the content.</li>
+<li><strong>Validation</strong> — Validate on blur or submit; show a concise error in the supporting text and turn the field's line/border to the error colour. Keep the label.</li>
+<li><strong>Read-only &amp; disabled</strong> — Read-only shows a value that can't be edited but can be copied; disabled dims the whole field and removes it from tab order.</li>
+</ul>
+<h2>States</h2>
+<table>
+<thead>
+<tr>
+<th>State</th>
+<th>Treatment</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Enabled</td>
+<td>Default container; medium-emphasis label.</td>
+</tr>
+<tr>
+<td>Hover</td>
+<td>Border/line darkens slightly.</td>
+</tr>
+<tr>
+<td>Focused</td>
+<td>Primary 2px border (outlined) or 2px underline (filled); primary label.</td>
+</tr>
+<tr>
+<td>Error</td>
+<td>Error colour border/line, label, and supporting text.</td>
+</tr>
+<tr>
+<td>Disabled</td>
+<td>38% opacity; not focusable.</td>
+</tr>
+</tbody>
+</table>
+<h2>Specs</h2>
+<table>
+<thead>
+<tr>
+<th>Property</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Height</td>
+<td>~56px (filled), ~56px (outlined) standard</td>
+</tr>
+<tr>
+<td>Input text</td>
+<td>Roboto 16px / 400</td>
+</tr>
+<tr>
+<td>Label (resting / floated)</td>
+<td>16px → 12px</td>
+</tr>
+<tr>
+<td>Supporting text</td>
+<td>12px</td>
+</tr>
+<tr>
+<td>Corner radius</td>
+<td>4px</td>
+</tr>
+<tr>
+<td>Focus / error colour</td>
+<td>primary-dark (#BB4800) / error (#F44336) — primary-dark keeps the focus line legible on white</td>
+</tr>
+</tbody>
+</table>
+<h2>Correct usage (themed MDC markup)</h2>
+<pre><code class="language-html">&lt;label class=&quot;mdc-text-field mdc-text-field--filled&quot;&gt;&lt;span class=&quot;mdc-text-field__ripple&quot;&gt;&lt;/span&gt;&lt;span class=&quot;mdc-floating-label&quot; id=&quot;m-tf1&quot;&gt;Registration&lt;/span&gt;&lt;input aria-labelledby=&quot;m-tf1&quot; class=&quot;mdc-text-field__input&quot; type=&quot;text&quot; value=&quot;CA 123-456&quot;/&gt;&lt;span class=&quot;mdc-line-ripple&quot;&gt;&lt;/span&gt;&lt;/label&gt;
+&lt;label class=&quot;mdc-text-field mdc-text-field--outlined&quot;&gt;&lt;span class=&quot;mdc-notched-outline&quot;&gt;&lt;span class=&quot;mdc-notched-outline__leading&quot;&gt;&lt;/span&gt;&lt;span class=&quot;mdc-notched-outline__notch&quot;&gt;&lt;span class=&quot;mdc-floating-label&quot; id=&quot;m-tf2&quot;&gt;Driver&lt;/span&gt;&lt;/span&gt;&lt;span class=&quot;mdc-notched-outline__trailing&quot;&gt;&lt;/span&gt;&lt;/span&gt;&lt;input aria-labelledby=&quot;m-tf2&quot; class=&quot;mdc-text-field__input&quot; type=&quot;text&quot;/&gt;&lt;/label&gt;
+</code></pre>
+<h2>Do</h2>
+<ul>
+<li>Always show a label; keep it visible when filled.</li>
+<li>Write specific, helpful error text ("Enter a value", not "Invalid").</li>
+<li>Use one field style per form.</li>
+<li>Right-size width to the expected content.</li>
+</ul>
+<h2>Don't</h2>
+<ul>
+<li>Don't use placeholder text as the only label.</li>
+<li>Don't mix filled and outlined in the same form.</li>
+<li>Don't rely on colour alone for errors — include text.</li>
+</ul>
+<h2>Accessibility</h2>
+<ul>
+<li>Every field has a programmatic <code>&lt;label&gt;</code>; errors are linked via aria-describedby and announced. Focus is clearly visible. Required and invalid states use aria-required / aria-invalid, not colour alone.</li>
+</ul></article>
+</main>
+<script>
+// each preview reports its exact content height; match the iframe to it
+window.addEventListener('message',function(e){
+  if(!e.data||!e.data.__previewHeight)return;
+  document.querySelectorAll('iframe.js-preview').forEach(function(f){
+    if(f.contentWindow===e.source){f.style.height=e.data.h+'px';}
+  });
+});
+</script>
+</body></html>

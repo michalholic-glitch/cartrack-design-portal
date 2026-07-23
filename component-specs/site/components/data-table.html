@@ -1,0 +1,341 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Data table — Cartrack Components</title>
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&family=Roboto+Mono&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/site.css">
+</head>
+<body class="detail">
+<aside class="sidebar"><a class="side-home" href="../index.html">&larr; All components</a>
+<nav class="side-nav">
+<div class="side-cat">Actions</div>
+<a class="side-link " href="./buttons.html">Buttons</a>
+<a class="side-link " href="./menus.html">Menus</a>
+<div class="side-cat">Inputs &amp; forms</div>
+<a class="side-link " href="./chips.html">Chips</a>
+<a class="side-link " href="./pickers.html">Pickers — date &amp; time</a>
+<a class="side-link " href="./selection-controls.html">Selection controls</a>
+<a class="side-link " href="./sliders.html">Sliders</a>
+<a class="side-link " href="./text-fields.html">Text fields</a>
+<div class="side-cat">Navigation</div>
+<a class="side-link " href="./app-bar.html">App bar (top)</a>
+<a class="side-link " href="./breadcrumbs.html">Breadcrumbs</a>
+<a class="side-link " href="./navigation-drawer.html">Navigation drawer</a>
+<a class="side-link " href="./navigation-rail.html">Navigation rail</a>
+<a class="side-link " href="./steppers.html">Steppers</a>
+<a class="side-link " href="./tabs.html">Tabs</a>
+<div class="side-cat">Data display</div>
+<a class="side-link " href="./badges.html">Badges</a>
+<a class="side-link active" href="./data-table.html">Data table</a>
+<a class="side-link " href="./dividers.html">Dividers</a>
+<a class="side-link " href="./image-lists.html">Image lists</a>
+<a class="side-link " href="./lists.html">Lists</a>
+<a class="side-link " href="./pagination.html">Pagination</a>
+<a class="side-link " href="./progress.html">Progress indicators</a>
+<a class="side-link " href="./tooltips.html">Tooltips</a>
+<div class="side-cat">Feedback</div>
+<a class="side-link " href="./banners.html">Banners</a>
+<a class="side-link " href="./snackbars.html">Snackbars</a>
+<div class="side-cat">Surfaces</div>
+<a class="side-link " href="./cards.html">Cards</a>
+<a class="side-link " href="./dialogs.html">Dialogs</a>
+<a class="side-link " href="./expansion-panels.html">Expansion panels</a>
+<a class="side-link " href="./side-sheet.html">Side sheet</a>
+</nav></aside>
+<main class="content">
+  <header class="detail-head">
+    <h1>Data table</h1>
+    <div class="meta"><span class="chip">Data display</span><span class="chip mono">DataGrid from @karoo-ui/core</span><span class="chip mono">data-table.md</span></div>
+    <p class="lede">Data tables present sets of records across rows and columns — the primary way operators scan, sort, select, and act on fleet data (vehicles, trips, drivers, alerts). This is the most-used component in the portal, so it carries the most behaviour.</p>
+  </header>
+  
+      <div class="preview-card">
+        <div class="preview-head">Interactive demo — configure variants</div>
+        <iframe class="js-preview" style="height:330px" srcdoc="<!doctype html><html lang=&quot;en&quot;><head><meta charset=&quot;utf-8&quot;>
+<link href=&quot;https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&family=Roboto+Mono&display=swap&quot; rel=&quot;stylesheet&quot;><link href=&quot;https://fonts.googleapis.com/icon?family=Material+Icons&quot; rel=&quot;stylesheet&quot;>
+<link rel=&quot;stylesheet&quot; href=&quot;https://unpkg.com/material-components-web@14.0.0/dist/material-components-web.min.css&quot;><link rel=&quot;stylesheet&quot; href=&quot;../assets/ds.css&quot;>
+<style>:root{--mdc-theme-primary:#F47735;--mdc-theme-secondary:#333;--mdc-theme-on-primary:#fff;--mdc-theme-surface:#fff;--mdc-theme-background:#fff;--mdc-theme-error:#BA1A1A}
+html,body{margin:0;padding:0}body{background:#F0F0F2;font-family:'Roboto',sans-serif}
+.simple-stage{padding:28px 22px;display:flex;flex-wrap:wrap;gap:18px;align-items:center;justify-content:center}
+
+body{margin:0;padding:0;background:#fff;display:block}
+.lab{display:grid;grid-template-columns:1fr 230px;background:#fff;width:100%;border:none;border-radius:0;box-shadow:none;margin:0;overflow:visible}
+.lab-prev{padding:22px 16px;background:#F0F0F2}
+.lab-ctrl{padding:16px 18px;border-left:1px solid rgba(0,0,0,.12)}
+.lab-ctrl h5{margin:0 0 12px;font-size:.7rem;letter-spacing:.06em;text-transform:uppercase;color:rgba(0,0,0,.6)}
+.lab-row{display:flex;align-items:center;gap:10px;margin:11px 0;font-size:.84rem}.lab-row label{flex:1}
+.lab-row input[type=checkbox]{width:16px;height:16px;accent-color:#F47735}
+.tablewrap{background:#fff;border-radius:8px;box-shadow:0 1px 3px rgba(0,0,0,.18);overflow:hidden}
+.tbar{display:flex;align-items:center;gap:10px;padding:14px 16px;border-bottom:1px solid rgba(0,0,0,.12)}
+.tbar .t{font-size:1rem;font-weight:500;flex:1}.tbar.context{background:rgba(244,119,53,.10)}.tbar.context .t{color:#BB4800}
+.icb{width:34px;height:34px;border-radius:50%;border:none;background:transparent;cursor:pointer;color:rgba(0,0,0,.6)}.icb:hover{background:rgba(0,0,0,.05)}
+.cbx{width:18px;height:18px;border:2px solid rgba(0,0,0,.6);border-radius:2px;position:relative;display:inline-block;cursor:pointer;vertical-align:middle}
+.cbx.on{background:#F47735;border-color:#F47735}.cbx.on::after{content:'';position:absolute;left:5px;top:1px;width:5px;height:10px;border:solid #fff;border-width:0 2px 2px 0;transform:rotate(45deg)}
+.cbx.ind{background:#F47735;border-color:#F47735}.cbx.ind::after{content:'';position:absolute;left:3px;top:7px;width:10px;height:2px;background:#fff}
+.schip{display:inline-flex;align-items:center;height:24px;padding:0 10px;border-radius:12px;font-size:.74rem;font-weight:500}
+.schip.ok{background:#E8F5E9;color:#1B5E20}.schip.warn{background:#FFF3E0;color:#E65100}.schip.err{background:#FFEBEE;color:#B71C1C}
+.tfoot{display:flex;justify-content:flex-end;gap:18px;padding:10px 16px;color:rgba(0,0,0,.6);font-size:.8rem}
+@media(max-width:620px){.lab{grid-template-columns:1fr}.lab-ctrl{border-left:none;border-top:1px solid rgba(0,0,0,.12)}}
+</style></head>
+<body>
+<div class=&quot;lab&quot;>
+  <div class=&quot;lab-prev&quot;><div id=&quot;dt&quot;></div></div>
+  <div class=&quot;lab-ctrl&quot;><h5>Variants</h5>
+    <div class=&quot;lab-row&quot;><label>Toolbar</label><input type=&quot;checkbox&quot; id=&quot;dToolbar&quot; checked></div>
+    <div class=&quot;lab-row&quot;><label>Selectable</label><input type=&quot;checkbox&quot; id=&quot;dSelect&quot;></div>
+    <div class=&quot;lab-row&quot;><label>Dense</label><input type=&quot;checkbox&quot; id=&quot;dDense&quot;></div>
+    <div class=&quot;lab-row&quot;><label>Status chips</label><input type=&quot;checkbox&quot; id=&quot;dStatus&quot; checked></div>
+    <div class=&quot;lab-row&quot;><label>Expandable</label><input type=&quot;checkbox&quot; id=&quot;dExpand&quot;></div>
+    <div class=&quot;lab-row&quot;><label>Pagination</label><input type=&quot;checkbox&quot; id=&quot;dPage&quot; checked></div>
+  </div>
+</div>
+
+<script src=&quot;https://unpkg.com/material-components-web@14.0.0/dist/material-components-web.min.js&quot;></script>
+<script>
+window.addEventListener('load',function(){function E(s,f){document.querySelectorAll(s).forEach(function(e){try{f(e)}catch(x){}})}
+try{E('.mdc-button,.mdc-fab,.mdc-icon-button,.mdc-card__primary-action',function(e){mdc.ripple.MDCRipple.attachTo(e)})}catch(x){}
+E('.mdc-text-field',function(e){mdc.textField.MDCTextField.attachTo(e)});
+E('.mdc-select',function(e){mdc.select.MDCSelect.attachTo(e)});
+E('.mdc-checkbox',function(e){mdc.checkbox.MDCCheckbox.attachTo(e)});
+E('.mdc-radio',function(e){mdc.radio.MDCRadio.attachTo(e)});
+E('.mdc-form-field',function(e){mdc.formField.MDCFormField.attachTo(e)});
+E('.mdc-switch',function(e){(mdc.switchControl||mdc['switch']).MDCSwitch.attachTo(e)});
+E('.mdc-evolution-chip-set',function(e){mdc.chips.MDCChipSet.attachTo(e)});
+E('.mdc-tab-bar',function(e){mdc.tabBar.MDCTabBar.attachTo(e)});
+E('.mdc-slider',function(e){mdc.slider.MDCSlider.attachTo(e)});
+E('.mdc-linear-progress',function(e){var p=mdc.linearProgress.MDCLinearProgress.attachTo(e);p.progress=0.6;p.buffer=1});
+E('.mdc-circular-progress',function(e){var c=mdc.circularProgress.MDCCircularProgress.attachTo(e);c.determinate=true;c.progress=0.6});
+E('.mdc-data-table',function(e){mdc.dataTable.MDCDataTable.attachTo(e)});
+E('.mdc-tooltip',function(e){mdc.tooltip.MDCTooltip.attachTo(e)});
+E('.mdc-drawer',function(e){mdc.drawer.MDCDrawer.attachTo(e)});
+E('.mdc-top-app-bar',function(e){mdc.topAppBar.MDCTopAppBar.attachTo(e)});
+E('.mdc-menu',function(e){new mdc.menu.MDCMenu(e)});
+E('.mdc-banner',function(e){mdc.banner.MDCBanner.attachTo(e)});});
+</script>
+<script>
+var rows=[{reg:'CA 123-456',d:'Jane Cooper',s:'Active',c:'ok',o:'84,210',t:'2 min ago',x:'3 trips today · 142 km'},
+{reg:'CA 789-012',d:'Frank Kim',s:'Idle',c:'warn',o:'120,540',t:'1 h ago',x:'Parked at depot · battery 78%'},
+{reg:'CA 345-678',d:'Lena Ortiz',s:'Offline',c:'err',o:'58,900',t:'3 d ago',x:'No signal since 18 Jun'},
+{reg:'CA 901-234',d:'Marcus Lee',s:'Active',c:'ok',o:'31,705',t:'just now',x:'En route · ETA 14:25'}];
+var sel={},exp={},host=document.getElementById('dt');
+function on(id){return document.getElementById(id).checked;}
+function dense(){return on('dDense');}
+function render(){
+ var n=Object.keys(sel).filter(function(k){return sel[k]}).length,all=n===rows.length,part=n>0&&!all;
+ var h='<div class=&quot;tablewrap&quot;>';
+ if(on('dToolbar')){h+= (on('dSelect')&&n>0)?('<div class=&quot;tbar context&quot;><span class=&quot;t&quot;>'+n+' selected</span><button class=&quot;icb&quot;>⭳</button><button class=&quot;icb&quot;>🗑</button></div>'):'<div class=&quot;tbar&quot;><span class=&quot;t&quot;>Vehicles</span><button class=&quot;icb&quot;>⌕</button><button class=&quot;icb&quot;>⛃</button><button class=&quot;icb&quot;>⋮</button></div>';}
+ var pad=dense()?'7px 16px':'12px 16px',hpad=dense()?'9px 16px':'14px 16px';
+ h+='<table style=&quot;width:100%;border-collapse:collapse;font-size:.84rem&quot;><thead><tr>';
+ var th='text-align:left;padding:'+hpad+';color:rgba(0,0,0,.6);font-weight:500;border-bottom:1px solid rgba(0,0,0,.12)';
+ if(on('dExpand'))h+='<th style=&quot;'+th+';width:36px&quot;></th>';
+ if(on('dSelect'))h+='<th style=&quot;'+th+';width:40px;text-align:center&quot;><span class=&quot;cbx'+(all?' on':part?' ind':'')+'&quot; data-all=&quot;1&quot;></span></th>';
+ h+='<th style=&quot;'+th+'&quot;>Registration ▲</th><th style=&quot;'+th+'&quot;>Driver</th>';
+ if(on('dStatus'))h+='<th style=&quot;'+th+'&quot;>Status</th>';
+ h+='<th style=&quot;'+th+';text-align:right&quot;>Odometer (km)</th><th style=&quot;'+th+'&quot;>Last trip</th></tr></thead><tbody>';
+ rows.forEach(function(r,i){var td='padding:'+pad+';border-bottom:1px solid rgba(0,0,0,.12)';var bg=sel[i]?'background:rgba(244,119,53,.10);':'';
+  h+='<tr style=&quot;'+bg+'&quot;>';
+  if(on('dExpand'))h+='<td style=&quot;'+td+';text-align:center;cursor:pointer&quot; data-exp=&quot;'+i+'&quot;>'+(exp[i]?'▾':'▸')+'</td>';
+  if(on('dSelect'))h+='<td style=&quot;'+td+';text-align:center&quot;><span class=&quot;cbx'+(sel[i]?' on':'')+'&quot; data-row=&quot;'+i+'&quot;></span></td>';
+  h+='<td style=&quot;'+td+'&quot;>'+r.reg+'</td><td style=&quot;'+td+'&quot;>'+r.d+'</td>';
+  if(on('dStatus'))h+='<td style=&quot;'+td+'&quot;><span class=&quot;schip '+r.c+'&quot;>'+r.s+'</span></td>';
+  h+='<td style=&quot;'+td+';text-align:right;font-variant-numeric:tabular-nums&quot;>'+r.o+'</td><td style=&quot;'+td+'&quot;>'+r.t+'</td></tr>';
+  if(on('dExpand')&&exp[i]){var sp=2+(on('dStatus')?1:0)+(on('dSelect')?1:0);h+='<tr><td style=&quot;'+td+'&quot;></td><td colspan=&quot;'+sp+'&quot; style=&quot;'+td+';background:#F5F5F5;color:rgba(0,0,0,.6);font-size:.8rem&quot;>'+r.x+'</td></tr>';}
+ });
+ h+='</tbody></table>';
+ if(on('dPage'))h+='<div class=&quot;tfoot&quot;><span>Rows per page: 10</span><span>1–'+rows.length+' of 128</span><span>‹ ›</span></div>';
+ h+='</div>';host.innerHTML=h;
+ host.querySelectorAll('[data-row]').forEach(function(e){e.onclick=function(){var i=e.getAttribute('data-row');sel[i]=!sel[i];render();}});
+ var a=host.querySelector('[data-all]');if(a)a.onclick=function(){var t=!all;rows.forEach(function(_,i){sel[i]=t});render();};
+ host.querySelectorAll('[data-exp]').forEach(function(e){e.onclick=function(){var i=e.getAttribute('data-exp');exp[i]=!exp[i];render();}});
+}
+['dToolbar','dSelect','dDense','dStatus','dExpand','dPage'].forEach(function(id){document.getElementById(id).addEventListener('change',render)});
+render();
+</script>
+<script>
+(function(){function ph(){try{var h=document.documentElement.scrollHeight;parent.postMessage({__previewHeight:true,h:h},'*');}catch(e){}}
+window.addEventListener('load',ph);window.addEventListener('resize',ph);
+if(window.ResizeObserver){new ResizeObserver(ph).observe(document.body);}
+setTimeout(ph,200);setTimeout(ph,800);setTimeout(ph,1600);})();
+</script>
+</body></html>" loading="lazy"></iframe>
+      </div>
+  <article class="spec"><h2>What it is</h2>
+<p>Data tables present sets of records across rows and columns — the primary way operators scan, sort, select, and act on fleet data (vehicles, trips, drivers, alerts). This is the most-used component in the portal, so it carries the most behaviour.</p>
+<h2>Key rule</h2>
+<blockquote>
+<p>When a dataset is large, server-paginated, sortable, or selectable, use the data table — not a basic Table. Reserve the basic table for small, static key/value layouts.</p>
+</blockquote>
+<h2>When to use</h2>
+<ul>
+<li><strong>With toolbar</strong> — Almost always — gives the table a title plus search/filter/export entry points.</li>
+<li><strong>Selectable (checkboxes)</strong> — When users perform bulk actions (assign, export, delete) on multiple records.</li>
+<li><strong>Paginated</strong> — Any dataset beyond a single screen; desktop tables paginate (rows-per-page + range), they don't infinite-scroll.</li>
+<li><strong>Dense</strong> — High-volume operator screens where maximizing visible rows matters; reduces row height.</li>
+<li><strong>Inline-editable</strong> — When quick edits (odometer, notes) are common; cells become editable in place.</li>
+<li><strong>Expandable rows</strong> — When a record has secondary detail (sub-trips, line items) worth revealing without leaving the table.</li>
+</ul>
+<h2>When NOT to use (and what to do instead)</h2>
+<ul>
+<li>Don't put the primary action inside a row's overflow menu if it's used constantly.</li>
+<li>Don't sort more than one column at once unless multi-sort is explicitly needed.</li>
+<li>Don't encode status by colour alone — keep the text label on the chip.</li>
+<li>Don't infinite-scroll a desktop data table; use pagination.</li>
+<li>Don't hard-code colours/sizes — use the theme tokens and these specs.</li>
+</ul>
+<h2>Variants</h2>
+<table>
+<thead>
+<tr>
+<th>Variant</th>
+<th>When to use</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>With toolbar</td>
+<td>Almost always — gives the table a title plus search/filter/export entry points.</td>
+</tr>
+<tr>
+<td>Selectable (checkboxes)</td>
+<td>When users perform bulk actions (assign, export, delete) on multiple records.</td>
+</tr>
+<tr>
+<td>Paginated</td>
+<td>Any dataset beyond a single screen; desktop tables paginate (rows-per-page + range), they don't infinite-scroll.</td>
+</tr>
+<tr>
+<td>Dense</td>
+<td>High-volume operator screens where maximizing visible rows matters; reduces row height.</td>
+</tr>
+<tr>
+<td>Inline-editable</td>
+<td>When quick edits (odometer, notes) are common; cells become editable in place.</td>
+</tr>
+<tr>
+<td>Expandable rows</td>
+<td>When a record has secondary detail (sub-trips, line items) worth revealing without leaving the table.</td>
+</tr>
+</tbody>
+</table>
+<h2>Anatomy</h2>
+<ul>
+<li>Toolbar — table title + table-level actions (search, filter, more). Becomes the contextual toolbar when rows are selected.</li>
+<li>Column header — the label for each column; sortable headers show a direction arrow and an active state.</li>
+<li>Sort indicator — arrow showing ascending/descending on the active sort column.</li>
+<li>Selection column — optional leading checkboxes; the header checkbox selects/clears all (indeterminate when partial).</li>
+<li>Row — one record; supports hover, selected, and (optionally) clickable states.</li>
+<li>Cell — one value; text left-aligned, numbers right-aligned with tabular figures.</li>
+<li>Pagination footer — rows-per-page, the visible range, and previous/next controls.</li>
+<li>Contextual toolbar — replaces the title bar while rows are selected, showing the count and bulk actions.</li>
+</ul>
+<h2>Behaviors</h2>
+<ul>
+<li><strong>Sorting</strong> — Clicking a sortable header sorts by that column; clicking again reverses direction. The active column shows a filled label and a direction arrow; only one column sorts at a time (unless multi-sort is explicitly enabled).</li>
+<li><strong>Selection</strong> — Row checkboxes select individual records; the header checkbox selects all on the page and shows an indeterminate state when the selection is partial. While anything is selected, the toolbar switches to the contextual toolbar — showing the count and bulk actions (e.g. Export, Delete) — and selected rows take the selected background.</li>
+<li><strong>Pagination</strong> — The footer shows rows-per-page, the current range, and prev/next. For large/server-driven data, fetch per page rather than loading everything.</li>
+<li><strong>Filtering &amp; search</strong> — A quick-search and a filter entry point live in the toolbar; applied filters show as removable filter chips above or within the toolbar.</li>
+<li><strong>Inline editing</strong> — Editable cells show a subtle affordance on hover (dashed underline in the example) and commit on blur/Enter, with validation shown inline.</li>
+</ul>
+<h2>Specs</h2>
+<table>
+<thead>
+<tr>
+<th>Property</th>
+<th>Standard</th>
+<th>Dense</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Header row height</td>
+<td>56px</td>
+<td>40px</td>
+</tr>
+<tr>
+<td>Data row height</td>
+<td>52px</td>
+<td>36px</td>
+</tr>
+<tr>
+<td>Column padding</td>
+<td>16px (first/last 24px)</td>
+<td>16px (first/last 24px)</td>
+</tr>
+<tr>
+<td>Toolbar height</td>
+<td>64px</td>
+<td>64px</td>
+</tr>
+<tr>
+<td>Header label</td>
+<td>Roboto 14px / 500, color on-surface-medium (full on-surface when sorted)</td>
+<td></td>
+</tr>
+<tr>
+<td>Cell text</td>
+<td>Roboto 14px / 400, color on-surface; numbers right-aligned, tabular figures</td>
+<td></td>
+</tr>
+<tr>
+<td>Row divider</td>
+<td>1px, divider color (rgba(0,0,0,.12))</td>
+<td></td>
+</tr>
+<tr>
+<td>Selected background</td>
+<td>primary at ~10% (token --selected )</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h2>Correct usage (themed MDC markup)</h2>
+<pre><code class="language-html">&lt;div class=&quot;mdc-data-table&quot;&gt;
+&lt;div class=&quot;mdc-data-table__table-container&quot;&gt;
+&lt;table aria-label=&quot;Vehicles&quot; class=&quot;mdc-data-table__table&quot;&gt;
+&lt;thead&gt;&lt;tr class=&quot;mdc-data-table__header-row&quot;&gt;
+&lt;th class=&quot;mdc-data-table__header-cell&quot; role=&quot;columnheader&quot; scope=&quot;col&quot;&gt;Registration&lt;/th&gt;
+&lt;th class=&quot;mdc-data-table__header-cell&quot; role=&quot;columnheader&quot; scope=&quot;col&quot;&gt;Driver&lt;/th&gt;
+&lt;th class=&quot;mdc-data-table__header-cell&quot; role=&quot;columnheader&quot; scope=&quot;col&quot;&gt;Status&lt;/th&gt;
+&lt;th class=&quot;mdc-data-table__header-cell mdc-data-table__header-cell--numeric&quot; role=&quot;columnheader&quot; scope=&quot;col&quot;&gt;Odometer (km)&lt;/th&gt;
+&lt;th class=&quot;mdc-data-table__header-cell&quot; role=&quot;columnheader&quot; scope=&quot;col&quot;&gt;Last trip&lt;/th&gt;
+&lt;/tr&gt;&lt;/thead&gt;
+&lt;tbody class=&quot;mdc-data-table__content&quot;&gt;
+&lt;tr class=&quot;mdc-data-table__row&quot;&gt;&lt;th class=&quot;mdc-data-table__cell&quot; scope=&quot;row&quot;&gt;CA 123-456&lt;/th&gt;&lt;td class=&quot;mdc-data-table__cell&quot;&gt;Jane Cooper&lt;/td&gt;&lt;td class=&quot;mdc-data-table__cell&quot;&gt;Active&lt;/td&gt;&lt;td class=&quot;mdc-data-table__cell mdc-data-table__cell--numeric&quot;&gt;84,210&lt;/td&gt;&lt;td class=&quot;mdc-data-table__cell&quot;&gt;2 min ago&lt;/td&gt;&lt;/tr&gt;
+&lt;tr class=&quot;mdc-data-table__row&quot;&gt;&lt;th class=&quot;mdc-data-table__cell&quot; scope=&quot;row&quot;&gt;CA 789-012&lt;/th&gt;&lt;td class=&quot;mdc-data-table__cell&quot;&gt;Frank Kim&lt;/td&gt;&lt;td class=&quot;mdc-data-table__cell&quot;&gt;Idle&lt;/td&gt;&lt;td class=&quot;mdc-data-table__cell mdc-data-table__cell--numeric&quot;&gt;120,540&lt;/td&gt;&lt;td class=&quot;mdc-data-table__cell&quot;&gt;1 h ago&lt;/td&gt;&lt;/tr&gt;
+&lt;tr class=&quot;mdc-data-table__row&quot;&gt;&lt;th class=&quot;mdc-data-table__cell&quot; scope=&quot;row&quot;&gt;CA 345-678&lt;/th&gt;&lt;td class=&quot;mdc-data-table__cell&quot;&gt;Lena Ortiz&lt;/td&gt;&lt;td class=&quot;mdc-data-table__cell&quot;&gt;Offline&lt;/td&gt;&lt;td class=&quot;mdc-data-table__cell mdc-data-table__cell--numeric&quot;&gt;58,900&lt;/td&gt;&lt;td class=&quot;mdc-data-table__cell&quot;&gt;3 d ago&lt;/td&gt;&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+</code></pre>
+<h2>Do</h2>
+<ul>
+<li>Use the data table (not a basic table) for any sortable, selectable, or large dataset.</li>
+<li>Right-align numeric columns and use tabular figures so digits line up.</li>
+<li>Switch to the contextual toolbar when rows are selected, showing the count + bulk actions.</li>
+<li>Map status to the consistent colour chips (Active/Idle/Offline).</li>
+<li>Paginate; fetch per page for large/server data.</li>
+</ul>
+<h2>Don't</h2>
+<ul>
+<li>Don't put the primary action inside a row's overflow menu if it's used constantly.</li>
+<li>Don't sort more than one column at once unless multi-sort is explicitly needed.</li>
+<li>Don't encode status by colour alone — keep the text label on the chip.</li>
+<li>Don't infinite-scroll a desktop data table; use pagination.</li>
+<li>Don't hard-code colours/sizes — use the theme tokens and these specs.</li>
+</ul>
+<h2>Accessibility</h2>
+<ul>
+<li>Use real <code>&lt;table&gt;</code> semantics with <code>&lt;th&gt;</code> headers; sortable headers expose aria-sort. The select-all checkbox announces its indeterminate state. Selection changes and the contextual toolbar are announced to assistive tech. Rows and controls are keyboard navigable; visible focus is preserved. Status is never colour-only — the chip carries a text label.</li>
+</ul></article>
+</main>
+<script>
+// each preview reports its exact content height; match the iframe to it
+window.addEventListener('message',function(e){
+  if(!e.data||!e.data.__previewHeight)return;
+  document.querySelectorAll('iframe.js-preview').forEach(function(f){
+    if(f.contentWindow===e.source){f.style.height=e.data.h+'px';}
+  });
+});
+</script>
+</body></html>

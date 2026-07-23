@@ -1,0 +1,73 @@
+<!DOCTYPE html><html lang="en"><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cartrack DS — Dividers</title>
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&family=Roboto+Mono&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/ds.css">
+</head><body><main>
+  <div class="crumbs"><a href="index.html">Components</a><span class="s">&rsaquo;</span> Dividers</div>
+  <h1>Dividers</h1>
+  <p class="lede">A divider is a thin line that separates and groups content — between list items, sections of a form, or regions of a dense layout. Used sparingly, it brings order without adding weight.</p>
+  <div class="chiprow"><span class="tag">Category: Data display</span><span class="tag">Desktop</span><span class="tag">Import: <code>Divider</code></span></div>
+  <div class="callout">Reach for whitespace and grouping first; add a divider only where a clear boundary helps. Too many lines make a layout feel busy.</div>
+
+  <div class="callout"><strong>No standalone MDC Web component.</strong> MDC Web has no dedicated divider component — it provides list dividers (<code>mdc-deprecated-list-divider</code>) and you draw a 1px rule using the divider colour token. The preview below is a Cartrack-styled approximation.</div>
+
+  <h2>Demo</h2>
+  <div class="lab">
+    <div class="lab-preview"><div style="width:280px;background:var(--surface);box-shadow:var(--el1);border-radius:4px;overflow:hidden"><div style="padding:12px 16px">Vehicle CA 123-456</div><div class="divider" id="pv" style="width:auto"></div><div style="padding:12px 16px">Driver: Jane Cooper</div></div></div>
+    <div class="lab-controls">
+      <h5>Options</h5>
+      <div class="lab-row"><label for="c-var">Variant</label><select id="c-var"><option value="full">Full-width</option><option value="inset">Inset</option><option value="middle">Middle</option></select></div>
+    </div>
+  </div>
+  <script>(function(){var pv=document.getElementById('pv'),v=document.getElementById('c-var');function u(){pv.style.marginLeft=v.value==='full'?'0':'16px';pv.style.marginRight=v.value==='middle'?'16px':'0';}v.addEventListener('change',u);u();})();</script>
+
+  <h2>Live example</h2>
+  <div class="stage col">
+    <span>Vehicle details</span>
+    <div class="divider"></div>
+    <span>Maintenance history</span>
+  </div>
+
+  <h2>Anatomy</h2>
+  <div class="anat"><p class="muted">A single hairline rule.</p>
+    <ol>
+      <li><b>Line</b> — 1px rule in the divider colour.</li>
+      <li><b>Inset</b> — optional left/right indentation to align with content (e.g. past an avatar).</li>
+    </ol></div>
+
+  <h2>Variants</h2>
+  <table class="spec"><tr><th>Variant</th><th>When to use</th></tr>
+    <tr><td>Full-width</td><td>Separate major sections edge to edge.</td></tr>
+    <tr><td>Inset</td><td>Between list items, aligned past the leading element.</td></tr>
+    <tr><td>Middle</td><td>Indented on both sides for a lighter separation.</td></tr>
+    <tr><td>Vertical</td><td>Separate inline items in a toolbar.</td></tr>
+  </table>
+
+  <h2>Behaviors</h2>
+  <h3>Grouping</h3><p class="muted">Use a divider to mark a real boundary between groups, not between every item — rows already separate visually.</p>
+  <h3>Inset alignment</h3><p class="muted">Inset dividers align with the text column so the eye reads a clean left edge.</p>
+
+  <h2>States</h2>
+  <table class="spec"><tr><th>State</th><th>Treatment</th></tr>
+    <tr><td>Default</td><td>1px line at the divider colour (rgba(0,0,0,.12)).</td></tr>
+  </table>
+
+  <h2>Specs</h2>
+  <table class="spec"><tr><th>Property</th><th>Value</th></tr>
+    <tr><td>Thickness</td><td>1px</td></tr>
+    <tr><td>Colour</td><td>rgba(0,0,0,.12) (divider token)</td></tr>
+    <tr><td>Inset</td><td>16px (or aligned to content, e.g. 72px past an avatar)</td></tr>
+  </table>
+
+  <h2>Do &amp; Don't</h2>
+  <div class="cols">
+    <div class="do"><h4>Do</h4><ul><li>Use dividers to mark real group boundaries.</li><li>Inset to align with the content column.</li><li>Prefer spacing where it reads clearly without a line.</li></ul></div>
+    <div class="dont"><h4>Don't</h4><ul><li>Don't put a divider between every list row.</li><li>Don't use heavy or coloured rules for plain separation.</li><li>Don't rely on a divider to convey meaning by itself.</li></ul></div>
+  </div>
+
+  <h2>Accessibility</h2>
+  <p class="muted">Decorative dividers are hidden from assistive tech; a divider that genuinely separates groups can use a <code>separator</code> role. Never use a line as the only way to convey structure — pair with headings/labels.</p>
+
+  <div class="callout" style="margin-top:32px">Part of the shared component detail-page set. <a href="index.html">All components →</a></div>
+</main></body></html>
