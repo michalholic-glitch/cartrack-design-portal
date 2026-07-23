@@ -55,9 +55,15 @@
   .demo{display:flex;flex-wrap:wrap;gap:16px;align-items:center;padding:22px;background:var(--surface);border:1px solid var(--divider);border-radius:8px}
   .demo.col{flex-direction:column;align-items:stretch}
 
+  /* ===== Hero preview (NEW 2026-07-23) — the component at actual size, first thing in each section ===== */
+  .hero-demo{margin:14px 0 0;padding:36px 32px;background:var(--surface);border:1px solid var(--divider);border-radius:8px;display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:16px;overflow-x:auto}
+  .hero-cap{margin:6px 2px 0;font-size:.7rem;font-weight:500;letter-spacing:.06em;text-transform:uppercase;color:var(--on-surface-dis)}
+
   /* ===== Variant grid (NEW) ===== */
   .variant-grid{display:flex;flex-wrap:wrap;gap:14px}
-  .variant-item{background:var(--surface);border:1px solid var(--divider);border-radius:8px;overflow:hidden;width:260px;display:flex;flex-direction:column}
+  .variant-item{background:var(--surface);border:1px solid var(--divider);border-radius:8px;overflow:hidden;flex:1 1 260px;min-width:260px;max-width:380px;display:flex;flex-direction:column}
+  /* wide = demo authored wider than a grid card (tables, banners, tabs) — takes the full row */
+  .variant-grid.wide .variant-item,.variant-item.wide{flex-basis:100%;max-width:none}
   .variant-demo{padding:20px;min-height:96px;display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:10px;background:repeating-linear-gradient(45deg,#fafafa,#fafafa 10px,#f4f4f4 10px,#f4f4f4 20px)}
   .variant-label{padding:10px 12px;border-top:1px solid var(--divider);background:#fff}
   .variant-label b{display:block;font-size:.82rem;margin-bottom:2px}
@@ -212,6 +218,23 @@
   .pgn{display:flex;align-items:center;gap:4px}.pgn .lbl{color:var(--on-surface-med);font-size:.8rem;margin-right:12px}.pgn .p{min-width:32px;height:32px;border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:.82rem;color:var(--on-surface);cursor:pointer}.pgn .p:hover{background:var(--hover)}.pgn .p.on{background:var(--selected);color:var(--primary-dark);font-weight:500}
   .stepper2{display:flex;align-items:center;gap:8px;flex-wrap:wrap}.st{display:flex;align-items:center;gap:8px;color:var(--on-surface-med);font-size:.85rem}.st .n{width:24px;height:24px;border-radius:50%;background:var(--on-surface-dis);color:#fff;display:flex;align-items:center;justify-content:center;font-size:.72rem}.st.on .n{background:var(--primary)}.st.done .n{background:var(--primary)}.st.on{color:var(--on-surface);font-weight:500}.st .bar{width:36px;height:1px;background:var(--divider)}
 
+  /* .dt container/table styles (NEW 2026-07-23): the data-table demos previously relied on bare
+     browser <table> defaults — the inner table collapsed to content width and had no padding,
+     which is what made this section look cramped. Values mirror the existing .table demo class. */
+  .dt{width:100%;background:var(--surface);border:1px solid var(--divider);border-radius:4px;overflow:hidden}
+  .dt table{width:100%;border-collapse:collapse;font-size:.84rem}
+  .dt th{text-align:left;padding:12px 16px;color:var(--on-surface-med);font-weight:500;border-bottom:1px solid var(--divider);white-space:nowrap}
+  .dt td{padding:12px 16px;border-bottom:1px solid var(--divider)}
+  .dt tbody tr:last-child td{border-bottom:none}
+  .dt.dense th,.dt.dense td{padding:6px 16px}
+  .dt th.num,.dt td.num{text-align:right}
+  .dt tr.sel td{background:var(--selected)}
+  .dt .ti{flex:1;font-weight:500}
+  .dt-tb.ctx{background:var(--selected);color:var(--primary-dark)}
+  .dt .cbx{display:inline-block;border:2px solid var(--on-surface-med);border-radius:2px}
+  .dt .cbx.on{background:var(--primary);border-color:var(--primary)}
+  .dt .cbx.ind{background:var(--primary);border-color:var(--primary)}
+  .dt .selcol{width:32px}
   .dt-tb{display:flex;align-items:center;gap:8px;padding:8px 12px;background:var(--surface);border-bottom:1px solid var(--divider)}
   .icb{width:32px;height:32px;border-radius:50%;border:none;background:transparent;color:var(--on-surface-med);cursor:pointer}
   .cbx{width:16px;height:16px}
@@ -266,9 +289,11 @@
   <main>
     <header class="hero">
       <h2>Cartrack — MD2 Component Library</h2>
-      <p class="lede">27 components, generated from <code>component-repo/components/*/*.doc.json</code> — the same structured docs an AI agent reads before writing UI. Each section shows every documented variant rendered live, plus the do/don't guidance and prop contract from that component's <code>.doc.json</code>. Source specs: <code>component-specs/</code>. Live MDC markup reference: <code>md2-cartrack-library/</code>.</p>
+      <p class="lede">28 components, generated from <code>component-repo/components/*/*.doc.json</code> — the same structured docs an AI agent reads before writing UI. Each section shows every documented variant rendered live, plus the do/don't guidance and prop contract from that component's <code>.doc.json</code>. Source specs: <code>component-specs/</code>. Live MDC markup reference: <code>md2-cartrack-library/</code>.</p>
     </header>
 <section id="button"><h3>Button</h3>
+  <div class="hero-demo"><button class="btn contained">Add vehicle</button><button class="btn outlined">Cancel</button><button class="btn text">View report</button></div>
+  <div class="hero-cap">Contained · Outlined · Text — actual size</div>
   <p class="desc">Buttons let operators trigger actions — saving a vehicle, running a report, confirming a change. Emphasis communicates priority: the one most important action on a view is the contained button; everything else steps down.</p>
   <div class="note">Use exactly one contained (high-emphasis) button per view. The floating action button (FAB) is excluded — it's a mobile pattern; on desktop the primary action sits in the page toolbar / app bar.</div>
 
@@ -314,7 +339,7 @@
     <table class="proptable"><tr><th>Prop</th><th>Type</th><th>Default</th><th>Description</th></tr>
       <tr><td>label</td><td>string</td><td>—</td><td>Short, verb-first action label (e.g. "Add vehicle"). Rendered uppercase per MD2.</td></tr>
       <tr><td>variant</td><td>'contained' | 'outlined' | 'text'</td><td>—</td><td>Contained = single primary action per view. Outlined = important secondary actions. Text = low-emphasis actions.</td></tr>
-      <tr><td>leadingIcon</td><td>string</td><td>—</td><td>Optional leading icon (material-icons ligature name). Keep the label even with an icon.</td></tr>
+      <tr><td>leadingIcon</td><td>string</td><td>—</td><td>Optional leading icon — a registered FontAwesome icon name, not a Material ligature. Keep the label even with an icon.</td></tr>
       <tr><td>disabled</td><td>boolean</td><td>—</td><td>Disables the button; not clickable.</td></tr>
       <tr><td>loading</td><td>boolean</td><td>—</td><td>Disables the button and shows a spinner in place of the label for async actions.</td></tr>
       <tr><td>onClick</td><td>() =&gt; void</td><td>—</td><td>Click handler.</td></tr>
@@ -323,6 +348,8 @@
   </div>
 </section>
 <section id="menu"><h3>Menu</h3>
+  <div class="hero-demo"><span class="iconbtn">⋮</span><div class="menu"><div class="mi">Edit</div><div class="mi">Duplicate</div><div class="mi">Export</div><div class="mi" style="color:var(--error)">Delete</div></div></div>
+  <div class="hero-cap">Overflow menu — actual size</div>
   <p class="desc">Menus show a temporary list of choices on a surface — overflow actions behind a ⋮ button, row actions in a data table, or a list of options from a control. They appear on demand and dismiss on selection or outside click.</p>
   <div class="note">Use a menu for secondary or overflow actions. Don't hide a view's primary action in a menu — promote it to a button in the toolbar.</div>
 
@@ -373,6 +400,8 @@
   </div>
 </section>
 <section id="chip"><h3>Chip</h3>
+  <div class="hero-demo"><span class="chip">Jane Cooper ✕</span><span class="chip sel">✓ Active filter</span><span class="chip out">Sedan</span><span class="schip ok">Active</span></div>
+  <div class="hero-cap">Input · Filter · Choice · Status — actual size</div>
   <p class="desc">Chips are compact elements that represent an input, a filter, or a choice — a selected driver, an active filter on a vehicle list, a quick action. They pack a lot of interaction into a small footprint.</p>
   <div class="note">Use chips for selections and filters the operator manipulates. For read-only status (Active/Idle/Offline) use a status chip with a consistent colour mapping.</div>
 
@@ -430,6 +459,8 @@
   </div>
 </section>
 <section id="picker"><h3>Picker</h3>
+  <div class="hero-demo"><div class="picker"><div class="ph2"><div style="font-size:.8rem">JUN 2026</div><div class="d">Sat, Jun 20</div></div><div class="grid"><span>S</span><span>M</span><span>T</span><span>W</span><span>T</span><span>F</span><span>S</span><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span><span>7</span><span>8</span><span>9</span><span>10</span><span>11</span><span>12</span><span>13</span><span class="on">20</span></div></div></div>
+  <div class="hero-cap">Date picker — actual size</div>
   <p class="desc">Pickers help operators choose dates and times — a trip window, a report period, a maintenance due date. They pair a typeable field with a calendar or clock surface, and support ranges for from–to selections.</p>
   <div class="note">Offer both: let operators type a date in the field and pick from the calendar. Use a range picker for any from–to selection (reports, trip history), and always respect the user's locale and time zone.</div>
 
@@ -447,7 +478,7 @@
         <div class="variant-demo"><div class="picker" style="width:220px"><div class="ph2"><div class="d">14:30</div></div><div class="clock"><div class="c"></div><div class="dot"></div></div></div></div>
         <div class="variant-label"><b>Time picker</b><span>A time of day (schedule, cut-off).</span></div>
       </div>
-      <div class="variant-item">
+      <div class="variant-item wide">
         <div class="variant-demo"><div class="picker"><div class="ph2"><div style="font-size:.8rem">JUN 2026</div><div class="d">Sat, Jun 20</div></div><div class="grid"><span>S</span><span>M</span><span>T</span><span>W</span><span>T</span><span>F</span><span>S</span><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span><span>7</span><span>8</span><span>9</span><span>10</span><span>11</span><span>12</span><span>13</span><span class="on">20</span></div></div> <div class="picker" style="width:220px"><div class="ph2"><div class="d">14:30</div></div><div class="clock"><div class="c"></div><div class="dot"></div></div></div></div>
         <div class="variant-label"><b>Date-time / date-time range</b><span>When both date and time matter (precise trip windows).</span></div>
       </div>
@@ -496,6 +527,8 @@
   </div>
 </section>
 <section id="selection-control"><h3>SelectionControl</h3>
+  <div class="hero-demo"><span class="ctl"><span class="cbox on"></span> Checkbox</span><span class="ctl"><span class="radio on"></span> Radio</span><span class="ctl"><span class="sw on"><span class="k"></span></span> Switch</span></div>
+  <div class="hero-cap">Checkbox · Radio · Switch — actual size</div>
   <p class="desc">Selection controls capture choices: checkboxes for multi-select, radio buttons for one-of-many, and switches for instant on/off settings. Choosing the right one tells the operator how the choice behaves.</p>
   <div class="note">Checkbox = select none/some/all and apply on submit. Radio = pick exactly one from a small set. Switch = toggle a setting that takes effect immediately.</div>
 
@@ -545,6 +578,8 @@
   </div>
 </section>
 <section id="slider"><h3>Slider</h3>
+  <div class="hero-demo"><span class="slider"><span class="fl"></span><span class="t"></span></span></div>
+  <div class="hero-cap">Continuous — actual size</div>
   <p class="desc">Sliders let an operator choose a value, or a range, by dragging along a track — useful for soft, approximate settings like a geofence radius or a map's time window. When precision matters, prefer a number field.</p>
   <div class="note">Use a slider when the exact number is less important than the relative position, or when immediate visual feedback helps. For exact entry (e.g. an odometer), use a text field.</div>
 
@@ -594,6 +629,8 @@
   </div>
 </section>
 <section id="text-field"><h3>TextField</h3>
+  <div class="hero-demo"><span class="tf outlined"><span class="lbl">Driver</span><div class="f">Jane Cooper</div></span><span class="tf filled"><span class="lbl">Registration</span><div class="f">CA 123-456</div></span></div>
+  <div class="hero-cap">Outlined (form default) · Filled — actual size</div>
   <p class="desc">Text fields let operators enter and edit text — a registration number, a driver's name, an odometer reading, a note. They come in filled and outlined styles and always carry a label so the field's purpose stays visible once filled.</p>
   <div class="note">Pick one style and use it consistently across a form. In the Cartrack portal, outlined is the default for forms; filled suits dense, list-like settings.</div>
 
@@ -650,14 +687,16 @@
       <tr><td>readOnly</td><td>boolean</td><td>—</td><td>Shows a value that can't be edited but can be copied.</td></tr>
       <tr><td>required</td><td>boolean</td><td>—</td><td>Sets aria-required.</td></tr>
       <tr><td>type</td><td>'text' | 'password' | 'search' | 'number'</td><td>—</td><td>Underlying input type for single-line fields; ignored when multiline is true.</td></tr>
-      <tr><td>leadingIcon</td><td>string</td><td>—</td><td>Leading Material icon ligature, e.g. "search".</td></tr>
-      <tr><td>trailingIcon</td><td>string</td><td>—</td><td>Trailing Material icon ligature, e.g. "clear" or a unit like "km".</td></tr>
+      <tr><td>leadingIcon</td><td>string</td><td>—</td><td>Leading FontAwesome icon name, e.g. "search".</td></tr>
+      <tr><td>trailingIcon</td><td>string</td><td>—</td><td>Trailing FontAwesome icon name, e.g. "times" (clear) or a unit like "km".</td></tr>
       <tr><td>multiline</td><td>boolean</td><td>—</td><td>Renders a textarea that grows with content instead of a single-line input.</td></tr>
       <tr><td>rows</td><td>number</td><td>—</td><td>Textarea row count when multiline is true.</td></tr>
     </table>
   </div>
 </section>
 <section id="breadcrumbs"><h3>Breadcrumbs</h3>
+  <div class="hero-demo"><div class="crumbs"><a href="#">Fleet</a><span class="s">›</span><a href="#">Vehicles</a><span class="s">›</span>CA 123-456</div></div>
+  <div class="hero-cap">Standard — actual size</div>
   <p class="desc">Breadcrumbs show where the operator is within the portal's hierarchy and let them step back up it — from a single vehicle, to the vehicle list, to the fleet. They orient users in deep desktop navigation.</p>
   <div class="note">Use breadcrumbs when content sits more than one level deep. They complement — not replace — the left navigation drawer.</div>
 
@@ -701,7 +740,53 @@
     </table>
   </div>
 </section>
+<section id="page-header"><h3>Page Header</h3>
+  <p class="desc">The horizontal row at the top of almost every authenticated page — title (or a back-link) on the left, page-level actions on the right. Unlike most of this library, it isn't modeled on an idealized MD2 spec: it's a direct, faithful port of the real, currently-shipping fleet-web component, not an approximation.</p>
+  <div class="note">Use PageHeader at the top of any page. Put PageHeader.Title (or a Breadcrumbs-based back-link) first and PageHeader.ButtonsContainer second — the real component has no other slots or props.</div>
+
+  <div class="block"><h4>Variants</h4>
+    <div class="variant-grid">
+      <div class="variant-item">
+        <div class="variant-demo"><div style="display:flex;justify-content:space-between;align-items:center;width:100%"><h5 style="margin:0;font-size:24px;font-weight:400">My Profile</h5></div></div>
+        <div class="variant-label"><b>Simple (title only)</b><span>Settings-style pages with no page-level action.</span></div>
+      </div>
+      <div class="variant-item">
+        <div class="variant-demo"><div style="display:flex;justify-content:space-between;align-items:center;gap:16px;width:100%"><h5 style="margin:0;font-size:24px;font-weight:400">Vehicles</h5><div style="display:flex;gap:16px;align-items:center;flex-wrap:wrap"><button class="btn contained">Add vehicle</button></div></div></div>
+        <div class="variant-label"><b>List (title + actions)</b><span>Collection pages: title plus one or more Buttons.</span></div>
+      </div>
+      <div class="variant-item">
+        <div class="variant-demo"><div style="display:flex;justify-content:space-between;align-items:center;gap:16px;width:100%"><div style="display:flex;align-items:center;gap:8px"><a href="#" style="display:flex;align-items:center;gap:4px;text-decoration:none">&larr; Infractions</a><span>CA 123-456</span></div><div style="display:flex;gap:16px;align-items:center"><button class="btn contained">Create report</button></div></div></div>
+        <div class="variant-label"><b>Detail (back-link + actions)</b><span>Drill-down pages: a Breadcrumbs-based back-link replaces the title.</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="block"><h4>Best practices</h4>
+    <div class="bp-grid">
+      <div class="bp-col do"><h5>Do</h5><ul>
+        <li>Put Title (or a back-link) in the left slot, ButtonsContainer in the right — that order, every time.</li>
+        <li>Build detail-page back-links from Breadcrumbs (back arrow + parent label), not a bare IconButton.</li>
+        <li>Keep it borderless, elevation-less, and non-sticky — that's what every real usage does.</li>
+      </ul></div>
+      <div class="bp-col dont"><h5>Don't</h5><ul>
+        <li>Don't add a subtitle, icon, or backLink prop — the real component doesn't have one.</li>
+        <li>Don't put Tabs or a border-bottom inside PageHeader — that row belongs directly below it.</li>
+        <li>Don't make it sticky or elevated — no real usage does this.</li>
+      </ul></div>
+    </div>
+  </div>
+
+  <div class="block"><h4>Props</h4>
+    <table class="proptable"><tr><th>Prop</th><th>Type</th><th>Default</th><th>Description</th></tr>
+      <tr><td>children</td><td>React.ReactNode</td><td>—</td><td>PageHeader itself: Title (or a back-link) first, ButtonsContainer second.</td></tr>
+      <tr><td>PageHeader.Title — children</td><td>React.ReactNode</td><td>—</td><td>The page title text. Renders as a real &lt;h5&gt;.</td></tr>
+      <tr><td>PageHeader.ButtonsContainer — children</td><td>React.ReactNode</td><td>—</td><td>One or more page-level actions (Buttons, a Menu trigger).</td></tr>
+    </table>
+  </div>
+</section>
 <section id="navigation-drawer"><h3>Navigation Drawer</h3>
+  <div class="hero-demo"><div class="drawer"><div class="it on">🗺 Map</div><div class="it">🚚 Assets</div><div class="it">👤 Drivers</div><div class="it">📊 Reports</div><div class="it">⚙ Settings</div></div></div>
+  <div class="hero-cap">Permanent — actual size</div>
   <p class="desc">The navigation drawer is the portal's primary, persistent navigation — anchored to the left edge and grouped by purpose. It's how operators move between the map, assets, and the domain pillars throughout a session.</p>
   <div class="note">On desktop the drawer is permanent (always visible) — not a temporary overlay. Group items by purpose so the model stays legible; default new features into a pillar, not the top level.</div>
 
@@ -755,6 +840,8 @@
   </div>
 </section>
 <section id="navigation-rail"><h3>Navigation Rail</h3>
+  <div class="hero-demo"><div class="rail"><div class="it on"><span>🗺</span>Map</div><div class="it"><span>🚚</span>Assets</div><div class="it"><span>👤</span>People</div><div class="it"><span>📊</span>Reports</div></div></div>
+  <div class="hero-cap">Labelled — actual size</div>
   <p class="desc">The navigation rail is a compact, icon-first side navigation. It's the collapsed form of the drawer — used on narrower desktop widths or when an operator wants more room for a dense map or table.</p>
   <div class="note">Use the rail as the space-saving alternative to the drawer, not as a second navigation. The two are the same destinations at different widths.</div>
 
@@ -801,12 +888,14 @@
   </div>
 </section>
 <section id="stepper"><h3>Stepper</h3>
+  <div class="hero-demo"><div class="stepper2"><span class="st done"><span class="n">✓</span> Details</span><span class="bar"></span><span class="st on"><span class="n">2</span> Assign driver</span><span class="bar"></span><span class="st"><span class="n">3</span> Confirm</span></div></div>
+  <div class="hero-cap">Horizontal — actual size</div>
   <p class="desc">A stepper guides an operator through a task in ordered steps — onboarding a new vehicle, building a report, running a bulk assignment. It shows progress and what's left to do.</p>
   <div class="note">Use a stepper for a sequence that benefits from being broken up and tracked. For peer views with no order, use tabs instead.</div>
 
   <div class="block"><h4>Variants</h4>
     <div class="variant-grid">
-      <div class="variant-item">
+      <div class="variant-item wide">
         <div class="variant-demo"><div class="stepper2"><span class="st done"><span class="n">✓</span> Details</span><span class="bar"></span><span class="st on"><span class="n">2</span> Assign driver</span><span class="bar"></span><span class="st"><span class="n">3</span> Confirm</span></div></div>
         <div class="variant-label"><b>Horizontal</b><span>A few steps with short labels; fits across the top.</span></div>
       </div>
@@ -814,11 +903,11 @@
         <div class="variant-demo"><div class="stepper2" style="flex-direction:column;align-items:flex-start;gap:10px"><span class="st done"><span class="n">✓</span> Details</span><span class="st on"><span class="n">2</span> Assign driver</span><span class="st"><span class="n">3</span> Confirm</span></div></div>
         <div class="variant-label"><b>Vertical</b><span>Steps with more content; content expands under each.</span></div>
       </div>
-      <div class="variant-item">
+      <div class="variant-item wide">
         <div class="variant-demo"><div class="stepper2"><span class="st done"><span class="n">✓</span> Details</span><span class="bar"></span><span class="st on"><span class="n">2</span> Assign driver</span><span class="bar"></span><span class="st"><span class="n">3</span> Confirm</span></div></div>
         <div class="variant-label"><b>Linear</b><span>Steps must be completed in order.</span></div>
       </div>
-      <div class="variant-item">
+      <div class="variant-item wide">
         <div class="variant-demo"><div class="stepper2"><span class="st"><span class="n">1</span> Details</span><span class="bar"></span><span class="st"><span class="n">2</span> Assign driver</span><span class="bar"></span><span class="st on"><span class="n">3</span> Confirm</span></div></div>
         <div class="variant-label"><b>Non-linear</b><span>Operators may jump between steps freely.</span></div>
       </div>
@@ -851,11 +940,13 @@
   </div>
 </section>
 <section id="tabs"><h3>Tabs</h3>
+  <div class="hero-demo"><div class="tabs" style="width:100%"><span class="t on">Overview</span><span class="t">Trips</span><span class="t">Maintenance</span><span class="t">Alerts</span></div></div>
+  <div class="hero-cap">Fixed — actual size</div>
   <p class="desc">Tabs switch between related views of the same subject — a vehicle's Overview, Trips, Maintenance, and Alerts — without leaving the page. They keep peer views one click apart.</p>
   <div class="note">Use tabs for peer views of one record or population. They're not top-level navigation (that's the drawer) and not a wizard (that's a stepper).</div>
 
   <div class="block"><h4>Variants</h4>
-    <div class="variant-grid">
+    <div class="variant-grid wide">
       <div class="variant-item">
         <div class="variant-demo"><div class="tabs" style="width:100%"><span class="t on">Overview</span><span class="t">Trips</span><span class="t">Maintenance</span><span class="t">Alerts</span></div></div>
         <div class="variant-label"><b>Fixed</b><span>A small, known set of tabs that fit the width.</span></div>
@@ -896,6 +987,8 @@
   </div>
 </section>
 <section id="badge"><h3>Badge</h3>
+  <div class="hero-demo"><span class="badge"><button class="iconbtn">🔔</button><span class="d">4</span></span></div>
+  <div class="hero-cap">Numeric — actual size</div>
   <p class="desc">A badge is a small indicator placed on another element to show a count or status — the number of unread alerts on the notifications bell, or a dot marking a vehicle that needs attention.</p>
   <div class="note">Use a badge to draw attention to a count or new state on an icon or item. Keep it glanceable — for detailed status use a status chip instead.</div>
 
@@ -942,11 +1035,24 @@
   </div>
 </section>
 <section id="data-table"><h3>Data Table</h3>
+  <div class="hero-demo">
+    <div class="dt" style="width:100%;max-width:720px">
+      <div class="dt-tb"><span class="ti">Vehicles</span><button class="icb" title="Search">🔍</button><button class="icb" title="Filter">⛃</button><button class="icb" title="More">⋮</button></div>
+      <table><thead><tr><th>Registration</th><th>Driver</th><th>Status</th><th>Last trip</th></tr></thead>
+      <tbody>
+        <tr><td>CA 123-456</td><td>Jane Cooper</td><td><span class="schip ok">Active</span></td><td>2 min ago</td></tr>
+        <tr><td>CA 789-012</td><td>Frank Kim</td><td><span class="schip warn">Idle</span></td><td>1 h ago</td></tr>
+        <tr><td>CA 345-678</td><td>Lena Ortiz</td><td><span class="schip err">Offline</span></td><td>3 d ago</td></tr>
+      </tbody></table>
+      <div class="dt-ft"><span>Rows per page: 100 ▾</span><span>1–100 of 100,000</span><span><button class="icb">‹</button><button class="icb">›</button></span></div>
+    </div>
+  </div>
+  <div class="hero-cap">With toolbar + pagination — actual size</div>
   <p class="desc">Data tables present sets of records across rows and columns — the primary way operators scan, sort, select, and act on fleet data (vehicles, trips, drivers, alerts). This is the most-used component in the portal, so it carries the most behaviour.</p>
   <div class="note">When a dataset is large, server-paginated, sortable, or selectable, use the data table — not a basic Table. Reserve the basic table for small, static key/value layouts.</div>
 
   <div class="block"><h4>Variants</h4>
-    <div class="variant-grid">
+    <div class="variant-grid wide">
       <div class="variant-item">
         <div class="variant-demo">
           <div class="dt" style="max-width:520px">
@@ -1003,27 +1109,56 @@
       <div class="variant-item">
         <div class="variant-demo">
           <div class="dt" style="max-width:520px">
-            <table><thead><tr><th>Registration</th><th>Driver</th><th class="num">Odometer (km)</th></tr></thead>
-            <tbody>
-              <tr><td>CA 123-456</td><td>Jane Cooper</td><td class="num">84,210</td></tr>
-              <tr><td>CA 789-012</td><td>Frank Kim</td><td class="num"><span class="editcell">120,540</span></td></tr>
-            </tbody></table>
+            <div style="max-height:96px;overflow-y:auto">
+              <table><thead><tr><th style="position:sticky;top:0;background:var(--surface);box-shadow:0 1px 0 var(--divider)">Registration</th><th style="position:sticky;top:0;background:var(--surface);box-shadow:0 1px 0 var(--divider)">Driver</th><th style="position:sticky;top:0;background:var(--surface);box-shadow:0 1px 0 var(--divider)">Status</th></tr></thead>
+              <tbody>
+                <tr><td>CA 123-456</td><td>Jane Cooper</td><td><span class="schip ok">Active</span></td></tr>
+                <tr><td>CA 789-012</td><td>Frank Kim</td><td><span class="schip warn">Idle</span></td></tr>
+                <tr><td>CA 345-678</td><td>Lena Ortiz</td><td><span class="schip err">Offline</span></td></tr>
+                <tr><td>CA 567-890</td><td>Ana Diaz</td><td><span class="schip ok">Active</span></td></tr>
+              </tbody></table>
+            </div>
           </div>
         </div>
-        <div class="variant-label"><b>Inline-editable</b><span>When quick edits (odometer, notes) are common; cells become editable in place.</span></div>
+        <div class="variant-label"><b>Sticky header + bounded height</b><span>maxHeight bounds the body; stickyHeader keeps column labels visible while rows scroll (scroll this demo).</span></div>
       </div>
       <div class="variant-item">
         <div class="variant-demo">
           <div class="dt" style="max-width:520px">
-            <table><thead><tr><th style="width:32px"></th><th>Registration</th><th>Driver</th><th>Status</th></tr></thead>
+            <div class="dt-tb"><span class="ti">Vehicles</span><button class="icb" title="Search">🔍</button><button class="icb" title="More">⋮</button></div>
+            <span class="linear" style="display:block;width:100%;border-radius:0"><span class="v" style="width:40%"></span></span>
+            <table><thead><tr><th>Registration</th><th>Driver</th><th>Status</th></tr></thead>
             <tbody>
-              <tr><td><button class="icb" style="width:28px;height:28px;font-size:.8rem">⌄</button></td><td>CA 123-456</td><td>Jane Cooper</td><td><span class="schip ok">Active</span></td></tr>
-              <tr><td colspan="4" style="padding:0 24px 12px;color:var(--on-surface-med);font-size:.82rem">3 sub-trips today · Depot North → Site 4 → Depot North</td></tr>
-              <tr><td><button class="icb" style="width:28px;height:28px;font-size:.8rem">›</button></td><td>CA 789-012</td><td>Frank Kim</td><td><span class="schip warn">Idle</span></td></tr>
+              <tr style="opacity:.5"><td>CA 123-456</td><td>Jane Cooper</td><td><span class="schip ok">Active</span></td></tr>
             </tbody></table>
           </div>
         </div>
-        <div class="variant-label"><b>Expandable rows</b><span>When a record has secondary detail (sub-trips, line items) worth revealing without leaving the table.</span></div>
+        <div class="variant-label"><b>Loading</b><span>Indeterminate linear bar under the toolbar; sort/selection/row/paging interactions disabled until data arrives.</span></div>
+      </div>
+      <div class="variant-item">
+        <div class="variant-demo">
+          <div class="dt" style="max-width:520px">
+            <div class="dt-tb"><span class="ti">Vehicles</span><button class="icb" title="Search">🔍</button></div>
+            <table><thead><tr><th>Registration</th><th>Driver</th><th>Status</th></tr></thead>
+            <tbody>
+              <tr><td colspan="3" style="text-align:center;padding:24px;color:var(--on-surface-med)">No data</td></tr>
+            </tbody></table>
+          </div>
+        </div>
+        <div class="variant-label"><b>Empty state</b><span>Zero rows and not loading — one full-width centered row; emptyState customises the message/action.</span></div>
+      </div>
+      <div class="variant-item">
+        <div class="variant-demo">
+          <div class="dt" style="max-width:520px">
+            <table><thead><tr><th>Registration</th><th>Driver</th><th style="width:40px"></th></tr></thead>
+            <tbody>
+              <tr><td>CA 123-456</td><td>Jane Cooper</td><td style="position:relative"><button class="icb" title="Actions">⋮</button><div class="menu" style="position:absolute;right:8px;top:32px;z-index:2;width:140px"><div class="mi">Edit</div><div class="mi">Duplicate</div><div class="mi" style="color:var(--error)">Delete</div></div></td></tr>
+              <tr><td>CA 789-012</td><td>Frank Kim</td><td><button class="icb" title="Actions">⋮</button></td></tr>
+              <tr><td>CA 345-678</td><td>Lena Ortiz</td><td><button class="icb" title="Actions">⋮</button></td></tr>
+            </tbody></table>
+          </div>
+        </div>
+        <div class="variant-label"><b>Row actions</b><span>rowActions renders a trailing ⋮ per row opening a Menu of secondary actions; destructive ones in error colour.</span></div>
       </div>
     </div>
   </div>
@@ -1035,7 +1170,9 @@
         <li>Right-align numeric columns and use tabular figures so digits line up.</li>
         <li>Switch to the contextual toolbar when rows are selected, showing the count + bulk actions.</li>
         <li>Map status to the consistent colour chips (Active/Idle/Offline).</li>
-        <li>Paginate; fetch per page for large/server data.</li>
+        <li>Paginate; fetch per page (server-driven) for large data — pass the page slice as rows and the full count as totalRows.</li>
+        <li>Pair maxHeight with stickyHeader on tall tables so column labels stay visible while scanning.</li>
+        <li>Use rowActions for per-row secondary actions instead of hand-rolling a ⋮ menu in every module.</li>
       </ul></div>
       <div class="bp-col dont"><h5>Don't</h5><ul>
         <li>Don't put the primary action inside a row's overflow menu if it's used constantly.</li>
@@ -1043,6 +1180,8 @@
         <li>Don't encode status by colour alone — keep the text label on the chip.</li>
         <li>Don't infinite-scroll a desktop data table; use pagination.</li>
         <li>Don't hard-code colours/sizes — use the theme tokens and these specs.</li>
+        <li>Don't build export/filter/search into DataTable — compose them into toolbarActions.</li>
+        <li>Don't leave a fetching table empty — use loading; the empty state is only for genuinely zero rows.</li>
       </ul></div>
     </div>
   </div>
@@ -1063,12 +1202,20 @@
       <tr><td>page</td><td>number</td><td>—</td><td>Current zero-based page index; omit to render an unpaginated table.</td></tr>
       <tr><td>rowsPerPage</td><td>number</td><td>—</td><td>Rows shown per page.</td></tr>
       <tr><td>totalRows</td><td>number</td><td>—</td><td>Total record count for the visible-range and next/prev disabled state.</td></tr>
-      <tr><td>onPageChange</td><td>(page: number) =&gt; void</td><td>—</td><td>Called when prev/next pagination controls are used.</td></tr>
-      <tr><td>onRowClick</td><td>(row: Row) =&gt; void</td><td>—</td><td>Handler for clickable rows.</td></tr>
+      <tr><td>onPageChange</td><td>(page: number) =&gt; void</td><td>—</td><td>Called when prev/next pagination controls are used. For server-driven pagination, fetch the new page's slice here and pass it back as rows.</td></tr>
+      <tr><td>onRowClick</td><td>(row: Row) =&gt; void</td><td>—</td><td>Handler for clickable rows. Not fired from clicks inside the row-actions cell.</td></tr>
+      <tr><td>stickyHeader</td><td>boolean</td><td>false</td><td>Keeps the header row pinned to the top of the scroll container while the body scrolls — pair with maxHeight.</td></tr>
+      <tr><td>maxHeight</td><td>number | string</td><td>—</td><td>Bounds the table body; vertical scroll beyond it. Horizontal scroll on overflow is always available. Toolbar and footer stay outside the scroll region.</td></tr>
+      <tr><td>loading</td><td>boolean</td><td>false</td><td>Indeterminate linear ProgressIndicator under the toolbar; sets aria-busy and disables sort/selection/row-click/row-actions/paging.</td></tr>
+      <tr><td>emptyState</td><td>React.ReactNode</td><td>'No data'</td><td>Custom zero-rows content rendered in a single full-width row. Minimal placeholder until the dedicated Empty state component exists.</td></tr>
+      <tr><td>rowActions</td><td>(row: Row) =&gt; { label: string; onClick: (row: Row) =&gt; void; destructive?: boolean }[]</td><td>—</td><td>Per-row overflow actions behind a trailing ⋮ opening a Menu; destructive items in error colour.</td></tr>
+      <tr><td>toolbarActions</td><td>React.ReactNode</td><td>—</td><td>Caller-composed toolbar controls (search/filter/export) beside the title — DataTable doesn't own these behaviours.</td></tr>
     </table>
   </div>
 </section>
 <section id="divider"><h3>Divider</h3>
+  <div class="hero-demo"><div style="width:280px;background:var(--surface);box-shadow:var(--el1);border-radius:4px;overflow:hidden"><div style="padding:12px 16px">Vehicle CA 123-456</div><div class="divider" style="margin-left:16px;width:calc(100% - 16px)"></div><div style="padding:12px 16px">Driver: Jane Cooper</div></div></div>
+  <div class="hero-cap">Inset — actual size</div>
   <p class="desc">A divider is a thin line that separates and groups content — between list items, sections of a form, or regions of a dense layout. Used sparingly, it brings order without adding weight.</p>
   <div class="note">Reach for whitespace and grouping first; add a divider only where a clear boundary helps. Too many lines make a layout feel busy.</div>
 
@@ -1116,6 +1263,8 @@
   </div>
 </section>
 <section id="image-list"><h3>Image List</h3>
+  <div class="hero-demo"><div class="imagelist"><div></div><div></div><div></div><div></div><div></div><div></div></div></div>
+  <div class="hero-cap">Standard — actual size</div>
   <p class="desc">Image lists arrange images in a grid — vehicle photos, inspection snapshots, document scans, map thumbnails. They make a set of visuals scannable at a glance.</p>
   <div class="note">Use an image list when the visual is the content. If text matters more than the picture, a list or table with a small thumbnail is usually better.</div>
 
@@ -1165,6 +1314,8 @@
   </div>
 </section>
 <section id="list"><h3>List</h3>
+  <div class="hero-demo"><div class="listmd"><div class="li"><span class="avatar">JC</span><div><div>Jane Cooper</div><div style="color:var(--on-surface-med);font-size:.8rem">CA 123-456</div></div></div><div class="li"><span class="avatar" style="background:var(--primary)">FK</span><div><div>Frank Kim</div><div style="color:var(--on-surface-med);font-size:.8rem">CA 789-012</div></div></div></div></div>
+  <div class="hero-cap">Two-line — actual size</div>
   <p class="desc">Lists present a vertical run of related records — drivers, notifications, recent vehicles. Each row pairs a primary line with optional supporting text, a leading avatar/icon, and trailing actions.</p>
   <div class="note">Use a list for simple, scannable records. The moment you need columns, sorting, selection, or pagination, switch to a data table.</div>
 
@@ -1214,6 +1365,8 @@
   </div>
 </section>
 <section id="pagination"><h3>Pagination</h3>
+  <div class="hero-demo"><div class="pgn"><span class="lbl">Rows per page: 100 &#9662;</span><span class="lbl">1&ndash;100 of 100,000</span><span class="p">&lsaquo;</span><span class="p">&rsaquo;</span></div></div>
+  <div class="hero-cap">Table footer — actual size</div>
   <p class="desc">Pagination breaks a large dataset into pages an operator can move through — the standard way to navigate the thousands of vehicles, trips, and alerts in the portal's data tables.</p>
   <div class="note">Desktop tables paginate — they don't infinite-scroll. For large or server-driven data, fetch one page at a time rather than loading everything.</div>
 
@@ -1264,6 +1417,8 @@
   </div>
 </section>
 <section id="progress-indicator"><h3>ProgressIndicator</h3>
+  <div class="hero-demo"><span class="linear" style="width:240px"><span class="v" style="width:60%"></span></span><span class="spin"></span></div>
+  <div class="hero-cap">Linear determinate · Circular — actual size</div>
   <p class="desc">Progress indicators show that the app is working — loading a report, exporting trips, fetching a page of vehicles. They reassure the operator that something is happening and, when possible, how far along it is.</p>
   <div class="note">Use determinate progress when you know the percentage; indeterminate when you don't. For content that's loading into a known layout (tables, cards), prefer skeletons over spinners.</div>
 
@@ -1315,6 +1470,8 @@
   </div>
 </section>
 <section id="tooltip"><h3>Tooltip</h3>
+  <div class="hero-demo"><span class="tip">Track vehicle</span></div>
+  <div class="hero-cap">Plain — actual size</div>
   <p class="desc">Tooltips reveal a short text label on hover or focus — naming an icon-only button, or showing a value that's been truncated in a dense table. They're especially valuable on desktop, where hover exists.</p>
   <div class="note">Use a tooltip for brief, supplementary text — an icon's name, a truncated cell's full value. Never put essential information or actions only in a tooltip.</div>
 
@@ -1355,11 +1512,13 @@
   </div>
 </section>
 <section id="banner"><h3>Banner</h3>
+  <div class="hero-demo"><div class="banner"><span>&#9888;</span><span style="flex:1">3 vehicles are due for service this week.</span><button class="btn text">Dismiss</button><button class="btn text">Review</button></div></div>
+  <div class="hero-cap">Warning — actual size</div>
   <p class="desc">A banner is a prominent message with one or two actions, shown at the top of a region. It surfaces something important but non-blocking — vehicles due for service, a sync issue, a new feature — and stays until the operator acts.</p>
   <div class="note">Use a banner for a persistent, moderate-priority message that needs acknowledgement. For transient confirmation use a snackbar; for a blocking decision use a dialog.</div>
 
   <div class="block"><h4>Variants</h4>
-    <div class="variant-grid">
+    <div class="variant-grid wide">
       <div class="variant-item">
         <div class="variant-demo"><div class="banner" style="background:#E3F2FD"><span style="color:#0D47A1">&#8505;</span><span style="flex:1">A new export format is now available.</span><button class="btn text">Dismiss</button><button class="btn text">Review</button></div></div>
         <div class="variant-label"><b>Informational</b><span>Neutral notice (a new export format, a tip).</span></div>
@@ -1406,6 +1565,8 @@
   </div>
 </section>
 <section id="snackbar"><h3>Snackbar</h3>
+  <div class="hero-demo"><span class="snackbar">Vehicle saved <a href="#">Undo</a></span></div>
+  <div class="hero-cap">With action — actual size</div>
   <p class="desc">A snackbar gives brief, low-priority feedback about an action just taken — "Vehicle saved", "Export started" — usually with a single optional action like Undo. It appears briefly and dismisses on its own.</p>
   <div class="note">Use a snackbar for transient confirmation that doesn't need acknowledgement. For a message that must persist until acted on, use a banner; for a blocking choice, a dialog.</div>
 
@@ -1453,6 +1614,8 @@
   </div>
 </section>
 <section id="card"><h3>Card</h3>
+  <div class="hero-demo"><div class="card"><div class="ch"><div class="t">CA 123-456</div><div class="s">Jane Cooper &middot; Active</div></div><div class="cc">14 trips &middot; 512 km this week.</div><div class="ca"><button class="btn text">Details</button><button class="btn text">Track</button></div></div></div>
+  <div class="hero-cap">Elevated — actual size</div>
   <p class="desc">A card groups related content and actions about a single subject — a vehicle summary, a KPI, an alert. Cards make a dashboard scannable by giving each thing its own contained surface.</p>
   <div class="note">Use a card to collect everything about one entity. If you're listing many comparable records, a data table is usually clearer than a wall of cards.</div>
 
@@ -1506,6 +1669,8 @@
   </div>
 </section>
 <section id="dialog"><h3>Dialog</h3>
+  <div class="hero-demo"><div class="dialog"><div class="dt">Remove vehicle?</div><div class="dc">This removes CA 123-456 from the active fleet. This action can't be undone.</div><div class="da"><button class="btn text">Cancel</button><button class="btn text" style="color:var(--error)">Remove</button></div></div></div>
+  <div class="hero-cap">Alert / confirmation — actual size</div>
   <p class="desc">A dialog is a modal window for a focused task or decision that interrupts the operator on purpose — confirming a deletion, capturing a few fields, or surfacing something that needs a choice before continuing.</p>
   <div class="note">Use a dialog only when the task genuinely needs to interrupt. For routine detail, prefer a side sheet or a detail page. For transient confirmation, prefer a snackbar.</div>
 
@@ -1515,11 +1680,11 @@
         <div class="variant-demo"><div class="dialog"><div class="dt">Remove vehicle?</div><div class="dc">This removes CA 123-456 from the active fleet. This action can't be undone.</div><div class="da"><button class="btn text">Cancel</button><button class="btn text" style="color:var(--error)">Remove</button></div></div></div>
         <div class="variant-label"><b>Alert / confirmation</b><span>Confirm a consequential action (delete, discard).</span></div>
       </div>
-      <div class="variant-item">
+      <div class="variant-item wide">
         <div class="variant-demo"><div class="dialog" style="width:360px"><div class="dt">Add note</div><div class="dc"><span class="tf outlined"><span class="lbl">Note</span><div class="f">Enter details&hellip;</div></span></div><div class="da"><button class="btn text">Cancel</button><button class="btn text">Save</button></div></div></div>
         <div class="variant-label"><b>Form dialog</b><span>Capture a few fields without leaving the page.</span></div>
       </div>
-      <div class="variant-item">
+      <div class="variant-item wide">
         <div class="variant-demo"><div class="dialog" style="width:480px"><div class="dt">Configure export</div><div class="dc">A larger task that benefits from focus; usually a page is better.</div><div class="da"><button class="btn text">Cancel</button><button class="btn text">Continue</button></div></div></div>
         <div class="variant-label"><b>Full-screen (rare on desktop)</b><span>A larger task that benefits from focus; usually a page is better.</span></div>
       </div>
@@ -1556,6 +1721,8 @@
   </div>
 </section>
 <section id="expansion-panel"><h3>ExpansionPanel</h3>
+  <div class="hero-demo"><div style="width:340px"><div class="accordion"><div class="hd"><span style="font-weight:500">Vehicle details</span><span>&#8994;</span></div><div class="bd2">Make, model, VIN, year, fuel type, and registration.</div></div><div class="accordion" style="margin-top:8px"><div class="hd"><span>Maintenance history</span><span>&#8250;</span></div></div></div></div>
+  <div class="hero-cap">Single-open — actual size</div>
   <p class="desc">Expansion panels (accordions) let operators reveal detail on demand — collapsing a long record or settings page into named sections that open one at a time, so the screen stays manageable.</p>
   <div class="note">Use expansion panels to tame dense detail (vehicle specs, settings groups). For switching between peer views of one record, prefer tabs.</div>
 
@@ -1613,6 +1780,8 @@
   </div>
 </section>
 <section id="side-sheet"><h3>SideSheet</h3>
+  <div class="hero-demo"><div class="sheet" style="width:260px;border-radius:0"><div style="padding:0 16px 8px;font-weight:500">CA 123-456</div><div class="listmd" style="box-shadow:none;border-radius:0"><div class="li">Overview</div><div class="li">Recent trips</div><div class="li">Maintenance</div><div class="li">Alerts</div></div></div></div>
+  <div class="hero-cap">Standard — actual size</div>
   <p class="desc">A side sheet is a surface anchored to the right edge that shows contextual detail beside the main content — the selected vehicle's summary next to the list, or a filters panel — without navigating away.</p>
   <div class="note">Use a side sheet to keep context: the operator sees a record's detail while the list stays visible. (Bottom sheets are a mobile pattern and are excluded from this desktop set.)</div>
 
@@ -1622,7 +1791,7 @@
         <div class="variant-demo"><div class="sheet" style="width:260px;border-radius:0"><div style="padding:0 16px 8px;font-weight:500">CA 123-456</div><div class="listmd" style="box-shadow:none;border-radius:0"><div class="li">Overview</div><div class="li">Recent trips</div><div class="li">Maintenance</div><div class="li">Alerts</div></div></div></div>
         <div class="variant-label"><b>Standard (pushes content)</b><span>Detail beside a list where keeping context matters; content reflows.</span></div>
       </div>
-      <div class="variant-item">
+      <div class="variant-item wide">
         <div class="variant-demo">
           <div style="display:flex;width:100%;min-height:160px;background:rgba(0,0,0,.32);border-radius:8px">
             <div style="flex:1;padding:16px;color:var(--on-surface-med)">List content&hellip;</div>
