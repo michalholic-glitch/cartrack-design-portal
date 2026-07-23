@@ -23,7 +23,7 @@ It also mirrors component-library-preview.html and the standalone download files
 from design-system/ into DOCS so the deployed site — which only serves files under
 portal/docs/ — doesn't need to reach outside its own output directory.
 """
-import json, html, os, re, shutil, zipfile
+import json, html, os, re, shutil, sys, zipfile
 from pathlib import Path
 
 HERE = Path(__file__).resolve().parent            # .../cartrack-ai-design-system/portal/docs
@@ -165,6 +165,67 @@ for d in sorted((DS / "components").iterdir()):
     if d.is_dir():
         doc = json.load(open(d / f"{d.name}.doc.json"))
         comps.append(doc)
+
+# ---------- doc.json ↔ .tsx parity check ----------
+# The portal's promise is "this page reflects exactly what the AI reads and what
+# the code implements". Nothing else links doc.json props to the tsx interface,
+# so enforce it here: the build FAILS on any prop-name or required-flag mismatch.
+# Skipped (with a warning): components whose Props is a derived type rather than
+# a literal `export interface <Name>Props { ... }` (e.g. Icon wraps FontAwesome's
+# props); doc.json prop names that aren't plain identifiers (subcomponent docs
+# like "PageHeader.Title — children") are ignored on the doc side.
+def _check_doc_tsx_parity():
+    failures, warnings = [], []
+    for d in sorted((DS / "components").iterdir()):
+        if not d.is_dir():
+            continue
+        tsx = (d / f"{d.name}.tsx").read_text(encoding="utf-8")
+        doc = json.load(open(d / f"{d.name}.doc.json"))
+        m = re.search(r"export interface \w+Props(?:<[^>]*>)?\s*\{(.*?)\n\}", tsx, re.S)
+        if not m:
+            warnings.append(f"{d.name}: no statically parseable Props interface — parity not verified")
+            continue
+        tsx_props = re.findall(r"^\s{2}(\w+)(\??):", m.group(1), re.M)
+        tsx_req = {n: (q != "?") for n, q in tsx_props}
+        doc_props = [p for p in doc.get("props", []) if re.fullmatch(r"\w+", p.get("name", ""))]
+        tsx_names, doc_names = set(tsx_req), {p["name"] for p in doc_props}
+        if tsx_names - doc_names:
+            failures.append(f"{d.name}: props in tsx but not doc.json: {sorted(tsx_names - doc_names)}")
+        if doc_names - tsx_names:
+            failures.append(f"{d.name}: props in doc.json but not tsx: {sorted(doc_names - tsx_names)}")
+        for p in doc_props:
+            n = p["name"]
+            if n in tsx_req and bool(p.get("required")) != tsx_req[n]:
+                failures.append(f"{d.name}: required-flag mismatch on '{n}' (tsx says {'required' if tsx_req[n] else 'optional'})")
+    for w in warnings:
+        print(f"  parity WARNING — {w}")
+    if failures:
+        print("PARITY CHECK FAILED — doc.json and .tsx disagree; fix before the portal can build:")
+        for f in failures:
+            print(f"  ✗ {f}")
+        sys.exit(1)
+    print(f"  parity check OK — doc.json props match .tsx interfaces ({len(warnings)} skipped)")
+
+_check_doc_tsx_parity()
+
+# ---------- live demos (rendered from the real .tsx) ----------
+# portal/demos/ bundles the actual React components with esbuild; component pages
+# listed in the manifest get live mounts (hero + variant tiles) instead of the
+# hand-drawn mockup fragments. Everything else keeps the mockup fallback, so the
+# build degrades gracefully when node/npm isn't available.
+LIVE_DEMOS = {}
+_demos_dir = DOCS.parent / "demos"
+if (_demos_dir / "node_modules").exists():
+    import subprocess
+    try:
+        subprocess.run(["node", str(_demos_dir / "build-demos.mjs")],
+                       check=True, capture_output=True, text=True, cwd=_demos_dir)
+        LIVE_DEMOS = json.load(open(DOCS / "assets" / "demos-manifest.json"))
+        print("  live demos: " + ", ".join(f"{k}({len(v)})" for k, v in LIVE_DEMOS.items()))
+    except Exception as e:
+        print(f"  live-demo build FAILED — mockup tiles used everywhere: {e}")
+else:
+    print("  live demos skipped (portal/demos/node_modules missing — run `npm install` there)")
 
 categories = {}
 for c in comps:
@@ -1677,21 +1738,34 @@ def body_component(c):
         anat = f'<h5>Anatomy</h5><ol class="anatomy">{rows}</ol>'
 
     # variants — demo tile + text + generated usage snippet (spec §4.4, §8);
-    # a variant with no preview fragment degrades to text-only (spec §5)
+    # live-manifest variants mount the REAL component (stacked full-width row);
+    # a variant with neither a live demo nor a preview fragment degrades to text-only
+    is_live = name in LIVE_DEMOS
+    live_labels = set(LIVE_DEMOS.get(name, []))
     vrows = ""
     for i, v in enumerate(c.get("variants", [])):
-        frag = demo_for_variant(s, v.get("name", ""), i)
-        tile = f'<div class="demo-embed vtile">{frag}</div>' if frag else ""
+        vname = v.get("name", "")
         snippet = f'<pre class="usage"><code>{esc(usage_snippet(c, v))}</code></pre>'
-        info = (f'<div class="vinfo"><b>{esc(v.get("name",""))}</b>'
+        info = (f'<div class="vinfo"><b>{esc(vname)}</b>'
                 f'<p>{esc(v.get("whenToUse",""))}</p>{snippet}</div>')
+        if is_live and vname in live_labels:
+            tile = f'<div class="live-demo vtile-live" data-live-demo="{esc(name)}" data-demo="{esc(vname)}"></div>'
+            vrows += f'<div class="vrow" style="grid-template-columns:1fr">{tile}{info}</div>'
+            continue
+        frag = demo_for_variant(s, vname, i)
+        tile = f'<div class="demo-embed vtile">{frag}</div>' if frag else ""
         vrows += f'<div class="vrow">{tile}{info}</div>' if tile else f'<div class="vrow" style="grid-template-columns:1fr">{info}</div>'
     vt = ""
     if vrows:
-        vt = (f'<h5>Variants</h5>'
-              f'<p class="tnote">Demos are the real preview markup, inlined at build time. '
-              f'"Example usage" lines are generated from doc.json — a documentation aid, not tested code.</p>'
-              f'{vrows}')
+        if is_live:
+            tnote = ('Demos marked <b>Live</b> are the real component — rendered in your browser from the same '
+                     f'<code>{esc(name)}.tsx</code> an agent imports; interactions (sort, select, menus) actually work. '
+                     'Unmarked tiles are static preview markup: the component can\'t express that variant yet. '
+                     '"Example usage" lines are generated from doc.json — a documentation aid, not tested code.')
+        else:
+            tnote = ('Demos are the real preview markup, inlined at build time. '
+                     '"Example usage" lines are generated from doc.json — a documentation aid, not tested code.')
+        vt = f'<h5>Variants</h5><p class="tnote">{tnote}</p>{vrows}'
 
     # states & behaviors — text table plus, where the preview stylesheet has a
     # real CSS hook for a state, one interactive demo instance (spec §4.6, §7)
@@ -1775,7 +1849,28 @@ def body_component(c):
 
     feedback = f'<div class="cfoot">Improve this component — edit <code>components/{esc(name)}/{esc(name)}.doc.json</code> and regenerate the portal.</div>'
 
+    # live hero + per-page assets (only pages with live demos load the MDC CSS/JS)
+    herodemo, liveassets, livepill = "", "", ""
+    if is_live:
+        livepill = '<span class="pill live" title="The demos on this page are the real component, rendered from its .tsx">● Live</span>'
+        herodemo = (f'<div class="livehero"><div class="live-demo" data-live-demo="{esc(name)}" data-demo="hero"></div>'
+                    f'<div class="livecap">Live — rendered from <code>components/{esc(name)}/{esc(name)}.tsx</code>, '
+                    f'the same code an agent imports. Interactions are real.</div></div>')
+        liveassets = (
+            '<link rel="stylesheet" href="../assets/mdc.cartrack.css">'
+            '<link rel="stylesheet" href="../assets/cartrack-supplement.css">'
+            '<style>'
+            '.livehero{margin:18px 0 6px;padding:32px 28px;background:#fff;border:1px solid rgba(0,0,0,.12);border-radius:12px}'
+            '.livehero .live-demo{display:flex;justify-content:center}'
+            '.livecap{margin-top:14px;font-size:.72rem;font-weight:600;letter-spacing:.05em;text-transform:uppercase;color:rgba(0,0,0,.55)}'
+            '.livecap::before{content:"●";color:#4CAF50;margin-right:6px}'
+            '.vtile-live{background:#fff;border:1px solid rgba(0,0,0,.12);border-radius:12px;padding:20px;overflow:auto;margin-bottom:8px}'
+            '.pill.live{background:#E8F5E9;color:#1B5E20;border-color:#A5D6A7}'
+            '</style>'
+            '<script defer src="../assets/demos.js"></script>')
+
     return f'''<div class="inner pagetop">
+{liveassets}
 <a class="backlink" href="index.html">← All components</a>
 <article class="comp">
   <div class="comphead">
@@ -1783,8 +1878,10 @@ def body_component(c):
     <span class="pill">{esc(c.get("category",""))}</span>
     <span class="pill soft">{esc(c.get("status",""))}</span>
     <span class="pill aa" title="Reviewed against WCAG AA during the 2026-07-16 preview audit">AA reviewed</span>
+    {livepill}
   </div>
   <p class="cdesc">{esc(c.get("description",""))}</p>
+  {herodemo}
   {prov}
   {keyrule}
   {whenblock}

@@ -1,0 +1,21 @@
+// =============================================================================
+// Cartrack-themed Material Components Web — Sass entry point.
+// Compile with DART SASS (not node-sass/libsass) to produce a self-contained,
+// brand-compiled stylesheet. See BUILD.md for the commands.
+//
+// MDC Web is Apache-2.0 (© Google). This file only sets theme tokens and
+// forwards MDC's own styles.
+// =============================================================================
+
+@use "@material/theme" with (
+  $primary:    #F47735,   // Cartrack orange
+  $secondary:  #333333,
+  $background:  #FFFFFF,
+  $surface:    #FFFFFF,
+  $error:      #F44336,   // tokens.json primitive.color.status.error.500 (was #BA1A1A, pre-tokens value)
+  // $on-primary defaults to a contrast-checked value. White on #F47735 fails
+  // WCAG AA (~2.79:1) — uncomment the next line to force dark text on primary:
+  // $on-primary: #000000,
+);
+
+@use "material-components-web/material-components-web";

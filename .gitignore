@@ -15,3 +15,6 @@ venv/
 
 # Vercel
 .vercel
+
+# Node (portal/demos live-demo build)
+node_modules/
