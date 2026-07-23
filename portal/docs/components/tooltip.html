@@ -571,7 +571,7 @@
 
 <main>
 <div class="inner pagetop">
-
+<link rel="stylesheet" href="../assets/mdc.cartrack.css"><link rel="stylesheet" href="../assets/cartrack-supplement.css"><style>.livehero{margin:18px 0 6px;padding:32px 28px;background:#fff;border:1px solid rgba(0,0,0,.12);border-radius:12px}.livehero .live-demo{display:flex;justify-content:center}.livecap{margin-top:14px;font-size:.72rem;font-weight:600;letter-spacing:.05em;text-transform:uppercase;color:rgba(0,0,0,.55)}.livecap::before{content:"●";color:#4CAF50;margin-right:6px}.vtile-live{background:#fff;border:1px solid rgba(0,0,0,.12);border-radius:12px;padding:20px;overflow:auto;margin-bottom:8px}.pill.live{background:#E8F5E9;color:#1B5E20;border-color:#A5D6A7}</style><script defer src="../assets/demos.js"></script>
 <a class="backlink" href="index.html">← All components</a>
 <article class="comp">
   <div class="comphead">
@@ -579,18 +579,18 @@
     <span class="pill">Overlays and layering</span>
     <span class="pill soft">stable</span>
     <span class="pill aa" title="Reviewed against WCAG AA during the 2026-07-16 preview audit">AA reviewed</span>
-    
+    <span class="pill live" title="The demos on this page are the real component, rendered from its .tsx">● Live</span>
   </div>
   <p class="cdesc">Tooltips reveal a short text label on hover or focus — naming an icon-only button, or showing a value that&#x27;s been truncated in a dense table. They&#x27;re especially valuable on desktop, where hover exists.</p>
-  
-  <div class="prov">Source: Material Components Web (MDC) 14.0.0 — Cartrack-themed · component-specs/tooltips.md</div>
+  <div class="livehero"><div class="live-demo" data-live-demo="Tooltip" data-demo="hero"></div><div class="livecap">Live — rendered from <code>components/Tooltip/Tooltip.tsx</code>, the same code an agent imports. Interactions are real.</div></div>
+  <div class="prov">References: Material Components Web (MDC) 14.0.0 — Cartrack-themed · md2-cartrack-library/components/tooltips.html</div>
   <div class="keyrule">Use a tooltip for brief, supplementary text — an icon&#x27;s name, a truncated cell&#x27;s full value. Never put essential information or actions only in a tooltip.</div>
   <div class="whens">
       <div class="whenuse"><h5>When to use</h5><ul><li>A short label naming or clarifying the trigger.</li><li>Shows the full value when text is clipped in a cell/label.</li></ul></div>
       <div class="whennot"><h5>When not to use</h5><ul><li>Don&#x27;t put actions or essential info only in a tooltip.</li></ul></div>
     </div>
   <h5>Anatomy</h5><ol class="anatomy"><li><b>Trigger</b> — the element being described (icon button, truncated text).</li><li><b>Container</b> — the small dark surface.</li><li><b>Label</b> — concise text (ideally a few words).</li></ol>
-  <h5>Variants</h5><p class="tnote">Demos are the real preview markup, inlined at build time. "Example usage" lines are generated from doc.json — a documentation aid, not tested code.</p><div class="vrow"><div class="demo-embed vtile"><span class="tip">Track vehicle</span></div><div class="vinfo"><b>Plain</b><p>A short label naming or clarifying the trigger.</p><pre class="usage"><code>&lt;Tooltip variant=&quot;plain&quot; label=&quot;Save&quot; children={…} /&gt;</code></pre></div></div><div class="vrow"><div class="demo-embed vtile"><span class="tip">CA 123-456 &middot; Jane Cooper &middot; Active</span></div><div class="vinfo"><b>Truncation reveal</b><p>Shows the full value when text is clipped in a cell/label.</p><pre class="usage"><code>&lt;Tooltip variant=&quot;truncation-reveal&quot; label=&quot;Save&quot; children={…} /&gt;</code></pre></div></div>
+  <h5>Variants</h5><p class="tnote">Demos marked <b>Live</b> are the real component — rendered in your browser from the same <code>Tooltip.tsx</code> an agent imports; interactions (sort, select, menus) actually work. Unmarked tiles are static preview markup: the component can't express that variant yet. "Example usage" lines are generated from doc.json — a documentation aid, not tested code.</p><div class="vrow" style="grid-template-columns:1fr"><div class="live-demo vtile-live" data-live-demo="Tooltip" data-demo="Plain"></div><div class="vinfo"><b>Plain</b><p>A short label naming or clarifying the trigger.</p><pre class="usage"><code>&lt;Tooltip variant=&quot;plain&quot; label=&quot;Save&quot; children={…} /&gt;</code></pre></div></div><div class="vrow" style="grid-template-columns:1fr"><div class="live-demo vtile-live" data-live-demo="Tooltip" data-demo="Truncation reveal"></div><div class="vinfo"><b>Truncation reveal</b><p>Shows the full value when text is clipped in a cell/label.</p><pre class="usage"><code>&lt;Tooltip variant=&quot;truncation-reveal&quot; label=&quot;Save&quot; children={…} /&gt;</code></pre></div></div>
   <h5>States</h5><table class="mini"><tbody><tr><td><b>Hidden</b></td><td>Not rendered until triggered.</td></tr><tr><td><b>Shown</b></td><td>Dark surface, light text, near the trigger.</td></tr></tbody></table>
   <h5>Behaviors</h5><table class="mini"><tbody><tr><td><b>Trigger</b></td><td>Appears on hover and on keyboard focus; dismisses on blur/mouse-out or Escape.</td></tr><tr><td><b>Delay</b></td><td>A short enter delay avoids tooltip noise as the pointer moves across a toolbar.</td></tr><tr><td><b>Positioning</b></td><td>Flips to stay within the viewport; never covers its own trigger.</td></tr></tbody></table>
   <div class="dodont">
@@ -602,7 +602,7 @@
   <details><summary>Visual specs</summary><table class="mini"><tbody><tr><td>Background</td><td>Dark grey (~92% opacity), white text (passes AA)</td></tr><tr><td>Text</td><td>Roboto ~10–12px</td></tr><tr><td>Padding / radius</td><td>~6px / 4px</td></tr><tr><td>Enter delay</td><td>~150–500ms</td></tr></tbody></table></details>
   <h5 id="accessibility">Accessibility</h5><ul class="plain"><li>Associate the tooltip with its trigger (e.g. aria-describedby).</li><li>Show on focus as well as hover, and allow Escape to dismiss.</li><li>The icon button still needs its own accessible name.</li></ul>
   <h5>Related components</h5><table class="mini"><tbody><tr><td><a href="snackbar.html"><b>Snackbar</b></a></td><td>Feedback after an action, not on hover</td></tr><tr><td><a href="badge.html"><b>Badge</b></a></td><td>Persistent status/counts on an icon</td></tr></tbody></table>
-  <h5>Design checklist</h5><div class="checks"><span class="chk on">✓ Tokens wired</span><span class="chk on">✓ Docs complete</span><span class="chk on">✓ AA reviewed (2026-07-16)</span><span class="chk on">✓ Preview synced</span><span class="chk ">○ Validated in a production prototype</span></div>
+  <h5>Design checklist</h5><div class="checks"><span class="chk on">✓ Tokens wired</span><span class="chk on">✓ Docs complete</span><span class="chk on">✓ AA reviewed (2026-07-16)</span><span class="chk on">✓ Live demo (rendered from the .tsx)</span><span class="chk ">○ Validated in a production prototype</span></div>
   <details class="research"><summary>Research &amp; findings</summary><p class="tnote">No usage findings logged yet. When research or prototype feedback exists for this component, add a <code>research</code> field to its doc.json and regenerate the portal.</p></details>
   <h5>Full page</h5><a class="livelink" href="../component-library-preview.html#tooltip" target="_blank">See this component in a full page layout ↗</a>
   <div class="cfoot">Improve this component — edit <code>components/Tooltip/Tooltip.doc.json</code> and regenerate the portal.</div>

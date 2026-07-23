@@ -578,12 +578,12 @@
     <h3>Icon</h3>
     <span class="pill">Images and icons</span>
     <span class="pill soft">stable</span>
-    <span class="pill aa" title="Reviewed against WCAG AA during the 2026-07-16 preview audit">AA reviewed</span>
+    
     
   </div>
   <p class="cdesc">Icon renders a single glyph from Cartrack&#x27;s FontAwesome set — a thin wrapper around FontAwesomeIcon. It is the only icon system fleet-web actually uses; there is no Material icon set anywhere in the app despite MUI powering most other components. All icons must be registered once in src/util-functions/font-initialization.ts (via FontAwesome&#x27;s `library.add(...)`) before they can be referenced by name.</p>
   
-  <div class="prov">Source: Font Awesome 6 (Free + Pro tiers) via @fortawesome/react-fontawesome · src/components/Icon/index.tsx</div>
+  <div class="prov">References: Font Awesome 6 (Free + Pro tiers) via @fortawesome/react-fontawesome · src/components/Icon/index.tsx</div>
   <div class="keyrule">Always render icons through Icon rather than a raw &lt;svg&gt;, emoji, or CSS ligature. Reference an already-registered icon name; if the icon you need isn&#x27;t registered yet, add it to font-initialization.ts first — don&#x27;t import a fa* module ad hoc in a feature component.</div>
   <div class="whens">
       <div class="whenuse"><h5>When to use</h5><ul><li>Default weight for most UI icons (fas prefix, Free tier). Most of the app&#x27;s registered icons are this style.</li><li>Lighter-weight alternative used selectively (far prefix, Free tier) — e.g. faCheckSquare, faCommentAlt, faClock.</li><li>Thinnest weight, used for a specific set of vehicle/fleet glyphs (fal prefix). Requires the Pro tier and the FontAwesome Pro licence Cartrack already holds — e.g. faSteeringWheel, faBusAlt, faTaxi, faUserHardHat.</li></ul></div>
@@ -602,7 +602,7 @@
   <details><summary>Visual specs</summary><table class="mini"><tbody><tr><td>Default size</td><td>1em (inherits font-size)</td></tr><tr><td>size prop scale</td><td>xs, sm, lg, 1x–10x (FontAwesome&#x27;s own enum — see tokens.json semantic.icon.sizing)</td></tr><tr><td>Default colour</td><td>currentColor (inherits; see tokens.json semantic.icon.colour)</td></tr></tbody></table></details>
   <h5 id="accessibility">Accessibility</h5><ul class="plain"><li>Icon-only buttons need an accessible name from the surrounding control (aria-label, or a Tooltip per the Tooltip component&#x27;s own rule) — the icon itself carries no text.</li><li>Purely decorative icons (next to a text label that already says the same thing) should be aria-hidden so they aren&#x27;t announced twice.</li><li>Don&#x27;t rely on icon shape alone to convey a status — pair it with the categorical colour and, where possible, text.</li></ul>
   <h5>Related components</h5><table class="mini"><tbody><tr><td><a href="tooltip.html"><b>Tooltip</b></a></td><td>Names an icon-only control that has no visible text</td></tr><tr><td><a href="badge.html"><b>Badge</b></a></td><td>Anchors a count/dot indicator to an icon</td></tr><tr><td><a href="button.html"><b>Button</b></a></td><td>leadingIcon takes a registered FontAwesome name, not a Material ligature</td></tr><tr><td><a href="text-field.html"><b>TextField</b></a></td><td>leadingIcon/trailingIcon take a registered FontAwesome name, not a Material ligature</td></tr></tbody></table>
-  <h5>Design checklist</h5><div class="checks"><span class="chk on">✓ Tokens wired</span><span class="chk on">✓ Docs complete</span><span class="chk on">✓ AA reviewed (2026-07-16)</span><span class="chk on">✓ Preview synced</span><span class="chk ">○ Validated in a production prototype</span></div>
+  <h5>Design checklist</h5><div class="checks"><span class="chk on">✓ Tokens wired</span><span class="chk on">✓ Docs complete</span><span class="chk ">○ AA reviewed</span><span class="chk ">○ Live demo (rendered from the .tsx)</span><span class="chk ">○ Validated in a production prototype</span></div>
   <details class="research"><summary>Research &amp; findings</summary><p class="tnote">No usage findings logged yet. When research or prototype feedback exists for this component, add a <code>research</code> field to its doc.json and regenerate the portal.</p></details>
   <h5>Full page</h5><a class="livelink" href="../component-library-preview.html#icon" target="_blank">See this component in a full page layout ↗</a>
   <div class="cfoot">Improve this component — edit <code>components/Icon/Icon.doc.json</code> and regenerate the portal.</div>

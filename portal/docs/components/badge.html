@@ -571,7 +571,7 @@
 
 <main>
 <div class="inner pagetop">
-
+<link rel="stylesheet" href="../assets/mdc.cartrack.css"><link rel="stylesheet" href="../assets/cartrack-supplement.css"><style>.livehero{margin:18px 0 6px;padding:32px 28px;background:#fff;border:1px solid rgba(0,0,0,.12);border-radius:12px}.livehero .live-demo{display:flex;justify-content:center}.livecap{margin-top:14px;font-size:.72rem;font-weight:600;letter-spacing:.05em;text-transform:uppercase;color:rgba(0,0,0,.55)}.livecap::before{content:"●";color:#4CAF50;margin-right:6px}.vtile-live{background:#fff;border:1px solid rgba(0,0,0,.12);border-radius:12px;padding:20px;overflow:auto;margin-bottom:8px}.pill.live{background:#E8F5E9;color:#1B5E20;border-color:#A5D6A7}</style><script defer src="../assets/demos.js"></script>
 <a class="backlink" href="index.html">← All components</a>
 <article class="comp">
   <div class="comphead">
@@ -579,18 +579,18 @@
     <span class="pill">Labels</span>
     <span class="pill soft">stable</span>
     <span class="pill aa" title="Reviewed against WCAG AA during the 2026-07-16 preview audit">AA reviewed</span>
-    
+    <span class="pill live" title="The demos on this page are the real component, rendered from its .tsx">● Live</span>
   </div>
   <p class="cdesc">A badge is a small indicator placed on another element to show a count or status — the number of unread alerts on the notifications bell, or a dot marking a vehicle that needs attention.</p>
-  
-  <div class="prov">Source: Material Components Web (MDC) 14.0.0 — Cartrack-themed · component-specs/badges.md</div>
+  <div class="livehero"><div class="live-demo" data-live-demo="Badge" data-demo="hero"></div><div class="livecap">Live — rendered from <code>components/Badge/Badge.tsx</code>, the same code an agent imports. Interactions are real.</div></div>
+  <div class="prov">References: Material Components Web (MDC) 14.0.0 — Cartrack-themed · md2-cartrack-library/components/badges.html</div>
   <div class="keyrule">Use a badge to draw attention to a count or new state on an icon or item. Keep it glanceable — for detailed status use a status chip instead.</div>
   <div class="whens">
       <div class="whenuse"><h5>When to use</h5><ul><li>Show a count (unread alerts, pending tasks).</li><li>Indicate &quot;new&quot;/attention without a number.</li><li>Large counts shown as &quot;99+&quot;.</li></ul></div>
       <div class="whennot"><h5>When not to use</h5><ul><li>Don&#x27;t put long text in a badge.</li></ul></div>
     </div>
   <h5>Anatomy</h5><ol class="anatomy"><li><b>Host</b> — the icon/element the badge sits on.</li><li><b>Badge</b> — the small count or dot indicator (usually top-right).</li><li><b>Content</b> — a number, capped value (&quot;99+&quot;), or empty dot.</li></ol>
-  <h5>Variants</h5><p class="tnote">Demos are the real preview markup, inlined at build time. "Example usage" lines are generated from doc.json — a documentation aid, not tested code.</p><div class="vrow"><div class="demo-embed vtile"><span class="badge"><button class="iconbtn">🔔</button><span class="d">4</span></span></div><div class="vinfo"><b>Numeric</b><p>Show a count (unread alerts, pending tasks).</p><pre class="usage"><code>&lt;Badge children={…} hostLabel=&quot;…&quot; /&gt;</code></pre></div></div><div class="vrow"><div class="demo-embed vtile"><span class="badge"><button class="iconbtn">🚚</button><span class="d" style="min-width:8px;height:8px;padding:0"></span></span></div><div class="vinfo"><b>Dot</b><p>Indicate &quot;new&quot;/attention without a number.</p><pre class="usage"><code>&lt;Badge children={…} hostLabel=&quot;…&quot; /&gt;</code></pre></div></div><div class="vrow"><div class="demo-embed vtile"><span class="badge"><button class="iconbtn">✉</button><span class="d">99+</span></span></div><div class="vinfo"><b>Capped</b><p>Large counts shown as &quot;99+&quot;.</p><pre class="usage"><code>&lt;Badge children={…} hostLabel=&quot;…&quot; /&gt;</code></pre></div></div>
+  <h5>Variants</h5><p class="tnote">Demos marked <b>Live</b> are the real component — rendered in your browser from the same <code>Badge.tsx</code> an agent imports; interactions (sort, select, menus) actually work. Unmarked tiles are static preview markup: the component can't express that variant yet. "Example usage" lines are generated from doc.json — a documentation aid, not tested code.</p><div class="vrow" style="grid-template-columns:1fr"><div class="live-demo vtile-live" data-live-demo="Badge" data-demo="Numeric"></div><div class="vinfo"><b>Numeric</b><p>Show a count (unread alerts, pending tasks).</p><pre class="usage"><code>&lt;Badge children={…} hostLabel=&quot;…&quot; /&gt;</code></pre></div></div><div class="vrow" style="grid-template-columns:1fr"><div class="live-demo vtile-live" data-live-demo="Badge" data-demo="Dot"></div><div class="vinfo"><b>Dot</b><p>Indicate &quot;new&quot;/attention without a number.</p><pre class="usage"><code>&lt;Badge children={…} hostLabel=&quot;…&quot; /&gt;</code></pre></div></div><div class="vrow" style="grid-template-columns:1fr"><div class="live-demo vtile-live" data-live-demo="Badge" data-demo="Capped"></div><div class="vinfo"><b>Capped</b><p>Large counts shown as &quot;99+&quot;.</p><pre class="usage"><code>&lt;Badge children={…} hostLabel=&quot;…&quot; /&gt;</code></pre></div></div>
   <h5>States</h5><table class="mini"><tbody><tr><td><b>Visible</b></td><td>Error-colour pill/dot on the host.</td></tr><tr><td><b>Empty (dot)</b></td><td>Small filled dot, no number.</td></tr><tr><td><b>Hidden</b></td><td>Removed at zero/none.</td></tr></tbody></table>
   <h5>Behaviors</h5><table class="mini"><tbody><tr><td><b>Capping</b></td><td>Cap large counts (e.g. 99+) so the badge stays small and readable.</td></tr><tr><td><b>Zero</b></td><td>Hide the badge at zero unless &quot;0&quot; is meaningful.</td></tr><tr><td><b>Live updates</b></td><td>When the count changes, update it promptly and announce it to assistive tech.</td></tr></tbody></table>
   <div class="dodont">
@@ -602,7 +602,7 @@
   <details><summary>Visual specs</summary><table class="mini"><tbody><tr><td>Numeric badge</td><td>~16–18px tall pill</td></tr><tr><td>Dot</td><td>~8px</td></tr><tr><td>Colour</td><td>error (#F44336) with white text (passes AA)</td></tr><tr><td>Text</td><td>Roboto ~11–12px / 500</td></tr></tbody></table></details>
   <h5 id="accessibility">Accessibility</h5><ul class="plain"><li>The host&#x27;s accessible name includes the badge meaning (e.g. &quot;Notifications, 4 unread&quot;).</li><li>Changes are announced via a live region.</li><li>The dot/number is not the only signal of an important state.</li></ul>
   <h5>Related components</h5><table class="mini"><tbody><tr><td><a href="chip.html"><b>Chip</b></a></td><td>When the label needs words, not just a count</td></tr><tr><td><a href="tooltip.html"><b>Tooltip</b></a></td><td>Icon-only targets with a badge still need a tooltip</td></tr></tbody></table>
-  <h5>Design checklist</h5><div class="checks"><span class="chk on">✓ Tokens wired</span><span class="chk on">✓ Docs complete</span><span class="chk on">✓ AA reviewed (2026-07-16)</span><span class="chk on">✓ Preview synced</span><span class="chk ">○ Validated in a production prototype</span></div>
+  <h5>Design checklist</h5><div class="checks"><span class="chk on">✓ Tokens wired</span><span class="chk on">✓ Docs complete</span><span class="chk on">✓ AA reviewed (2026-07-16)</span><span class="chk on">✓ Live demo (rendered from the .tsx)</span><span class="chk ">○ Validated in a production prototype</span></div>
   <details class="research"><summary>Research &amp; findings</summary><p class="tnote">No usage findings logged yet. When research or prototype feedback exists for this component, add a <code>research</code> field to its doc.json and regenerate the portal.</p></details>
   <h5>Full page</h5><a class="livelink" href="../component-library-preview.html#badge" target="_blank">See this component in a full page layout ↗</a>
   <div class="cfoot">Improve this component — edit <code>components/Badge/Badge.doc.json</code> and regenerate the portal.</div>

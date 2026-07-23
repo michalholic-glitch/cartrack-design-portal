@@ -1,8 +1,36 @@
 {
+  "Badge": [
+    "Numeric",
+    "Dot",
+    "Capped"
+  ],
+  "Banner": [
+    "Informational",
+    "Warning",
+    "Error",
+    "Success"
+  ],
+  "Breadcrumbs": [
+    "Standard",
+    "Collapsed"
+  ],
   "Button": [
     "Contained",
     "Outlined",
     "Text"
+  ],
+  "Card": [
+    "Elevated",
+    "Outlined",
+    "With media",
+    "Actionable (whole-card)"
+  ],
+  "Chip": [
+    "Input chip",
+    "Filter chip",
+    "Choice chip",
+    "Action chip",
+    "Status chip (read-only)"
   ],
   "DataTable": [
     "With toolbar",
@@ -13,5 +41,110 @@
     "Loading",
     "Empty state",
     "Row actions"
+  ],
+  "Dialog": [
+    "Alert / confirmation",
+    "Form dialog"
+  ],
+  "Divider": [
+    "Full-width",
+    "Inset",
+    "Middle",
+    "Vertical"
+  ],
+  "ExpansionPanel": [
+    "Single-open",
+    "Multi-open",
+    "With summary"
+  ],
+  "ImageList": [
+    "Standard",
+    "With text overlay"
+  ],
+  "List": [
+    "Single-line",
+    "Two-line",
+    "Three-line",
+    "With controls"
+  ],
+  "Menu": [
+    "Overflow menu",
+    "Dropdown (exposed) menu",
+    "Context menu"
+  ],
+  "NavigationDrawer": [
+    "Permanent",
+    "Collapsible",
+    "Grouped"
+  ],
+  "NavigationRail": [
+    "Labelled",
+    "Icon-only",
+    "Expandable"
+  ],
+  "PageHeader": [
+    "Simple (title only)",
+    "List (title + actions)",
+    "Detail (back-link + actions)"
+  ],
+  "Pagination": [
+    "Table footer (range + prev/next)",
+    "Numbered pages",
+    "Rows-per-page only"
+  ],
+  "Picker": [
+    "Date picker",
+    "Date range picker",
+    "Time picker",
+    "Date-time / date-time range",
+    "Field-only",
+    "Static / inline"
+  ],
+  "ProgressIndicator": [
+    "Linear determinate",
+    "Linear indeterminate",
+    "Circular determinate",
+    "Circular indeterminate"
+  ],
+  "SelectionControl": [
+    "Checkbox",
+    "Radio button",
+    "Switch"
+  ],
+  "SideSheet": [
+    "Standard (pushes content)",
+    "Modal (over a scrim)",
+    "Filters panel"
+  ],
+  "Slider": [
+    "Continuous",
+    "Discrete",
+    "Range (two thumbs)"
+  ],
+  "Snackbar": [
+    "Message only",
+    "With action",
+    "Error toast"
+  ],
+  "Stepper": [
+    "Horizontal",
+    "Vertical",
+    "Linear",
+    "Non-linear"
+  ],
+  "Tabs": [
+    "Fixed",
+    "Scrollable",
+    "With icon / count"
+  ],
+  "TextField": [
+    "Filled",
+    "Outlined",
+    "With adornments",
+    "Multiline / textarea"
+  ],
+  "Tooltip": [
+    "Plain",
+    "Truncation reveal"
   ]
 }
