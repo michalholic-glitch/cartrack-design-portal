@@ -17,13 +17,15 @@ design-system/
 ├── README.md                        # Human-friendly overview
 ├── tokens/
 │   └── tokens.json                  # Single source of truth: color, spacing, type, radius, border width
-├── components/                      # 27 components, one folder each
+├── components/                      # 28 components, one folder each
 │   └── <Name>/
 │       ├── <Name>.tsx               # Implementation (React, MDC class contract)
 │       ├── <Name>.doc.json          # Structured docs — props, variants, doThis/dontDoThis, tokens
 │       └── index.ts                 # Export
-├── templates/                       # Page patterns: table-page, detail-page, map-tracking-view,
-│                                    # settings-page, login — how components compose into screens
+├── templates/                       # Patterns — full-page (table-page, detail-page, login, etc.) and
+│                                    # cross-cutting regions (main-navigation, page-header) — how
+│                                    # components compose into screens; read the whole folder, don't
+│                                    # assume this list is complete
 ├── vibe-tests/                      # Tests whether these docs actually produce correct output from a
 │                                    # fresh AI agent — see vibe-tests/README.md
 └── component-library-preview.html   # Static visual preview of all components (open in a browser)
