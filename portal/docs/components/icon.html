@@ -571,6 +571,7 @@
 
 <main>
 <div class="inner pagetop">
+
 <a class="backlink" href="index.html">← All components</a>
 <article class="comp">
   <div class="comphead">
@@ -578,8 +579,10 @@
     <span class="pill">Images and icons</span>
     <span class="pill soft">stable</span>
     <span class="pill aa" title="Reviewed against WCAG AA during the 2026-07-16 preview audit">AA reviewed</span>
+    
   </div>
   <p class="cdesc">Icon renders a single glyph from Cartrack&#x27;s FontAwesome set — a thin wrapper around FontAwesomeIcon. It is the only icon system fleet-web actually uses; there is no Material icon set anywhere in the app despite MUI powering most other components. All icons must be registered once in src/util-functions/font-initialization.ts (via FontAwesome&#x27;s `library.add(...)`) before they can be referenced by name.</p>
+  
   <div class="prov">Source: Font Awesome 6 (Free + Pro tiers) via @fortawesome/react-fontawesome · src/components/Icon/index.tsx</div>
   <div class="keyrule">Always render icons through Icon rather than a raw &lt;svg&gt;, emoji, or CSS ligature. Reference an already-registered icon name; if the icon you need isn&#x27;t registered yet, add it to font-initialization.ts first — don&#x27;t import a fa* module ad hoc in a feature component.</div>
   <div class="whens">

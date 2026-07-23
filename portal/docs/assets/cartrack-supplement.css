@@ -1,0 +1,106 @@
+/* Cartrack supplement to the compiled MDC stylesheet (mdc.cartrack.css).
+   Covers only what MDC 14 doesn't style:
+   (a) the AA contrast fix for raised buttons, and
+   (b) DataTable's Cartrack-specific extensions (toolbar div, pagination footer,
+       row-actions column, loading bar wrapper, empty state).
+   Every value is a tokens.json literal — token path noted inline. */
+
+/* --- WCAG AA fix (tokens.json accessibility.knownIssues): white on #F47735 is
+   ~2.79:1. Raised buttons use brand primary.dark (#BB4800, ~5.2:1) as the fill. */
+.mdc-button--raised:not(:disabled) {
+  background-color: #BB4800; /* semantic.color.brand.primary.dark */
+}
+
+/* --- DataTable container ------------------------------------------------- */
+.mdc-data-table {
+  font-family: "Roboto", "Helvetica", "Arial", sans-serif; /* semantic.typography.fontFamily */
+}
+
+/* Toolbar (div.mdc-data-table__header-row above the table — Cartrack extension;
+   MDC's own header-row class targets the <tr>) */
+div.mdc-data-table__header-row {
+  display: flex;
+  align-items: center;
+  gap: 16px;               /* semantic.spacing.md */
+  min-height: 64px;        /* doc.json specs: toolbar height */
+  padding: 0 16px 0 24px;  /* semantic.spacing.md / .lg */
+  font-size: 1.25rem;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.12); /* semantic.color.border.default */
+}
+div.mdc-data-table__header-row--selected {
+  background-color: rgba(244, 119, 53, 0.08); /* semantic.color.interactive.primarySelected */
+  color: #BB4800;                             /* semantic.color.brand.primary.dark */
+  font-size: 1rem;
+}
+div.mdc-data-table__header-row--selected span { flex: 1; }
+div.mdc-data-table__header-row--selected button {
+  font: 500 0.875rem "Roboto", sans-serif;    /* semantic.typography.scale.button */
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #BB4800;                             /* semantic.color.brand.primary.dark */
+  background: none;
+  border: none;
+  border-radius: 4px;                         /* semantic.radius.default */
+  padding: 8px;                               /* semantic.spacing.sm */
+  cursor: pointer;
+}
+div.mdc-data-table__header-row--selected button:hover {
+  background: rgba(244, 119, 53, 0.08);       /* semantic.color.interactive.primarySelected */
+}
+.mdc-data-table__title { flex: 1; font-weight: 500; font-size: 1.1rem; }
+.mdc-data-table__toolbar-actions { display: flex; align-items: center; gap: 8px; } /* semantic.spacing.sm */
+
+/* Loading bar wrapper — the ProgressIndicator sits directly under the toolbar */
+.mdc-data-table__progress-indicator .mdc-linear-progress { width: 100%; }
+
+/* Pagination footer (Cartrack extension) */
+.mdc-data-table__pagination {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 16px;                                  /* semantic.spacing.md */
+  padding: 8px 16px;                          /* semantic.spacing.sm / .md */
+  border-top: 1px solid rgba(0, 0, 0, 0.12);  /* semantic.color.border.default */
+  color: rgba(0, 0, 0, 0.6);                  /* semantic.color.text.secondary */
+  font-size: 0.8rem;
+}
+.mdc-data-table__pagination-button {
+  min-width: 32px; height: 32px;
+  border: none; background: none; cursor: pointer;
+  border-radius: 4px;                         /* semantic.radius.default */
+  color: rgba(0, 0, 0, 0.6);                  /* semantic.color.text.secondary */
+  font-size: 1.1rem;
+}
+.mdc-data-table__pagination-button:hover:not(:disabled) {
+  background: rgba(0, 0, 0, 0.04);            /* semantic.color.interactive.hover */
+}
+.mdc-data-table__pagination-button:disabled {
+  color: rgba(0, 0, 0, 0.38);                 /* semantic.color.text.disabled */
+  cursor: default;
+}
+
+/* Row actions (Cartrack extension) */
+.mdc-data-table__cell--row-actions { width: 52px; }
+.mdc-data-table__row-actions-trigger {
+  width: 32px; height: 32px;
+  border: none; background: none; cursor: pointer;
+  border-radius: 50%;
+  color: rgba(0, 0, 0, 0.6);                  /* semantic.color.text.secondary */
+  font-size: 1.1rem;
+  line-height: 1;
+}
+.mdc-data-table__row-actions-trigger:hover:not(:disabled) {
+  background: rgba(0, 0, 0, 0.04);            /* semantic.color.interactive.hover */
+}
+.mdc-data-table__row-actions-surface .mdc-menu {
+  position: static;                            /* wrapper div does the absolute positioning */
+  min-width: 140px;
+}
+
+/* Empty state row: alignment/padding/colour are inline in DataTable.tsx (token-bound);
+   nothing needed here. */
+
+/* Simplified checkbox markup (div.mdc-checkbox > input) — the components render a
+   native input rather than MDC's full checkbox anatomy; give it sane sizing. */
+.mdc-data-table .mdc-checkbox { display: inline-flex; align-items: center; justify-content: center; }
+.mdc-data-table .mdc-checkbox input { width: 18px; height: 18px; accent-color: #F47735; } /* semantic.color.brand.primary.main */

@@ -1,0 +1,17 @@
+{
+  "Button": [
+    "Contained",
+    "Outlined",
+    "Text"
+  ],
+  "DataTable": [
+    "With toolbar",
+    "Selectable (checkboxes)",
+    "Paginated",
+    "Dense",
+    "Sticky header + bounded height",
+    "Loading",
+    "Empty state",
+    "Row actions"
+  ]
+}

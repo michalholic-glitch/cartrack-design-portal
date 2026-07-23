@@ -571,6 +571,7 @@
 
 <main>
 <div class="inner pagetop">
+
 <a class="backlink" href="index.html">← All components</a>
 <article class="comp">
   <div class="comphead">
@@ -578,8 +579,10 @@
     <span class="pill">Layout and structure</span>
     <span class="pill soft">stable</span>
     <span class="pill aa" title="Reviewed against WCAG AA during the 2026-07-16 preview audit">AA reviewed</span>
+    
   </div>
   <p class="cdesc">The horizontal row at the top of almost every authenticated page — title (or a back-link) on the left, page-level actions on the right. Unlike most of this library, it isn&#x27;t modeled on an idealized MD2 spec: it&#x27;s a direct, faithful port of the real, currently-shipping fleet-web component, not an approximation.</p>
+  
   <div class="prov">Source: karoo-ui / MUI Stack — real fleet-web implementation (not an MDC spec) · apps/fleet-web/src/components/_containers/PageHeader/index.tsx (real fleet-web source, 43 usages confirmed 2026-07-23 — no md2-cartrack-library spec exists for this one; see AppBar&#x27;s removal)</div>
   <div class="keyrule">Use PageHeader at the top of any page. Put PageHeader.Title (or a Breadcrumbs-based back-link) first and PageHeader.ButtonsContainer second — the real component has no other slots or props, so don&#x27;t invent a subtitle, icon, or backLink prop; compose those from other components as children instead.</div>
   <div class="whens">
