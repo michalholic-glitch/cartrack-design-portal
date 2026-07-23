@@ -523,9 +523,6 @@ zip_kb = round(os.path.getsize(zip_path) / 1024) if zip_path.exists() else 0
 # ================================================================
 # Shell + navigation
 # ================================================================
-def cat_slug(cat):
-    return re.sub(r'[^a-z0-9]+', '-', cat.lower()).strip('-')
-
 def render_nav(active, prefix):
     """Collapsible accordion nav. Long lists (Patterns, Components) live inside
     <details> groups that are closed at rest; the branch holding the current
@@ -572,24 +569,15 @@ def render_nav(active, prefix):
     finner += leaf("foundations/accessibility.html", "Accessibility", "found:accessibility")
     parts.append(group("grp-foundations", "Foundations", 8, f_open, finner, ic="tokens"))
 
-    # Components group, with a collapsible sub-group per category
+    # Components group — flat alphabetical list, Overview first. Categories
+    # still group the index page; the nav is a simple A-Z jump list.
     comp_open = active == "components" or active.startswith("comp:")
     cinner = leaf("components/index.html", "Overview", "components")
-    for cat in [c for c in CATEGORY_ORDER if c in categories] + sorted(c for c in categories if c not in CATEGORY_ORDER):
-        cat_comps = sorted(categories[cat], key=lambda x: x["name"])
-        cat_active = any(active == f"comp:{slug(c['name'])}" for c in cat_comps)
-        sub_links = ""
-        for c in cat_comps:
-            st = c.get("status", "stable")
-            badge = "" if st == "stable" else f' <span class="navbadge">{esc(st)}</span>'
-            s = slug(c["name"])
-            sub_links += leaf(f"components/{s}.html", f'{esc(c["name"])}{badge}', f"comp:{s}")
-        ha = " has-active" if cat_active else ""
-        oa = " open" if cat_active else ""
-        cinner += (f'<details class="navsub{ha}" id="cat-{cat_slug(cat)}" '
-                   f'data-defopen="{1 if cat_active else 0}"{oa}>'
-                   f'<summary><span class="navlabel">{esc(cat)}</span>'
-                   f'<span class="navcount">{len(cat_comps)}</span><span class="chev"></span></summary>{sub_links}</details>')
+    for c in sorted(comps, key=lambda x: x["name"]):
+        st = c.get("status", "stable")
+        badge = "" if st == "stable" else f' <span class="navbadge">{esc(st)}</span>'
+        s = slug(c["name"])
+        cinner += leaf(f"components/{s}.html", f'{esc(c["name"])}{badge}', f"comp:{s}")
     parts.append(group("grp-components", "Components", n_comps, comp_open, cinner, ic="box"))
 
     # Patterns group
@@ -771,8 +759,6 @@ def render_shell(active, body, prefix="", page_title="Cartrack AI Design System 
   nav details.has-active > summary .navlabel{{color:var(--accent-d)}}
   /* nesting aligns text under the parent label (icon 17px + gap 9px) */
   nav .navgrp > .navcomp{{padding-left:36px}}
-  nav .navsub > summary{{padding-left:36px;font-weight:500;font-size:13px}}
-  nav .navsub > .navcomp{{padding-left:50px}}
   @media (prefers-reduced-motion:reduce){{nav .chev{{transition:none}}}}
 
   /* ------- mobile top bar + drawer ------- */
