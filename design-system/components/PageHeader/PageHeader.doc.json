@@ -1,0 +1,126 @@
+{
+  "name": "PageHeader",
+  "category": "Layout and structure",
+  "status": "stable",
+  "library": "karoo-ui / MUI Stack — real fleet-web implementation (not an MDC spec)",
+  "source": "apps/fleet-web/src/components/_containers/PageHeader/index.tsx (real fleet-web source, 43 usages confirmed 2026-07-23 — no md2-cartrack-library spec exists for this one; see AppBar's removal)",
+  "description": "The horizontal row at the top of almost every authenticated page — title (or a back-link) on the left, page-level actions on the right. Unlike most of this library, it isn't modeled on an idealized MD2 spec: it's a direct, faithful port of the real, currently-shipping fleet-web component, not an approximation.",
+  "keyRule": "Use PageHeader at the top of any page. Put PageHeader.Title (or a Breadcrumbs-based back-link) first and PageHeader.ButtonsContainer second — the real component has no other slots or props, so don't invent a subtitle, icon, or backLink prop; compose those from other components as children instead.",
+  "variants": [
+    {
+      "name": "Simple (title only)",
+      "whenToUse": "Settings-style pages with no page-level action — saving happens per section (e.g. My Profile, Audit)."
+    },
+    {
+      "name": "List (title + actions)",
+      "whenToUse": "Collection pages: title plus one or more primary/secondary Buttons in ButtonsContainer (e.g. Vehicles, Drivers, Geofences — \"Add X\")."
+    },
+    {
+      "name": "Detail (back-link + actions)",
+      "whenToUse": "Drill-down pages: the left slot becomes a back-link (Breadcrumbs > back arrow + parent label > current record name) instead of a plain Title; ButtonsContainer still holds page actions."
+    }
+  ],
+  "anatomy": [
+    {
+      "name": "Left slot",
+      "description": "Title (an h5 heading) on most pages, or a Breadcrumbs-based back-link + record name on detail pages."
+    },
+    {
+      "name": "ButtonsContainer",
+      "description": "right-aligned, wrapping row for one or more page-level actions — Buttons, or a Menu trigger for overflow."
+    }
+  ],
+  "behaviors": [
+    {
+      "name": "Layout",
+      "description": "A single flex row, `justify-content: space-between` — the two slots never overlap; ButtonsContainer wraps onto a second line on narrow viewports instead of overflowing."
+    },
+    {
+      "name": "Scrolling",
+      "description": "No sticky/fixed positioning, no elevation, no border — the header scrolls with the page. Don't add any of these when applying this component unless a specific page has a documented reason to."
+    },
+    {
+      "name": "Composition with Tabs",
+      "description": "Tabs (and their divider/border) always render in their own row below PageHeader, never inside it."
+    }
+  ],
+  "states": [
+    {
+      "state": "Resting",
+      "treatment": "The only state PageHeader itself has — it's purely a layout container. Interactive states (hover/focus/disabled) belong to whatever Buttons, links, or Menu triggers are placed inside it."
+    }
+  ],
+  "specs": [
+    {
+      "property": "Title typography",
+      "value": "24px / 400 (h5)"
+    },
+    {
+      "property": "Row / ButtonsContainer gap",
+      "value": "16px"
+    },
+    {
+      "property": "Elevation / border / position",
+      "value": "None — scrolls with the page"
+    }
+  ],
+  "tokens": [
+    "semantic.typography.scale.h5",
+    "primitive.fontWeight.regular",
+    "semantic.spacing.md"
+  ],
+  "props": [
+    {
+      "name": "children",
+      "type": "React.ReactNode",
+      "required": true,
+      "description": "PageHeader itself: put PageHeader.Title (or a back-link) first and PageHeader.ButtonsContainer second."
+    },
+    {
+      "name": "PageHeader.Title — children",
+      "type": "React.ReactNode",
+      "required": true,
+      "description": "The page title text. Renders as a real <h5> — keep it as the page's one main heading."
+    },
+    {
+      "name": "PageHeader.ButtonsContainer — children",
+      "type": "React.ReactNode",
+      "required": true,
+      "description": "One or more page-level actions (Buttons, a Menu trigger). No count limit is enforced, but see dontDoThis."
+    }
+  ],
+  "doThis": [
+    "Put Title (or a back-link) in the left slot, ButtonsContainer in the right — that order, every time.",
+    "On detail pages, build the back-link from Breadcrumbs (back arrow + parent label) followed by the record name, not a bare IconButton.",
+    "Keep it borderless, elevation-less, and non-sticky — that's what every real usage does."
+  ],
+  "dontDoThis": [
+    "Don't add a subtitle, icon, or backLink prop — the real component doesn't have one; compose it from children instead.",
+    "Don't put Tabs, a divider, or a border-bottom inside PageHeader — that row belongs directly below it.",
+    "Don't make it sticky or elevated — no real usage does this; if a page seems to need it, flag the gap rather than inventing the behavior here.",
+    "Don't use more than one contained primary Button in ButtonsContainer — same one-primary-action rule as everywhere else in this library."
+  ],
+  "accessibility": [
+    "Title renders as a real <h5> — don't wrap it in another heading level, and don't skip it as the page's one primary heading.",
+    "A detail-page back-link is a real link (or button) with an accessible name that includes where it goes back to, not just an unlabeled arrow icon.",
+    "Every action in ButtonsContainer needs the same accessible-name and visible-focus treatment as Button/Menu already document."
+  ],
+  "related": [
+    {
+      "name": "Breadcrumbs",
+      "why": "Repurposed for the detail-page back-link variant (back arrow + parent label + record name)"
+    },
+    {
+      "name": "Button",
+      "why": "The primary/secondary actions that live inside ButtonsContainer"
+    },
+    {
+      "name": "Menu",
+      "why": "Overflow actions inside ButtonsContainer when there are more than fit as visible buttons"
+    },
+    {
+      "name": "Tabs",
+      "why": "Always sits in its own row directly below PageHeader, never inside it"
+    }
+  ]
+}

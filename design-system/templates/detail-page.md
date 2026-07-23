@@ -8,7 +8,7 @@ Page header (back arrow + record name + actions) > identity header (Card) > Tabs
 
 ## Components used
 
-- Page header — back arrow as the leading element, record name as title, page actions (edit, overflow ⋮). No dedicated header component exists in the codebase (AppBar was removed 2026-07-22, zero real usage) — compose from IconButton + Typography + Button/Menu.
+- Page header — the detail-header variant of the Page header pattern: a back-link (arrow + parent label, via Breadcrumbs) as the leading element, record name after it, page actions (edit, overflow ⋮) in ButtonsContainer.
 - Card — identity header: registration, status chip, key metrics (odometer, driver, last position); titleMedium (16px/500) for the card title
 - Tabs — section navigation: Overview, Trips, Maintenance, Alerts (Documents, Costs into overflow if >5)
 - DataTable — history-style tab content (trips, events), same rules as the table-page template

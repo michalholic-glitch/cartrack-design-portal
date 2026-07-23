@@ -122,7 +122,7 @@
       "name": "leadingIcon",
       "type": "string",
       "required": false,
-      "description": "Optional leading icon (material-icons ligature name). Keep the label even with an icon."
+      "description": "Optional leading icon — a registered FontAwesome icon name (see Icon.doc.json), not a Material icon ligature. Keep the label even with an icon."
     },
     {
       "name": "disabled",
@@ -176,6 +176,10 @@
     {
       "name": "Chip",
       "why": "Compact filter/selection actions, not commands"
+    },
+    {
+      "name": "Icon",
+      "why": "leadingIcon takes a registered FontAwesome name, not a Material ligature"
     }
   ]
 }

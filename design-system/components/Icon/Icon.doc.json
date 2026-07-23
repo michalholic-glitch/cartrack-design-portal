@@ -1,0 +1,147 @@
+{
+  "name": "Icon",
+  "category": "Images and icons",
+  "status": "stable",
+  "library": "Font Awesome 6 (Free + Pro tiers) via @fortawesome/react-fontawesome",
+  "source": "src/components/Icon/index.tsx",
+  "description": "Icon renders a single glyph from Cartrack's FontAwesome set — a thin wrapper around FontAwesomeIcon. It is the only icon system fleet-web actually uses; there is no Material icon set anywhere in the app despite MUI powering most other components. All icons must be registered once in src/util-functions/font-initialization.ts (via FontAwesome's `library.add(...)`) before they can be referenced by name.",
+  "keyRule": "Always render icons through Icon rather than a raw <svg>, emoji, or CSS ligature. Reference an already-registered icon name; if the icon you need isn't registered yet, add it to font-initialization.ts first — don't import a fa* module ad hoc in a feature component.",
+  "variants": [
+    {
+      "name": "Solid",
+      "whenToUse": "Default weight for most UI icons (fas prefix, Free tier). Most of the app's registered icons are this style."
+    },
+    {
+      "name": "Regular",
+      "whenToUse": "Lighter-weight alternative used selectively (far prefix, Free tier) — e.g. faCheckSquare, faCommentAlt, faClock."
+    },
+    {
+      "name": "Light",
+      "whenToUse": "Thinnest weight, used for a specific set of vehicle/fleet glyphs (fal prefix). Requires the Pro tier and the FontAwesome Pro licence Cartrack already holds — e.g. faSteeringWheel, faBusAlt, faTaxi, faUserHardHat."
+    }
+  ],
+  "anatomy": [
+    {
+      "name": "Glyph",
+      "description": "The single SVG path rendered by FontAwesomeIcon, resolved at runtime from the icon name against the app-wide registered library."
+    }
+  ],
+  "behaviors": [
+    {
+      "name": "Name resolution",
+      "description": "`icon` is looked up against whatever was passed to `library.add()` in font-initialization.ts. A name that was never registered there renders nothing at runtime — there's no build-time check today."
+    },
+    {
+      "name": "Colour inheritance",
+      "description": "Without an explicit `color` prop, the glyph fills with currentColor — it inherits whatever text colour is already in scope, same as any inline glyph."
+    },
+    {
+      "name": "Sizing",
+      "description": "Without an explicit `size` prop, the glyph sizes to 1em — it scales with the surrounding font-size rather than needing its own explicit size in most call sites."
+    }
+  ],
+  "specs": [
+    {
+      "property": "Default size",
+      "value": "1em (inherits font-size)"
+    },
+    {
+      "property": "size prop scale",
+      "value": "xs, sm, lg, 1x–10x (FontAwesome's own enum — see tokens.json semantic.icon.sizing)"
+    },
+    {
+      "property": "Default colour",
+      "value": "currentColor (inherits; see tokens.json semantic.icon.colour)"
+    }
+  ],
+  "tokens": [
+    "semantic.icon.sizing",
+    "semantic.icon.colour",
+    "semantic.color.text.primary",
+    "semantic.color.text.secondary",
+    "semantic.color.text.disabled"
+  ],
+  "props": [
+    {
+      "name": "icon",
+      "type": "IconName | [IconPrefix, IconName]",
+      "required": true,
+      "description": "The registered icon name, e.g. \"chevron-down\", or a [prefix, name] tuple (e.g. [\"fal\", \"steering-wheel\"]) to pick a specific style tier when more than one is registered under the same name."
+    },
+    {
+      "name": "size",
+      "type": "'xs' | 'sm' | 'lg' | '1x'…'10x'",
+      "required": false,
+      "description": "FontAwesome's built-in size enum. Most real usage omits this and relies on inherited font-size instead."
+    },
+    {
+      "name": "color",
+      "type": "string",
+      "required": false,
+      "description": "CSS colour override. Omit to inherit currentColor — reuse semantic.color.text.* or a categorical hue.<hue>.icon token rather than a raw hex value."
+    },
+    {
+      "name": "spin",
+      "type": "boolean",
+      "required": false,
+      "description": "Continuous rotation — loading/in-progress affordances."
+    },
+    {
+      "name": "pulse",
+      "type": "boolean",
+      "required": false,
+      "description": "Stepped 8-frame rotation, an alternative loading affordance to spin."
+    },
+    {
+      "name": "fixedWidth",
+      "type": "boolean",
+      "required": false,
+      "description": "Forces a consistent glyph width so mixed icons in a vertical list line up — matches FontAwesome's own fixed-width utility."
+    },
+    {
+      "name": "rotation",
+      "type": "90 | 180 | 270",
+      "required": false,
+      "description": "Rotates the glyph, e.g. reusing one chevron asset for both an expand and collapse affordance."
+    },
+    {
+      "name": "title",
+      "type": "string",
+      "required": false,
+      "description": "Native SVG <title> text. Not a substitute for an aria-label on the interactive control the icon sits inside — see Accessibility."
+    }
+  ],
+  "doThis": [
+    "Reference an icon name already registered in font-initialization.ts.",
+    "Let colour and size inherit from context unless a specific override is genuinely needed.",
+    "Pair every icon-only control with an accessible name (aria-label or a Tooltip), not just this component's `title` prop."
+  ],
+  "dontDoThis": [
+    "Don't import a fa* icon module directly in a feature component — register it centrally first.",
+    "Don't assume a Pro-tier icon (fal prefix, or any icon only in pro-*-svg-icons) is available to consumers of this design system without their own FontAwesome Pro licence.",
+    "Don't hardcode a hex colour on an icon — reuse semantic.color.text.* or the categorical hue.<hue>.icon tokens."
+  ],
+  "accessibility": [
+    "Icon-only buttons need an accessible name from the surrounding control (aria-label, or a Tooltip per the Tooltip component's own rule) — the icon itself carries no text.",
+    "Purely decorative icons (next to a text label that already says the same thing) should be aria-hidden so they aren't announced twice.",
+    "Don't rely on icon shape alone to convey a status — pair it with the categorical colour and, where possible, text."
+  ],
+  "related": [
+    {
+      "name": "Tooltip",
+      "why": "Names an icon-only control that has no visible text"
+    },
+    {
+      "name": "Badge",
+      "why": "Anchors a count/dot indicator to an icon"
+    },
+    {
+      "name": "Button",
+      "why": "leadingIcon takes a registered FontAwesome name, not a Material ligature"
+    },
+    {
+      "name": "TextField",
+      "why": "leadingIcon/trailingIcon take a registered FontAwesome name, not a Material ligature"
+    }
+  ]
+}

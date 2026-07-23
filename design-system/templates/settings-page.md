@@ -8,7 +8,7 @@ Page header (title) > two-column: settings navigation (List) left, settings cont
 
 ## Components used
 
-- Page header — page title only; no primary action (saving happens per section). No dedicated header component exists in the codebase (AppBar was removed 2026-07-22, zero real usage) — compose from Typography.
+- Page header — page title only; no primary action (saving happens per section) — the simple/settings-header variant of the Page header pattern (Title only, no ButtonsContainer).
 - List — settings category navigation (single-line items, selected state = 8% overlay + primary-dark text)
 - Card — one card per settings group, titleMedium heading, ≤6 controls each
 - SelectionControl — switches for on/off preferences (the default control), checkboxes for multi-select groups, radios for exclusive choices

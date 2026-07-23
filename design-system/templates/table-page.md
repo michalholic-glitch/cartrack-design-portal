@@ -8,7 +8,7 @@ Page header (title + search + one primary action) > filter row (Chips) > DataTab
 
 ## Components used
 
-- Page header — page title, global search, ONE contained primary action (e.g. "Add vehicle"), overflow menu. No dedicated header component exists in the codebase (AppBar was removed 2026-07-22, zero real usage) — compose from Typography + SearchTextField + Button + Menu.
+- Page header — page title, global search, ONE contained primary action (e.g. "Add vehicle"), overflow menu — the list-header variant of the Page header pattern (Title + ButtonsContainer), plus a search field.
 - Chip — filter chips in a single row below the bar; selected state uses the 8% primary overlay
 - DataTable — the main content; row height 52px, header sticky on scroll
 - Chip (status) — status values inside cells use small status chips (12px/500 labelSmall), never plain coloured text

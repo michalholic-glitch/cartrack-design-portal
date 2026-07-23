@@ -14,7 +14,7 @@ All values are **derived from the real fleetapp-web production codebase** (karoo
 | `CLAUDE.md` | The index: folder map, how the token tiers work, known issues. Auto-loaded by Claude tools (Cowork, Claude Code) when the folder is connected | AI agents first, then people |
 | `AGENTS.md` | The behavior contract: rules an AI agent must follow when generating UI (do/don't list, verification checklist) | AI agents |
 | `tokens/tokens.json` | Single source of truth for color, spacing, typography, radius, and border width. Two tiers: `primitive` (raw values) and `semantic` (named roles), plus a `legacy` section and a `_meta.changelog` | AI agents + developers |
-| `components/` | 27 components, one folder each: `<Name>.tsx` (React implementation), `<Name>.doc.json` (structured docs: props, variants, do/don't rules, token references), `index.ts` (export) | AI agents + developers |
+| `components/` | 28 components, one folder each: `<Name>.tsx` (React implementation), `<Name>.doc.json` (structured docs: props, variants, do/don't rules, token references), `index.ts` (export) | AI agents + developers |
 | `templates/` | Page patterns — table page, detail page, map/tracking view, settings, login: which components compose each screen and the composition rules | AI agents + designers |
 | `component-library-preview.html` | Static visual preview of every component — open it in any browser, no server needed | People |
 | `vibe-tests/` | Tests whether `AGENTS.md` + the `.doc.json` files actually produce correct output from a fresh AI agent — stratified prompts, a subagent-driven run, an aggregate pass-rate script | Whoever maintains this package |

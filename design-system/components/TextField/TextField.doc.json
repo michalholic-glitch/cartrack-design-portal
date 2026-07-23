@@ -188,13 +188,13 @@
       "name": "leadingIcon",
       "type": "string",
       "required": false,
-      "description": "Leading Material icon ligature, e.g. \"search\"."
+      "description": "Leading FontAwesome icon name (see Icon.doc.json), e.g. \"search\"."
     },
     {
       "name": "trailingIcon",
       "type": "string",
       "required": false,
-      "description": "Trailing Material icon ligature, e.g. \"clear\" or a unit like \"km\"."
+      "description": "Trailing FontAwesome icon name, e.g. \"times\" (clear) or a unit like \"km\"."
     },
     {
       "name": "multiline",
@@ -237,6 +237,10 @@
     {
       "name": "Menu",
       "why": "Constrained choices — use a select"
+    },
+    {
+      "name": "Icon",
+      "why": "leadingIcon/trailingIcon take a registered FontAwesome name, not a Material ligature"
     }
   ]
 }

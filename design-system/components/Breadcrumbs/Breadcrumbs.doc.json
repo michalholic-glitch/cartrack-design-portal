@@ -122,6 +122,10 @@
     {
       "name": "Tabs",
       "why": "For switching sibling views at the same level"
+    },
+    {
+      "name": "PageHeader",
+      "why": "Repurposed as the back-link on PageHeader's detail-page variant"
     }
   ]
 }

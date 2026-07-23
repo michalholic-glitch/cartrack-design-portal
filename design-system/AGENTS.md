@@ -8,13 +8,13 @@ Component library + design tokens for the Cartrack Fleet Portal — a dense, dat
 
 ## Design system rules (read before generating any UI)
 
-1. **Use our components, never raw HTML elements** when a component exists. Use `<Button>`, not `<button>`; `<TextField>`, not `<input>`; `<Card>`, not a styled `<div>`. All 27 live in `components/`.
+1. **Use our components, never raw HTML elements** when a component exists. Use `<Button>`, not `<button>`; `<TextField>`, not `<input>`; `<Card>`, not a styled `<div>`. All 28 live in `components/`.
 2. **Use design tokens, never hardcoded values.** No raw hex, px, or font names. Source: `tokens/tokens.json`.
 3. **Primitive vs semantic — the one non-obvious rule:** in `.tsx` inline styles, use `tokens.primitive.*` (concrete literals). Most `tokens.semantic.*` values are unresolved alias strings (`"{primitive...}"`) meant for a build-time resolver this repo doesn't have — using one in a style prop sets the CSS property to that literal placeholder text. Safe semantic exceptions (authored as real literals): `semantic.color.text.*`, `semantic.color.border.default`, `semantic.color.interactive.*`. In `.doc.json` files and documentation, always cite `semantic.*` paths.
 4. **Component docs are the source of truth.** Before using a component, read its `<Name>.doc.json` — respect `props`, `variants`, `doThis`/`dontDoThis`, and its `tokens` list.
 5. **One primary action per view.** One contained primary button; secondary actions use outlined/text variants.
 6. **WCAG AA is not optional.** Never put white text on brand orange `#F47735` (~2.79:1, fails AA) — use `primary.dark` `#BB4800` for filled+white surfaces, or a light surface with dark text. Every interactive element needs an accessible name and visible focus.
-7. **Match existing patterns.** Check `templates/` for a matching page pattern (table page, detail page, map view, settings, login) and follow its structure and composition rules rather than inventing a new layout.
+7. **Match existing patterns.** Check every file in `templates/` for one that matches what you're building — full-page patterns (table page, detail page, map view, settings, login) and cross-cutting region patterns reused across pages (main navigation, page header) — and follow its structure and composition rules rather than inventing a new layout. Don't rely on this parenthetical staying complete; read the actual folder.
 
 ## Hard "do not" list
 
