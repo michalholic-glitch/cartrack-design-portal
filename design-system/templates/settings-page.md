@@ -10,7 +10,7 @@ Page header (title) > two-column: settings navigation (List) left, settings cont
 
 - Page header — page title only; no primary action (saving happens per section) — the simple/settings-header variant of the Page header pattern (Title only, no ButtonsContainer).
 - List — settings category navigation (single-line items, selected state = 8% overlay + primary-dark text)
-- Card — one card per settings group, titleMedium heading, ≤6 controls each
+- Card — one card per settings group, titleMedium-scale heading (`semantic.typography.scale.titleMedium` — render with MUI `<Typography variant="subtitle1">` or `"h6"`; `titleMedium` is a token scale, not a registered MUI variant), ≤6 controls each
 - Switch — on/off preferences (the default control); Checkbox — multi-select groups; Radio — exclusive choices
 - TextField — text/number entry; helper text explains consequences ("Alerts are sent to this address")
 - Slider — approximate values only (e.g. map refresh interval); exact values use a TextField

@@ -11,7 +11,7 @@ Page header (title + search + one primary action) > filter row (Chips) > DataGri
 - Page header — page title, global search, ONE contained primary action (e.g. "Add vehicle"), overflow menu — the list-header variant of the Page header pattern (Title + ButtonsContainer), plus a search field.
 - Chip — filter chips in a single row below the bar; selected state uses the 8% primary overlay
 - DataGrid — the main content; row height 52px, header sticky on scroll
-- Chip (status) — status values inside cells use small status chips (12px/500 labelSmall), never plain coloured text
+- Chip (status) — status values inside cells use small status chips (12px/500, `semantic.typography.scale.labelSmall` — a token scale, render via `sx`/`caption`, not a registered MUI variant), never plain coloured text
 - Pagination — always present below the table; never render more than 50 rows unpaginated
 - Contextual page header — swaps in when rows are selected: count + bulk actions
 - Menu — per-row overflow actions (⋮), destructive actions in error colour with confirmation Dialog

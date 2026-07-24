@@ -1,0 +1,25 @@
+{
+  "id": "textfield-form",
+  "promptId": "textfield-form",
+  "category": "component-basic",
+  "timestamp": "2026-07-24T00:00:00Z",
+  "prompt": "",
+  "evaluation": {
+    "success": true,
+    "componentsUsed": [
+      "TextField (design-system)",
+      "Button (design-system)",
+      "Card (design-system)",
+      "ThemeProvider (@mui/material/styles)",
+      "Stack (@mui/material \u2014 layout primitive)",
+      "CardContent (@mui/material \u2014 Card sibling part)",
+      "CardActions (@mui/material \u2014 Card sibling part)",
+      "Typography (@mui/material)"
+    ],
+    "tokensUsed": [],
+    "invented": [],
+    "flaggedGap": true,
+    "violatedRules": [],
+    "notes": "Small controlled form to edit a driver's name and phone. Two design-system <TextField>s (outlined default variant, size 'small' via wrapper), always-visible labels, presence + basic phone-shape validation surfaced via paired error+helperText, and a single contained primary Save button (WCAG: primary.dark #BB4800 is the theme's focus line, no white-on-#F47735 introduced). The new MUI-based docs were clear and helpful: TextField.doc.json's props table and slotProps guidance, and theme.ts's explicit 'renders under <ThemeProvider theme={cartrackTheme}>' contract made import/render straightforward. Two minor confusions: (1) settings-page.md and Card.doc.json call the card heading 'titleMedium', but that MD3 variant name is not registered in theme.ts's typography, so a naive Typography variant='titleMedium' would be invalid \u2014 resolved by using 'h6'; (2) the system wraps only 27 components, so common layout/composition primitives (Stack, CardContent, CardActions) had to come straight from @mui/material \u2014 acceptable per Card.doc.json but worth an explicit gap note. | hardcoded: sx maxWidth: 480 \u2014 a layout constraint (px), not a color/type/radius token; no matching design token exists for container max-width so a literal was used | gaps: Layout/composition primitives (Stack, CardContent, CardActions, Typography) are plain @mui/material v9 components, not part of the 27 wrapped design-system components. Card.doc.json explicitly composes titles/actions with these MUI sibling parts, so they are the sanctioned composition path, but they are not themselves wrapped/documented components., Typography variant 'titleMedium' referenced by settings-page.md and Card.doc.json is a Material Design 3 token name, not a variant defined in components/theme.ts (which only sets base typography). Used the real MUI variant 'h6' for the card heading instead., No design token exists for a form container max-width, so sx maxWidth:480 is a plain literal."
+  }
+}

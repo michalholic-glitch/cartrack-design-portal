@@ -1,0 +1,24 @@
+{
+  "id": "btn-basic-primary",
+  "promptId": "btn-basic-primary",
+  "category": "component-basic",
+  "timestamp": "2026-07-24T00:00:00Z",
+  "prompt": "",
+  "evaluation": {
+    "success": true,
+    "componentsUsed": [
+      "Card",
+      "TextField",
+      "Button",
+      "ThemeProvider (@mui/material/styles)",
+      "Box (@mui/material)",
+      "CardContent (@mui/material)",
+      "CardActions (@mui/material)"
+    ],
+    "tokensUsed": [],
+    "invented": [],
+    "flaggedGap": true,
+    "violatedRules": [],
+    "notes": "The new MUI-based docs were clear and directly useful. Button.doc.json's keyRule and doThis explicitly call out the Save+Cancel pattern (contained primary + outlined Cancel) and warn that MUI's default variant is 'text', so contained must be passed explicitly \u2014 this removed all ambiguity about emphasis. AGENTS.md rule 3 + theme.ts made the styling contract obvious: theme.spacing via sx numbers, ThemeProvider wrapper required. Rule 1 / CLAUDE.md's note that composing MUI primitives (CardContent, CardActions, Box) is part of the contract resolved what would otherwise have been a gap (no form/actions wrapper component). The loading prop is documented on Button, so Save's saving state used a real prop rather than a fabricated one. Only genuine friction: no token for the Card's max-width, so a raw px sx value was used for that one layout dimension. | hardcoded: maxWidth: 480 on the Card sx \u2014 a layout dimension, not a design token (color/spacing/type). tokens.json exposes no max-width token; MUI sx treats bare numbers as px. Minor, non-thematic; noted for honesty. | gaps: No dedicated form-layout or CardActions component in components/ \u2014 composed CardContent/CardActions/Box directly from @mui/material, which AGENTS.md rule 1 and CLAUDE.md explicitly permit for missing sub-primitives., No spacing token exists for arbitrary container max-width; used a raw px sx value (see hardcodedValues)."
+  }
+}
