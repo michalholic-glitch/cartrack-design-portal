@@ -26,7 +26,7 @@ const Dismissible = ({
         <span style={{ fontSize: '.8rem', color: 'rgba(0,0,0,.6)' /* semantic.color.text.secondary */ }}>
           Banner dismissed{acted ? ` (${acted})` : ''} — layout reflows.
         </span>
-        <Button variant="text" label="Reset demo" onClick={() => { setVisible(true); setActed(''); }} />
+        <Button variant="text" onClick={() => { setVisible(true); setActed(''); }}>Reset demo</Button>
       </div>
     );
   }

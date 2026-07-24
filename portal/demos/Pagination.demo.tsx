@@ -1,68 +1,89 @@
 import React from 'react';
 import { Pagination } from '../../design-system/components/Pagination/Pagination';
 
-/* Live demos for the portal — rendered from the REAL Pagination.tsx.
-   Keys must exactly match Pagination.doc.json variant names.
-   Page and page-size are live state; changing rows-per-page resets to page
-   one, per the doc's "Resetting" behavior. */
+/* Live demos for the portal — rendered from the REAL Pagination.tsx (thin wrapper
+   over @mui/material/Pagination, MUI v9). Keys must exactly match
+   Pagination.doc.json variant names. All three variants are expressible live —
+   none omitted.
+   Per the doc.json, this component is page controls only — no rows-per-page
+   select or "1–100 of N" range label. The hero composes its own range caption
+   alongside, as the doc's doThis suggests. */
 
-/* Shared controlled state: page (1-indexed) + pageSize. */
-function usePaging(initialSize = 25) {
+const rowStyle: React.CSSProperties = {
+  display: 'flex',
+  alignItems: 'center',
+  flexWrap: 'wrap',
+  gap: '16px /* primitive.spacing.4 */',
+};
+
+const captionStyle: React.CSSProperties = {
+  fontSize: '12px /* semantic.typography.scale.caption */',
+  color: 'rgba(0, 0, 0, 0.6) /* semantic.color.text.secondary */',
+};
+
+/* Hero — a fleet data grid's pager: composed range caption + page controls,
+   brand tint on the current page. */
+export const hero: React.ComponentType = () => {
+  const [page, setPage] = React.useState(3);
+  const pageSize = 25;
+  const totalVehicles = 1187;
+  const count = Math.ceil(totalVehicles / pageSize);
+  const from = (page - 1) * pageSize + 1;
+  const to = Math.min(page * pageSize, totalVehicles);
+  return (
+    <div style={rowStyle}>
+      <span style={captionStyle}>
+        {from}–{to} of {totalVehicles.toLocaleString()} vehicles
+      </span>
+      <Pagination
+        count={count}
+        page={page}
+        onChange={(_event, value) => setPage(value)}
+        color="primary"
+        showFirstButton
+        showLastButton
+      />
+    </div>
+  );
+};
+
+const TextDefault: React.ComponentType = () => {
   const [page, setPage] = React.useState(1);
-  const [pageSize, setPageSize] = React.useState(initialSize);
-  return {
-    page,
-    pageSize,
-    onPageChange: setPage,
-    onPageSizeChange: (size: number) => {
-      setPageSize(size);
-      setPage(1); // Resetting behavior: page-size change goes back to page one
-    },
-  };
-}
-
-const Caption = ({ text }: { text: string }) => (
-  <div style={{ marginBottom: 8, fontSize: '.8rem', color: 'rgba(0,0,0,.6)' /* semantic.color.text.secondary */ }}>
-    {text}
-  </div>
-);
-
-const TableFooter = () => {
-  const paging = usePaging();
   return (
-    <div>
-      <Caption text="4,832 vehicles" />
-      <Pagination variant="table-footer" totalItems={4832} {...paging} />
-    </div>
+    <Pagination
+      count={12}
+      page={page}
+      onChange={(_event, value) => setPage(value)}
+    />
   );
 };
 
-const Numbered = () => {
-  const paging = usePaging();
+const Outlined: React.ComponentType = () => {
+  const [page, setPage] = React.useState(4);
   return (
-    <div>
-      <Caption text="1,204 trips this week" />
-      <Pagination variant="numbered" totalItems={1204} siblingCount={1} {...paging} />
-    </div>
+    <Pagination
+      variant="outlined"
+      count={12}
+      page={page}
+      onChange={(_event, value) => setPage(value)}
+    />
   );
 };
 
-const RowsPerPageOnly = () => {
-  const paging = usePaging(25);
+const RoundedShape: React.ComponentType = () => {
+  const [page, setPage] = React.useState(2);
   return (
-    <div>
-      <Caption text="38 drivers — fits a couple of pages" />
-      <Pagination variant="rows-per-page-only" totalItems={38} {...paging} />
-    </div>
+    <Pagination
+      shape="rounded"
+      count={12}
+      page={page}
+      onChange={(_event, value) => setPage(value)}
+    />
   );
 };
-
-/* Hero: the default table-footer form on a realistically large fleet dataset —
-   rows-per-page select, live range label, prev/next stepping. */
-export const hero = TableFooter;
 
 export const demos: Record<string, React.ComponentType> = {
-  'Table footer (range + prev/next)': TableFooter,
-  'Numbered pages': Numbered,
-  'Rows-per-page only': RowsPerPageOnly,
+  'Text (default)': TextDefault,
+  'Outlined': Outlined,
+  'Rounded shape': RoundedShape,
 };

@@ -1,102 +1,87 @@
 import React from 'react';
 import { Tooltip } from '../../design-system/components/Tooltip/Tooltip';
 import { Button } from '../../design-system/components/Button/Button';
+import IconButton from '@mui/material/IconButton';
 
-/* Live demos for the portal — rendered from the REAL Tooltip.tsx.
-   Keys must exactly match Tooltip.doc.json variant names.
-   Tooltip.tsx renders the trigger plus a .mdc-tooltip surface that the MDC CSS
-   keeps hidden (position: fixed; display: none) until MDC's JS adds
-   .mdc-tooltip--shown — and that JS isn't loaded in the portal. So the demo
-   stages exactly what MDC's foundation would do: on hover/focus it adds the
-   real .mdc-tooltip--shown class and positions the fixed surface from the
-   trigger's rect; blur/mouse-out or Escape hides it again. No custom CSS —
-   the shown state is MDC's own. */
+/* Live demos for the portal — rendered from the REAL Tooltip.tsx (MUI v9
+   wrapper; `arrow` defaults to true per the karoo-ui wrapper). Hover/focus
+   triggers are native MUI behaviour — hover any trigger below.
+   Keys must exactly match Tooltip.doc.json variant names. */
 
-function HoverReveal({ children }: { children: React.ReactNode }) {
-  const ref = React.useRef<HTMLSpanElement>(null);
+/* Inline glyph — @mui/icons-material isn't installed. */
+const CrosshairIcon = () => (
+  <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+    <path d="M12 8a4 4 0 1 0 4 4 4 4 0 0 0-4-4zm8.94 3A8.99 8.99 0 0 0 13 3.06V1h-2v2.06A8.99 8.99 0 0 0 3.06 11H1v2h2.06A8.99 8.99 0 0 0 11 20.94V23h2v-2.06A8.99 8.99 0 0 0 20.94 13H23v-2zM12 19a7 7 0 1 1 7-7 7 7 0 0 1-7 7z" />
+  </svg>
+);
 
-  const setShown = (shown: boolean) => {
-    const root = ref.current;
-    if (!root) return;
-    const tip = root.querySelector<HTMLElement>('.mdc-tooltip');
-    const trigger = root.firstElementChild as HTMLElement | null;
-    if (!tip || !trigger || trigger === tip) return;
-    if (shown) {
-      const r = trigger.getBoundingClientRect();
-      tip.classList.add('mdc-tooltip--shown');
-      tip.setAttribute('aria-hidden', 'false');
-      /* 4px gap below the trigger: semantic.spacing.xs */
-      tip.style.top = `${r.bottom + 4}px`;
-      tip.style.left = `${r.left}px`;
-    } else {
-      tip.classList.remove('mdc-tooltip--shown');
-      tip.setAttribute('aria-hidden', 'true');
-      tip.style.removeProperty('top');
-      tip.style.removeProperty('left');
-    }
-  };
-
+/* Hero: an icon-only action labelled by its tooltip — the doc's first doThis. */
+export const hero = () => {
+  const [followed, setFollowed] = React.useState(false);
   return (
-    <span
-      ref={ref}
-      onMouseEnter={() => setShown(true)}
-      onMouseLeave={() => setShown(false)}
-      onFocus={() => setShown(true)}
-      onBlur={() => setShown(false)}
-      onKeyDown={(e) => {
-        if (e.key === 'Escape') setShown(false);
-      }}
-    >
-      {children}
-    </span>
-  );
-}
-
-export const hero = () => (
-  <div style={{ display: 'flex', gap: 16, alignItems: 'center' }}>
-    <HoverReveal>
-      <Tooltip variant="plain" label="Requires ignition off">
-        <Button variant="outlined" label="Immobilise" />
+    <div style={{ display: 'flex', gap: 16 /* semantic.spacing.md */, alignItems: 'center' }}>
+      <Tooltip title={followed ? 'Stop following CA 123-456' : 'Follow CA 123-456 on the map'}>
+        <IconButton
+          aria-label={followed ? 'Stop following CA 123-456' : 'Follow CA 123-456 on the map'}
+          color={followed ? 'primary' : 'default'}
+          onClick={() => setFollowed((f) => !f)}
+        >
+          <CrosshairIcon />
+        </IconButton>
       </Tooltip>
-    </HoverReveal>
-    <span style={{ fontSize: '.8rem', color: 'rgba(0,0,0,.6)' /* semantic.color.text.secondary */ }}>
-      Hover or focus the button.
-    </span>
+      <span style={{ fontSize: '.8rem', color: 'rgba(0,0,0,.6)' /* semantic.color.text.secondary */ }}>
+        {followed ? 'Following CA 123-456' : 'Hover or focus the button'}
+      </span>
+    </div>
+  );
+};
+
+const Plain = () => (
+  <div style={{ display: 'flex', gap: 16 /* semantic.spacing.md */, alignItems: 'center' }}>
+    <Tooltip title="Assign Jane Cooper to CA 123-456">
+      <Button variant="outlined">Assign driver</Button>
+    </Tooltip>
+    {/* placement + arrow are plain MUI props forwarded by the wrapper. */}
+    <Tooltip title="Last position update 16:42" placement="right">
+      <span
+        tabIndex={0}
+        style={{
+          fontSize: '.85rem',
+          borderBottom: '1px dotted rgba(0,0,0,0.6)', // semantic.color.text.secondary
+          cursor: 'help',
+        }}
+      >
+        Updated 2 min ago
+      </span>
+    </Tooltip>
   </div>
 );
 
-const Plain = () => (
-  <HoverReveal>
-    <Tooltip variant="plain" label="Sends the trip report by email">
-      <Button variant="text" label="Export" />
-    </Tooltip>
-  </HoverReveal>
-);
-
-const TruncationReveal = () => (
-  <HoverReveal>
-    <Tooltip variant="truncation" label="Refrigerated trailer — Cape Town depot, bay 14">
-      {/* A truncated table-cell value; tabIndex makes it keyboard-reachable
-          (the doc requires focus as a trigger, not hover alone). */}
+/* Truncated cell text revealed in full on hover/focus — a usage pattern,
+   not a component variant (per Tooltip.doc.json). */
+const TruncationReveal = () => {
+  const depot = 'Cape Town depot — 14 Buitengracht Street, Foreshore, Cape Town, 8001';
+  return (
+    <Tooltip title={depot}>
       <span
         tabIndex={0}
         style={{
           display: 'inline-block',
-          maxWidth: 160,
+          maxWidth: 180, // staging: force truncation in the tile
+          whiteSpace: 'nowrap',
           overflow: 'hidden',
           textOverflow: 'ellipsis',
-          whiteSpace: 'nowrap',
+          fontSize: '.85rem',
           verticalAlign: 'bottom',
-          fontSize: '.875rem',
         }}
       >
-        Refrigerated trailer — Cape Town depot, bay 14
+        {depot}
       </span>
     </Tooltip>
-  </HoverReveal>
-);
+  );
+};
 
 export const demos: Record<string, React.ComponentType> = {
   Plain,
-  'Truncation reveal': TruncationReveal,
+  'Truncation reveal (usage pattern)': TruncationReveal,
 };

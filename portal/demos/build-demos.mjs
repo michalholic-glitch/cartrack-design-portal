@@ -18,6 +18,9 @@ const alias = {
   react: path.join(here, 'node_modules', 'react'),
   'react-dom': path.join(here, 'node_modules', 'react-dom'),
 };
+// design-system/components/*.tsx import @mui/* and @emotion/*, but no node_modules
+// exists above them — resolve those (and anything else) from this folder's install.
+const nodePaths = [path.join(here, 'node_modules')];
 
 // 1. browser bundle
 await build({
@@ -26,6 +29,7 @@ await build({
   minify: true,
   jsx: 'transform',
   alias,
+  nodePaths,
   loader: { '.json': 'json' },
   outfile: path.join(assets, 'demos.js'),
   logLevel: 'warning',
@@ -39,6 +43,7 @@ await build({
   platform: 'node',
   jsx: 'transform',
   alias,
+  nodePaths,
   loader: { '.json': 'json' },
   outfile: tmp,
   logLevel: 'warning',

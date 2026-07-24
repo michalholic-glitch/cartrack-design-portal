@@ -2,6 +2,8 @@ import React from 'react';
 import { PageHeader } from '../../design-system/components/PageHeader/PageHeader';
 import { Button } from '../../design-system/components/Button/Button';
 import { Breadcrumbs } from '../../design-system/components/Breadcrumbs/Breadcrumbs';
+import Link from '@mui/material/Link';
+import Typography from '@mui/material/Typography';
 
 /* Live demos for the portal — rendered from the REAL PageHeader.tsx.
    Keys must exactly match PageHeader.doc.json variant names.
@@ -32,19 +34,20 @@ const List = () => {
       <PageHeader>
         <PageHeader.Title>Vehicles</PageHeader.Title>
         <PageHeader.ButtonsContainer>
-          <Button variant="text" label="Export" />
-          <Button variant="outlined" label="Import" />
+          <Button variant="text">Export</Button>
+          <Button variant="outlined">Import</Button>
           {/* one contained primary action per view */}
           <Button
             variant="contained"
-            label="Add vehicle"
-            leadingIcon="add"
+            startIcon={<span aria-hidden="true">+</span>}
             loading={loading}
             onClick={() => {
               setLoading(true);
               window.setTimeout(() => setLoading(false), 900);
             }}
-          />
+          >
+            Add vehicle
+          </Button>
         </PageHeader.ButtonsContainer>
       </PageHeader>
     </Stage>
@@ -55,16 +58,19 @@ const Detail = () => (
   <Stage>
     <PageHeader>
       {/* Back-link built from Breadcrumbs (back arrow + parent label > record
-          name), per PageHeader.doc.json — the left slot replaces Title here. */}
-      <Breadcrumbs
-        items={[
-          { label: '← Vehicles', href: '#' },
-          { label: 'CA 123-456' },
-        ]}
-      />
+          name), per PageHeader.doc.json — the left slot replaces Title here.
+          Breadcrumbs is children-based (Link/Typography), not an items array. */}
+      <Breadcrumbs aria-label="Back to vehicles">
+        <Link underline="hover" color="inherit" href="#">
+          ← Vehicles
+        </Link>
+        <Typography color="text.primary" aria-current="page">
+          CA 123-456
+        </Typography>
+      </Breadcrumbs>
       <PageHeader.ButtonsContainer>
-        <Button variant="outlined" label="Assign driver" />
-        <Button variant="contained" label="Edit vehicle" leadingIcon="edit" />
+        <Button variant="outlined">Assign driver</Button>
+        <Button variant="contained">Edit vehicle</Button>
       </PageHeader.ButtonsContainer>
     </PageHeader>
   </Stage>

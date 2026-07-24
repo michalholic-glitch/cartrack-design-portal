@@ -1,6 +1,11 @@
 {
+  "Accordion": [
+    "Single-open group",
+    "Multi-open group",
+    "With summary text"
+  ],
   "Badge": [
-    "Numeric",
+    "Standard (numeric)",
     "Dot",
     "Capped"
   ],
@@ -12,7 +17,8 @@
   ],
   "Breadcrumbs": [
     "Standard",
-    "Collapsed"
+    "Collapsed",
+    "Custom separator"
   ],
   "Button": [
     "Contained",
@@ -22,44 +28,52 @@
   "Card": [
     "Elevated",
     "Outlined",
+    "Raised",
     "With media",
     "Actionable (whole-card)"
   ],
-  "Chip": [
-    "Input chip",
-    "Filter chip",
-    "Choice chip",
-    "Action chip",
-    "Status chip (read-only)"
+  "Checkbox": [
+    "Standalone checkbox",
+    "List/table row checkbox",
+    "Header select-all checkbox (indeterminate)"
   ],
-  "DataTable": [
-    "With toolbar",
-    "Selectable (checkboxes)",
-    "Paginated",
-    "Dense",
-    "Sticky header + bounded height",
-    "Loading",
-    "Empty state",
-    "Row actions"
+  "Chip": [
+    "Filled",
+    "Outlined",
+    "Clickable / deletable",
+    "Status (read-only, usage pattern)"
+  ],
+  "CircularProgress": [
+    "variant=\"indeterminate\" (default)",
+    "variant=\"determinate\""
   ],
   "Dialog": [
     "Alert / confirmation",
-    "Form dialog"
+    "Form dialog",
+    "Full-screen (rare on desktop)"
   ],
   "Divider": [
     "Full-width",
     "Inset",
-    "Middle",
-    "Vertical"
+    "Middle"
   ],
-  "ExpansionPanel": [
-    "Single-open",
-    "Multi-open",
-    "With summary"
+  "Drawer": [
+    "Permanent (docked navigation drawer)",
+    "Persistent (toggleable docked drawer)",
+    "Temporary (modal side sheet / overlay)",
+    "Filters panel"
   ],
   "ImageList": [
     "Standard",
-    "With text overlay"
+    "Quilted / Woven",
+    "With text overlay",
+    "Masonry"
+  ],
+  "LinearProgress": [
+    "variant=\"indeterminate\" (default)",
+    "variant=\"determinate\"",
+    "variant=\"buffer\"",
+    "variant=\"query\""
   ],
   "List": [
     "Single-line",
@@ -70,12 +84,8 @@
   "Menu": [
     "Overflow menu",
     "Dropdown (exposed) menu",
-    "Context menu"
-  ],
-  "NavigationDrawer": [
-    "Permanent",
-    "Collapsible",
-    "Grouped"
+    "Context menu",
+    "Cascading submenu"
   ],
   "NavigationRail": [
     "Labelled",
@@ -88,33 +98,13 @@
     "Detail (back-link + actions)"
   ],
   "Pagination": [
-    "Table footer (range + prev/next)",
-    "Numbered pages",
-    "Rows-per-page only"
+    "Text (default)",
+    "Outlined",
+    "Rounded shape"
   ],
-  "Picker": [
-    "Date picker",
-    "Date range picker",
-    "Time picker",
-    "Date-time / date-time range",
-    "Field-only",
-    "Static / inline"
-  ],
-  "ProgressIndicator": [
-    "Linear determinate",
-    "Linear indeterminate",
-    "Circular determinate",
-    "Circular indeterminate"
-  ],
-  "SelectionControl": [
-    "Checkbox",
-    "Radio button",
-    "Switch"
-  ],
-  "SideSheet": [
-    "Standard (pushes content)",
-    "Modal (over a scrim)",
-    "Filters panel"
+  "Radio": [
+    "Grouped (RadioGroup) — the standard pattern",
+    "Standalone Radio"
   ],
   "Slider": [
     "Continuous",
@@ -124,27 +114,36 @@
   "Snackbar": [
     "Message only",
     "With action",
-    "Error toast"
+    "Custom content"
   ],
   "Stepper": [
     "Horizontal",
     "Vertical",
     "Linear",
-    "Non-linear"
+    "Non-linear",
+    "Alternative label"
+  ],
+  "Switch": [
+    "Standalone toggle",
+    "List item trailing toggle"
   ],
   "Tabs": [
-    "Fixed",
-    "Scrollable",
-    "With icon / count"
+    "variant=\"standard\"",
+    "variant=\"scrollable\"",
+    "variant=\"fullWidth\"",
+    "orientation=\"vertical\"",
+    "Tab with icon / label"
   ],
   "TextField": [
-    "Filled",
-    "Outlined",
-    "With adornments",
-    "Multiline / textarea"
+    "variant=\"outlined\"",
+    "variant=\"filled\"",
+    "variant=\"standard\"",
+    "With adornments (slotProps.input.startAdornment/endAdornment)",
+    "select",
+    "multiline"
   ],
   "Tooltip": [
     "Plain",
-    "Truncation reveal"
+    "Truncation reveal (usage pattern)"
   ]
 }

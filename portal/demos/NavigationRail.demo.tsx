@@ -1,14 +1,18 @@
 import React from 'react';
 import { NavigationRail, NavigationRailItem } from '../../design-system/components/NavigationRail/NavigationRail';
-import { NavigationDrawer } from '../../design-system/components/NavigationDrawer/NavigationDrawer';
+import { Drawer } from '../../design-system/components/Drawer/Drawer';
 import { Button } from '../../design-system/components/Button/Button';
+import { List } from '../../design-system/components/List/List';
+import ListItemButton from '@mui/material/ListItemButton';
+import ListItemIcon from '@mui/material/ListItemIcon';
+import ListItemText from '@mui/material/ListItemText';
 
 /* Live demos for the portal — rendered from the REAL NavigationRail.tsx.
    Keys must exactly match NavigationRail.doc.json variant names.
    Every demo sits in a fixed-height staging wrapper so the tall strip doesn't
    blow up the tile, and switches the active item via useState.
 
-   The rail's destinations mirror the NavigationDrawer's exactly (its keyRule:
+   The rail's destinations mirror the navigation Drawer's exactly (its keyRule:
    same destinations at different widths) — the Expandable demo makes that
    literal by toggling between the two components. */
 
@@ -45,7 +49,7 @@ const IconOnly = () => {
   );
 };
 
-/* Expandable: onExpand swaps the rail for the full NavigationDrawer with the
+/* Expandable: onExpand swaps the rail for a full docked Drawer with the
    SAME destinations (the doc's "toggles to the full navigation drawer"). */
 const Expandable = () => {
   const [active, setActive] = React.useState('map');
@@ -54,25 +58,38 @@ const Expandable = () => {
     <div>
       {expanded && (
         <div style={{ marginBottom: 8 }}>
-          <Button variant="text" label="Collapse to rail" leadingIcon="chevron_left" onClick={() => setExpanded(false)} />
+          <Button variant="text" startIcon={<span aria-hidden="true">‹</span>} onClick={() => setExpanded(false)}>
+            Collapse to rail
+          </Button>
         </div>
       )}
       <Stage>
         {expanded ? (
-          <NavigationDrawer
-            sections={[
-              {
-                items: [
-                  { id: 'map', label: 'Map', icon: 'map', onClick: () => setActive('map') },
-                  { id: 'assets', label: 'Assets', icon: 'local_shipping', onClick: () => setActive('assets') },
-                  { id: 'drivers', label: 'Drivers', icon: 'person', onClick: () => setActive('drivers') },
-                  { id: 'reports', label: 'Reports', icon: 'assessment', onClick: () => setActive('reports') },
-                ],
+          /* Drawer (MUI) replaces the old NavigationDrawer — variant="permanent"
+             is the docked navigation form; open is always true (unmount to close,
+             per Drawer.tsx). Same destinations as the rail, per its keyRule. */
+          <Drawer
+            variant="permanent"
+            open
+            slotProps={{
+              paper: {
+                sx: { position: 'static', width: 220 /* staging width inside the tile */ },
               },
-            ]}
-            activeId={active}
-            height="100%"
-          />
+            }}
+          >
+            <List aria-label="Main navigation">
+              {ITEMS.map((item) => (
+                <ListItemButton
+                  key={item.id}
+                  selected={active === item.id}
+                  onClick={() => setActive(item.id)}
+                >
+                  <ListItemIcon aria-hidden="true">{item.icon}</ListItemIcon>
+                  <ListItemText primary={item.label} />
+                </ListItemButton>
+              ))}
+            </List>
+          </Drawer>
         ) : (
           <NavigationRail
             items={withActive(setActive)}

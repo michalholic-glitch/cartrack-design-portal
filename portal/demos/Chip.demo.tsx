@@ -1,155 +1,127 @@
 import React from 'react';
 import { Chip } from '../../design-system/components/Chip/Chip';
-import { Button } from '../../design-system/components/Button/Button';
 
-/* Live demos for the portal — rendered from the REAL Chip.tsx.
-   Keys must exactly match Chip.doc.json variant names. */
+/* Live demos for the portal — rendered from the REAL Chip.tsx (a thin
+   wrapper over @mui/material/Chip). Keys must exactly match Chip.doc.json
+   variant names.
+   The "small" chip size comes from cartrackTheme's MuiChip defaultProps
+   (the portal mount supplies the ThemeProvider). Status colouring is a
+   usage pattern (sx mapped from the statusChip tokens), not a Chip prop —
+   per Chip.doc.json. */
 
 const Row = ({ children }: { children: React.ReactNode }) => (
-  <div style={{ display: 'flex', gap: 8, alignItems: 'center', flexWrap: 'wrap' }}>{children}</div>
-);
-
-const Hint = ({ children }: { children: React.ReactNode }) => (
-  <span style={{ fontSize: '.8rem', color: 'rgba(0,0,0,.6)' /* semantic.color.text.secondary */ }}>
+  <div
+    style={{
+      display: 'flex',
+      alignItems: 'center',
+      flexWrap: 'wrap',
+      gap: '8px' /* semantic.spacing.sm */,
+    }}
+  >
     {children}
-  </span>
+  </div>
 );
 
-/* Hero: a vehicle-list filter bar — toggleable status filters plus removable
-   driver input chips, the chip combination the portal actually uses. */
-export const hero = () => {
-  const [filters, setFilters] = React.useState<Record<string, boolean>>({
-    Active: true,
-    Idle: false,
-    Offline: false,
-  });
-  const allDrivers = ['Jane Cooper', 'Frank Kim', 'Lena Ortiz'];
-  const [drivers, setDrivers] = React.useState<string[]>(allDrivers);
+const FilledChips = () => (
+  <Row>
+    <Chip label="Depot North" />
+    <Chip label="Long haul" />
+    <Chip label="Refrigerated" />
+  </Row>
+);
+
+const OutlinedChips = () => (
+  <Row>
+    <Chip variant="outlined" label="Depot North" />
+    <Chip variant="outlined" label="Long haul" />
+    <Chip variant="outlined" label="Refrigerated" />
+  </Row>
+);
+
+/* Filter chips (onClick toggles) + input chips (onDelete removes) — both are
+   usage patterns of the same Chip API, per the doc.json ("no dedicated
+   input/filter/choice/action prop"). Selected filter chips use brand primary
+   DARK, not main: white on #F47735 fails WCAG AA (tokens.json
+   accessibility.knownIssues). */
+const FILTERS = ['Active', 'Idle', 'Offline'];
+const DRIVERS = ['Jane Cooper', 'Frank Kim', 'Ayanda Dlamini'];
+
+const ClickableDeletableChips = () => {
+  const [on, setOn] = React.useState<string[]>(['Active']);
+  const [drivers, setDrivers] = React.useState<string[]>(DRIVERS);
+  const toggle = (f: string) =>
+    setOn((s) => (s.includes(f) ? s.filter((x) => x !== f) : [...s, f]));
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' /* semantic.spacing.md */ }}>
       <Row>
-        <Hint>Status:</Hint>
-        {Object.keys(filters).map((name) => (
-          <Chip
-            key={name}
-            variant="filter"
-            label={name}
-            selected={filters[name]}
-            onClick={() => setFilters((f) => ({ ...f, [name]: !f[name] }))}
-          />
-        ))}
+        {FILTERS.map((f) => {
+          const selected = on.includes(f);
+          return (
+            <Chip
+              key={f}
+              label={f}
+              onClick={() => toggle(f)}
+              variant={selected ? 'filled' : 'outlined'}
+              aria-pressed={selected}
+              sx={
+                selected
+                  ? {
+                      bgcolor: '#BB4800' /* semantic.color.brand.primary.dark */,
+                      color: '#FFFFFF' /* semantic.color.brand.primary.onPrimary */,
+                      '&:hover': { bgcolor: '#BB4800' /* semantic.color.brand.primary.dark */ },
+                    }
+                  : undefined
+              }
+            />
+          );
+        })}
       </Row>
       <Row>
-        <Hint>Drivers:</Hint>
         {drivers.map((d) => (
-          <Chip
-            key={d}
-            variant="input"
-            label={d}
-            removable
-            onRemove={() => setDrivers((ds) => ds.filter((x) => x !== d))}
-          />
+          <Chip key={d} label={d} onDelete={() => setDrivers((s) => s.filter((x) => x !== d))} />
         ))}
-        {drivers.length < allDrivers.length && (
-          <Button variant="text" label="Reset drivers" onClick={() => setDrivers(allDrivers)} />
+        {drivers.length === 0 && (
+          <Chip variant="outlined" label="Reset drivers" onClick={() => setDrivers(DRIVERS)} />
         )}
       </Row>
     </div>
   );
 };
 
-const InputChip = () => {
-  const all = ['Jane Cooper', 'Frank Kim', 'Lena Ortiz', 'Ana Diaz'];
-  const [drivers, setDrivers] = React.useState<string[]>(all);
-  return (
-    <Row>
-      {drivers.map((d) => (
-        <Chip
-          key={d}
-          variant="input"
-          label={d}
-          removable
-          onRemove={() => setDrivers((ds) => ds.filter((x) => x !== d))}
-        />
-      ))}
-      {drivers.length === 0 && (
-        <>
-          <Hint>All driver chips removed.</Hint>
-          <Button variant="text" label="Reset" onClick={() => setDrivers(all)} />
-        </>
-      )}
-    </Row>
-  );
-};
-
-const FilterChip = () => {
-  const [selected, setSelected] = React.useState<Record<string, boolean>>({
-    Speeding: true,
-    'Harsh braking': false,
-    'Geofence exit': false,
-    'After hours': false,
-  });
-  const active = Object.values(selected).filter(Boolean).length;
-  return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-      <Row>
-        {Object.keys(selected).map((name) => (
-          <Chip
-            key={name}
-            variant="filter"
-            label={name}
-            selected={selected[name]}
-            onClick={() => setSelected((s) => ({ ...s, [name]: !s[name] }))}
-          />
-        ))}
-      </Row>
-      <Hint>{active} alert filter{active === 1 ? '' : 's'} active</Hint>
-    </div>
-  );
-};
-
-const ChoiceChip = () => {
-  const options = ['Today', 'Last 7 days', 'Last 30 days'];
-  const [choice, setChoice] = React.useState('Today');
-  return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-      <Row>
-        {options.map((o) => (
-          <Chip key={o} variant="choice" label={o} selected={choice === o} onClick={() => setChoice(o)} />
-        ))}
-      </Row>
-      <Hint>Trip range: {choice}</Hint>
-    </div>
-  );
-};
-
-const ActionChip = () => {
-  const [last, setLast] = React.useState('');
-  return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-      <Row>
-        <Chip variant="action" label="Assign driver" onClick={() => setLast('Assign driver')} />
-        <Chip variant="action" label="Create geofence" onClick={() => setLast('Create geofence')} />
-        <Chip variant="action" label="Export trips" disabled />
-      </Row>
-      {last && <Hint>Last action: {last}</Hint>}
-    </div>
-  );
-};
-
-const StatusChip = () => (
+/* Read-only status mapping: Active=success, Idle=warning, Offline=error.
+   50-tone fill + 900-tone text (the AA-passing pair per tokens.json's
+   statusChip note). No onClick/onDelete — status chips stay non-interactive. */
+const StatusChips = () => (
   <Row>
-    {/* Read-only status mapping per Chip.doc.json: Active=success, Idle=warning, Offline=error */}
-    <Chip variant="status" status="success" label="Active" />
-    <Chip variant="status" status="warning" label="Idle" />
-    <Chip variant="status" status="error" label="Offline" />
+    <Chip
+      label="Active"
+      sx={{
+        bgcolor: '#E8F5E9' /* semantic.color.statusChip.success.background */,
+        color: '#1B5E20' /* semantic.color.statusChip.success.text */,
+      }}
+    />
+    <Chip
+      label="Idle"
+      sx={{
+        bgcolor: '#FFF3E0' /* semantic.color.statusChip.warning.background */,
+        color: '#E65100' /* semantic.color.statusChip.warning.text */,
+      }}
+    />
+    <Chip
+      label="Offline"
+      sx={{
+        bgcolor: '#FFEBEE' /* semantic.color.statusChip.error.background */,
+        color: '#B71C1C' /* semantic.color.statusChip.error.text */,
+      }}
+    />
   </Row>
 );
 
+export const hero: React.ComponentType = () => <Chip label="Jane Cooper" />;
+
 export const demos: Record<string, React.ComponentType> = {
-  'Input chip': InputChip,
-  'Filter chip': FilterChip,
-  'Choice chip': ChoiceChip,
-  'Action chip': ActionChip,
-  'Status chip (read-only)': StatusChip,
+  Filled: FilledChips,
+  Outlined: OutlinedChips,
+  'Clickable / deletable': ClickableDeletableChips,
+  'Status (read-only, usage pattern)': StatusChips,
 };

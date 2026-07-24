@@ -1,131 +1,163 @@
 import React from 'react';
-import { Menu, MenuItemData } from '../../design-system/components/Menu/Menu';
+import { Menu } from '../../design-system/components/Menu/Menu';
 import { Button } from '../../design-system/components/Button/Button';
+import { Divider } from '../../design-system/components/Divider/Divider';
+import { MenuItem } from '@mui/material';
 
-/* Live demos for the portal — rendered from the REAL Menu.tsx.
+/* Live demos for the portal — rendered from the REAL Menu.tsx (MUI v9 wrapper).
    Keys must exactly match Menu.doc.json variant names.
+   Every Menu is anchored to a real trigger (anchorEl state or anchorPosition)
+   with onClose wired. Items are plain @mui/material MenuItem children —
+   the wrapper deliberately has no custom `items` array prop. */
 
-   Menu is a controlled surface (open/onClose, no trigger of its own), so every
-   demo stages it with a real trigger inside a position:relative container tall
-   enough that the absolutely-positioned .mdc-menu-surface--open doesn't spill
-   over neighbouring tiles.
-
-   "Cascading submenu" is deliberately absent: MenuItemData has no children/
-   submenu prop, so a second-level surface can't be expressed with the real
-   API — that tile falls back to the mockup (documented gap). */
-
-const Stage = ({ children, minHeight = 300 }: { children: React.ReactNode; minHeight?: number }) => (
-  <div style={{ position: 'relative', minHeight }}>{children}</div>
-);
-
-/* Anchor: the surface is absolutely positioned, so this zero-height relative
-   wrapper pins it directly below the trigger instead of over it. */
-const Anchor = ({ children }: { children: React.ReactNode }) => (
-  <div style={{ position: 'relative' }}>{children}</div>
-);
-
-const LastAction = ({ text }: { text: string }) =>
-  text ? (
-    <div style={{ marginTop: 8, fontSize: '.8rem', color: 'rgba(0,0,0,.6)' /* semantic.color.text.secondary */ }}>
-      Last action: {text}
-    </div>
-  ) : null;
-
-const vehicleActions = (report: (label: string) => void): MenuItemData[] => [
-  { id: 'edit', label: 'Edit vehicle', icon: 'edit', onClick: () => report('Edit CA 123-456') },
-  { id: 'assign', label: 'Assign driver', icon: 'person_add', onClick: () => report('Assign driver to CA 123-456') },
-  { id: 'trip', label: 'Download trip report', icon: 'download', shortcut: '⌘D', onClick: () => report('Download trip report') },
-  { id: 'sep', divider: true },
-  { id: 'delete', label: 'Delete vehicle', icon: 'delete', destructive: true, onClick: () => report('Delete CA 123-456') },
-];
-
-const OverflowDemo = ({ initiallyOpen = false }: { initiallyOpen?: boolean }) => {
-  const [open, setOpen] = React.useState(initiallyOpen);
-  const [last, setLast] = React.useState('');
+const OverflowDemo = () => {
+  const [anchorEl, setAnchorEl] = React.useState<HTMLElement | null>(null);
+  const close = () => setAnchorEl(null);
   return (
-    <Stage>
-      <Button variant="outlined" label="Actions" leadingIcon="more_vert" onClick={() => setOpen((o) => !o)} />
-      <Anchor>
-        <Menu variant="overflow" open={open} onClose={() => setOpen(false)} items={vehicleActions(setLast)} />
-      </Anchor>
-      <LastAction text={last} />
-    </Stage>
-  );
-};
-
-const DropdownDemo = () => {
-  const [open, setOpen] = React.useState(false);
-  const [status, setStatus] = React.useState('Active');
-  const options = ['Active', 'Idle', 'Offline'];
-  return (
-    <Stage minHeight={220}>
+    <>
       <Button
         variant="outlined"
-        label={`Status: ${status}`}
-        leadingIcon="arrow_drop_down"
-        onClick={() => setOpen((o) => !o)}
-      />
-      <Anchor>
-        <Menu
-          variant="dropdown"
-          open={open}
-          onClose={() => setOpen(false)}
-          items={options.map((option) => ({
-            id: option.toLowerCase(),
-            label: option,
-            selected: option === status,
-            onClick: () => setStatus(option),
-          }))}
-        />
-      </Anchor>
-    </Stage>
+        aria-label="More actions for CA 123-456"
+        aria-haspopup="menu"
+        aria-expanded={anchorEl ? 'true' : undefined}
+        onClick={(e) => setAnchorEl(e.currentTarget)}
+        sx={{ minWidth: 40, px: 1 }}
+      >
+        ⋮
+      </Button>
+      <Menu anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={close}>
+        <MenuItem onClick={close}>Edit vehicle</MenuItem>
+        <MenuItem onClick={close}>Assign driver</MenuItem>
+        <MenuItem onClick={close}>View trip history</MenuItem>
+        <Divider />
+        {/* Destructive action set apart with a Divider (doThis). */}
+        <MenuItem onClick={close} sx={{ color: '#D32F2F' /* semantic.color.status.error.dark */ }}>
+          Remove vehicle
+        </MenuItem>
+      </Menu>
+    </>
   );
 };
 
-const ContextDemo = () => {
-  const [open, setOpen] = React.useState(false);
-  const [last, setLast] = React.useState('');
+const DEPOTS = ['Cape Town Main', 'Paarl depot', 'Stellenbosch'];
+
+const DropdownDemo = () => {
+  const [anchorEl, setAnchorEl] = React.useState<HTMLElement | null>(null);
+  const [depot, setDepot] = React.useState(DEPOTS[0]);
+  const close = () => setAnchorEl(null);
   return (
-    <Stage>
+    <>
+      <Button
+        variant="outlined"
+        aria-haspopup="menu"
+        aria-expanded={anchorEl ? 'true' : undefined}
+        onClick={(e) => setAnchorEl(e.currentTarget)}
+      >
+        Depot: {depot} ▾
+      </Button>
+      <Menu anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={close}>
+        {DEPOTS.map((d) => (
+          <MenuItem
+            key={d}
+            selected={d === depot}
+            onClick={() => {
+              setDepot(d);
+              close();
+            }}
+          >
+            {d}
+          </MenuItem>
+        ))}
+      </Menu>
+    </>
+  );
+};
+
+const ContextMenuDemo = () => {
+  const [pos, setPos] = React.useState<{ top: number; left: number } | null>(null);
+  const close = () => setPos(null);
+  return (
+    <>
       <div
         onContextMenu={(e) => {
           e.preventDefault();
-          setOpen((o) => !o);
+          setPos({ top: e.clientY, left: e.clientX });
         }}
-        onClick={() => open && setOpen(false)}
         style={{
-          display: 'flex',
-          justifyContent: 'space-between',
-          alignItems: 'center',
-          padding: '12px 16px',
-          border: '1px solid #E0E0E0' /* semantic.color.border.default */,
+          padding: 16 /* semantic.spacing.md */,
+          border: '1px dashed rgba(0, 0, 0, 0.12) /* semantic.color.border.default */',
           borderRadius: 4 /* semantic.radius.default */,
-          fontSize: 14,
-          cursor: 'context-menu',
+          color: 'rgba(0, 0, 0, 0.6) /* semantic.color.text.secondary */',
+          fontSize: '0.875rem /* semantic.typography.scale.body2 */',
           userSelect: 'none',
+          cursor: 'context-menu',
         }}
       >
-        <span>CA 123-456 — Jane Cooper</span>
-        <span style={{ fontSize: '.75rem', color: 'rgba(0,0,0,.6)' /* semantic.color.text.secondary */ }}>
-          Right-click this row
-        </span>
+        Right-click this row — CA 123-456 · Jane Cooper · Driving
       </div>
-      <Anchor>
-        <Menu variant="context" open={open} onClose={() => setOpen(false)} items={vehicleActions(setLast)} />
-      </Anchor>
-      <LastAction text={last} />
-    </Stage>
+      <Menu
+        open={pos !== null}
+        onClose={close}
+        anchorReference="anchorPosition"
+        anchorPosition={pos ?? undefined}
+      >
+        <MenuItem onClick={close}>Zoom to vehicle</MenuItem>
+        <MenuItem onClick={close}>Follow on live map</MenuItem>
+        <MenuItem onClick={close}>Copy registration</MenuItem>
+      </Menu>
+    </>
   );
 };
 
-/* Hero: the overflow pattern — a ⋮-style trigger with a vehicle's row actions,
-   open on load so the surface itself is what you see first. */
-export const hero = () => <OverflowDemo initiallyOpen />;
+/* Composed manually with a second Menu anchored to the parent item —
+   cascading is not a built-in Menu feature. One submenu level only. */
+const CascadingDemo = () => {
+  const [anchorEl, setAnchorEl] = React.useState<HTMLElement | null>(null);
+  const [subAnchorEl, setSubAnchorEl] = React.useState<HTMLElement | null>(null);
+  const closeAll = () => {
+    setSubAnchorEl(null);
+    setAnchorEl(null);
+  };
+  return (
+    <>
+      <Button
+        variant="outlined"
+        aria-haspopup="menu"
+        aria-expanded={anchorEl ? 'true' : undefined}
+        onClick={(e) => setAnchorEl(e.currentTarget)}
+      >
+        Report actions
+      </Button>
+      <Menu anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={closeAll}>
+        <MenuItem onClick={closeAll}>Refresh data</MenuItem>
+        <MenuItem onClick={closeAll}>Schedule…</MenuItem>
+        <MenuItem aria-haspopup="menu" onClick={(e) => setSubAnchorEl(e.currentTarget)}>
+          <span style={{ flex: 1 }}>Export</span>
+          <span aria-hidden="true" style={{ marginLeft: 16 /* semantic.spacing.md */ }}>
+            ▸
+          </span>
+        </MenuItem>
+      </Menu>
+      <Menu
+        anchorEl={subAnchorEl}
+        open={Boolean(subAnchorEl)}
+        onClose={() => setSubAnchorEl(null)}
+        anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+        transformOrigin={{ vertical: 'top', horizontal: 'left' }}
+      >
+        <MenuItem onClick={closeAll}>Export as CSV</MenuItem>
+        <MenuItem onClick={closeAll}>Export as PDF</MenuItem>
+        <MenuItem onClick={closeAll}>Export as XLSX</MenuItem>
+      </Menu>
+    </>
+  );
+};
+
+export const hero: React.ComponentType = OverflowDemo;
 
 export const demos: Record<string, React.ComponentType> = {
-  'Overflow menu': () => <OverflowDemo />,
+  'Overflow menu': OverflowDemo,
   'Dropdown (exposed) menu': DropdownDemo,
-  'Context menu': ContextDemo,
-  // 'Cascading submenu' omitted — MenuItemData has no children/submenu prop,
-  // so a second-level surface can't be built from the real API.
+  'Context menu': ContextMenuDemo,
+  'Cascading submenu': CascadingDemo,
 };

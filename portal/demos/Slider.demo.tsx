@@ -1,103 +1,125 @@
 import React from 'react';
 import { Slider } from '../../design-system/components/Slider/Slider';
 
-/* Live demos for the portal — rendered from the REAL Slider.tsx.
-   Keys must exactly match Slider.doc.json variant names.
-   Every demo shows the current value next to the track (doc.json:
-   "Don't hide the value"). */
+/* Live demos for the portal — rendered from the REAL Slider.tsx (thin wrapper over
+   @mui/material/Slider, MUI v9). Keys must exactly match Slider.doc.json variant
+   names. All three variants are expressible live — none omitted.
+   No invented `variant` prop (the old MDC-era demo's approach): continuous is the
+   default behavior, discrete is `step` + `marks`, range is a two-element `value`
+   array — exactly as the doc.json's correction note says. */
 
-const valueStyle: React.CSSProperties = {
-  fontSize: '.875rem',
-  color: 'rgba(0, 0, 0, 0.6)' /* semantic.color.text.secondary */,
-  minWidth: 96,
+const stageStyle: React.CSSProperties = {
+  display: 'flex',
+  alignItems: 'center',
+  gap: '24px /* primitive.spacing.6 */',
+  width: '100%',
+  maxWidth: '360px',
+};
+
+const readoutStyle: React.CSSProperties = {
+  fontSize: '14px /* semantic.typography.scale.body2 */',
+  color: 'rgba(0, 0, 0, 0.87) /* semantic.color.text.primary */',
+  whiteSpace: 'nowrap',
+  minWidth: '72px',
+  textAlign: 'right',
 };
 
 const labelStyle: React.CSSProperties = {
-  fontSize: '.8rem',
-  fontWeight: 500,
-  color: 'rgba(0, 0, 0, 0.6)' /* semantic.color.text.secondary */,
-  marginBottom: 4,
+  fontSize: '12px /* semantic.typography.scale.caption */',
+  color: 'rgba(0, 0, 0, 0.6) /* semantic.color.text.secondary */',
+  display: 'block',
+  marginBottom: '4px /* primitive.spacing.1 */',
 };
 
-const row: React.CSSProperties = { display: 'flex', alignItems: 'center', gap: 16, maxWidth: 480 };
-
-const Continuous = () => {
+/* Hero — geofence radius: continuous drag with live value feedback. */
+export const hero: React.ComponentType = () => {
   const [radius, setRadius] = React.useState(750);
   return (
-    <div>
-      <div style={labelStyle}>Geofence radius</div>
-      <div style={row}>
+    <div style={{ width: '100%', maxWidth: '360px' }}>
+      <span style={labelStyle} id="geofence-radius-label">
+        Geofence radius — Depot A
+      </span>
+      <div style={stageStyle}>
         <Slider
-          variant="continuous"
-          label="Geofence radius"
+          aria-labelledby="geofence-radius-label"
           value={radius}
+          onChange={(_event, value) => setRadius(value as number)}
           min={100}
-          max={5000}
-          onChange={(v) => {
-            if (typeof v === 'number') setRadius(v);
-          }}
+          max={2000}
+          step={50}
+          valueLabelDisplay="auto"
+          valueLabelFormat={(value) => `${value} m`}
         />
-        <span style={valueStyle}>{radius.toLocaleString()} m</span>
+        <span style={readoutStyle}>{radius} m</span>
       </div>
     </div>
   );
 };
 
-const Discrete = () => {
-  const [threshold, setThreshold] = React.useState(15);
+const Continuous: React.ComponentType = () => {
+  const [opacity, setOpacity] = React.useState(60);
   return (
-    <div>
-      <div style={labelStyle}>Speed alert threshold (over limit)</div>
-      <div style={row}>
-        <Slider
-          variant="discrete"
-          label="Speed alert threshold"
-          value={threshold}
-          min={5}
-          max={30}
-          step={5}
-          onChange={(v) => {
-            if (typeof v === 'number') setThreshold(v);
-          }}
-        />
-        <span style={valueStyle}>+{threshold} km/h</span>
-      </div>
+    <div style={stageStyle}>
+      <Slider
+        aria-label="Map overlay opacity"
+        value={opacity}
+        onChange={(_event, value) => setOpacity(value as number)}
+      />
+      <span style={readoutStyle}>{opacity}%</span>
     </div>
   );
 };
 
-const Range = () => {
-  const [window_, setWindow] = React.useState<[number, number]>([6, 18]);
-  const fmt = (h: number) => `${String(h).padStart(2, '0')}:00`;
+const Discrete: React.ComponentType = () => {
+  const [distance, setDistance] = React.useState(10);
   return (
-    <div>
-      <div style={labelStyle}>Trip replay time window</div>
-      <div style={row}>
-        <Slider
-          variant="range"
-          label="Trip replay time window"
-          value={window_}
-          min={0}
-          max={24}
-          step={1}
-          onChange={(v) => {
-            if (Array.isArray(v)) setWindow(v);
-          }}
-        />
-        <span style={valueStyle}>
-          {fmt(window_[0])} – {fmt(window_[1])}
-        </span>
-      </div>
+    <div style={stageStyle}>
+      <Slider
+        aria-label="Alert radius"
+        value={distance}
+        onChange={(_event, value) => setDistance(value as number)}
+        min={5}
+        max={20}
+        step={5}
+        marks={[
+          { value: 5, label: '5 km' },
+          { value: 10, label: '10 km' },
+          { value: 15, label: '15 km' },
+          { value: 20, label: '20 km' },
+        ]}
+        valueLabelDisplay="auto"
+      />
+      <span style={readoutStyle}>{distance} km</span>
     </div>
   );
 };
 
-/* Hero: the fleet-typical case — dragging a geofence radius with the value
-   read out beside the track. */
-export const hero = Continuous;
+const pad = (hour: number) => `${String(hour).padStart(2, '0')}:00`;
+
+const Range: React.ComponentType = () => {
+  const [window, setWindow] = React.useState<number[]>([8, 17]);
+  return (
+    <div style={stageStyle}>
+      <Slider
+        getAriaLabel={(index) => (index === 0 ? 'Report window start' : 'Report window end')}
+        getAriaValueText={(value) => pad(value)}
+        value={window}
+        onChange={(_event, value) => setWindow(value as number[])}
+        min={0}
+        max={24}
+        valueLabelDisplay="auto"
+        valueLabelFormat={(value) => pad(value)}
+        disableSwap
+      />
+      <span style={readoutStyle}>
+        {pad(window[0])}–{pad(window[1])}
+      </span>
+    </div>
+  );
+};
 
 export const demos: Record<string, React.ComponentType> = {
-  Continuous,
-  Discrete,
+  'Continuous': Continuous,
+  'Discrete': Discrete,
   'Range (two thumbs)': Range,
 };

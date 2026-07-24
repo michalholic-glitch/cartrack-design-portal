@@ -1,107 +1,120 @@
 import React from 'react';
 import { Snackbar } from '../../design-system/components/Snackbar/Snackbar';
 import { Button } from '../../design-system/components/Button/Button';
+import Alert from '@mui/material/Alert';
 
-/* Live demos for the portal — rendered from the REAL Snackbar.tsx.
-   Keys must exactly match Snackbar.doc.json variant names.
-   Snackbar.tsx renders the mdc-snackbar contract, which the portal CSS positions
-   fixed at the bottom of the viewport (.mdc-snackbar { position: fixed; bottom: 0 }) —
-   that overlay is real behaviour, so every demo is triggered by a staging Button,
-   auto-dismisses on a timer (per the doc's Auto-dismiss behaviour), and can be
-   closed explicitly via onClose. One snackbar at a time, per doc.json. */
+/* Live demos for the portal — rendered from the REAL Snackbar.tsx (thin wrapper
+   over @mui/material/Snackbar, MUI v9). Keys must exactly match
+   Snackbar.doc.json variant names. All three variants are expressible live —
+   none omitted.
+   Each demo opens via a staging trigger Button and sets an explicit
+   autoHideDuration — per the doc.json, auto-dismiss is opt-in (the real default
+   is null / no auto-hide). Positioning is left at MUI's documented default,
+   anchorOrigin { vertical: 'bottom', horizontal: 'left' }, which is what the
+   doc.json's Position spec records — no override needed. The snackbar renders
+   fixed to the viewport, as it would in the app. */
 
-function useSnackbar(durationMs: number) {
+/* Hero — the most representative use: brief confirmation with a single Undo
+   action. Timer is longer because there's an action to reach (doc guidance),
+   and clickaway is ignored so an accidental click doesn't eat the Undo. */
+export const hero: React.ComponentType = () => {
   const [open, setOpen] = React.useState(false);
-  const timer = React.useRef<number | undefined>(undefined);
-  const show = () => {
-    window.clearTimeout(timer.current);
-    setOpen(true);
-    timer.current = window.setTimeout(() => setOpen(false), durationMs);
-  };
-  const close = () => {
-    window.clearTimeout(timer.current);
+  const handleClose = (_event: React.SyntheticEvent | Event, reason?: string) => {
+    if (reason === 'clickaway') return;
     setOpen(false);
   };
-  React.useEffect(() => () => window.clearTimeout(timer.current), []);
-  return { open, show, close };
-}
-
-export const hero = () => {
-  const snack = useSnackbar(4000);
   return (
-    <div style={{ display: 'flex', gap: 16, alignItems: 'center' }}>
-      <Button variant="contained" label="Save vehicle" onClick={snack.show} />
+    <div>
+      <Button variant="outlined" onClick={() => setOpen(true)}>
+        Unassign driver
+      </Button>
       <Snackbar
-        variant="message"
-        open={snack.open}
-        message="Vehicle saved"
-        onClose={snack.close}
+        open={open}
+        autoHideDuration={6000}
+        onClose={handleClose}
+        message="Frank Kim unassigned from CA 123-456"
+        action={
+          <Button
+            size="small"
+            onClick={() => setOpen(false)}
+            sx={{ color: '#FFA863' /* semantic.color.brand.primary.light — legible on the dark surface */ }}
+          >
+            Undo
+          </Button>
+        }
       />
     </div>
   );
 };
 
-const MessageOnly = () => {
-  const snack = useSnackbar(4000);
+const MessageOnly: React.ComponentType = () => {
+  const [open, setOpen] = React.useState(false);
   return (
-    <>
-      <Button variant="outlined" label="Save changes" onClick={snack.show} />
-      <Snackbar variant="message" open={snack.open} message="Changes saved" onClose={snack.close} />
-    </>
-  );
-};
-
-const WithAction = () => {
-  /* Longer timeout when there's an action (doc spec: ~4–6s, longer with an action). */
-  const snack = useSnackbar(6000);
-  const [undone, setUndone] = React.useState(false);
-  return (
-    <div style={{ display: 'flex', gap: 16, alignItems: 'center' }}>
-      <Button
-        variant="outlined"
-        label="Unassign driver"
-        onClick={() => {
-          setUndone(false);
-          snack.show();
-        }}
-      />
-      {undone && (
-        <span style={{ fontSize: '.8rem', color: 'rgba(0,0,0,.6)' /* semantic.color.text.secondary */ }}>
-          Assignment restored.
-        </span>
-      )}
+    <div>
+      <Button variant="outlined" onClick={() => setOpen(true)}>
+        Save vehicle
+      </Button>
       <Snackbar
-        variant="action"
-        open={snack.open}
-        message="Driver unassigned from CA 123-456"
-        actionLabel="Undo"
-        onAction={() => {
-          setUndone(true);
-          snack.close();
-        }}
-        onClose={snack.close}
+        open={open}
+        autoHideDuration={4000}
+        onClose={() => setOpen(false)}
+        message="Vehicle CA 123-456 saved"
       />
     </div>
   );
 };
 
-const ErrorToast = () => {
-  const snack = useSnackbar(4000);
+const WithAction: React.ComponentType = () => {
+  const [open, setOpen] = React.useState(false);
+  const handleClose = (_event: React.SyntheticEvent | Event, reason?: string) => {
+    if (reason === 'clickaway') return;
+    setOpen(false);
+  };
   return (
-    <>
-      <Button variant="outlined" label="Export trips" onClick={snack.show} />
+    <div>
+      <Button variant="outlined" onClick={() => setOpen(true)}>
+        Archive geofence
+      </Button>
       <Snackbar
-        variant="error"
-        open={snack.open}
-        message="Trip export failed"
-        onClose={snack.close}
+        open={open}
+        autoHideDuration={6000}
+        onClose={handleClose}
+        message="Geofence “Depot A” archived"
+        action={
+          <Button
+            size="small"
+            onClick={() => setOpen(false)}
+            sx={{ color: '#FFA863' /* semantic.color.brand.primary.light — legible on the dark surface */ }}
+          >
+            Undo
+          </Button>
+        }
       />
-    </>
+    </div>
+  );
+};
+
+/* `children` fully replaces the default SnackbarContent — here with an Alert
+   for an error toast, the doc.json's own example. (Persistent errors that need
+   acknowledgement belong in a Banner, not a snackbar.) */
+const CustomContent: React.ComponentType = () => {
+  const [open, setOpen] = React.useState(false);
+  return (
+    <div>
+      <Button variant="outlined" onClick={() => setOpen(true)}>
+        Run trip export
+      </Button>
+      <Snackbar open={open} autoHideDuration={6000} onClose={() => setOpen(false)}>
+        <Alert severity="error" variant="filled" onClose={() => setOpen(false)}>
+          Export failed — no trips for CA 123-456 in the selected period
+        </Alert>
+      </Snackbar>
+    </div>
   );
 };
 
 export const demos: Record<string, React.ComponentType> = {
   'Message only': MessageOnly,
   'With action': WithAction,
-  'Error toast': ErrorToast,
+  'Custom content': CustomContent,
 };

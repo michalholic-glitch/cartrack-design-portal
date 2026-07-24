@@ -166,45 +166,77 @@ for d in sorted((DS / "components").iterdir()):
         doc = json.load(open(d / f"{d.name}.doc.json"))
         comps.append(doc)
 
-# ---------- doc.json ↔ .tsx parity check ----------
+# ---------- doc.json ↔ .tsx parity check (v2: TypeScript probe) ----------
 # The portal's promise is "this page reflects exactly what the AI reads and what
-# the code implements". Nothing else links doc.json props to the tsx interface,
-# so enforce it here: the build FAILS on any prop-name or required-flag mismatch.
-# Skipped (with a warning): components whose Props is a derived type rather than
-# a literal `export interface <Name>Props { ... }` (e.g. Icon wraps FontAwesome's
-# props); doc.json prop names that aren't plain identifiers (subcomponent docs
-# like "PageHeader.Title — children") are ignored on the doc side.
+# the code implements". The MUI-era components re-export MUI prop types
+# (`export type ButtonProps = MuiButtonProps`), which no regex can verify — so
+# parity is now checked by the TypeScript compiler: a generated probe file
+# Pick<>s every documented prop name off each component's real Props type and
+# tsc --noEmit fails the build if any documented prop doesn't exist on the type.
+# (Documented props are a curated SUBSET of the full forwarded MUI surface —
+# extra undocumented MUI props are expected and fine; a documented prop the type
+# doesn't have is the drift this catches.)
+# Skipped (with a warning): Icon (its FontAwesome type source isn't installed);
+# doc.json prop names that aren't plain identifiers (subcomponent docs like
+# "PageHeader.Title — children") are ignored.
+_PARITY_SKIP = {"Icon"}
+
 def _check_doc_tsx_parity():
-    failures, warnings = [], []
+    demos_dir = DOCS.parent / "demos"
+    tsc = demos_dir / "node_modules" / ".bin" / "tsc"
+    if not tsc.exists():
+        print("  parity WARNING — tsc not installed (portal/demos npm install) — parity not verified")
+        return
+    lines, skipped = [], []
     for d in sorted((DS / "components").iterdir()):
         if not d.is_dir():
             continue
-        tsx = (d / f"{d.name}.tsx").read_text(encoding="utf-8")
-        doc = json.load(open(d / f"{d.name}.doc.json"))
-        m = re.search(r"export interface \w+Props(?:<[^>]*>)?\s*\{(.*?)\n\}", tsx, re.S)
-        if not m:
-            warnings.append(f"{d.name}: no statically parseable Props interface — parity not verified")
+        tsx_path = d / f"{d.name}.tsx"
+        if not tsx_path.exists():
             continue
-        tsx_props = re.findall(r"^\s{2}(\w+)(\??):", m.group(1), re.M)
-        tsx_req = {n: (q != "?") for n, q in tsx_props}
-        doc_props = [p for p in doc.get("props", []) if re.fullmatch(r"\w+", p.get("name", ""))]
-        tsx_names, doc_names = set(tsx_req), {p["name"] for p in doc_props}
-        if tsx_names - doc_names:
-            failures.append(f"{d.name}: props in tsx but not doc.json: {sorted(tsx_names - doc_names)}")
-        if doc_names - tsx_names:
-            failures.append(f"{d.name}: props in doc.json but not tsx: {sorted(doc_names - tsx_names)}")
-        for p in doc_props:
-            n = p["name"]
-            if n in tsx_req and bool(p.get("required")) != tsx_req[n]:
-                failures.append(f"{d.name}: required-flag mismatch on '{n}' (tsx says {'required' if tsx_req[n] else 'optional'})")
-    for w in warnings:
-        print(f"  parity WARNING — {w}")
-    if failures:
-        print("PARITY CHECK FAILED — doc.json and .tsx disagree; fix before the portal can build:")
-        for f in failures:
-            print(f"  ✗ {f}")
+        tsx = tsx_path.read_text(encoding="utf-8")
+        # only probe components that actually export a `<Name>Props` type/interface
+        if d.name in _PARITY_SKIP or not re.search(rf"export (?:interface|type) {d.name}Props\b", tsx):
+            skipped.append(d.name)
+            continue
+        doc = json.load(open(d / f"{d.name}.doc.json"))
+        names = [p["name"] for p in doc.get("props", []) if re.fullmatch(r"\w+", p.get("name", ""))]
+        if not names:
+            continue
+        rel = os.path.relpath(d / d.name, demos_dir).replace(os.sep, "/")
+        union = " | ".join(f"'{n}'" for n in names)
+        lines.append(f"import type {{ {d.name}Props as P_{d.name} }} from '{rel}';")
+        lines.append(f"type _Check_{d.name} = Pick<P_{d.name}, {union}>;")
+    probe = demos_dir / ".parity-probe.ts"
+    probe.write_text("// GENERATED — doc.json↔Props parity probe.\n" + "\n".join(lines) + "\nexport {};\n", encoding="utf-8")
+    cfg = demos_dir / "tsconfig.parity.json"
+    cfg.write_text(json.dumps({
+        "compilerOptions": {
+            "noEmit": True, "strict": False, "skipLibCheck": True, "esModuleInterop": True,
+            "jsx": "react", "moduleResolution": "bundler", "module": "esnext", "target": "es2020",
+            # design-system components import bare specifiers (react, @mui/*) but live
+            # outside this folder's node_modules; map every bare import here so tsc resolves them.
+            "paths": {"*": ["./node_modules/*"]},
+        },
+        "include": [".parity-probe.ts"],
+    }), encoding="utf-8")
+    import subprocess
+    r = subprocess.run([str(tsc), "-p", str(cfg)], capture_output=True, text=True, cwd=demos_dir)
+    probe.unlink(missing_ok=True); cfg.unlink(missing_ok=True)
+    # Parity violations surface as errors ON the probe file (a documented prop that
+    # isn't a key of the Props type). Errors inside a component's own .tsx are
+    # implementation type-soundness issues — a separate concern; warn, don't block.
+    out = r.stdout or r.stderr
+    parity_errs = [ln for ln in out.splitlines() if ".parity-probe.ts(" in ln]
+    impl_errs = [ln for ln in out.splitlines() if "/components/" in ln and "error TS" in ln]
+    if parity_errs:
+        print("PARITY CHECK FAILED — a documented prop doesn't exist on the component's Props type:")
+        for ln in parity_errs[:40]:
+            print("  ✗ " + ln.strip())
         sys.exit(1)
-    print(f"  parity check OK — doc.json props match .tsx interfaces ({len(warnings)} skipped)")
+    for ln in impl_errs[:20]:
+        print("  type WARNING (component impl, not parity) — " + ln.strip())
+    print(f"  parity check OK — documented props exist on real Props types via tsc ({len(skipped)} skipped: {', '.join(skipped)})")
 
 _check_doc_tsx_parity()
 
@@ -261,7 +293,7 @@ COMING_SOON = {
         ("Skeleton", "No skeleton-loading component documented."),
     ],
     "Messaging": [
-        ("Empty state", "No dedicated \"no data\" placeholder component yet. DataTable now ships a minimal built-in placeholder (emptyState prop, default \"No data\") — this future component supersedes that default with richer message + action guidance."),
+        ("Empty state", "No dedicated \"no data\" placeholder component yet. MUI X DataGrid provides a noRowsOverlay slot (the old DataTable's built-in placeholder retired with the 2026-07-24 MUI swap); this future component owns the richer message + action guidance."),
         ("Inline message", "Banner is page/region-level; nothing smaller and inline exists."),
         ("Section message", "Possibly coverable by a Banner variant, but not currently documented as one — flagged rather than assumed."),
         ("Spotlight", "No onboarding/feature-tour component."),
@@ -273,8 +305,8 @@ COMING_SOON = {
     ],
     "Text and data display": [
         ("Code", "No inline/block code-display component — low priority for this product."),
-        ("Inline edit", "No click-to-edit-in-place component. DataTable's former \"Inline-editable\" variant was documentation-only and has been removed pending this component."),
-        ("Table tree", "No expandable/hierarchical table variant. DataTable's former \"Expandable rows\" variant was documentation-only and has been removed; hierarchical rows are this future component's job."),
+        ("Inline edit", "No click-to-edit-in-place component documented — MUI X DataGrid has native cell editing, but the pattern isn't specified for this system yet."),
+        ("Table tree", "No documented hierarchical-rows pattern — MUI X DataGrid Pro supports tree data natively, but it isn't specified for this system yet."),
         ("Visually hidden", "Accessibility utility, not currently documented as a reusable component."),
     ],
 }
@@ -373,6 +405,25 @@ def _extract_demos():
     return demos
 
 DEMOS = _extract_demos()
+
+# The static preview predates the 2026-07-24 MUI library swap; its sections are
+# keyed by the old component slugs. Alias renamed/split components to their old
+# sections so mockup fallbacks (Icon, the MUI X license-gated DataGrid/DatePicker
+# pages, and any variant a live demo can't express) keep working.
+_MOCKUP_SLUG_ALIASES = {
+    "data-grid": "data-table",
+    "date-picker": "picker",
+    "accordion": "expansion-panel",
+    "checkbox": "selection-control",
+    "radio": "selection-control",
+    "switch": "selection-control",
+    "circular-progress": "progress-indicator",
+    "linear-progress": "progress-indicator",
+    "drawer": "navigation-drawer",
+}
+for _new, _old in _MOCKUP_SLUG_ALIASES.items():
+    if _new not in DEMOS and _old in DEMOS:
+        DEMOS[_new] = DEMOS[_old]
 
 def demo_for_variant(comp_slug, variant_name, index):
     """Match by exact label text (spec §5.3), fall back to order, else None."""
@@ -1148,7 +1199,7 @@ def body_home():
       <span><b>{n_patterns}</b> patterns</span><span class="sep">·</span>
       <span><b>1</b> tokens source</span><span class="sep">·</span>
       <span><b>0</b> setup steps</span><span class="sep">·</span>
-      <span>MD2 / MDC 14 / React</span>
+      <span>Material UI v9 / React</span>
     </div>
   </div>
 </header>
@@ -1279,7 +1330,7 @@ def body_guides():
 <section>
   <h2>How to start</h2>
   <p class="sub"><b>Cartrack AI Design System</b> is a self-contained, AI-ready component library and token set for the Cartrack Fleet Portal. One folder, no build step, no external dependencies — everything an AI agent or a human developer needs to generate consistent, on-brand, accessible UI lives inside it. It follows the "lean AI-optimized design system" pattern (the Astryx approach): tokens as a single source of truth, per-component documentation colocated with the code, and short root-level instruction files that tell an AI agent how to behave — instead of one giant style guide nobody reads.</p>
-  <p class="sub">Every value is <b>derived from the real fleetapp-web production codebase</b> (karoo-ui / MUI theme, MDC 14 components, legacy Sass variables). This documents what actually ships today, not an idealized spec — if something looks inconsistent, that's the current product, flagged rather than hidden.</p>
+  <p class="sub">Every value is <b>derived from the real fleetapp-web production codebase</b> (karoo-ui / MUI v9 theme and wrappers, legacy Sass variables). This documents what actually ships today, not an idealized spec — if something looks inconsistent, that's the current product, flagged rather than hidden.</p>
   <p class="toc">On this page: <a href="#inside">What's inside</a> · <a href="#why">Why it's built this way</a> · <a href="#quick-start">Quick start</a> · <a href="#paths">Pick your path</a> · <a href="#concepts">Core concepts</a> · <a href="#rules">The rules</a> · <a href="#verify">Verify your work</a> · <a href="#scope">Scope &amp; limitations</a> · <a href="#next">Where to go next</a></p>
 
   <h3 id="inside">What's inside the folder</h3>
@@ -1312,12 +1363,12 @@ def body_guides():
       <div class="who">For designers</div>
       <h4>Prototype in product language</h4>
       <p>Ask for screens in plain language — no need to mention the design system by name, the rules are already loaded once the folder is connected. Iterate the same way you'd brief a developer: "denser table", "add a selection bar". Check results against the <a href="../resources/preview.html">visual preview</a>.</p>
-      <div class="prompt"><b>Try this first prompt:</b><br><i>"Build an HTML prototype of a vehicle list page: app bar with search, filter chips, a data table with status chips and pagination, and one primary action 'Add vehicle'."</i><br><span class="expect">Expected result: a single .html file using the MDC classes, orange <code>primary.dark</code> for the contained button (AA-safe), 14px Roboto body text, and 4px-grid spacing throughout.</span></div>
+      <div class="prompt"><b>Try this first prompt:</b><br><i>"Build an HTML prototype of a vehicle list page: app bar with search, filter chips, a data table with status chips and pagination, and one primary action 'Add vehicle'."</i><br><span class="expect">Expected result: React using the real components under the Cartrack theme, orange <code>primary.dark</code> for the contained button (AA-safe), 14px Roboto body text, and 4px-grid spacing throughout.</span></div>
     </div>
     <div class="path p-developers">
       <div class="who">For developers</div>
       <h4>Build features on the real values</h4>
-      <p>Every component is 3 files: <code>.tsx</code> (MDC class contract), <code>.doc.json</code> (the API and usage contract — <b>read this first</b>), <code>index.ts</code>. All visual values come from <code>tokens/tokens.json</code>.</p>
+      <p>Every component is 3 files: <code>.tsx</code> (thin wrapper over the real @mui/material component), <code>.doc.json</code> (the API and usage contract — <b>read this first</b>), <code>index.ts</code>. All visual values come from <code>tokens/tokens.json</code>.</p>
       <p style="margin-top:8px">The one non-obvious rule up front: in inline styles, use <code>primitive.*</code> values. Most <code>semantic.*</code> entries are alias strings awaiting a build-time resolver this repo doesn't have yet — full explanation in <a href="#concepts">core concepts</a>.</p>
     </div>
     <div class="path p-agents">
@@ -1363,7 +1414,7 @@ def body_guides():
 
   <h3 id="scope">Scope &amp; limitations</h3>
   <ul class="plain" style="margin-top:10px">
-    <li><b>MD2-based</b> (Material Design 2 / MDC 14), matching current production — not MD3.</li>
+    <li><b>Material UI v9-based</b>, mirroring production's @karoo-ui/core wrappers — not MD3, and no longer the earlier MDC 14 model (library rebuilt 2026-07-24).</li>
     <li>The HTML preview is <b>hand-authored and manually synced</b> to <code>tokens.json</code> — not generated, so it can drift if tokens change without a manual re-sync.</li>
     <li><code>semantic.*</code> alias resolution, tests, Storybook, and theme packages are <b>deliberately not included yet</b>.</li>
   </ul>
@@ -1863,16 +1914,23 @@ def body_component(c):
 
     feedback = f'<div class="cfoot">Improve this component — edit <code>components/{esc(name)}/{esc(name)}.doc.json</code> and regenerate the portal.</div>'
 
-    # live hero + per-page assets (only pages with live demos load the MDC CSS/JS)
+    # live hero + per-page assets. MUI components style themselves at runtime
+    # (emotion) and need only the fonts/supplement; the three carried-over
+    # legacy components still render the old MDC/preview class contracts and
+    # keep the compiled MDC stylesheet + scoped preview CSS on their pages.
+    _LEGACY_LIVE = {"Banner", "NavigationRail", "PageHeader"}
     herodemo, liveassets, livepill = "", "", ""
     if is_live:
+        legacy_css = (
+            '<link rel="stylesheet" href="../assets/mdc.cartrack.css">'
+            '<link rel="stylesheet" href="../assets/live-preview-scoped.css">'
+        ) if name in _LEGACY_LIVE else ''
         livepill = '<span class="pill live" title="The demos on this page are the real component, rendered from its .tsx">● Live</span>'
         herodemo = (f'<div class="livehero"><div class="live-demo" data-live-demo="{esc(name)}" data-demo="hero"></div>'
                     f'<div class="livecap">Live — rendered from <code>components/{esc(name)}/{esc(name)}.tsx</code>, '
                     f'the same code an agent imports. Interactions are real.</div></div>')
         liveassets = (
-            '<link rel="stylesheet" href="../assets/mdc.cartrack.css">'
-            '<link rel="stylesheet" href="../assets/live-preview-scoped.css">'
+            legacy_css +
             '<link rel="stylesheet" href="../assets/cartrack-supplement.css">'
             '<style>'
             '.livehero{margin:18px 0 6px;padding:32px 28px;background:#fff;border:1px solid rgba(0,0,0,.12);border-radius:12px}'
@@ -2063,6 +2121,15 @@ for c in comps:
     s = slug(c["name"])
     written.append(write(f"components/{s}.html", f"comp:{s}", body_component(c), "../",
                          f"{c['name']} — Cartrack AI Design System", extra_css=DEMO_CSS))
+
+# 2026-07-24 MUI library swap — previously published component URLs keep working
+for _old, _new in [
+    ("data-table", "data-grid"), ("picker", "date-picker"),
+    ("expansion-panel", "accordion"), ("selection-control", "checkbox"),
+    ("progress-indicator", "linear-progress"),
+    ("navigation-drawer", "drawer"), ("side-sheet", "drawer"),
+]:
+    written.append(write_redirect(f"components/{_old}.html", f"{_new}.html"))
 
 total_kb = round(sum(os.path.getsize(p) for p in written) / 1024)
 print(f"Wrote {len(written)} pages to {DOCS} — {total_kb} KB total")
