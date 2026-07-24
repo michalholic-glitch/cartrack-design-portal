@@ -11,10 +11,10 @@ Page header (title) > two-column: settings navigation (List) left, settings cont
 - Page header — page title only; no primary action (saving happens per section) — the simple/settings-header variant of the Page header pattern (Title only, no ButtonsContainer).
 - List — settings category navigation (single-line items, selected state = 8% overlay + primary-dark text)
 - Card — one card per settings group, titleMedium heading, ≤6 controls each
-- SelectionControl — switches for on/off preferences (the default control), checkboxes for multi-select groups, radios for exclusive choices
+- Switch — on/off preferences (the default control); Checkbox — multi-select groups; Radio — exclusive choices
 - TextField — text/number entry; helper text explains consequences ("Alerts are sent to this address")
 - Slider — approximate values only (e.g. map refresh interval); exact values use a TextField
-- Picker — dates/times (e.g. quiet hours)
+- DatePicker — dates/times (e.g. quiet hours; MUI X — see its licenseNote)
 - Button — per-card "Save" (contained, primary-dark) appears only when that card has unsaved changes
 - Snackbar — save confirmation ("Notification settings saved") with optional Undo
 - Dialog — confirmations for destructive or fleet-wide changes

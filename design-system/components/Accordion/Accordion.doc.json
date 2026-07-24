@@ -1,0 +1,185 @@
+{
+  "name": "Accordion",
+  "category": "Layout and structure",
+  "status": "stable",
+  "aaReviewed": "2026-07-24",
+  "library": "Material UI (MUI) v9 — Cartrack-themed via @karoo-ui/core",
+  "source": "libs/shared/js/karoo-ui/core/src/lib/Accordion/index.tsx (real fleet-web source, wraps @mui/material/Accordion)",
+  "description": "Accordion lets operators reveal detail on demand — collapsing a long record or settings page into named sections that open one at a time or several at once, so the screen stays manageable. It's always composed with two sub-parts as children: AccordionSummary (the always-visible clickable header) and AccordionDetails (the revealed body).",
+  "keyRule": "Use Accordion to tame dense detail (vehicle specs, settings groups). For switching between peer views of one record, prefer Tabs.",
+  "correction": "Replaces the old MDC-modeled 'ExpansionPanel'. MDC Web never shipped an accordion primitive — the old component mirrored a custom Cartrack markup (.accordion/.hd/.bd2) instead of a real library contract. The real fleet-web component is MUI's Accordion.",
+  "variants": [
+    {
+      "name": "Single-open group",
+      "whenToUse": "Only one section open at a time (guided reading). Not built into Accordion itself — achieved by the parent lifting state and only ever setting one instance's `expanded` prop to true at a time (the classic MUI 'controlled group' pattern)."
+    },
+    {
+      "name": "Multi-open group",
+      "whenToUse": "Several sections open at once (reference scanning). Achieved by giving each Accordion instance its own independent `expanded`/`onChange` (or leaving it uncontrolled with `defaultExpanded`)."
+    },
+    {
+      "name": "With summary text",
+      "whenToUse": "Show a key value on the collapsed header — put it inside AccordionSummary alongside (or instead of) the title, e.g. a secondary <Typography> next to the heading."
+    }
+  ],
+  "anatomy": [
+    {
+      "name": "Accordion (root)",
+      "description": "the outer container. Renders on a Paper root by default (elevation, radius) and manages expanded/collapsed state via `expanded`/`onChange` or `defaultExpanded`."
+    },
+    {
+      "name": "AccordionSummary (sub-component)",
+      "description": "the always-visible header — a separate karoo-ui/MUI component (@mui/material/AccordionSummary), not a prop of Accordion. Takes its own `expandIcon` prop (typically an ExpandMoreIcon) and toggles the parent Accordion's expanded state when clicked."
+    },
+    {
+      "name": "AccordionDetails (sub-component)",
+      "description": "the panel body revealed when expanded — also a separate component (@mui/material/AccordionDetails), rendered as a plain content container with default padding."
+    },
+    {
+      "name": "Expand icon",
+      "description": "passed via AccordionSummary's `expandIcon` prop; MUI rotates it 180° on expand via CSS, it isn't Accordion's own concern."
+    }
+  ],
+  "behaviors": [
+    {
+      "name": "Expand/collapse",
+      "description": "Clicking AccordionSummary toggles the Accordion's expanded state (controlled via `expanded`+`onChange`, or uncontrolled via `defaultExpanded`); the expand icon rotates via CSS to reflect state."
+    },
+    {
+      "name": "Single vs multi (composition, not a prop)",
+      "description": "Accordion has no built-in accordion-group exclusivity. Whether opening one section closes its siblings is entirely up to the parent: render each Accordion controlled, and in the shared onChange handler decide whether to close the others."
+    },
+    {
+      "name": "Deep linking",
+      "description": "A section can open automatically when linked to by setting its `expanded` prop from a route/query param — same controlled pattern as single/multi grouping."
+    }
+  ],
+  "states": [
+    {
+      "state": "Collapsed",
+      "treatment": "AccordionSummary only, min-height ~48px; expand icon unrotated."
+    },
+    {
+      "state": "Expanded",
+      "treatment": "AccordionDetails visible; expand icon rotated 180°; AccordionSummary's min-height typically increases (~64px) unless `disableGutters` is set."
+    },
+    {
+      "state": "Disabled",
+      "treatment": "`disabled` prop on Accordion — AccordionSummary becomes non-interactive and dims via the theme's disabled text/icon opacity."
+    },
+    {
+      "state": "Header hover/focus",
+      "treatment": "AccordionSummary is ButtonBase-backed — visible focus ring, hover state layer."
+    }
+  ],
+  "specs": [
+    {
+      "property": "AccordionSummary min-height",
+      "value": "~48px collapsed, ~64px expanded (MUI defaults, unless disableGutters)"
+    },
+    {
+      "property": "AccordionDetails padding",
+      "value": "MUI default ~8px top, 16px sides, 16px bottom"
+    },
+    {
+      "property": "Radius / elevation",
+      "value": "Inherited from Paper (Accordion's root): semantic.radius.default (4px); default elevation per theme"
+    },
+    {
+      "property": "Header text",
+      "value": "Whatever is placed inside AccordionSummary — not a fixed variant. The old doc's 'Roboto 14–16px/500' claim was the MDC spec's guess, not a real constraint; this theme's default text variant is body2 (14px/400) unless you set your own Typography variant inside."
+    }
+  ],
+  "tokens": [
+    "semantic.radius.default",
+    "semantic.spacing.md",
+    "semantic.typography.scale.body2",
+    "semantic.color.border.default"
+  ],
+  "props": [
+    {
+      "name": "children",
+      "type": "React.ReactNode (required)",
+      "required": true,
+      "description": "Typically exactly one AccordionSummary followed by one AccordionDetails. Both are separate real components (@mui/material/AccordionSummary, @mui/material/AccordionDetails) composed as children — not props of Accordion."
+    },
+    {
+      "name": "expanded",
+      "type": "boolean",
+      "required": false,
+      "description": "Controlled open state. Setting this enables control over the accordion and is required to implement single-open-vs-multi-open group behavior in a parent."
+    },
+    {
+      "name": "defaultExpanded",
+      "type": "boolean",
+      "required": false,
+      "description": "Uncontrolled initial expanded state. Default false."
+    },
+    {
+      "name": "onChange",
+      "type": "(event: React.SyntheticEvent, expanded: boolean) => void",
+      "required": false,
+      "description": "Fired when the expand/collapse state changes (i.e. AccordionSummary was clicked)."
+    },
+    {
+      "name": "disabled",
+      "type": "boolean",
+      "required": false,
+      "description": "Disables the whole accordion (its AccordionSummary becomes non-interactive). Default false."
+    },
+    {
+      "name": "disableGutters",
+      "type": "boolean",
+      "required": false,
+      "description": "Removes the margin between two expanded accordion items and prevents the increased min-height when expanded. Default false."
+    },
+    {
+      "name": "square",
+      "type": "boolean",
+      "required": false,
+      "description": "Paper prop, inherited: if true, removes the rounded corners."
+    },
+    {
+      "name": "TransitionProps",
+      "type": "object",
+      "required": false,
+      "description": "Props forwarded to the internal Collapse transition (e.g. timeout). Newer MUI versions prefer `slotProps.transition` for the same purpose."
+    },
+    {
+      "name": "sx",
+      "type": "SxProps<Theme>",
+      "required": false,
+      "description": "Standard MUI style-override escape hatch."
+    }
+  ],
+  "doThis": [
+    "Name sections clearly so collapsed AccordionSummary headers are scannable.",
+    "Put a summary value inside AccordionSummary where it helps.",
+    "Decide and keep consistent whether a group is single-open or multi-open by how you wire the controlled `expanded` props."
+  ],
+  "dontDoThis": [
+    "Don't nest accordions deeply.",
+    "Don't hide critical, always-needed info behind a collapse.",
+    "Don't use Accordion where Tabs fit better (peer views, not layered detail)."
+  ],
+  "accessibility": [
+    "AccordionSummary renders as a heading (h3 by default via the `heading` slot) containing a button-like control exposing aria-expanded.",
+    "AccordionDetails is associated via aria-controls / a region role so assistive tech can find the revealed content.",
+    "Fully keyboard operable with visible focus on AccordionSummary.",
+    "The expand icon is decorative — state is conveyed programmatically via aria-expanded, not by the icon's rotation alone."
+  ],
+  "related": [
+    {
+      "name": "Drawer",
+      "why": "Details that deserve their own surface (replaces the old doc's 'SideSheet' — SideSheet duplicate-maps to Drawer)"
+    },
+    {
+      "name": "Tabs",
+      "why": "Peer views of the same subject"
+    },
+    {
+      "name": "Card",
+      "why": "Independent, always-visible content blocks"
+    }
+  ]
+}

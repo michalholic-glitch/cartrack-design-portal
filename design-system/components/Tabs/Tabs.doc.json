@@ -2,134 +2,207 @@
   "name": "Tabs",
   "category": "Navigation",
   "status": "stable",
-  "aaReviewed": "2026-07-16",
-  "library": "Material Components Web (MDC) 14.0.0 — Cartrack-themed",
-  "source": "md2-cartrack-library/components/tabs.html",
-  "description": "Tabs switch between related views of the same subject — a vehicle's Overview, Trips, Maintenance, and Alerts — without leaving the page. They keep peer views one click apart.",
-  "keyRule": "Use tabs for peer views of one record or population. They're not top-level navigation (that's the drawer) and not a wizard (that's a stepper).",
+  "aaReviewed": "2026-07-24",
+  "library": "Material UI (MUI) v9 — Cartrack-themed via @karoo-ui/core",
+  "source": "libs/shared/js/karoo-ui/core/src/lib/Tabs/index.tsx (real fleet-web source)",
+  "description": "Tabs switch between related views of the same subject — a vehicle's Overview, Trips, Maintenance, and Alerts — without leaving the page. They keep peer views one click apart. karoo-ui's Tabs is a bare re-export of MUI's <Tabs> (paired with MUI's own <Tab> children) — no default-prop overrides at all, unlike most other karoo-ui wrappers.",
+  "keyRule": "Use tabs for peer views of one record or population. They're not top-level navigation (that's the main navigation pattern) and not a wizard (that's a stepper). Compose <Tabs value={...} onChange={...}> with <Tab> children — Tabs itself renders only the tab bar, not the panels.",
   "variants": [
     {
-      "name": "Fixed",
-      "whenToUse": "A small, known set of tabs that fit the width."
+      "name": "variant=\"standard\"",
+      "whenToUse": "A small, known set of tabs that fit the width (MUI default)."
     },
     {
-      "name": "Scrollable",
-      "whenToUse": "Many tabs that overflow; the bar scrolls."
+      "name": "variant=\"scrollable\"",
+      "whenToUse": "Many tabs that overflow; pair with scrollButtons=\"auto\" so the bar scrolls instead of wrapping."
     },
     {
-      "name": "With icon / count",
-      "whenToUse": "Reinforce a tab or show a count (e.g. \"Alerts 3\")."
+      "name": "variant=\"fullWidth\"",
+      "whenToUse": "Small views (e.g. mobile) where tabs should grow to fill the available width."
+    },
+    {
+      "name": "orientation=\"vertical\"",
+      "whenToUse": "A vertical tab rail alongside content instead of a horizontal bar."
+    },
+    {
+      "name": "Tab with icon / label",
+      "whenToUse": "Reinforce a tab visually, or show a count by composing a Badge/Chip into the Tab's label node."
     }
   ],
   "anatomy": [
     {
-      "name": "Tab bar",
-      "description": "the row of selectable labels."
+      "name": "Tabs (root)",
+      "description": "the scrollable/flex container rendering the tab bar and active indicator."
     },
     {
       "name": "Tab",
-      "description": "one view label, optionally with an icon or count."
+      "description": "one selectable child (@mui/material Tab) — label, optional icon, optional disabled state."
     },
     {
-      "name": "Active indicator",
-      "description": "the underline marking the selected tab."
+      "name": "Indicator",
+      "description": "the underline marking the selected tab; MUI animates it between tabs on selection."
     },
     {
-      "name": "Panel",
-      "description": "the content for the active tab."
+      "name": "Scroll buttons",
+      "description": "optional prev/next chevrons shown when variant=\"scrollable\" and content overflows."
     }
   ],
   "behaviors": [
     {
-      "name": "Selection",
-      "description": "Selecting a tab swaps the panel and moves the indicator; one tab is always active."
+      "name": "Controlled selection",
+      "description": "value identifies the selected Tab (matched against each Tab's own value, or index if omitted); onChange(event, newValue) is called on selection — Tabs is always controlled, there is no internal uncontrolled state."
     },
     {
       "name": "Overflow",
-      "description": "When tabs exceed the width, the bar scrolls rather than wrapping."
+      "description": "With variant=\"scrollable\", tabs that exceed the width scroll horizontally (or vertically with orientation=\"vertical\") rather than wrapping."
     },
     {
-      "name": "Deep linking",
-      "description": "The active tab can be reflected in the URL so a view is shareable."
+      "name": "Keyboard navigation",
+      "description": "Arrow keys move focus between tabs; selectionFollowsFocus (opt-in) selects on focus instead of requiring Enter/Space."
     }
   ],
   "states": [
     {
       "state": "Inactive",
-      "treatment": "On-surface-medium label."
+      "treatment": "textColor default 'primary' at reduced emphasis; MUI applies opacity via the Tab's own disabled/selected classes."
     },
     {
-      "state": "Active",
-      "treatment": "Primary label + primary underline indicator."
+      "state": "Active (selected)",
+      "treatment": "Primary label colour + indicatorColor=\"primary\" underline (theme primary = semantic.color.brand.primary.main)."
     },
     {
       "state": "Hover/focus",
-      "treatment": "State layer; visible focus."
+      "treatment": "MUI's standard state-layer overlay; visible focus ring."
+    },
+    {
+      "state": "Disabled (per-Tab)",
+      "treatment": "Set on the child <Tab disabled>, not on Tabs itself; dims and removes that tab from the tab order."
     }
   ],
   "specs": [
     {
-      "property": "Tab height",
-      "value": "48px"
-    },
-    {
-      "property": "Label",
-      "value": "Roboto 14px / 500, uppercase"
-    },
-    {
       "property": "Indicator",
-      "value": "2px primary underline"
+      "value": "2px primary underline (MUI default), colour from indicatorColor=\"primary\" → semantic.color.brand.primary.main"
     },
     {
-      "property": "Min tab width",
-      "value": "~90px; padding 16px sides"
+      "property": "Tab label",
+      "value": "semantic.typography.scale.button (14px/500, uppercase — theme.typography.button.textTransform='uppercase' in theme.ts)"
     }
   ],
   "tokens": [
     "semantic.color.brand.primary.main",
-    "semantic.spacing.md",
     "semantic.typography.scale.button"
   ],
   "props": [
     {
-      "name": "items",
-      "type": "TabItem[]",
+      "name": "value",
+      "type": "any",
       "required": true,
-      "description": "The tab list; each item can carry a label, optional icon, and optional count."
-    },
-    {
-      "name": "activeIndex",
-      "type": "number",
-      "required": true,
-      "description": "Index of the currently selected tab; one tab is always active."
+      "description": "The value of the currently selected Tab (matched to a child Tab's own `value` prop, or its index). Pass `false` for no tab selected."
     },
     {
       "name": "onChange",
-      "type": "(index: number) => void",
+      "type": "(event: React.SyntheticEvent, value: any) => void",
       "required": false,
-      "description": "Called when a tab is selected."
+      "description": "Called when the user selects a different tab."
     },
     {
-      "name": "scrollable",
+      "name": "children",
+      "type": "React.ReactNode",
+      "required": false,
+      "description": "One or more @mui/material <Tab> elements (or React.Fragment-wrapped groups)."
+    },
+    {
+      "name": "variant",
+      "type": "'standard' | 'scrollable' | 'fullWidth'",
+      "required": false,
+      "default": "'standard'",
+      "description": "standard = default sizing; scrollable = horizontally/vertically scrolling bar for overflow; fullWidth = tabs grow to fill available space (mobile)."
+    },
+    {
+      "name": "orientation",
+      "type": "'horizontal' | 'vertical'",
+      "required": false,
+      "default": "'horizontal'",
+      "description": "Layout flow direction of the tab bar."
+    },
+    {
+      "name": "scrollButtons",
+      "type": "'auto' | true | false",
+      "required": false,
+      "default": "'auto'",
+      "description": "Whether prev/next scroll buttons show when variant=\"scrollable\"; 'auto' shows them only when not all tabs are visible."
+    },
+    {
+      "name": "allowScrollButtonsMobile",
       "type": "boolean",
       "required": false,
-      "description": "Fixed = small known set that fits the width. Scrollable = many tabs that overflow; the bar scrolls."
+      "default": "false",
+      "description": "Scroll buttons are hidden on mobile by default; set true to keep them."
+    },
+    {
+      "name": "centered",
+      "type": "boolean",
+      "required": false,
+      "default": "false",
+      "description": "Centers the tabs; intended for large (non-scrollable) views only."
+    },
+    {
+      "name": "indicatorColor",
+      "type": "'primary' | 'secondary'",
+      "required": false,
+      "default": "'primary'",
+      "description": "Colour of the active indicator underline."
+    },
+    {
+      "name": "textColor",
+      "type": "'primary' | 'secondary' | 'inherit'",
+      "required": false,
+      "default": "'primary'",
+      "description": "Colour applied to the Tab labels."
+    },
+    {
+      "name": "selectionFollowsFocus",
+      "type": "boolean",
+      "required": false,
+      "description": "If true, the selected tab changes as focus moves via keyboard, not only on activation."
+    },
+    {
+      "name": "visibleScrollbar",
+      "type": "boolean",
+      "required": false,
+      "default": "false",
+      "description": "Shows the scrollbar (useful for a long vertical list of tabs)."
+    },
+    {
+      "name": "action",
+      "type": "React.Ref<TabsActions>",
+      "required": false,
+      "description": "Ref-like callback exposing updateIndicator()/updateScrollButtons() for programmatic control."
+    },
+    {
+      "name": "sx",
+      "type": "SxProps<Theme>",
+      "required": false,
+      "description": "Standard MUI system prop for style overrides/overrides via the theme."
     }
   ],
   "doThis": [
     "Use tabs for peer views of one subject.",
     "Keep labels short and parallel.",
-    "Reflect the active tab in the URL."
+    "Reflect the active tab in the URL by deriving `value` from route state.",
+    "Use variant=\"scrollable\" (not fullWidth hacks) once tabs overflow the available width."
   ],
   "dontDoThis": [
-    "Don't use tabs as primary site navigation.",
-    "Don't use tabs for a sequential, must-complete flow (use a stepper).",
+    "Don't use Tabs as primary site navigation — see the Main Navigation pattern for that.",
+    "Don't use tabs for a sequential, must-complete flow (use a Stepper).",
+    "Don't manage selection as uncontrolled state — Tabs requires a controlled `value`/`onChange` pair.",
     "Don't overload with too many tabs — consider a different structure."
   ],
   "accessibility": [
-    "Use the tablist/tab/tabpanel pattern; the active tab exposes aria-selected and arrow keys move between tabs.",
-    "Each panel is associated with its tab.",
-    "Focus is visible."
+    "MUI implements the tablist/tab/tabpanel ARIA pattern automatically; the selected Tab exposes aria-selected and arrow keys move between tabs.",
+    "Each Tab should be associated with its panel via aria-controls/id — Tabs/Tab don't render panels themselves, so wire this up in the consuming component.",
+    "Focus is visible; disabled tabs are removed from the tab order."
   ],
   "related": [
     {
@@ -137,8 +210,8 @@
       "why": "Ordered flows with completion semantics"
     },
     {
-      "name": "NavigationRail",
-      "why": "App-level destination switching"
+      "name": "Main Navigation pattern",
+      "why": "App-level destination switching — Tabs is for peer views within one page, not top-level nav"
     }
   ]
 }

@@ -2,91 +2,91 @@
   "name": "Snackbar",
   "category": "Messaging",
   "status": "stable",
-  "aaReviewed": "2026-07-16",
-  "library": "Material Components Web (MDC) 14.0.0 — Cartrack-themed",
-  "source": "md2-cartrack-library/components/snackbars.html",
-  "description": "A snackbar gives brief, low-priority feedback about an action just taken — \"Vehicle saved\", \"Export started\" — usually with a single optional action like Undo. It appears briefly and dismisses on its own.",
-  "keyRule": "Use a snackbar for transient confirmation that doesn't need acknowledgement. For a message that must persist until acted on, use a banner; for a blocking choice, a dialog.",
+  "aaReviewed": "2026-07-24",
+  "library": "Material UI (MUI) v9 — Cartrack-themed via @karoo-ui/core",
+  "source": "libs/shared/js/karoo-ui/core/src/lib/Snackbar/index.tsx (real fleet-web source, wraps @mui/material/Snackbar)",
+  "description": "A snackbar gives brief, low-priority feedback about an action just taken — \"Vehicle saved\", \"Export started\" — usually with a single optional action like Undo. Built from @mui/material/Snackbar, which by default renders a SnackbarContent (dark surface) driven by the `message`/`action` props, or a fully custom `children` element (e.g. an Alert).",
+  "keyRule": "Use a snackbar for transient confirmation that doesn't need acknowledgement. For a message that must persist until acted on, use a Banner; for a blocking choice, a Dialog. Auto-dismiss is opt-in (`autoHideDuration`), not automatic.",
   "variants": [
     {
       "name": "Message only",
-      "whenToUse": "Simple confirmation (\"Changes saved\")."
+      "whenToUse": "Simple confirmation (\"Changes saved\") — set `message` only."
     },
     {
       "name": "With action",
-      "whenToUse": "Offer a quick follow-up (Undo, View)."
+      "whenToUse": "Offer a quick follow-up (Undo, View) — set `action` alongside `message`."
     },
     {
-      "name": "Error toast",
-      "whenToUse": "A brief failure notice; pair persistent errors with a banner instead."
+      "name": "Custom content",
+      "whenToUse": "Replace SnackbarContent entirely via `children`, e.g. to render an Alert for an error toast; pair persistent errors with a Banner instead of relying on this."
     }
   ],
   "anatomy": [
     {
-      "name": "Container",
-      "description": "dark surface, low elevation."
+      "name": "Root",
+      "description": "positions the snackbar per `anchorOrigin` — MUI's real `root` slot."
+    },
+    {
+      "name": "SnackbarContent",
+      "description": "the default dark surface rendered from `message`/`action` — MUI's real `content` slot; swap it out entirely via `children`."
     },
     {
       "name": "Message",
-      "description": "one concise line of text."
+      "description": "one concise line of text, from the `message` prop."
     },
     {
       "name": "Action",
-      "description": "at most one (e.g. Undo)."
-    },
-    {
-      "name": "Dismiss",
-      "description": "optional close; otherwise auto-hides."
+      "description": "at most one action element (e.g. an Undo Button), from the `action` prop."
     }
   ],
   "behaviors": [
     {
-      "name": "Auto-dismiss",
-      "description": "Auto-hides after a few seconds; an action or hover can pause/extend it so it isn't missed."
+      "name": "Auto-dismiss is opt-in",
+      "description": "`autoHideDuration` defaults to `null` — nothing auto-hides unless you set it (e.g. 4000–6000ms). When set, hovering/focusing pauses the timer automatically (and disableWindowBlurListener controls whether it also pauses when the window loses focus)."
     },
     {
       "name": "One at a time",
-      "description": "Show a single snackbar; queue subsequent ones rather than stacking."
+      "description": "Show a single snackbar; queue subsequent ones yourself (e.g. via notistack or your own queue) rather than stacking multiple Snackbar instances."
     },
     {
       "name": "Single action",
-      "description": "At most one action; don't put critical, irreversible choices in a transient surface."
+      "description": "At most one action; don't put critical, irreversible choices behind a transient surface's action."
     }
   ],
   "states": [
     {
       "state": "Shown",
-      "treatment": "Dark surface, light text, optional action."
+      "treatment": "Dark surface (SnackbarContent default), light text, optional action."
     },
     {
       "state": "Action hover/focus",
-      "treatment": "Highlighted action; visible focus."
+      "treatment": "Whatever hover/focus state the action Button itself provides; visible focus."
     },
     {
       "state": "Hidden",
-      "treatment": "Slides/fades out after the timeout."
+      "treatment": "Grow transition out (MUI's real default transition) after `onClose` sets `open` to false."
     }
   ],
   "specs": [
     {
       "property": "Background / text",
-      "value": "Dark grey (#323232) / white (passes AA)"
+      "value": "SnackbarContent's real default: dark grey background / white text (semantic.color.surface.inverse / .onInverse), passes AA"
     },
     {
       "property": "Action colour",
-      "value": "primary-light (#FFA863) — light enough to read on the dark surface"
+      "value": "Not a built-in — style the action Button yourself; semantic.color.brand.primary.light (#FFA863) is legible on the dark surface"
     },
     {
       "property": "Message text",
-      "value": "Roboto 14px"
+      "value": "Inherits the app-wide default Typography variant (body2, 14px)"
     },
     {
       "property": "Duration",
-      "value": "~4–6s (longer if there's an action)"
+      "value": "No default auto-hide (`autoHideDuration` is null); set ~4000–6000ms yourself, longer if there's an action"
     },
     {
       "property": "Position",
-      "value": "Bottom-left or bottom-center"
+      "value": "Default anchorOrigin { vertical: 'bottom', horizontal: 'left' } — override for bottom-center etc."
     }
   ],
   "tokens": [
@@ -97,69 +97,92 @@
   ],
   "props": [
     {
-      "name": "variant",
-      "type": "'message' | 'action' | 'error'",
-      "required": false,
-      "description": "Message only = simple confirmation. With action = one quick follow-up. Error toast = brief failure notice."
-    },
-    {
       "name": "open",
       "type": "boolean",
-      "required": true,
-      "description": "Whether the snackbar is currently shown."
+      "required": false,
+      "description": "Whether the snackbar is shown. Default false — always pass this as a controlled value in practice."
     },
     {
       "name": "message",
-      "type": "string",
-      "required": true,
-      "description": "One concise line of text, e.g. \"Vehicle saved\"."
+      "type": "React.ReactNode",
+      "required": false,
+      "description": "One concise line of text, e.g. \"Vehicle saved\" — rendered by the default SnackbarContent."
     },
     {
-      "name": "actionLabel",
-      "type": "string",
+      "name": "action",
+      "type": "React.ReactNode",
       "required": false,
-      "description": "At most one action label, e.g. \"Undo\"."
+      "description": "At most one action element (e.g. an Undo Button), rendered after the message by the default SnackbarContent."
     },
     {
-      "name": "onAction",
-      "type": "() => void",
+      "name": "autoHideDuration",
+      "type": "number | null",
       "required": false,
-      "description": "Called when the action button is activated."
+      "description": "Milliseconds before onClose is called automatically. Default null (no auto-dismiss) — opt-in, not automatic."
     },
     {
       "name": "onClose",
-      "type": "() => void",
+      "type": "(event: React.SyntheticEvent | Event, reason: 'timeout' | 'clickaway' | 'escapeKeyDown') => void",
       "required": false,
-      "description": "Called when the snackbar is dismissed (timeout or explicit close)."
+      "description": "Called on timeout, a click away, or Escape. Check `reason` if you want to ignore 'clickaway'."
+    },
+    {
+      "name": "anchorOrigin",
+      "type": "{ vertical: 'top' | 'bottom'; horizontal: 'left' | 'center' | 'right' }",
+      "required": false,
+      "description": "Where the snackbar is positioned. Default { vertical: 'bottom', horizontal: 'left' }."
+    },
+    {
+      "name": "children",
+      "type": "React.ReactElement",
+      "required": false,
+      "description": "Fully replaces the default SnackbarContent — e.g. render an Alert instead."
+    },
+    {
+      "name": "resumeHideDuration",
+      "type": "number",
+      "required": false,
+      "description": "Milliseconds to wait after user interaction before dismissing again. Defaults to autoHideDuration / 2 if autoHideDuration is set."
+    },
+    {
+      "name": "disableWindowBlurListener",
+      "type": "boolean",
+      "required": false,
+      "description": "If true, the autoHideDuration timer keeps running even when the window loses focus. Default false."
+    },
+    {
+      "name": "transitionDuration",
+      "type": "number | { appear?, enter?, exit? }",
+      "required": false,
+      "description": "Overrides the Grow transition's timing."
+    },
+    {
+      "name": "sx",
+      "type": "SxProps<Theme>",
+      "required": false,
+      "description": "Standard MUI system prop for one-off style overrides."
     }
   ],
   "doThis": [
     "Keep the message to one short line.",
     "Offer at most one action (e.g. Undo).",
-    "Queue snackbars; show one at a time."
+    "Queue snackbars yourself; show one at a time.",
+    "Set an explicit autoHideDuration — it doesn't auto-dismiss by default."
   ],
   "dontDoThis": [
-    "Don't use a snackbar for errors that need action — use a banner/dialog.",
+    "Don't use a snackbar for errors that need action — use a Banner/Dialog.",
     "Don't stack multiple snackbars.",
-    "Don't auto-dismiss something the user must act on."
+    "Don't rely on a default timeout that doesn't exist — always set autoHideDuration if you want auto-dismiss."
   ],
   "accessibility": [
-    "Announce via a polite live region (assertive only for important messages).",
-    "If there's an action, give enough time or pause on hover/focus so it's reachable.",
-    "The action is a real button with an accessible name."
+    "MUI renders the SnackbarContent as a polite live region by default; use `children` with role=\"alert\" if a message needs assertive announcement.",
+    "If there's an action, autoHideDuration pauses automatically on hover/focus so it stays reachable.",
+    "The action should be a real Button with an accessible name."
   ],
   "related": [
     {
-      "name": "Banner",
-      "why": "Persistent messages that must not auto-dismiss"
-    },
-    {
       "name": "Dialog",
       "why": "When feedback requires a decision"
-    },
-    {
-      "name": "Tooltip",
-      "why": "Hover hints, not event feedback"
     }
   ]
 }

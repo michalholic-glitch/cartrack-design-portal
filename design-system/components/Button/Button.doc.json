@@ -3,44 +3,40 @@
   "category": "Forms and inputs",
   "status": "stable",
   "aaReviewed": "2026-07-16",
-  "library": "Material Components Web (MDC) 14.0.0 — Cartrack-themed",
-  "source": "md2-cartrack-library/components/buttons.html",
+  "library": "Material UI (MUI) v9 — Cartrack-themed via @karoo-ui/core",
+  "source": "libs/shared/js/karoo-ui/core/src/lib/Button/index.tsx (real fleet-web source, wraps @mui/material/Button)",
   "description": "Buttons let operators trigger actions — saving a vehicle, running a report, confirming a change. Emphasis communicates priority: the one most important action on a view is the contained button; everything else steps down.",
-  "keyRule": "Use exactly one contained (high-emphasis) button per view. The floating action button (FAB) is excluded — it's a mobile pattern; on desktop the primary action sits in the page toolbar / app bar.",
+  "keyRule": "Use exactly one contained (high-emphasis) button per view. Real MUI default `variant` is \"text\" — pass `variant=\"contained\"` explicitly for the primary action. The karoo-ui wrapper defaults `disableElevation` to true, so contained buttons never get MUI's default drop shadow, even on hover.",
   "variants": [
     {
       "name": "Contained",
-      "whenToUse": "The single primary action on a view (Save, Add, Run)."
+      "whenToUse": "The single primary action on a view (Save, Add, Run). `variant=\"contained\"`."
     },
     {
       "name": "Outlined",
-      "whenToUse": "Important secondary actions, or \"Cancel\" next to a contained button."
+      "whenToUse": "Important secondary actions, or \"Cancel\" next to a contained button. `variant=\"outlined\"`."
     },
     {
       "name": "Text",
-      "whenToUse": "Low-emphasis actions — in toolbars, cards, and dialog dismissals."
-    },
-    {
-      "name": "Toggle button(s)",
-      "whenToUse": "Switch between exclusive views (Map / List); 2–5 options, not navigation."
+      "whenToUse": "Low-emphasis actions — in toolbars, cards, and dialog dismissals. `variant=\"text\"` (the real MUI default)."
     }
   ],
   "anatomy": [
     {
       "name": "Container",
-      "description": "the clickable surface; fill/border depends on emphasis."
+      "description": "the clickable surface (a real <button>, or <a> when `href` is set); fill/border depends on `variant`."
     },
     {
       "name": "Label",
-      "description": "a short, verb-first action (e.g. \"Add vehicle\"), uppercase in MD2."
+      "description": "`children` — a short, verb-first action (e.g. \"Add vehicle\"), rendered uppercase (theme.typography.button.textTransform)."
     },
     {
-      "name": "Leading icon",
-      "description": "optional, reinforces the action."
+      "name": "startIcon / endIcon",
+      "description": "optional leading/trailing icon nodes that reinforce the action."
     },
     {
-      "name": "State layer",
-      "description": "hover/focus/pressed overlay on the container."
+      "name": "Touch ripple",
+      "description": "ButtonBase's built-in ripple state layer on hover/focus/pressed (can be disabled via `disableRipple`)."
     }
   ],
   "behaviors": [
@@ -50,11 +46,11 @@
     },
     {
       "name": "Loading",
-      "description": "For async actions, disable the button and show a small spinner in place of the label; never let it be clicked twice."
+      "description": "The real MUI `loading` prop (true/false/null) disables the button and shows `loadingIndicator` (default a small CircularProgress) in the position set by `loadingPosition` ('start' | 'end' | 'center', default 'center')."
     },
     {
       "name": "Icon + label",
-      "description": "Pair a leading icon with the label for frequent actions; keep the label even with an icon (icon-only goes to an icon button with a tooltip)."
+      "description": "Pair `startIcon` with the label for frequent actions; keep the label even with an icon (icon-only goes to an IconButton with a Tooltip, not Button)."
     }
   ],
   "states": [
@@ -64,7 +60,7 @@
     },
     {
       "state": "Hover",
-      "treatment": "Contained darkens to primary-dark; outlined/text show a light primary tint."
+      "treatment": "Contained darkens toward primary-dark via the theme's action-hover overlay; outlined/text show a light primary tint. No shadow lift — disableElevation is true."
     },
     {
       "state": "Focus",
@@ -72,29 +68,29 @@
     },
     {
       "state": "Disabled",
-      "treatment": "12% black fill, 38% black label, no shadow, not clickable."
+      "treatment": "12% black fill, 38% black label, no shadow, not clickable (`disabled` prop)."
     }
   ],
   "specs": [
     {
       "property": "Height",
-      "value": "36px (standard)"
+      "value": "~36px (medium, MUI's built-in padding/line-height, not a separate token)"
     },
     {
       "property": "Corner radius",
-      "value": "4px"
+      "value": "4px (semantic.radius.button, theme.shape.borderRadius — unmodified)"
     },
     {
       "property": "Label",
-      "value": "Roboto 14px / 500, uppercase, ~0.05em tracking"
+      "value": "Roboto 14px / 500, uppercase (semantic.typography.scale.button — theme.typography.button.textTransform = 'uppercase')"
     },
     {
       "property": "Padding",
-      "value": "16px sides (8px for text buttons)"
+      "value": "6px 16px (contained/outlined); 6px 8px (text) — MUI's built-in padding"
     },
     {
       "property": "Contained fill / label",
-      "value": "primary / white — use primary-dark (#BB4800) for the fill where white text must pass WCAG AA; white on #F47735 is only ~2.79:1"
+      "value": "primary / white (palette.primary.main + contrastText) — use primary-dark (#BB4800) for the fill where white text must pass WCAG AA; white on #F47735 is only ~2.79:1"
     }
   ],
   "tokens": [
@@ -102,28 +98,44 @@
     "semantic.color.brand.primary.dark",
     "semantic.color.brand.primary.onPrimary",
     "semantic.radius.button",
-    "semantic.spacing.md",
-    "semantic.spacing.sm",
     "semantic.typography.scale.button"
   ],
   "props": [
     {
-      "name": "label",
-      "type": "string",
+      "name": "children",
+      "type": "React.ReactNode",
       "required": true,
-      "description": "Short, verb-first action label (e.g. \"Add vehicle\"). Rendered uppercase per MD2."
+      "description": "Short, verb-first action label (e.g. \"Add vehicle\"). Rendered uppercase."
     },
     {
       "name": "variant",
-      "type": "'contained' | 'outlined' | 'text'",
+      "type": "'text' | 'outlined' | 'contained'",
       "required": false,
-      "description": "Contained = single primary action per view. Outlined = important secondary actions. Text = low-emphasis actions."
+      "description": "Contained = single primary action per view. Outlined = important secondary actions. Text = low-emphasis actions (real MUI default)."
     },
     {
-      "name": "leadingIcon",
-      "type": "string",
+      "name": "color",
+      "type": "'inherit' | 'primary' | 'secondary' | 'success' | 'error' | 'info' | 'warning'",
       "required": false,
-      "description": "Optional leading icon — a registered FontAwesome icon name (see Icon.doc.json), not a Material icon ligature. Keep the label even with an icon."
+      "description": "Palette colour used for the fill/border/label. Default 'primary'."
+    },
+    {
+      "name": "size",
+      "type": "'small' | 'medium' | 'large'",
+      "required": false,
+      "description": "Default 'medium'."
+    },
+    {
+      "name": "startIcon",
+      "type": "React.ReactNode",
+      "required": false,
+      "description": "Optional leading icon element. Keep the label even with an icon."
+    },
+    {
+      "name": "endIcon",
+      "type": "React.ReactNode",
+      "required": false,
+      "description": "Optional trailing icon element."
     },
     {
       "name": "disabled",
@@ -132,20 +144,44 @@
       "description": "Disables the button; not clickable."
     },
     {
-      "name": "loading",
+      "name": "disableElevation",
       "type": "boolean",
       "required": false,
-      "description": "Disables the button and shows a spinner in place of the label for async actions."
+      "description": "Removes the drop-shadow on contained buttons. Real MUI default is false; the karoo-ui wrapper defaults this to true app-wide."
+    },
+    {
+      "name": "loading",
+      "type": "boolean | null",
+      "required": false,
+      "description": "Shows a loading indicator in place of/alongside the label and disables the button. Default null."
+    },
+    {
+      "name": "loadingPosition",
+      "type": "'start' | 'end' | 'center'",
+      "required": false,
+      "description": "Where the loading indicator renders. Default 'center'."
+    },
+    {
+      "name": "fullWidth",
+      "type": "boolean",
+      "required": false,
+      "description": "Button spans the full width of its container. Default false."
+    },
+    {
+      "name": "href",
+      "type": "string",
+      "required": false,
+      "description": "If set, renders as an <a> instead of a <button>."
     },
     {
       "name": "onClick",
-      "type": "() => void",
+      "type": "(event) => void",
       "required": false,
       "description": "Click handler."
     },
     {
       "name": "type",
-      "type": "'button' | 'submit'",
+      "type": "'button' | 'submit' | 'reset'",
       "required": false,
       "description": "Native button type attribute."
     }
@@ -158,29 +194,25 @@
   ],
   "dontDoThis": [
     "Don't stack multiple contained buttons.",
-    "Don't use a button for navigation that's really a link.",
+    "Don't use a button for navigation that's really a link (unless it renders as an anchor via `href`).",
     "Don't ship white-on-orange for important labels.",
-    "Don't hard-code colours/sizes — use tokens + these specs."
+    "Don't hard-code colours/sizes — use the theme + these tokens."
   ],
   "accessibility": [
-    "Buttons are real <button> elements with discernible text.",
-    "Icon-only actions get an aria-label.",
+    "Buttons are real <button> (or <a> with `href`) elements with discernible text.",
+    "Icon-only actions belong on IconButton with an aria-label, not Button with an empty label.",
     "Focus is always visible.",
-    "Disabled buttons are conveyed to assistive tech.",
+    "Disabled buttons are conveyed to assistive tech via the native `disabled` attribute.",
     "Labels read as actions, not vague words."
   ],
   "related": [
-    {
-      "name": "Menu",
-      "why": "Group secondary commands behind an overflow menu"
-    },
     {
       "name": "Chip",
       "why": "Compact filter/selection actions, not commands"
     },
     {
       "name": "Icon",
-      "why": "leadingIcon takes a registered FontAwesome name, not a Material ligature"
+      "why": "startIcon/endIcon commonly render a registered FontAwesome icon via the Icon wrapper"
     }
   ]
 }

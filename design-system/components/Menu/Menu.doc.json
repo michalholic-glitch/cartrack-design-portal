@@ -2,119 +2,111 @@
   "name": "Menu",
   "category": "Navigation",
   "status": "stable",
-  "aaReviewed": "2026-07-16",
-  "library": "Material Components Web (MDC) 14.0.0 — Cartrack-themed",
-  "source": "md2-cartrack-library/components/menus.html",
-  "description": "Menus show a temporary list of choices on a surface — overflow actions behind a ⋮ button, row actions in a data table, or a list of options from a control. They appear on demand and dismiss on selection or outside click.",
+  "aaReviewed": "2026-07-24",
+  "library": "Material UI (MUI) v9 — Cartrack-themed via @karoo-ui/core",
+  "source": "libs/shared/js/karoo-ui/core/src/lib/Menu/index.tsx (real fleet-web source, wraps @mui/material/Menu)",
+  "description": "Menus show a temporary list of choices on a surface — overflow actions behind a ⋮ button, row actions in a data grid, or a list of options from a control. They appear on demand and dismiss on selection or outside click. Built from @mui/material/Menu (a positioned Popover + MenuList) composed with MenuItem children.",
   "keyRule": "Use a menu for secondary or overflow actions. Don't hide a view's primary action in a menu — promote it to a button in the toolbar.",
   "variants": [
     {
       "name": "Overflow menu",
-      "whenToUse": "Secondary actions behind a ⋮ in toolbars, cards, and table rows."
+      "whenToUse": "Secondary actions behind a ⋮ in toolbars, cards, and DataGrid rows — a usage pattern, not a Menu prop."
     },
     {
       "name": "Dropdown (exposed) menu",
-      "whenToUse": "A field that opens a list to choose one value (see also Select on the Text fields page)."
+      "whenToUse": "A field that opens a list to choose one value (see also Select on the Text fields page) — also a usage pattern, built by anchoring a Menu to a button/input."
     },
     {
       "name": "Context menu",
-      "whenToUse": "Right-click actions on a desktop row or item."
+      "whenToUse": "Right-click actions on a desktop row or item — anchor the Menu to the click position via anchorPosition/anchorReference on the underlying Popover."
     },
     {
       "name": "Cascading submenu",
-      "whenToUse": "Grouped choices that expand to a second level (use sparingly)."
+      "whenToUse": "Grouped choices that expand to a second level (use sparingly) — composed manually with a nested Menu, not a built-in feature."
     }
   ],
   "anatomy": [
     {
       "name": "Trigger",
-      "description": "the control that opens the menu (overflow ⋮, a button, or a field)."
+      "description": "the control that opens the menu (overflow ⋮, a button, or a field) — not part of Menu itself; you control `open` and `anchorEl`."
     },
     {
-      "name": "Surface",
-      "description": "an elevated container holding the items."
+      "name": "Paper (surface)",
+      "description": "an elevated container holding the items — MUI's real `paper` slot."
     },
     {
-      "name": "Menu item",
-      "description": "one choice; may carry a leading icon and a trailing shortcut/meta."
+      "name": "MenuItem",
+      "description": "a separate @mui/material component — one choice; may carry a leading icon and a trailing shortcut/meta as its own children."
     },
     {
       "name": "Divider",
-      "description": "groups items (e.g. separates destructive actions)."
+      "description": "a separate @mui/material component that groups items (e.g. separates destructive actions)."
     },
     {
       "name": "Selected / disabled item",
-      "description": "current choice or unavailable option."
+      "description": "pass `selected`/`disabled` directly to a MenuItem."
     }
   ],
   "behaviors": [
     {
       "name": "Open & dismiss",
-      "description": "Opens at the trigger; closes on selection, Escape, or an outside click. It should never cover its own trigger if avoidable."
+      "description": "Opens anchored to `anchorEl`; closes on selection (call your own onClose from the MenuItem's onClick), Escape, or an outside click (onClose fires with reason 'backdropClick'/'tabKeyDown'/'escapeKeyDown')."
     },
     {
       "name": "Selection",
-      "description": "Selecting an item performs the action and closes the menu; a stateful menu marks the current choice."
+      "description": "Selecting a MenuItem performs the action and should call onClose; use `variant=\"selectedMenu\"` (the real default) so a stateful menu focuses the current choice on open."
     },
     {
       "name": "Keyboard",
-      "description": "Arrow keys move focus, Enter activates, Escape closes; typing jumps to a matching item."
+      "description": "Arrow keys move focus, Enter activates, Escape closes; typing jumps to a matching item — all built into the underlying MenuList."
     }
   ],
   "states": [
     {
       "state": "Item enabled",
-      "treatment": "Default text on surface."
+      "treatment": "Default text on the Paper surface."
     },
     {
       "state": "Item hover/focus",
-      "treatment": "4% overlay."
+      "treatment": "4% overlay (MUI's real action.hover)."
     },
     {
       "state": "Item selected",
-      "treatment": "Light primary tint / check."
+      "treatment": "Light primary tint / check — pass `selected` to MenuItem."
     },
     {
       "state": "Item disabled",
-      "treatment": "38% black text, not selectable."
+      "treatment": "38% text opacity, not selectable — pass `disabled` to MenuItem."
     }
   ],
   "specs": [
     {
       "property": "Surface radius / elevation",
-      "value": "4px, high elevation (overlay)"
+      "value": "4px (semantic.radius.default); Paper elevation is MUI's real Popover default (elevation 8), not overridden in theme.ts"
     },
     {
       "property": "Item height",
-      "value": "~36–48px"
+      "value": "MenuItem's real default minHeight is 48px (36px when `dense`)"
     },
     {
       "property": "Item text",
-      "value": "Roboto 14–16px / 400"
+      "value": "Themed to 1rem / 16px via theme.ts's MuiMenuItem override — not the app-wide 14px body2 default"
     },
     {
       "property": "Item padding",
-      "value": "16px sides"
+      "value": "16px sides (MenuItem's real default horizontal padding)"
     },
     {
       "property": "Min width",
-      "value": "~112px; grows to content"
+      "value": "Grows to content by default; set minWidth via sx on the paper slot if a fixed minimum is wanted"
     }
   ],
   "tokens": [
     "semantic.radius.default",
-    "semantic.color.status.error.main",
     "semantic.color.surface.paper",
-    "semantic.spacing.md",
-    "semantic.typography.scale.body2"
+    "semantic.spacing.md"
   ],
   "props": [
-    {
-      "name": "items",
-      "type": "MenuItemData[]",
-      "required": true,
-      "description": "Choices and dividers shown on the menu surface; each choice may carry a leading icon and trailing shortcut/meta."
-    },
     {
       "name": "open",
       "type": "boolean",
@@ -122,39 +114,69 @@
       "description": "Whether the menu surface is open."
     },
     {
-      "name": "onClose",
-      "type": "() => void",
+      "name": "anchorEl",
+      "type": "HTMLElement | (() => HTMLElement) | null",
       "required": false,
-      "description": "Called on selection, Escape, or an outside click, per the Open & dismiss behavior."
+      "description": "The element the menu is positioned against — typically the trigger button/field."
+    },
+    {
+      "name": "onClose",
+      "type": "(event: object, reason: 'escapeKeyDown' | 'backdropClick' | 'tabKeyDown') => void",
+      "required": false,
+      "description": "Called on selection handling you wire up yourself, Escape, an outside click, or Tab-away."
+    },
+    {
+      "name": "children",
+      "type": "React.ReactNode",
+      "required": false,
+      "description": "MenuItem elements — there is no `items` array prop."
     },
     {
       "name": "variant",
-      "type": "'overflow' | 'dropdown' | 'context' | 'cascading'",
+      "type": "'menu' | 'selectedMenu'",
       "required": false,
-      "description": "Which trigger pattern opened this menu (overflow menu, dropdown/exposed menu, context menu, or cascading submenu)."
+      "description": "Real MUI prop (different meaning from a trigger-pattern label): 'selectedMenu' (default) focuses the currently selected item on open; 'menu' always focuses the first item, avoiding selected-item focus jumps."
     },
     {
-      "name": "className",
-      "type": "string",
+      "name": "autoFocus",
+      "type": "boolean",
       "required": false,
-      "description": "Optional extra class names to compose with the base mdc-menu class."
+      "description": "Focuses the menu list (or its active item) on open. Default true."
+    },
+    {
+      "name": "disableAutoFocusItem",
+      "type": "boolean",
+      "required": false,
+      "description": "Focuses the menu container instead of an item on open. Default false; has accessibility implications if set."
+    },
+    {
+      "name": "transitionDuration",
+      "type": "number | { appear?, enter?, exit? } | 'auto'",
+      "required": false,
+      "description": "Length of the open/close transition. Default 'auto'."
+    },
+    {
+      "name": "sx",
+      "type": "SxProps<Theme>",
+      "required": false,
+      "description": "Standard MUI system prop for one-off style overrides."
     }
   ],
   "doThis": [
-    "Group destructive actions and set them apart with a divider.",
-    "Keep labels short and verb-first.",
+    "Group destructive actions and set them apart with a Divider.",
+    "Keep MenuItem labels short and verb-first.",
     "Use a menu for overflow, not for a view's primary action."
   ],
   "dontDoThis": [
     "Don't bury frequently-used actions in an overflow menu.",
     "Don't nest more than one submenu level.",
-    "Don't use a menu where a few options fit better as visible buttons or tabs."
+    "Don't use a menu where a few options fit better as visible buttons or Tabs."
   ],
   "accessibility": [
-    "The trigger exposes aria-haspopup and expanded state.",
-    "The surface uses a menu role with menuitem children.",
-    "Focus moves into the menu on open and returns to the trigger on close.",
-    "Full keyboard support (arrows, Enter, Escape, type-ahead)."
+    "Wire the trigger's aria-haspopup and aria-expanded yourself, matching `open` — Menu doesn't set these on your trigger for you.",
+    "The Menu surface uses MUI's built-in menu role with menuitem children (MenuItem).",
+    "Focus moves into the menu on open (autoFocus/disableAutoFocusItem control exactly where) and returns to the trigger on close via the underlying Modal.",
+    "Full keyboard support (arrows, Enter, Escape, type-ahead) comes from the underlying MenuList for free."
   ],
   "related": [
     {
@@ -164,10 +186,6 @@
     {
       "name": "List",
       "why": "Persistent (non-overlay) option lists"
-    },
-    {
-      "name": "Button",
-      "why": "The visible trigger the menu anchors to"
     }
   ]
 }

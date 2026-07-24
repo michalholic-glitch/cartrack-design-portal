@@ -3,58 +3,62 @@
   "category": "Layout and structure",
   "status": "stable",
   "aaReviewed": "2026-07-16",
-  "library": "Material Components Web (MDC) 14.0.0 — Cartrack-themed",
-  "source": "md2-cartrack-library/components/cards.html",
-  "description": "A card groups related content and actions about a single subject — a vehicle summary, a KPI, an alert. Cards make a dashboard scannable by giving each thing its own contained surface.",
-  "keyRule": "Use a card to collect everything about one entity. If you're listing many comparable records, a data table is usually clearer than a wall of cards.",
+  "library": "Material UI (MUI) v9 — Cartrack-themed via @karoo-ui/core",
+  "source": "libs/shared/js/karoo-ui/core/src/lib/Card/index.tsx (real fleet-web source, wraps @mui/material/Card)",
+  "description": "A card groups related content and actions about a single subject — a vehicle summary, a KPI, an alert. Cards make a dashboard scannable by giving each thing its own contained surface. Card itself (extends Paper) is only the outer surface — title/media/actions come from composing sibling MUI components (CardHeader, CardContent, CardMedia, CardActions, CardActionArea) inside it.",
+  "keyRule": "Use a card to collect everything about one entity. If you're listing many comparable records, a data table (DataGrid) is usually clearer than a wall of cards.",
   "variants": [
     {
       "name": "Elevated",
-      "whenToUse": "Default — a subtle shadow lifts the card off the page."
+      "whenToUse": "Default — `variant=\"elevation\"` (the real MUI default), a subtle shadow lifts the card off the page."
     },
     {
       "name": "Outlined",
-      "whenToUse": "Flatter surfaces / dense dashboards where shadows add noise."
+      "whenToUse": "`variant=\"outlined\"` — flatter surfaces / dense dashboards where shadows add noise."
+    },
+    {
+      "name": "Raised",
+      "whenToUse": "`raised` bumps an elevation-variant card to elevation 8 for extra emphasis (ignored when `variant=\"outlined\"`)."
     },
     {
       "name": "With media",
-      "whenToUse": "When an image/map adds context (vehicle photo, location)."
+      "whenToUse": "Compose a `CardMedia` child when an image/map adds context (vehicle photo, location)."
     },
     {
       "name": "Actionable (whole-card)",
-      "whenToUse": "The entire card navigates to detail."
+      "whenToUse": "Compose a `CardActionArea` child so the entire card navigates to detail with a ripple + focus ring."
     }
   ],
   "anatomy": [
     {
       "name": "Container",
-      "description": "the elevated/outlined surface (4px radius)."
+      "description": "the Paper-based surface (4px radius) — this component. Accepts `variant`, `raised`, and any Paper/sx prop."
     },
     {
-      "name": "Media",
-      "description": "optional image/map thumbnail."
+      "name": "CardMedia",
+      "description": "sibling component — optional image/map thumbnail region."
     },
     {
-      "name": "Header",
-      "description": "title, subtitle, optional avatar and overflow ⋮."
+      "name": "CardHeader",
+      "description": "sibling component — title, subtitle, optional avatar and overflow action."
     },
     {
-      "name": "Content",
-      "description": "supporting text, KPIs, or a small table."
+      "name": "CardContent",
+      "description": "sibling component — supporting text, KPIs, or a small table."
     },
     {
-      "name": "Actions",
-      "description": "a row of buttons (usually text/outlined)."
+      "name": "CardActions",
+      "description": "sibling component — a row of buttons (usually text/outlined)."
     }
   ],
   "behaviors": [
     {
       "name": "Actions",
-      "description": "Keep card actions low-emphasis (text/outlined); reserve the contained button for the page's primary action."
+      "description": "Keep CardActions buttons low-emphasis (text/outlined); reserve the contained button for the page's primary action."
     },
     {
       "name": "Whole-card click",
-      "description": "If the card is clickable, show hover/focus and don't bury separate interactive controls that compete with the card click."
+      "description": "If the card is clickable, wrap the content in CardActionArea rather than an onClick on Card itself, so hover/focus/ripple are handled correctly."
     },
     {
       "name": "Density",
@@ -64,33 +68,33 @@
   "states": [
     {
       "state": "Resting",
-      "treatment": "Elevation 1 (or outline)."
+      "treatment": "Elevation 1 (or outline border if `variant=\"outlined\"`)."
     },
     {
-      "state": "Hover (actionable)",
-      "treatment": "Raised elevation / overlay."
+      "state": "Hover (with CardActionArea)",
+      "treatment": "State-layer overlay from CardActionArea, not Card itself."
     },
     {
-      "state": "Focus (actionable)",
-      "treatment": "Visible focus ring."
+      "state": "Focus (with CardActionArea)",
+      "treatment": "Visible focus ring from CardActionArea."
     }
   ],
   "specs": [
     {
       "property": "Corner radius",
-      "value": "4px"
+      "value": "4px (semantic.radius.card, theme.shape.borderRadius)"
     },
     {
       "property": "Elevation",
-      "value": "1 (resting); raises on hover if actionable"
+      "value": "1 (resting, variant=\"elevation\"); 8 when `raised`; none (border only) when variant=\"outlined\""
     },
     {
       "property": "Content padding",
-      "value": "16px"
+      "value": "16px — applied by CardContent, not Card itself"
     },
     {
       "property": "Title / subtitle",
-      "value": "Roboto 16px/500 · 14px/400 on-surface-medium"
+      "value": "Roboto 16px/500 · 14px/400 on-surface-medium — applied by CardHeader's title/subheader, not Card itself"
     }
   ],
   "tokens": [
@@ -103,58 +107,35 @@
   ],
   "props": [
     {
-      "name": "title",
-      "type": "string",
-      "required": true,
-      "description": "Card title, rendered as a heading."
-    },
-    {
-      "name": "subtitle",
-      "type": "string",
-      "required": false,
-      "description": "Optional subtitle line under the title (e.g. \"Jane Cooper · Active\")."
-    },
-    {
-      "name": "content",
+      "name": "children",
       "type": "React.ReactNode",
       "required": false,
-      "description": "Supporting text, KPIs, or a small table — kept to a single subject."
-    },
-    {
-      "name": "media",
-      "type": "React.ReactNode",
-      "required": false,
-      "description": "Optional media/image/map thumbnail region above the header."
+      "description": "Typically CardMedia / CardHeader / CardContent / CardActions composed inside."
     },
     {
       "name": "variant",
-      "type": "'elevated' | 'outlined'",
+      "type": "'elevation' | 'outlined'",
       "required": false,
-      "description": "Outlined removes the elevation shadow in favor of a divider border. Elevated is the default."
+      "description": "'outlined' removes the elevation shadow in favor of a divider border. 'elevation' is the real MUI default."
     },
     {
-      "name": "actions",
-      "type": "CardAction[]",
-      "required": false,
-      "description": "Row of low-emphasis actions (usually text buttons)."
-    },
-    {
-      "name": "actionable",
+      "name": "raised",
       "type": "boolean",
       "required": false,
-      "description": "Makes the whole card a single clickable target that navigates to detail."
+      "description": "Bumps elevation to 8 for extra emphasis. Only applies when variant=\"elevation\". Default false."
     },
     {
-      "name": "onClick",
-      "type": "() => void",
+      "name": "sx",
+      "type": "SxProps<Theme>",
       "required": false,
-      "description": "Handler fired when an actionable card is clicked or activated via keyboard."
+      "description": "MUI system prop for one-off style overrides."
     }
   ],
   "doThis": [
     "Keep one subject per card.",
-    "Use low-emphasis actions inside cards.",
-    "Align cards into a tidy grid on dashboards."
+    "Use low-emphasis actions inside CardActions.",
+    "Align cards into a tidy grid on dashboards.",
+    "Use CardActionArea (not a raw onClick) for whole-card navigation."
   ],
   "dontDoThis": [
     "Don't replace a comparable-records table with many cards.",
@@ -162,21 +143,17 @@
     "Don't nest cards within cards."
   ],
   "accessibility": [
-    "The card's title is a heading.",
-    "An actionable card is a single link/button with an accessible name, or it exposes its inner controls clearly — not both in a confusing way.",
+    "CardHeader's title should be a real heading level appropriate to the page structure.",
+    "An actionable card built with CardActionArea exposes a single accessible interactive target; don't also nest separate interactive controls that compete with the card click.",
     "Focus is visible and order is logical."
   ],
   "related": [
     {
-      "name": "DataTable",
-      "why": "When operators compare many records, use a table"
+      "name": "DataGrid",
+      "why": "When operators compare many records, use a table, not many cards"
     },
     {
-      "name": "List",
-      "why": "Dense homogeneous content scans better as a list"
-    },
-    {
-      "name": "ExpansionPanel",
+      "name": "Accordion",
       "why": "Collapsible content that stays in the page flow"
     }
   ]

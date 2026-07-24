@@ -1,0 +1,275 @@
+{
+  "name": "DatePicker",
+  "category": "Forms and inputs",
+  "status": "stable",
+  "aaReviewed": "2026-07-24",
+  "library": "MUI X (@mui/x-date-pickers) — Cartrack-themed via @karoo-ui/core",
+  "source": "libs/shared/js/karoo-ui/core/src/lib/DatePicker/index.tsx (real fleet-web source)",
+  "licenseNote": "DatePicker's range/pro variants (DateRangePicker, DateTimePicker range) are @mui/x-date-pickers-pro and require a valid @mui/x-license key at runtime, same caveat as DataGrid. The base single-value DatePicker/TimePicker are in the free @mui/x-date-pickers tier.",
+  "description": "DatePicker helps operators choose a single date — a maintenance due date, a report start date, a trip window's start. It pairs a typeable, locale-aware text field with a calendar popup (desktop) or a modal calendar (mobile), auto-switching based on pointer capability. Replaces the old repo's 'Picker' component, which invented a single component with a `mode: 'date' | 'time' | 'dateRange'` prop — the real library instead ships separate components per shape: DatePicker (this file), TimePicker, DateTimePicker (all free-tier @mui/x-date-pickers), and DateRangePicker / a date-time range variant (Pro-tier @mui/x-date-pickers-pro — see licenseNote). Pick the component that matches the shape you need instead of a mode switch.",
+  "keyRule": "Use DatePicker for a single date value. For a time, use TimePicker; for date+time together, use DateTimePicker; for a from–to span, use DateRangePicker (Pro-tier, licensed environments only). All of them must render under a <LocalizationProvider dateAdapter={...}> (fleet-web uses AdapterDayjs) — that provider is not part of any individual picker component.",
+  "variants": [
+    {
+      "name": "Desktop (auto)",
+      "whenToUse": "Default behaviour on pointer:fine devices — a typeable field plus a calendar popup anchored to it."
+    },
+    {
+      "name": "Mobile (auto)",
+      "whenToUse": "Default behaviour on touch devices (per desktopModeMediaQuery) — tapping the field opens a full modal calendar instead of a popup."
+    },
+    {
+      "name": "Field-only entry",
+      "whenToUse": "Power users who want to type a date without opening the calendar — DatePicker already supports direct typing in the field; disable the picker affordance entirely with the underlying DateField component instead if no popup should ever appear."
+    },
+    {
+      "name": "Static / inline (StaticDatePicker)",
+      "whenToUse": "An always-open calendar embedded directly in a panel/dialog, with no text field — a separate sibling component, not a prop on DatePicker."
+    }
+  ],
+  "anatomy": [
+    {
+      "name": "Text field",
+      "description": "the typeable, locale-formatted date field — a MUI TextField under the hood, defaulting to size=\"small\" via slotProps.textField (karoo-ui override)."
+    },
+    {
+      "name": "Calendar icon / adornment",
+      "description": "opens the popup/modal calendar; also keyboard-accessible."
+    },
+    {
+      "name": "Calendar popup/modal",
+      "description": "month/year navigation header + day grid; desktop renders as a popper, mobile as a modal dialog."
+    },
+    {
+      "name": "Action bar",
+      "description": "optional Cancel/Accept/Today/Clear buttons via slots.actionBar / slotProps.actionBar, off by default on desktop."
+    }
+  ],
+  "behaviors": [
+    {
+      "name": "Type or pick",
+      "description": "The field accepts typed input in the locale's date format (via the LocalizationProvider's adapter); the calendar offers visual selection. Both stay in sync — this is native MUI X behaviour, not something DatePicker needs to opt into."
+    },
+    {
+      "name": "Constraints",
+      "description": "minDate/maxDate and disablePast/disableFuture/shouldDisableDate prevent invalid choices at the source (grey out + non-selectable in the calendar, and fail field validation if typed) rather than erroring after submit."
+    },
+    {
+      "name": "Format",
+      "description": "`format` controls the display/parse pattern shown in the text field (locale-derived by default via LocalizationProvider); doesn't need to be set explicitly in most cases."
+    },
+    {
+      "name": "Desktop/mobile auto-switch",
+      "description": "`desktopModeMediaQuery` (default '@media (pointer: fine)') decides whether the popup (desktop) or modal (mobile) rendering is used; force one or the other with DesktopDatePicker / MobileDatePicker directly if the auto behaviour isn't wanted."
+    }
+  ],
+  "states": [
+    {
+      "state": "Day — enabled",
+      "treatment": "Default text in the calendar grid."
+    },
+    {
+      "state": "Day — hover/focus",
+      "treatment": "State-layer circle."
+    },
+    {
+      "state": "Day — selected",
+      "treatment": "Filled circle in semantic.color.brand.primary.main — use dark text or brand.primary.dark for any label on it; white on #F47735 fails AA (tokens.json's accessibility.knownIssues)."
+    },
+    {
+      "state": "Day — disabled/out-of-range",
+      "treatment": "38% opacity, not selectable (minDate/maxDate/disablePast/disableFuture/shouldDisableDate)."
+    },
+    {
+      "state": "Field — error",
+      "treatment": "Standard TextField error state when the typed value fails validation (out of range, malformed, disabled date)."
+    }
+  ],
+  "specs": [
+    {
+      "property": "Text field size",
+      "value": "'small' (karoo-ui override via slotProps.textField; MUI's own unoverridden default is 'medium', matching this repo's TextField.tsx convention)"
+    },
+    {
+      "property": "Popup surface radius",
+      "value": "semantic.radius.default (4px)"
+    },
+    {
+      "property": "Selected day fill",
+      "value": "semantic.color.brand.primary.main (#F47735)"
+    },
+    {
+      "property": "Day cell",
+      "value": "~36px, circular selection (MUI default)"
+    }
+  ],
+  "tokens": [
+    "semantic.radius.default",
+    "semantic.color.brand.primary.main",
+    "semantic.color.brand.primary.dark"
+  ],
+  "props": [
+    {
+      "name": "value",
+      "type": "PickerValidDate | null",
+      "required": false,
+      "description": "The selected date (controlled) — type depends on the LocalizationProvider's date adapter (fleet-web uses dayjs, so this is a Dayjs object or null)."
+    },
+    {
+      "name": "onChange",
+      "type": "(value: PickerValidDate | null, context: FieldChangeHandlerContext) => void",
+      "required": false,
+      "description": "Called when the operator types or picks a new value; fires on every keystroke that produces a parseable date as well as on calendar selection."
+    },
+    {
+      "name": "defaultValue",
+      "type": "PickerValidDate",
+      "required": false,
+      "description": "Initial value for an uncontrolled picker."
+    },
+    {
+      "name": "label",
+      "type": "React.ReactNode",
+      "required": false,
+      "description": "Not a direct DatePicker prop — set the field's label via slotProps.textField.label (this wrapper already injects slotProps.textField.size, so merge your own textField slotProps alongside it)."
+    },
+    {
+      "name": "minDate",
+      "type": "PickerValidDate",
+      "required": false,
+      "description": "Earliest selectable date; disables earlier dates in the calendar and fails validation if typed."
+    },
+    {
+      "name": "maxDate",
+      "type": "PickerValidDate",
+      "required": false,
+      "description": "Latest selectable date."
+    },
+    {
+      "name": "disablePast",
+      "type": "boolean",
+      "required": false,
+      "default": "false",
+      "description": "Disables all dates before today."
+    },
+    {
+      "name": "disableFuture",
+      "type": "boolean",
+      "required": false,
+      "default": "false",
+      "description": "Disables all dates after today."
+    },
+    {
+      "name": "shouldDisableDate",
+      "type": "(date: PickerValidDate) => boolean",
+      "required": false,
+      "description": "Per-date disable predicate for arbitrary blocked dates (e.g. blocking a future service date that's actually in the past for a given vehicle)."
+    },
+    {
+      "name": "shouldDisableMonth",
+      "type": "(month: PickerValidDate) => boolean",
+      "required": false,
+      "description": "Per-month disable predicate."
+    },
+    {
+      "name": "shouldDisableYear",
+      "type": "(year: PickerValidDate) => boolean",
+      "required": false,
+      "description": "Per-year disable predicate."
+    },
+    {
+      "name": "format",
+      "type": "string",
+      "required": false,
+      "description": "Display/parse format string for the text field; defaults to a locale-appropriate format from the LocalizationProvider if omitted."
+    },
+    {
+      "name": "views",
+      "type": "Array<'year' | 'month' | 'day'>",
+      "required": false,
+      "description": "Which calendar views are navigable (e.g. omit 'day' for a month/year-only picker)."
+    },
+    {
+      "name": "openTo",
+      "type": "'year' | 'month' | 'day'",
+      "required": false,
+      "description": "Which view the calendar opens to initially."
+    },
+    {
+      "name": "disabled",
+      "type": "boolean",
+      "required": false,
+      "description": "Disables both the field and the calendar trigger."
+    },
+    {
+      "name": "readOnly",
+      "type": "boolean",
+      "required": false,
+      "description": "Shows the current value but prevents changes via either typing or the calendar."
+    },
+    {
+      "name": "closeOnSelect",
+      "type": "boolean",
+      "required": false,
+      "default": "true on desktop, false on mobile",
+      "description": "Whether picking a day auto-closes the popup/modal."
+    },
+    {
+      "name": "desktopModeMediaQuery",
+      "type": "string",
+      "required": false,
+      "default": "'@media (pointer: fine)'",
+      "description": "Media query deciding the desktop (popup) vs. mobile (modal) rendering."
+    },
+    {
+      "name": "slots",
+      "type": "DatePickerSlots",
+      "required": false,
+      "description": "Overridable component slots (textField, actionBar, calendarHeader, day, etc.)."
+    },
+    {
+      "name": "slotProps",
+      "type": "DatePickerSlotProps",
+      "required": false,
+      "description": "Props forwarded to each slot — this wrapper injects slotProps.textField.size='small' by default and merges any textField slotProps you pass in."
+    }
+  ],
+  "doThis": [
+    "Allow typing and picking — both are native behaviour, don't suppress either.",
+    "Disable invalid dates (minDate/maxDate/shouldDisableDate) rather than erroring after submit.",
+    "Wrap the app (or the relevant subtree) in a single <LocalizationProvider> with the dayjs adapter — don't instantiate one per picker.",
+    "Reach for TimePicker/DateTimePicker/DateRangePicker for their respective shapes instead of trying to make DatePicker do double duty."
+  ],
+  "dontDoThis": [
+    "Don't force calendar-only entry — the text field's typed input is part of the intended UX.",
+    "Don't use white text on the primary-orange selected-day fill (#F47735) — fails WCAG AA, use dark text or brand.primary.dark.",
+    "Don't reach for DateRangePicker/date-time-range without confirming a valid @mui/x-license key is configured — see licenseNote.",
+    "Don't invent a `mode` prop to switch shapes — use the dedicated sibling component instead."
+  ],
+  "accessibility": [
+    "The field is labelled (via slotProps.textField.label) and announces the selected value as formatted text.",
+    "The calendar is keyboard navigable (arrow keys move days, PageUp/PageDown change months) with ARIA grid semantics, built in.",
+    "Selected and disabled days are conveyed via aria-selected/aria-disabled, not colour alone."
+  ],
+  "related": [
+    {
+      "name": "TimePicker",
+      "why": "The real sibling component for time-of-day selection — free tier, same slotProps.textField pattern"
+    },
+    {
+      "name": "DateTimePicker",
+      "why": "The real sibling component when both date and time matter in one field — free tier"
+    },
+    {
+      "name": "DateRangePicker",
+      "why": "The real sibling component for from–to spans (report periods, trip history) — Pro-tier, see licenseNote"
+    },
+    {
+      "name": "TextField",
+      "why": "DatePicker composes a TextField internally via slotProps.textField for typed entry"
+    },
+    {
+      "name": "DataGrid",
+      "why": "Its date-column filter inputs are date pickers from the same @mui/x-date-pickers family"
+    }
+  ]
+}

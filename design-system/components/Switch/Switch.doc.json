@@ -1,0 +1,207 @@
+{
+  "name": "Switch",
+  "category": "Forms and inputs",
+  "status": "stable",
+  "aaReviewed": "2026-07-24",
+  "library": "Material UI (MUI) v9 — Cartrack-themed via @karoo-ui/core",
+  "source": "libs/shared/js/karoo-ui/core/src/lib/Switch/index.tsx (real fleet-web source, wraps @mui/material/Switch)",
+  "description": "Switch toggles a setting that's meant to take effect immediately (e.g. enable notifications). It's a bare track/thumb control (no built-in label): pair it with @mui/material/FormControlLabel for a clickable label.",
+  "keyRule": "Use Switch only for an immediate on/off setting the operator expects to apply right away, with no separate Save step. If the toggle is really part of a form that gets submitted together, prefer Checkbox instead — Switch signals instant effect.",
+  "correction": "One of three real components split out of the old MDC-modeled 'SelectionControl' umbrella, which documented Checkbox, Radio, and Switch behind a single fake `type` discriminator prop and rendered Switch as a custom `<button role=\"switch\">` with hand-built track/thumb/icon markup. The real Switch is a single @mui/material component (internally IconButton/ButtonBase-based) with its own dedicated prop API.",
+  "variants": [
+    {
+      "name": "Standalone toggle",
+      "whenToUse": "A single setting, e.g. inside a settings panel."
+    },
+    {
+      "name": "List item trailing toggle",
+      "whenToUse": "Paired with a ListItem/ListItemText as the trailing control for an on/off row (common settings-list pattern)."
+    }
+  ],
+  "anatomy": [
+    {
+      "name": "Root",
+      "description": "outer span establishing the track+thumb layout."
+    },
+    {
+      "name": "Track",
+      "description": "the background pill; colour reflects checked/unchecked state."
+    },
+    {
+      "name": "Thumb",
+      "description": "the circular handle that slides between the two ends of the track."
+    },
+    {
+      "name": "SwitchBase (internal)",
+      "description": "the ButtonBase-backed interactive layer plus the visually-hidden native `<input type=\"checkbox\">` that actually carries the checked state."
+    },
+    {
+      "name": "Label (external)",
+      "description": "not part of Switch itself. Wrap in @mui/material/FormControlLabel for a clickable label — the old SelectionControl's built-in `label` prop has no real equivalent."
+    }
+  ],
+  "behaviors": [
+    {
+      "name": "Controlled vs uncontrolled",
+      "description": "Use `checked`+`onChange` for a controlled switch, or `defaultChecked` for an uncontrolled one — same pattern as Checkbox, since Switch is built on the same internal SwitchBase."
+    },
+    {
+      "name": "Instant apply (convention, not enforced)",
+      "description": "MUI's Switch renders the same regardless of whether the consumer actually applies the change instantly or defers it. Treating it as instant-effect is a UX convention this doc recommends, not something the component itself guarantees — don't gate a Switch behind a Save button, or you undermine the affordance."
+    }
+  ],
+  "states": [
+    {
+      "state": "Off",
+      "treatment": "Grey/unchecked track colour, thumb at the start."
+    },
+    {
+      "state": "On",
+      "treatment": "Primary-coloured track (color=\"primary\" by default), thumb slid to the end."
+    },
+    {
+      "state": "Hover/focus",
+      "treatment": "State-layer ripple around the thumb; visible focus ring."
+    },
+    {
+      "state": "Disabled",
+      "treatment": "Theme disabled-action opacity; not focusable."
+    }
+  ],
+  "specs": [
+    {
+      "property": "Default size",
+      "value": "size=\"small\" — set at the theme level (theme.ts: MuiSwitch.defaultProps.size), not by this wrapper. MUI's own default is \"medium\"."
+    },
+    {
+      "property": "Track / thumb (medium, MUI stock default)",
+      "value": "~34×14px track, ~20px thumb — this matches the old MDC doc's numbers, which happen to be accurate for MUI's real default size."
+    },
+    {
+      "property": "Track / thumb (small, Cartrack theme default)",
+      "value": "~26×14px track, ~16px thumb (approximate MUI internals, not tokenized)"
+    },
+    {
+      "property": "On colour",
+      "value": "primary (#F47735) via the default color=\"primary\""
+    },
+    {
+      "property": "Size options",
+      "value": "Switch only supports 'small' | 'medium' — unlike Checkbox, MUI Switch has no 'large' size."
+    }
+  ],
+  "tokens": [
+    "semantic.color.brand.primary.main"
+  ],
+  "props": [
+    {
+      "name": "checked",
+      "type": "boolean",
+      "required": false,
+      "description": "Controlled checked (on) state."
+    },
+    {
+      "name": "defaultChecked",
+      "type": "boolean",
+      "required": false,
+      "description": "Uncontrolled initial checked state."
+    },
+    {
+      "name": "onChange",
+      "type": "(event: React.ChangeEvent<HTMLInputElement>, checked: boolean) => void",
+      "required": false,
+      "description": "Fired when the switch is toggled; `event.target.checked` also carries the new value."
+    },
+    {
+      "name": "icon",
+      "type": "React.ReactNode",
+      "required": false,
+      "description": "Custom thumb icon shown when unchecked (rare — most usage relies on the default filled thumb)."
+    },
+    {
+      "name": "checkedIcon",
+      "type": "React.ReactNode",
+      "required": false,
+      "description": "Custom thumb icon shown when checked."
+    },
+    {
+      "name": "color",
+      "type": "'primary' | 'secondary' | 'error' | 'info' | 'success' | 'warning' | 'default'",
+      "required": false,
+      "description": "On-state colour. Default 'primary'."
+    },
+    {
+      "name": "size",
+      "type": "'small' | 'medium'",
+      "required": false,
+      "description": "Default 'medium' in stock MUI, overridden to 'small' fleet-wide by theme.ts."
+    },
+    {
+      "name": "edge",
+      "type": "'start' | 'end' | false",
+      "required": false,
+      "description": "Negative margin to align the switch with adjacent content (e.g. inside a ListItem)."
+    },
+    {
+      "name": "disabled",
+      "type": "boolean",
+      "required": false,
+      "description": "Disables the control."
+    },
+    {
+      "name": "required",
+      "type": "boolean",
+      "required": false,
+      "description": "Marks the underlying native input as required."
+    },
+    {
+      "name": "name",
+      "type": "string",
+      "required": false,
+      "description": "Name attribute of the native input."
+    },
+    {
+      "name": "value",
+      "type": "unknown",
+      "required": false,
+      "description": "Value attribute of the native input."
+    },
+    {
+      "name": "id",
+      "type": "string",
+      "required": false,
+      "description": "id of the native input — pair with FormControlLabel's htmlFor."
+    },
+    {
+      "name": "sx",
+      "type": "SxProps<Theme>",
+      "required": false,
+      "description": "Standard MUI style-override escape hatch."
+    }
+  ],
+  "doThis": [
+    "Use Switch only for settings that take effect the moment it's toggled.",
+    "Use FormControlLabel to give every Switch a clickable label — there is no built-in label prop.",
+    "Place it as a ListItem's trailing control for settings-list rows (edge=\"end\")."
+  ],
+  "dontDoThis": [
+    "Don't gate a Switch's effect behind a separate Save/Apply action — that breaks the instant-apply expectation the control signals.",
+    "Don't use Switch for exactly-one-of-many (use Radio) or independent multi-select (use Checkbox).",
+    "Don't rely on track colour alone — the thumb's position (start vs end) already conveys state independent of colour."
+  ],
+  "accessibility": [
+    "Renders a real native `<input type=\"checkbox\">` under the hood (visually hidden), so it's announced as a checkbox-role control by default — Switch does not natively expose role=\"switch\"; if that distinction matters, set it explicitly via slotProps/aria attributes.",
+    "Always pair with FormControlLabel (or your own <label htmlFor>) so the label is announced and clickable.",
+    "Focus is visible via the theme's focus ring."
+  ],
+  "related": [
+    {
+      "name": "Checkbox",
+      "why": "Independent multi-select, applied on submit rather than instantly — split from the same old SelectionControl umbrella"
+    },
+    {
+      "name": "Radio",
+      "why": "Exactly one choice from a small set — split from the same old SelectionControl umbrella"
+    }
+  ]
+}

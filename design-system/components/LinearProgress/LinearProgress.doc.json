@@ -1,0 +1,141 @@
+{
+  "name": "LinearProgress",
+  "category": "Loading",
+  "status": "stable",
+  "aaReviewed": "2026-07-24",
+  "library": "Material UI (MUI) v9 — Cartrack-themed via @karoo-ui/core",
+  "source": "libs/shared/js/karoo-ui/core/src/lib/LinearProgress/index.tsx (real fleet-web source)",
+  "description": "A full-width bar that spans a region — under a page header, a toolbar, or a DataGrid — to show that data is loading. Split out of the old repo's single umbrella \"ProgressIndicator\" component: the real library has two separate components, CircularProgress and LinearProgress, not one component with a type prop switching between them. karoo-ui's wrapper is a bare re-export of MUI's <LinearProgress> — no overrides.",
+  "keyRule": "Use LinearProgress for a region-width indicator (under a toolbar, above a table). Use determinate when you know the percentage; indeterminate (the default) when you don't; buffer/query are rare secondary variants for two-stage or unknown-direction loads.",
+  "variants": [
+    {
+      "name": "variant=\"indeterminate\" (default)",
+      "whenToUse": "Loading where duration is unknown; spans the full width of its container."
+    },
+    {
+      "name": "variant=\"determinate\"",
+      "whenToUse": "A known-percentage task with a layout to sit above/below (uploads, exports) — pair with `value`."
+    },
+    {
+      "name": "variant=\"buffer\"",
+      "whenToUse": "Two-stage progress (e.g. downloaded vs. buffered) — pair with `value` + `valueBuffer`. Rare in fleet-web today."
+    },
+    {
+      "name": "variant=\"query\"",
+      "whenToUse": "An indeterminate animation that runs in the reverse direction, conventionally used while querying before a real percentage is known."
+    }
+  ],
+  "anatomy": [
+    {
+      "name": "Track",
+      "description": "the full-width background bar."
+    },
+    {
+      "name": "Active indicator",
+      "description": "the filled/animated bar segment showing progress."
+    }
+  ],
+  "behaviors": [
+    {
+      "name": "Determinate vs indeterminate",
+      "description": "Switch to variant=\"determinate\" as soon as a real percentage is available via `value`; don't fake progress. Stays indeterminate (the default) otherwise."
+    },
+    {
+      "name": "Delay",
+      "description": "For fast operations, delay showing the bar briefly to avoid a flicker — this is caller-side logic, not a LinearProgress prop."
+    },
+    {
+      "name": "DataGrid loading state",
+      "description": "DataGrid's own `loading` prop renders a spinner overlay by default, not a LinearProgress bar under the toolbar — if the old MD2 'linear bar under the toolbar' pattern is wanted, compose LinearProgress explicitly above the DataGrid rather than relying on `loading` to produce it."
+    }
+  ],
+  "states": [
+    {
+      "state": "Indeterminate — Active",
+      "treatment": "Animated sliding bar across the full track width."
+    },
+    {
+      "state": "Determinate — Active",
+      "treatment": "Bar fill width reflects `value`; no sliding animation."
+    },
+    {
+      "state": "Complete",
+      "treatment": "Caller hides the component, or briefly shows value=100 before dismissing — not a built-in state."
+    }
+  ],
+  "specs": [
+    {
+      "property": "Height",
+      "value": "4px (MUI unoverridden default)."
+    },
+    {
+      "property": "Colour",
+      "value": "primary (semantic.color.brand.primary.main, #F47735) — color=\"primary\" is MUI's own default."
+    },
+    {
+      "property": "Width",
+      "value": "Always 100% of its container — LinearProgress has no `size`/`maxWidth` prop; constrain it by wrapping in a sized container."
+    }
+  ],
+  "tokens": [
+    "semantic.color.brand.primary.main"
+  ],
+  "props": [
+    {
+      "name": "variant",
+      "type": "'determinate' | 'indeterminate' | 'buffer' | 'query'",
+      "required": false,
+      "default": "'indeterminate'",
+      "description": "determinate/buffer need `value` (and valueBuffer for buffer); indeterminate/query animate with no known percentage."
+    },
+    {
+      "name": "value",
+      "type": "number",
+      "required": false,
+      "description": "0-100. Used by 'determinate' and 'buffer' variants."
+    },
+    {
+      "name": "valueBuffer",
+      "type": "number",
+      "required": false,
+      "description": "0-100. The secondary (buffer) value, only used by variant=\"buffer\"."
+    },
+    {
+      "name": "color",
+      "type": "'primary' | 'secondary' | 'error' | 'info' | 'success' | 'warning' | 'inherit'",
+      "required": false,
+      "default": "'primary'",
+      "description": "Theme colour applied to the track/bar."
+    }
+  ],
+  "doThis": [
+    "Use determinate progress when you know the percentage.",
+    "Prefer skeletons for content loads into a known layout.",
+    "Delay showing the bar on fast (sub-second) operations to avoid flicker.",
+    "Give it an accessible label via aria-label on a wrapping element — LinearProgress itself renders no text."
+  ],
+  "dontDoThis": [
+    "Don't fake a percentage.",
+    "Don't reach for a `type` prop to pick circular vs linear — they're two separate components now; import CircularProgress directly for the compact/inline shape.",
+    "Don't expect a `maxWidth` prop — size it via a wrapping container's width/max-width instead."
+  ],
+  "accessibility": [
+    "Renders role=\"progressbar\" with aria-valuenow set automatically for determinate/buffer; indeterminate/query omit aria-valuenow per ARIA spec.",
+    "Give it an accessible label (aria-label or aria-labelledby on a wrapping element) describing what's loading.",
+    "Don't rely on motion alone; set aria-busy on the region that's loading."
+  ],
+  "related": [
+    {
+      "name": "CircularProgress",
+      "why": "The compact/inline sibling — use for a small spinner instead of a region-width bar"
+    },
+    {
+      "name": "DataGrid",
+      "why": "Compose LinearProgress above it for the classic 'bar under the toolbar' loading treatment; DataGrid's own `loading` prop renders a different overlay by default"
+    },
+    {
+      "name": "Snackbar",
+      "why": "Announce completion when the wait ends"
+    }
+  ]
+}

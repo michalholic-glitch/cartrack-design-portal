@@ -1,74 +1,37 @@
 import React from 'react';
+import MuiStepper, { StepperProps as MuiStepperProps } from '@mui/material/Stepper';
 
-export interface StepperStep {
-  label: string;
-  /** Optional sub-text shown under the label. */
-  subLabel?: string;
-  /** Explicit per-step state override. If omitted, state is derived from activeStep. */
-  state?: 'completed' | 'active' | 'upcoming' | 'error';
-}
-
-export interface StepperProps {
-  /** Horizontal fits a few short-labelled steps across the top; vertical expands content under each step. */
-  orientation?: 'horizontal' | 'vertical';
-  /** Linear = steps must be completed in order. Non-linear = operators may jump between steps freely. */
-  linear?: boolean;
-  steps: StepperStep[];
-  /** Zero-based index of the current step. */
-  activeStep: number;
-  onStepClick?: (index: number) => void;
-}
+export type StepperProps = MuiStepperProps;
 
 /**
- * Stepper — MD2 (MDC) Cartrack-themed.
+ * Stepper — MUI v9, Cartrack-themed via @karoo-ui/core.
  * Full spec: Stepper.doc.json
- * NOTE: MDC Web has no stock stepper component (it's a Material guideline pattern, not a
- * shipped MDC primitive). This mirrors the Cartrack-styled custom markup (.stepper2 / .st / .bar)
- * from md2-cartrack-library/components/steppers.html rather than an mdc-* class contract.
+ *
+ * Real source: libs/shared/js/karoo-ui/core/src/lib/Stepper/index.tsx is a pure
+ * re-export of @mui/material/Stepper — `export { default as Stepper } from
+ * '@mui/material/Stepper'` — with zero prop overrides at the wrapper level, and
+ * theme.ts has no MuiStepper entry either, so this renders exactly like stock MUI.
+ * The old MDC-modeled Stepper.tsx invented a `steps: StepperStep[]` array prop and
+ * derived each step's completed/active/upcoming/error state itself (MDC Web has no
+ * stock stepper — that version mirrored the Cartrack-styled custom .stepper2 markup
+ * instead of an mdc-* class contract). None of that exists here: the real Stepper
+ * takes ordinary React `children` — one @mui/material/Step per step, each usually
+ * containing a StepLabel (icon + label; pass `error` here for error styling, there
+ * is no separate "error" prop on Stepper or Step) — and Stepper's own `activeStep`
+ * index drives which Step renders as active/completed via internal context.
  * Tokens (tokens/tokens.json):
- * - color: semantic.color.brand.primary.main (active/done indicator — set by the .st CSS classes
- *   below, not inline), semantic.color.border.default (connector line).
- * - radius: semantic.radius.pill (circular indicator).
- * - type: semantic.typography.scale.subtitle2 (14px/500 active label — exact match),
- *   semantic.typography.scale.body2 (14px/400 other labels — exact match).
- * Not yet tokenized: the 24px indicator size has no matching dimension token.
+ * - color: semantic.color.brand.primary.main — active/completed StepIcon fill.
+ * - color: semantic.color.border.default — approximates StepConnector's default line colour.
+ * - type: semantic.typography.scale.body2 (14px/400, StepLabel's base) and the
+ *   14px/500 result MUI applies on top for the active/completed label (a CSS
+ *   fontWeight override on body2, not a switch to the subtitle2 variant itself).
+ * Dropped: the old doc's semantic.radius.pill for the circular step indicator —
+ * the real StepIcon is an SVG circle (MUI's default Step icon), not a CSS
+ * border-radius shape, so a radius token doesn't apply to it.
+ * Not tokenized: the ~24px StepIcon diameter has no matching dimension token.
  */
-export function Stepper({ orientation = 'horizontal', linear = true, steps, activeStep, onStepClick }: StepperProps) {
-  return (
-    <div
-      className={`stepper2${orientation === 'vertical' ? ' stepper2--vertical' : ''}`}
-      role="group"
-      aria-label={`Step ${activeStep + 1} of ${steps.length}`}
-    >
-      {steps.map((step, i) => {
-        const derivedState = step.state ?? (i < activeStep ? 'completed' : i === activeStep ? 'active' : 'upcoming');
-        const cls =
-          derivedState === 'completed'
-            ? 'st done'
-            : derivedState === 'active'
-            ? 'st on'
-            : derivedState === 'error'
-            ? 'st error'
-            : 'st';
-        const mark = derivedState === 'completed' ? '✓' : i + 1;
-
-        return (
-          <React.Fragment key={step.label}>
-            <span
-              className={cls}
-              aria-current={derivedState === 'active' ? 'step' : undefined}
-              onClick={!linear || i <= activeStep ? () => onStepClick?.(i) : undefined}
-              style={{ cursor: onStepClick && (!linear || i <= activeStep) ? 'pointer' : undefined }}
-            >
-              <span className="n">{mark}</span> {step.label}
-              {step.subLabel ? <span className="sub">{step.subLabel}</span> : null}
-            </span>
-            {i < steps.length - 1 ? <span className="bar" /> : null}
-          </React.Fragment>
-        );
-      })}
-    </div>
-  );
-}
+export const Stepper = React.forwardRef<HTMLDivElement, StepperProps>(function Stepper(props, ref) {
+  return <MuiStepper ref={ref} {...props} />;
+});
 
 export default Stepper;

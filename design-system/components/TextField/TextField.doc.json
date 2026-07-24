@@ -2,71 +2,75 @@
   "name": "TextField",
   "category": "Forms and inputs",
   "status": "stable",
-  "aaReviewed": "2026-07-16",
-  "library": "Material Components Web (MDC) 14.0.0 — Cartrack-themed",
-  "source": "md2-cartrack-library/components/text-fields.html",
-  "description": "Text fields let operators enter and edit text — a registration number, a driver's name, an odometer reading, a note. They come in filled and outlined styles and always carry a label so the field's purpose stays visible once filled.",
-  "keyRule": "Pick one style and use it consistently across a form. In the Cartrack portal, outlined is the default for forms; filled suits dense, list-like settings.",
+  "aaReviewed": "2026-07-24",
+  "library": "Material UI (MUI) v9 — Cartrack-themed via @karoo-ui/core",
+  "source": "libs/shared/js/karoo-ui/core/src/lib/TextField/index.tsx (real fleet-web source)",
+  "description": "Text fields let operators enter and edit text — a registration number, a driver's name, an odometer reading, a note. karoo-ui's TextField wraps MUI's <TextField> (which itself composes FormControl + InputLabel + Input/OutlinedInput/FilledInput + FormHelperText) and defaults size to 'small' plus normalises a convenience `readOnly` prop across MUI v9's two readOnly locations.",
+  "keyRule": "Pick one `variant` ('outlined' | 'filled' | 'standard') and use it consistently across a form. In the Cartrack portal, outlined is the de facto default for forms; filled suits dense, settings-style lists. Always pass `label`.",
   "variants": [
     {
-      "name": "Filled",
-      "whenToUse": "Dense, settings-style lists; strong visual grouping."
-    },
-    {
-      "name": "Outlined",
+      "name": "variant=\"outlined\"",
       "whenToUse": "Default for forms; clear field boundaries."
     },
     {
-      "name": "With adornments",
+      "name": "variant=\"filled\"",
+      "whenToUse": "Dense, settings-style lists; strong visual grouping."
+    },
+    {
+      "name": "variant=\"standard\"",
+      "whenToUse": "Rare in fleet-web; underline-only, minimal chrome."
+    },
+    {
+      "name": "With adornments (slotProps.input.startAdornment/endAdornment)",
       "whenToUse": "Search (leading magnifier + trailing clear), password (visibility toggle), units (trailing \"km\")."
     },
     {
-      "name": "Select / dropdown field",
-      "whenToUse": "A field that opens a menu to choose one value."
+      "name": "select",
+      "whenToUse": "Set `select` + child <MenuItem>s to render a dropdown field instead of composing a separate Select."
     },
     {
-      "name": "Multiline / textarea",
-      "whenToUse": "Longer notes; grows with content."
+      "name": "multiline",
+      "whenToUse": "Longer notes; grows with content up to `maxRows`/`minRows`."
     }
   ],
   "anatomy": [
     {
-      "name": "Container",
-      "description": "filled (shaded box, bottom line) or outlined (border box)."
+      "name": "FormControl (root)",
+      "description": "wraps label, input, and helper text; carries error/disabled/required/fullWidth context."
     },
     {
-      "name": "Label",
-      "description": "floats above the value; stays visible when filled."
+      "name": "InputLabel",
+      "description": "floats above the value; stays visible once filled or focused."
     },
     {
-      "name": "Input text",
-      "description": "the value the operator types."
+      "name": "Input / OutlinedInput / FilledInput",
+      "description": "the actual editable surface, chosen by `variant`."
     },
     {
-      "name": "Supporting text",
-      "description": "helper or error message below the field."
+      "name": "FormHelperText",
+      "description": "helper or error message below the field, driven by `helperText` + `error`."
     },
     {
-      "name": "Leading / trailing icon",
-      "description": "optional adornment (search, clear, visibility, unit)."
-    },
-    {
-      "name": "Activation line / border",
-      "description": "turns primary on focus, error on invalid."
+      "name": "Adornments",
+      "description": "optional leading/trailing content via slotProps.input.startAdornment/endAdornment."
     }
   ],
   "behaviors": [
     {
       "name": "Label float",
-      "description": "The label sits in the field when empty and floats up on focus or when a value is present, so it never hides the content."
+      "description": "The label sits in the field when empty and floats up on focus or when a value is present (MUI's InputLabel shrink behaviour), so it never hides the content."
     },
     {
       "name": "Validation",
-      "description": "Validate on blur or submit; show a concise error in the supporting text and turn the field's line/border to the error colour. Keep the label."
+      "description": "Set `error` + `helperText` together to flip the field into the error state and show a concise message; MUI wires aria-invalid/aria-describedby automatically."
     },
     {
-      "name": "Read-only & disabled",
-      "description": "Read-only shows a value that can't be edited but can be copied; disabled dims the whole field and removes it from tab order."
+      "name": "Read-only convenience prop",
+      "description": "karoo-ui's `readOnly` (reproduced here) sets readOnly on both slotProps.input and slotProps.htmlInput at once, since MUI v9 supports it in either place and Autocomplete's renderInput pattern only wires the htmlInput one — passing this prop keeps behaviour predictable regardless of which internal path a given MUI feature reads from."
+    },
+    {
+      "name": "Disabled",
+      "description": "Dims the whole field and removes it from the tab order (standard MUI `disabled`)."
     }
   ],
   "states": [
@@ -76,45 +80,41 @@
     },
     {
       "state": "Hover",
-      "treatment": "Border/line darkens slightly."
+      "treatment": "Border/underline darkens slightly."
     },
     {
       "state": "Focused",
-      "treatment": "Primary 2px border (outlined) or 2px underline (filled); primary label."
+      "treatment": "Primary 2px border (outlined) or 2px underline (filled/standard); primary label. Use brand.primary.dark, not .main, for the line — see tokens.json's accessibility.knownIssues."
     },
     {
       "state": "Error",
-      "treatment": "Error colour border/line, label, and supporting text."
+      "treatment": "Error colour border/underline, label, and helper text (error + helperText props)."
     },
     {
       "state": "Disabled",
-      "treatment": "38% opacity; not focusable."
+      "treatment": "38% opacity; not focusable, removed from tab order."
     }
   ],
   "specs": [
     {
-      "property": "Height",
-      "value": "~56px (filled), ~56px (outlined) standard"
-    },
-    {
-      "property": "Input text",
-      "value": "Roboto 16px / 400"
-    },
-    {
-      "property": "Label (resting / floated)",
-      "value": "16px → 12px"
-    },
-    {
-      "property": "Supporting text",
-      "value": "12px"
+      "property": "Default size",
+      "value": "'small' (karoo-ui override; MUI's own unoverridden default is 'medium')"
     },
     {
       "property": "Corner radius",
-      "value": "4px"
+      "value": "4px (semantic.radius.default — outlined variant only)"
+    },
+    {
+      "property": "Input text",
+      "value": "semantic.typography.scale.body1 (16px/400)"
+    },
+    {
+      "property": "Helper/error text",
+      "value": "semantic.typography.scale.caption (12px/400)"
     },
     {
       "property": "Focus / error colour",
-      "value": "primary-dark (#BB4800) / error (#F44336) — primary-dark keeps the focus line legible on white"
+      "value": "semantic.color.brand.primary.dark (#BB4800) / semantic.color.status.error.main (#F44336)"
     }
   ],
   "tokens": [
@@ -126,40 +126,54 @@
   ],
   "props": [
     {
-      "name": "variant",
-      "type": "'filled' | 'outlined'",
-      "required": false,
-      "description": "Filled suits dense, settings-style lists; outlined is the Cartrack portal's default for forms."
-    },
-    {
       "name": "label",
-      "type": "string",
-      "required": true,
-      "description": "Always shown; keeps the field's purpose visible once filled."
+      "type": "React.ReactNode",
+      "required": false,
+      "description": "Field label; not required by MUI's type but should always be set per the portal's accessibility convention."
     },
     {
       "name": "value",
-      "type": "string",
-      "required": true,
-      "description": "The value the operator has typed."
+      "type": "unknown",
+      "required": false,
+      "description": "The input's current value (controlled) — pair with onChange."
+    },
+    {
+      "name": "defaultValue",
+      "type": "unknown",
+      "required": false,
+      "description": "Initial value for an uncontrolled field."
     },
     {
       "name": "onChange",
-      "type": "(value: string) => void",
+      "type": "React.ChangeEventHandler<HTMLInputElement | HTMLTextAreaElement>",
       "required": false,
       "description": "Called on every input change."
     },
     {
-      "name": "helperText",
-      "type": "string",
+      "name": "variant",
+      "type": "'outlined' | 'filled' | 'standard'",
       "required": false,
-      "description": "Helper text below the field; replaced by the error message when error is set."
+      "default": "'outlined'",
+      "description": "MUI's own default is 'outlined' (unoverridden by karoo-ui); outlined is the Cartrack portal's de facto default for forms."
+    },
+    {
+      "name": "size",
+      "type": "'small' | 'medium'",
+      "required": false,
+      "default": "'small'",
+      "description": "karoo-ui overrides MUI's own 'medium' default to 'small' for the portal's form density."
+    },
+    {
+      "name": "helperText",
+      "type": "React.ReactNode",
+      "required": false,
+      "description": "Helper text below the field; typically replaced by an error message when `error` is true."
     },
     {
       "name": "error",
-      "type": "string",
+      "type": "boolean",
       "required": false,
-      "description": "Concise, specific error text; also flips the field into the error state."
+      "description": "Flips the field into the error state (border/label/helper text colour); pair with a specific helperText message."
     },
     {
       "name": "disabled",
@@ -171,77 +185,98 @@
       "name": "readOnly",
       "type": "boolean",
       "required": false,
-      "description": "Shows a value that can't be edited but can be copied."
+      "description": "karoo-ui convenience prop (not on plain MUI TextField) — shows a value that can't be edited but can be copied; sets readOnly on both slotProps.input and slotProps.htmlInput internally."
     },
     {
       "name": "required",
       "type": "boolean",
       "required": false,
-      "description": "Sets aria-required."
+      "description": "Sets aria-required and appends the required-field indicator to the label."
     },
     {
       "name": "type",
-      "type": "'text' | 'password' | 'search' | 'number'",
-      "required": false,
-      "description": "Underlying input type for single-line fields; ignored when multiline is true."
-    },
-    {
-      "name": "leadingIcon",
       "type": "string",
       "required": false,
-      "description": "Leading FontAwesome icon name (see Icon.doc.json), e.g. \"search\"."
-    },
-    {
-      "name": "trailingIcon",
-      "type": "string",
-      "required": false,
-      "description": "Trailing FontAwesome icon name, e.g. \"times\" (clear) or a unit like \"km\"."
+      "description": "Underlying <input> type ('text' | 'password' | 'search' | 'number' | ...); ignored when multiline is true."
     },
     {
       "name": "multiline",
       "type": "boolean",
       "required": false,
-      "description": "Renders a textarea that grows with content instead of a single-line input."
+      "description": "Renders a <textarea> that grows with content instead of a single-line input."
     },
     {
       "name": "rows",
-      "type": "number",
+      "type": "string | number",
       "required": false,
-      "description": "Textarea row count when multiline is true."
+      "description": "Fixed row count for a multiline field (mutually exclusive with minRows/maxRows auto-grow)."
+    },
+    {
+      "name": "minRows",
+      "type": "string | number",
+      "required": false,
+      "description": "Minimum rows for an auto-growing multiline field."
+    },
+    {
+      "name": "maxRows",
+      "type": "string | number",
+      "required": false,
+      "description": "Maximum rows before an auto-growing multiline field scrolls."
+    },
+    {
+      "name": "select",
+      "type": "boolean",
+      "required": false,
+      "description": "Renders as a dropdown (composes MUI Select internally); pair with child <MenuItem>s."
+    },
+    {
+      "name": "slotProps",
+      "type": "{ input?: object; htmlInput?: object; inputLabel?: object; htmlInput?: object; formHelperText?: object; select?: object; }",
+      "required": false,
+      "description": "MUI v9's slot-props API — the real way to pass adornments (input.startAdornment/endAdornment), native <input> attributes (htmlInput), etc. Replaces the deprecated InputProps/inputProps."
+    },
+    {
+      "name": "fullWidth",
+      "type": "boolean",
+      "required": false,
+      "description": "Stretches the field to the width of its container."
+    },
+    {
+      "name": "autoFocus",
+      "type": "boolean",
+      "required": false,
+      "description": "Focuses the field on mount."
     }
   ],
   "doThis": [
     "Always show a label; keep it visible when filled.",
-    "Write specific, helpful error text (\"Enter a value\", not \"Invalid\").",
-    "Use one field style per form.",
-    "Right-size width to the expected content."
+    "Write specific, helpful error text (\"Enter a value\", not \"Invalid\") via helperText + error.",
+    "Use one field variant per form.",
+    "Use slotProps.input for adornments, not the deprecated InputProps."
   ],
   "dontDoThis": [
     "Don't use placeholder text as the only label.",
     "Don't mix filled and outlined in the same form.",
-    "Don't rely on colour alone for errors — include text."
+    "Don't rely on colour alone for errors — include helperText.",
+    "Don't reach for MUI's legacy InputProps/inputProps — this codebase is on MUI v9's slotProps."
   ],
   "accessibility": [
-    "Every field has a programmatic <label>; errors are linked via aria-describedby and announced.",
+    "Every field has a programmatic <label> (via MUI's InputLabel + htmlFor wiring); errors are linked via aria-describedby and announced.",
     "Focus is clearly visible.",
     "Required and invalid states use aria-required / aria-invalid, not colour alone."
   ],
   "related": [
     {
-      "name": "Picker",
-      "why": "Dates and times pick better than they type"
+      "name": "DatePicker",
+      "why": "Dates and times pick better than they type — DatePicker composes its own TextField internally via slotProps.textField"
     },
     {
       "name": "Slider",
       "why": "Approximate values within a visible range"
     },
     {
-      "name": "Menu",
-      "why": "Constrained choices — use a select"
-    },
-    {
       "name": "Icon",
-      "why": "leadingIcon/trailingIcon take a registered FontAwesome name, not a Material ligature"
+      "why": "Adornment icons come from the FontAwesome Icon wrapper, not a Material ligature"
     }
   ]
 }

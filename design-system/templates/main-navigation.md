@@ -11,7 +11,7 @@ Fixed-height flex column, full viewport height: Header (logo + collapse toggle) 
 - Tooltip — flyout sub-item panel when the rail is collapsed (or when a row is momentarily closed while expanded); also wraps truncated item labels so the full text is available on hover.
 - Chip — "Beta" / "New" badges on a row's label; a numeric Badge on the Alerts / Engine Faults / Help footer icons shows outstanding counts.
 - No dedicated Icon component exists yet (tracked gap, see Components — Images and icons) — each row's icon is an individual MUI icon wrapped in a plain SvgIcon, not a shared Icon component.
-- Not built from NavigationDrawer or NavigationRail — this pattern is its own implementation on top of the third-party `react-pro-sidebar` library. Those two documented components have zero real usage elsewhere in the app (confirmed 2026-07-20 gap analysis) and should not be assumed to back this pattern.
+- Not built from Drawer or NavigationRail — this pattern is its own implementation on top of the third-party `react-pro-sidebar` library. Those two documented components have zero real usage elsewhere in the app (confirmed 2026-07-20 gap analysis) and should not be assumed to back this pattern.
 
 ## Structure rules
 

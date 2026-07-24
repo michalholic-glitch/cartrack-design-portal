@@ -1,48 +1,30 @@
-import React, { useId } from 'react';
-
-export interface TooltipProps {
-  /** Plain = a short label naming/clarifying the trigger. Truncation reveal = shows the full value when text is clipped. */
-  variant?: 'plain' | 'truncation';
-  /** Concise text (ideally a few words). */
-  label: string;
-  /** The trigger element being described (icon button, truncated text). Cloned to receive aria-describedby. */
-  children: React.ReactElement;
-}
+import * as React from 'react';
+import MuiTooltip from '@mui/material/Tooltip';
+import type { TooltipProps as MuiTooltipProps } from '@mui/material/Tooltip';
 
 /**
- * Tooltip — MD2 (MDC) Cartrack-themed.
+ * Tooltip — Material UI v9 (Cartrack-themed via @karoo-ui/core).
  * Full spec: Tooltip.doc.json
- * Mirrors the mdc-tooltip class contract from md2-cartrack-library/components/tooltips.html.
+ * Mirrors @karoo-ui/core's real wrapper (libs/shared/js/karoo-ui/core/src/lib/Tooltip/index.tsx),
+ * which wraps @mui/material/Tooltip and defaults `arrow` to `true` — Cartrack's design
+ * guidelines call for tooltips to always show an arrow by default (still overridable per
+ * instance). Every other prop passes straight through unmodified.
  * Tokens (tokens/tokens.json):
- * - radius: semantic.radius.default (4px — exact match).
- * - color: semantic.color.surface.inverse / .onInverse (added 2026-07-16, shared with Snackbar.tsx
- *   — use the same solid #323232 rather than this component's own separate "~92% opacity" grey;
- *   apply opacity on top of the token, e.g. via a CSS alpha layer, if the translucent look matters).
- * - spacing: the vague "~6px" padding resolves cleanly to the real MD2 tooltip spec once split by
- *   axis — semantic.spacing.xs (4px) block, semantic.spacing.sm (8px) inline — no new token needed.
- * Not yet tokenized: ~10px text (below caption's 12px) is still outside the scale; that's normal
- * design tolerance, not a gap worth a new token for.
+ * - color: semantic.color.surface.inverse / semantic.color.surface.onInverse — MUI's own
+ *   real default tooltip surface (grey 700 @ 92% opacity, white text), reused here as the
+ *   app's one canonical dark/inverse surface.
+ * - spacing: semantic.spacing.xs / semantic.spacing.sm approximate MUI's built-in
+ *   padding (~4px/8px) and radius (theme.shape.borderRadius, 4px) — not separately tokenized.
+ * - delays: real MUI defaults (enterDelay 100ms, leaveDelay 0ms) are NOT overridden by the
+ *   karoo-ui wrapper — only `arrow` is.
  */
-export function Tooltip({ variant = 'plain', label, children }: TooltipProps) {
-  const tooltipId = useId();
+export type TooltipProps = MuiTooltipProps;
 
-  const trigger = React.cloneElement(children, {
-    'aria-describedby': tooltipId,
-  });
-
-  return (
-    <>
-      {trigger}
-      <div
-        id={tooltipId}
-        className={`mdc-tooltip${variant === 'truncation' ? ' mdc-tooltip--truncation' : ''}`}
-        role="tooltip"
-        aria-hidden="true"
-      >
-        <div className="mdc-tooltip__surface mdc-tooltip__surface-animation">{label}</div>
-      </div>
-    </>
-  );
-}
+export const Tooltip = React.forwardRef<unknown, TooltipProps>(function Tooltip(
+  { arrow = true, ...props },
+  ref,
+) {
+  return <MuiTooltip {...props} arrow={arrow} ref={ref} />;
+});
 
 export default Tooltip;

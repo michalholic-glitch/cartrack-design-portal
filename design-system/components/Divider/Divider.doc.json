@@ -3,36 +3,36 @@
   "category": "Text and data display",
   "status": "stable",
   "aaReviewed": "2026-07-16",
-  "library": "Material Components Web (MDC) 14.0.0 — Cartrack-themed",
-  "source": "md2-cartrack-library/components/dividers.html",
+  "library": "Material UI (MUI) v9 — Cartrack-themed via @karoo-ui/core",
+  "source": "libs/shared/js/karoo-ui/core/src/lib/Divider/index.tsx (real fleet-web source, wraps @mui/material/Divider)",
   "description": "A divider is a thin line that separates and groups content — between list items, sections of a form, or regions of a dense layout. Used sparingly, it brings order without adding weight.",
-  "keyRule": "Reach for whitespace and grouping first; add a divider only where a clear boundary helps. Too many lines make a layout feel busy.",
+  "keyRule": "Reach for whitespace and grouping first; add a divider only where a clear boundary helps. Too many lines make a layout feel busy. Note: 'vertical' is not a `variant` value in real MUI — it's a separate `orientation` prop.",
   "variants": [
     {
       "name": "Full-width",
-      "whenToUse": "Separate major sections edge to edge."
+      "whenToUse": "`variant=\"fullWidth\"` (real MUI default) — separate major sections edge to edge."
     },
     {
       "name": "Inset",
-      "whenToUse": "Between list items, aligned past the leading element."
+      "whenToUse": "`variant=\"inset\"` — between list items; MUI applies a fixed 72px left margin (aligned past a typical 40px avatar)."
     },
     {
       "name": "Middle",
-      "whenToUse": "Indented on both sides for a lighter separation."
-    },
-    {
-      "name": "Vertical",
-      "whenToUse": "Separate inline items in a toolbar."
+      "whenToUse": "`variant=\"middle\"` — indented 16px on both sides for a lighter separation."
     }
   ],
   "anatomy": [
     {
       "name": "Line",
-      "description": "1px rule in the divider colour."
+      "description": "1px rule in the divider colour, rendered as an <hr> by default."
     },
     {
-      "name": "Inset",
-      "description": "optional left/right indentation to align with content (e.g. past an avatar)."
+      "name": "orientation",
+      "description": "'horizontal' (default) or 'vertical' — a separate prop from variant, e.g. for separating inline toolbar items (pair with `flexItem` inside a flex container)."
+    },
+    {
+      "name": "children / textAlign",
+      "description": "optional text content within the divider line (e.g. \"OR\"), aligned via `textAlign` ('center' default, 'left', 'right')."
     }
   ],
   "behaviors": [
@@ -43,6 +43,10 @@
     {
       "name": "Inset alignment",
       "description": "Inset dividers align with the text column so the eye reads a clean left edge."
+    },
+    {
+      "name": "Vertical in flex layouts",
+      "description": "Set `flexItem` when using `orientation=\"vertical\"` inside a flex container — without it, a vertical divider collapses to 0px height."
     }
   ],
   "states": [
@@ -54,15 +58,19 @@
   "specs": [
     {
       "property": "Thickness",
-      "value": "1px"
+      "value": "1px (semantic.borderWidth.hairline)"
     },
     {
       "property": "Colour",
-      "value": "rgba(0,0,0,.12) (divider token)"
+      "value": "rgba(0,0,0,.12) (semantic.color.border.default — MUI's own real default, unmodified)"
     },
     {
-      "property": "Inset",
-      "value": "16px (or aligned to content, e.g. 72px past an avatar)"
+      "property": "Inset margin",
+      "value": "72px left margin (variant=\"inset\", MUI's built-in value, aligns past a 40px avatar)"
+    },
+    {
+      "property": "Middle margin",
+      "value": "16px both sides (variant=\"middle\")"
     }
   ],
   "tokens": [
@@ -73,15 +81,39 @@
   "props": [
     {
       "name": "variant",
-      "type": "'full-width' | 'inset' | 'middle' | 'vertical'",
+      "type": "'fullWidth' | 'inset' | 'middle'",
       "required": false,
-      "description": "Which divider treatment to render; derived from the spec's Variants table (full-width, inset, middle, vertical)."
+      "description": "Which margin treatment to render. Default 'fullWidth'."
     },
     {
-      "name": "className",
-      "type": "string",
+      "name": "orientation",
+      "type": "'horizontal' | 'vertical'",
       "required": false,
-      "description": "Optional extra class names to compose with the base divider class."
+      "description": "Default 'horizontal'. Pair vertical with flexItem inside flex containers."
+    },
+    {
+      "name": "flexItem",
+      "type": "boolean",
+      "required": false,
+      "description": "Ensures a vertical divider has correct height as a flex child. Default false."
+    },
+    {
+      "name": "absolute",
+      "type": "boolean",
+      "required": false,
+      "description": "Absolutely positions the divider. Default false."
+    },
+    {
+      "name": "textAlign",
+      "type": "'center' | 'left' | 'right'",
+      "required": false,
+      "description": "Alignment of optional children text within the divider line. Default 'center'."
+    },
+    {
+      "name": "children",
+      "type": "React.ReactNode",
+      "required": false,
+      "description": "Optional text/content rendered inline within the divider (e.g. \"OR\")."
     }
   ],
   "doThis": [
@@ -92,11 +124,11 @@
   "dontDoThis": [
     "Don't put a divider between every list row.",
     "Don't use heavy or coloured rules for plain separation.",
-    "Don't rely on a divider to convey meaning by itself."
+    "Don't rely on a divider to convey meaning by itself.",
+    "Don't pass 'vertical' as `variant` — it's the separate `orientation` prop."
   ],
   "accessibility": [
-    "Decorative dividers are hidden from assistive tech.",
-    "A divider that genuinely separates groups can use a separator role.",
+    "A purely decorative divider (default) is rendered as an <hr>, exposed to assistive tech as a separator automatically.",
     "Never use a line as the only way to convey structure — pair with headings/labels."
   ],
   "related": [
@@ -105,7 +137,7 @@
       "why": "Use the inset variant between list items"
     },
     {
-      "name": "ExpansionPanel",
+      "name": "Accordion",
       "why": "Prefer structured grouping over long divider runs"
     }
   ]

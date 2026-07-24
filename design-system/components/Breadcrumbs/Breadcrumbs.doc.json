@@ -3,109 +3,130 @@
   "category": "Navigation",
   "status": "stable",
   "aaReviewed": "2026-07-16",
-  "library": "Material Components Web (MDC) 14.0.0 — Cartrack-themed",
-  "source": "md2-cartrack-library/components/breadcrumbs.html",
+  "library": "Material UI (MUI) v9 — Cartrack-themed via @karoo-ui/core",
+  "source": "libs/shared/js/karoo-ui/core/src/lib/Breadcrumbs/index.tsx (real fleet-web source, wraps @mui/material/Breadcrumbs)",
   "description": "Breadcrumbs show where the operator is within the portal's hierarchy and let them step back up it — from a single vehicle, to the vehicle list, to the fleet. They orient users in deep desktop navigation.",
-  "keyRule": "Use breadcrumbs when content sits more than one level deep. They complement — not replace — the left navigation drawer.",
+  "keyRule": "Use breadcrumbs when content sits more than one level deep. They complement — not replace — the left navigation drawer. Breadcrumbs renders whatever `children` you pass (typically `Link`/`Typography` elements) with its own separators — it does not take a data prop.",
   "variants": [
     {
       "name": "Standard",
-      "whenToUse": "Show the full path for shallow hierarchies."
+      "whenToUse": "Show the full path for shallow hierarchies — render one child per level."
     },
     {
       "name": "Collapsed",
-      "whenToUse": "Hide middle levels behind \"…\" for deep paths."
+      "whenToUse": "`maxItems` triggers automatic collapse of the middle levels behind an expandable \"…\" once the path exceeds it (default 8)."
     },
     {
-      "name": "With menu crumb",
-      "whenToUse": "A crumb opens a menu of sibling pages."
+      "name": "Custom separator",
+      "whenToUse": "Pass a custom `separator` node (icon, different glyph) instead of the default \"/\"."
     }
   ],
   "anatomy": [
     {
-      "name": "Crumb link",
-      "description": "an ancestor level (navigates up)."
+      "name": "Crumb child",
+      "description": "each `children` element is an ancestor level — typically a `Link` (navigates up) or plain `Typography` for the current page."
     },
     {
       "name": "Separator",
-      "description": "a divider glyph between crumbs."
+      "description": "`separator` prop, default \"/\", rendered between each pair of children — decorative, hidden from assistive tech."
     },
     {
       "name": "Current page",
-      "description": "the last crumb, not a link."
+      "description": "the last child, conventionally rendered as non-link `Typography` with `aria-current=\"page\"`."
     },
     {
-      "name": "Overflow",
-      "description": "optional collapse (\"…\") for very deep paths."
+      "name": "Collapse control",
+      "description": "when `maxItems` is exceeded, an expand button (labelled via `expandText`, default \"Show path\") reveals the hidden middle items."
     }
   ],
   "behaviors": [
     {
       "name": "Navigation",
-      "description": "Each crumb except the last navigates to that ancestor; the current page is plain text."
+      "description": "Each crumb except the last is conventionally a link that navigates to that ancestor; the current page is plain text — Breadcrumbs doesn't enforce this, it's a usage convention."
+    },
+    {
+      "name": "Collapse",
+      "description": "`itemsBeforeCollapse` (default 1) and `itemsAfterCollapse` (default 1) control how many crumbs stay visible around the collapsed \"…\" when `maxItems` is exceeded."
     },
     {
       "name": "Truncation",
-      "description": "Long labels truncate with a tooltip; deep paths collapse the middle."
+      "description": "Long labels aren't truncated by Breadcrumbs itself — wrap long crumb text with your own text-overflow/Tooltip handling."
     }
   ],
   "states": [
     {
       "state": "Link",
-      "treatment": "On-surface-medium; underlines on hover."
+      "treatment": "on-surface-medium; underlines on hover (styling of the Link child, not Breadcrumbs itself)."
     },
     {
       "state": "Current",
-      "treatment": "On-surface, not a link."
+      "treatment": "on-surface, not a link."
     },
     {
-      "state": "Focus",
-      "treatment": "Visible focus on each link."
+      "state": "Collapsed",
+      "treatment": "middle crumbs replaced by an expand ellipsis button until clicked."
     }
   ],
   "specs": [
     {
       "property": "Text",
-      "value": "Roboto 14px / 400"
+      "value": "Roboto 14px / 400 (semantic.typography.scale.body2 — the app-wide default Typography variant); Breadcrumbs itself has no text styling, it inherits from its children"
     },
     {
       "property": "Separator spacing",
-      "value": "~8px each side"
+      "value": "8px each side (MUI's built-in theme.spacing(1) margin)"
     },
     {
       "property": "Link colour",
-      "value": "on-surface-medium → primary-dark on hover"
+      "value": "on-surface-medium → primary-dark on hover (styling applied to the Link child)"
     }
   ],
   "tokens": [
     "semantic.color.text.secondary",
     "semantic.color.brand.primary.dark",
-    "semantic.spacing.sm",
     "semantic.typography.scale.body2"
   ],
   "props": [
     {
-      "name": "items",
-      "type": "BreadcrumbItem[]",
+      "name": "children",
+      "type": "React.ReactNode",
       "required": true,
-      "description": "Full ancestor path, ending with the current page."
+      "description": "The full ancestor path as a list of elements (Link/Typography), ending with the current page. There is no `items` array prop — Breadcrumbs renders children directly."
     },
     {
       "name": "separator",
-      "type": "string",
+      "type": "React.ReactNode",
       "required": false,
-      "description": "Separator glyph between crumbs (decorative, hidden from assistive tech)."
+      "description": "Custom separator node between crumbs. Default \"/\"."
     },
     {
-      "name": "maxVisible",
+      "name": "maxItems",
       "type": "number",
       "required": false,
-      "description": "Collapse middle levels behind \"…\" for deep paths."
+      "description": "Max crumbs to show before collapsing the middle behind \"…\". Default 8."
+    },
+    {
+      "name": "itemsBeforeCollapse",
+      "type": "number",
+      "required": false,
+      "description": "How many leading crumbs stay visible when collapsed. Default 1."
+    },
+    {
+      "name": "itemsAfterCollapse",
+      "type": "number",
+      "required": false,
+      "description": "How many trailing crumbs stay visible when collapsed. Default 1."
+    },
+    {
+      "name": "expandText",
+      "type": "string",
+      "required": false,
+      "description": "Accessible label for the collapse-expand button. Default 'Show path'."
     }
   ],
   "doThis": [
-    "Make the current page the non-link last crumb.",
-    "Collapse very deep paths.",
+    "Make the current page the non-link last crumb, with aria-current=\"page\".",
+    "Let `maxItems` collapse very deep paths instead of hand-rolling truncation.",
     "Mirror the real IA hierarchy."
   ],
   "dontDoThis": [
@@ -114,9 +135,9 @@
     "Don't make the current page a link to itself."
   ],
   "accessibility": [
-    "Wrap in a nav labelled \"Breadcrumb\" with an ordered list.",
-    "The current page uses aria-current=\"page\".",
-    "Separators are decorative (hidden from assistive tech).",
+    "Breadcrumbs renders a <nav aria-label=\"breadcrumb\"> wrapping an <ol> automatically.",
+    "The current page should carry aria-current=\"page\" (set it on your Typography child — Breadcrumbs doesn't add it for you).",
+    "Separators are decorative (hidden from assistive tech) automatically.",
     "Links are keyboard reachable with visible focus."
   ],
   "related": [

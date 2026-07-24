@@ -1,149 +1,65 @@
-import React, { useId } from 'react';
+import React from 'react';
+import MuiTextField, {
+  type TextFieldProps as MuiTextFieldProps,
+} from '@mui/material/TextField';
 
-export interface TextFieldProps {
-  /** Filled suits dense, settings-style lists; outlined is the Cartrack portal's default for forms. */
-  variant?: 'filled' | 'outlined';
-  label: string;
-  value: string;
-  onChange?: (value: string) => void;
-  /** Helper text below the field; replaced by the error message when error is set. */
-  helperText?: string;
-  /** Concise, specific error text (e.g. "Enter a value", not "Invalid"). Also flips the field into the error state. */
-  error?: string;
-  disabled?: boolean;
+export type TextFieldProps = MuiTextFieldProps & {
+  /**
+   * Prevents the user from changing the field's value (but not from
+   * interacting with/focusing/copying from it) — mirrors the real karoo-ui
+   * convenience prop, which sets this on both slotProps.input and
+   * slotProps.htmlInput because MUI v9 supports readOnly in both places
+   * and Autocomplete only wires the htmlInput one.
+   */
   readOnly?: boolean;
-  required?: boolean;
-  /** Underlying input type for single-line fields; ignored when multiline is true. */
-  type?: 'text' | 'password' | 'search' | 'number';
-  /** Leading Material icon ligature, e.g. "search". */
-  leadingIcon?: string;
-  /** Trailing Material icon ligature, e.g. "clear" or a unit like "km". */
-  trailingIcon?: string;
-  /** Renders a textarea that grows with content instead of a single-line input. */
-  multiline?: boolean;
-  rows?: number;
-}
+};
 
 /**
- * TextField — MD2 (MDC) Cartrack-themed.
+ * TextField — Material UI (MUI) v9, Cartrack-themed via @karoo-ui/core.
  * Full spec: TextField.doc.json
- * Mirrors the mdc-text-field class contract from md2-cartrack-library/components/text-fields.html.
+ * Real source: libs/shared/js/karoo-ui/core/src/lib/TextField/index.tsx.
+ * Overrides actually applied by karoo-ui's wrapper (both reproduced here):
+ * - size defaults to 'small' (fleet-web's form-density convention; see
+ *   theme.ts's MuiCheckbox/MuiRadio/MuiSwitch/MuiChip size:'small' defaults
+ *   for the same pattern elsewhere in the theme).
+ * - readOnly is a plain top-level convenience prop that, when set, is
+ *   pushed into BOTH slotProps.input.readOnly and slotProps.htmlInput.readOnly
+ *   for predictable behaviour across MUI v9's two possible readOnly locations.
+ * Not reproduced: karoo-ui's KarooFormStateContext, which lets a parent
+ * form disable/read-only every field at once — that's an internal
+ * workspace context (../KarooFormStateContext), dropped here for portability.
  * Tokens (tokens/tokens.json):
  * - radius: semantic.radius.default (4px).
- * - color: semantic.color.brand.primary.dark (focus border/line — .dark, not .main, keeps the
- *   line legible on white per the spec's own note), semantic.color.status.error.main (error state).
- * - type: semantic.typography.scale.body1 (16px/400 input text), semantic.typography.scale.caption
- *   (12px supporting text and floated label — exact matches).
- * Not yet tokenized: ~56px field height and the label's resting size (16px, matching body1) have
- * no dedicated tokens beyond what's already listed.
+ * - color: semantic.color.brand.primary.dark (focus/active line — .dark, not
+ *   .main, keeps the line legible; see tokens.json's accessibility.knownIssues),
+ *   semantic.color.status.error.main (error state).
+ * - type: semantic.typography.scale.body1 (input text), .caption (helper/error text).
  */
-export function TextField({
-  variant = 'outlined',
-  label,
-  value,
-  onChange,
-  helperText,
-  error,
-  disabled = false,
-  readOnly = false,
-  required = false,
-  type = 'text',
-  leadingIcon,
-  trailingIcon,
-  multiline = false,
-  rows = 3,
-}: TextFieldProps) {
-  const labelId = useId();
-  const supportingId = useId();
-  const isFilled = variant === 'filled';
-  const hasError = Boolean(error);
-
-  // MDC's text-field foundation (JS) toggles the label-float and focus classes at
-  // runtime; without them the label sits over the typed value. This repo ships no
-  // MDC JS, so the component derives them from its own state (same JS-less pattern
-  // as Slider/Banner/ProgressIndicator).
-  const [focused, setFocused] = React.useState(false);
-  const floating = focused || Boolean(value);
-
-  const fieldClass = [
-    'mdc-text-field',
-    isFilled ? 'mdc-text-field--filled' : 'mdc-text-field--outlined',
-    multiline ? 'mdc-text-field--textarea' : '',
-    leadingIcon ? 'mdc-text-field--with-leading-icon' : '',
-    trailingIcon ? 'mdc-text-field--with-trailing-icon' : '',
-    disabled ? 'mdc-text-field--disabled' : '',
-    hasError ? 'mdc-text-field--invalid' : '',
-    focused ? 'mdc-text-field--focused' : '',
-    floating ? 'mdc-text-field--label-floating' : '',
-  ]
-    .filter(Boolean)
-    .join(' ');
-
-  const floatingLabelClass = `mdc-floating-label${floating ? ' mdc-floating-label--float-above' : ''}`;
-
-  const inputProps = {
-    className: 'mdc-text-field__input',
-    'aria-labelledby': labelId,
-    'aria-describedby': helperText || error ? supportingId : undefined,
-    'aria-required': required || undefined,
-    'aria-invalid': hasError || undefined,
-    value,
-    disabled,
-    readOnly,
-    onChange: (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => onChange?.(e.target.value),
-    onFocus: () => setFocused(true),
-    onBlur: () => setFocused(false),
-  };
+export const TextField = React.forwardRef<HTMLDivElement, TextFieldProps>(function TextField(
+  { size = 'small', readOnly, slotProps, ...props }: TextFieldProps,
+  ref,
+) {
+  const slotPropsInput = slotProps?.input;
+  const slotPropsHtmlInput = slotProps?.htmlInput;
 
   return (
-    <div>
-      <label className={fieldClass}>
-        {isFilled ? <span className="mdc-text-field__ripple" /> : null}
-        {leadingIcon ? (
-          <span className="mdc-text-field__icon mdc-text-field__icon--leading material-icons">{leadingIcon}</span>
-        ) : null}
-
-        {isFilled ? (
-          <span className={floatingLabelClass} id={labelId}>
-            {label}
-          </span>
-        ) : (
-          <span className={`mdc-notched-outline${floating ? ' mdc-notched-outline--notched' : ''}`}>
-            <span className="mdc-notched-outline__leading" />
-            <span className="mdc-notched-outline__notch">
-              <span className={floatingLabelClass} id={labelId}>
-                {label}
-              </span>
-            </span>
-            <span className="mdc-notched-outline__trailing" />
-          </span>
-        )}
-
-        {multiline ? (
-          <textarea rows={rows} {...inputProps} />
-        ) : (
-          <input type={type} {...inputProps} />
-        )}
-
-        {trailingIcon ? (
-          <span className="mdc-text-field__icon mdc-text-field__icon--trailing material-icons">{trailingIcon}</span>
-        ) : null}
-
-        {isFilled ? <span className="mdc-line-ripple" /> : null}
-      </label>
-
-      {helperText || error ? (
-        <div className="mdc-text-field-helper-line">
-          <div
-            id={supportingId}
-            className={`mdc-text-field-helper-text${hasError ? ' mdc-text-field-helper-text--validation-msg' : ''}`}
-          >
-            {error ?? helperText}
-          </div>
-        </div>
-      ) : null}
-    </div>
+    <MuiTextField
+      ref={ref}
+      size={size}
+      slotProps={{
+        ...slotProps,
+        htmlInput:
+          readOnly !== undefined
+            ? { ...slotPropsHtmlInput, readOnly }
+            : slotPropsHtmlInput,
+        input:
+          readOnly !== undefined
+            ? { ...slotPropsInput, readOnly }
+            : slotPropsInput,
+      }}
+      {...props}
+    />
   );
-}
+});
 
 export default TextField;

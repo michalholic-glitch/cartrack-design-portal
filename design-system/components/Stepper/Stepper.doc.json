@@ -2,150 +2,201 @@
   "name": "Stepper",
   "category": "Status indicators",
   "status": "stable",
-  "aaReviewed": "2026-07-16",
-  "library": "Material Components Web (MDC) 14.0.0 — Cartrack-themed",
-  "source": "md2-cartrack-library/components/steppers.html",
-  "description": "A stepper guides an operator through a task in ordered steps — onboarding a new vehicle, building a report, running a bulk assignment. It shows progress and what's left to do.",
-  "keyRule": "Use a stepper for a sequence that benefits from being broken up and tracked. For peer views with no order, use tabs instead.",
+  "aaReviewed": "2026-07-24",
+  "library": "Material UI (MUI) v9 — Cartrack-themed via @karoo-ui/core",
+  "source": "libs/shared/js/karoo-ui/core/src/lib/Stepper/index.tsx (real fleet-web source, wraps @mui/material/Stepper)",
+  "description": "A stepper guides an operator through a task in ordered steps — onboarding a new vehicle, building a report, running a bulk assignment. It shows progress and what's left to do. Stepper itself is the outer shell; each step is composed as a real @mui/material/Step child, typically containing a StepLabel (icon + label).",
+  "keyRule": "Use a stepper for a sequence that benefits from being broken up and tracked. For peer views with no order, use Tabs instead.",
+  "correction": "1:1 name match with the old component, but the old Stepper.tsx invented a `steps: StepperStep[]` array prop and derived each step's completed/active/upcoming/error state itself, mirroring a custom Cartrack `.stepper2` markup because MDC Web has no stock stepper component. The real @mui/material/Stepper takes ordinary React `children` (one Step per step) and drives active/completed state via its own `activeStep` index passed through context — there is no `steps` array prop and no per-step 'error' state on Stepper or Step (error styling is StepLabel's own `error` prop).",
   "variants": [
     {
       "name": "Horizontal",
-      "whenToUse": "A few steps with short labels; fits across the top."
+      "whenToUse": "A few steps with short labels; fits across the top. Default orientation."
     },
     {
       "name": "Vertical",
-      "whenToUse": "Steps with more content; content expands under each."
+      "whenToUse": "Steps with more content; pair with StepContent, which expands under each active step. Set orientation=\"vertical\"."
     },
     {
       "name": "Linear",
-      "whenToUse": "Steps must be completed in order."
+      "whenToUse": "Steps must be completed in order. Default (`nonLinear` is false)."
     },
     {
       "name": "Non-linear",
-      "whenToUse": "Operators may jump between steps freely."
+      "whenToUse": "Operators may jump between steps freely. Set `nonLinear`, and make each Step's header a StepButton so it's clickable."
+    },
+    {
+      "name": "Alternative label",
+      "whenToUse": "Horizontal stepper where the label sits under the icon rather than beside it. Set `alternativeLabel`."
     }
   ],
   "anatomy": [
     {
-      "name": "Step indicator",
-      "description": "a numbered/checked circle per step."
+      "name": "Stepper (root)",
+      "description": "the outer container; owns `activeStep`, `orientation`, `nonLinear`, `alternativeLabel`, and the `connector` used between steps."
     },
     {
-      "name": "Step label",
-      "description": "the step's name (and optional sub-text)."
+      "name": "Step (sub-component, per step)",
+      "description": "@mui/material/Step — one required per step, rendered as a Stepper child. Accepts `completed`, `active` (usually left to auto-derive from Stepper's activeStep), `disabled`, and `index`/`last` (managed internally)."
     },
     {
-      "name": "Connector",
-      "description": "the line linking steps."
+      "name": "StepLabel (sub-component)",
+      "description": "@mui/material/StepLabel — the icon + label (+ optional secondary/subtext via `optional`) inside a Step. Its `error` prop is the real way to show an error state on a step; Stepper/Step have no separate error prop."
     },
     {
-      "name": "Step content",
-      "description": "the fields/actions for the active step."
+      "name": "StepConnector (sub-component)",
+      "description": "the line linking steps; default rendering, replaceable via Stepper's `connector` prop."
     },
     {
-      "name": "Navigation",
-      "description": "Back / Next (and Finish) controls."
+      "name": "StepContent (sub-component, vertical only)",
+      "description": "the expandable body shown under the active step in a vertical stepper — holds the fields/actions for that step."
+    },
+    {
+      "name": "StepButton (sub-component, optional)",
+      "description": "a clickable step header, used instead of a plain StepLabel to support non-linear navigation."
+    },
+    {
+      "name": "Navigation (external)",
+      "description": "Back / Next / Finish controls are not part of Stepper at all — build them yourself (e.g. plain Buttons) and drive `activeStep` from your own state."
     }
   ],
   "behaviors": [
     {
-      "name": "Progress",
-      "description": "Completed steps show a check; the active step is highlighted; upcoming steps are muted."
+      "name": "Progress via activeStep",
+      "description": "Stepper passes its `activeStep` index down through context; each Step compares its own position to it to render as completed (index < activeStep), active (index === activeStep), or upcoming (index > activeStep) — unless a Step explicitly overrides `completed`/`active` itself."
     },
     {
-      "name": "Validation",
-      "description": "In a linear stepper, a step must be valid before Next; show errors on the step that needs attention."
+      "name": "Validation (not built in)",
+      "description": "Stepper has no validation logic. In a linear flow, the consumer must decide when it's valid to increment `activeStep`, and surface errors via StepLabel's `error` prop on the affected step."
     },
     {
-      "name": "Back/skip",
-      "description": "Allow going back; mark optional steps as skippable where appropriate."
+      "name": "Back/skip (not built in)",
+      "description": "Going back, skipping optional steps, and Finish behavior are all consumer-built — Stepper only tracks and displays which step is active; it exposes no Back/Next/Skip API."
     }
   ],
   "states": [
     {
       "state": "Completed",
-      "treatment": "Primary circle with a check."
+      "treatment": "Primary-coloured StepIcon with a check mark (auto-derived from activeStep, or explicit Step `completed` prop)."
     },
     {
       "state": "Active",
-      "treatment": "Primary circle with the step number; bold label."
+      "treatment": "Primary-coloured StepIcon with the step number; bold label (a fontWeight override on top of the base label typography, not a distinct MUI variant)."
     },
     {
       "state": "Upcoming",
-      "treatment": "Muted circle/label."
+      "treatment": "Muted/disabled-toned StepIcon and label."
     },
     {
       "state": "Error",
-      "treatment": "Error-colour indicator on the affected step."
+      "treatment": "Set via StepLabel's own `error` prop on the affected step — there is no Stepper- or Step-level error state."
+    },
+    {
+      "state": "Disabled",
+      "treatment": "Set per-Step via its `disabled` prop; dims that step and (with StepButton) prevents clicking it."
     }
   ],
   "specs": [
     {
-      "property": "Indicator",
-      "value": "24px circle; primary when active/done"
+      "property": "StepIcon",
+      "value": "~24px circle (SVG icon component, filled/outlined per state) — an SVG shape, not a CSS border-radius element"
     },
     {
       "property": "Label",
-      "value": "Roboto 14px / 500 (active) / 400 (other)"
+      "value": "~14px/400 base (body2), with a ~500-weight CSS override applied for the active/completed label — not a switch to a distinct Typography variant"
     },
     {
       "property": "Connector",
-      "value": "1px divider line"
+      "value": "1px line by default (StepConnector), replaceable via the `connector` prop"
     }
   ],
   "tokens": [
     "semantic.color.brand.primary.main",
     "semantic.color.border.default",
-    "semantic.radius.pill",
-    "semantic.typography.scale.subtitle2",
     "semantic.typography.scale.body2"
   ],
   "props": [
     {
+      "name": "activeStep",
+      "type": "number",
+      "required": false,
+      "description": "Zero-based index of the current step. Default 0. Set to -1 to disable all steps."
+    },
+    {
+      "name": "children",
+      "type": "React.ReactNode",
+      "required": false,
+      "description": "Two or more @mui/material/Step components, one per step — replaces the old doc's `steps: StepperStep[]` array prop."
+    },
+    {
       "name": "orientation",
       "type": "'horizontal' | 'vertical'",
       "required": false,
-      "description": "Horizontal fits a few short-labelled steps across the top; vertical expands content under each step."
+      "description": "Default 'horizontal'."
     },
     {
-      "name": "linear",
+      "name": "nonLinear",
       "type": "boolean",
       "required": false,
-      "description": "Linear = steps must be completed in order. Non-linear = operators may jump between steps freely."
+      "description": "If true, Stepper won't assist in controlling steps for a linear flow — pair with StepButton for free navigation. Default false."
     },
     {
-      "name": "steps",
-      "type": "StepperStep[]",
-      "required": true,
-      "description": "The ordered list of steps with label, optional subLabel, and optional state override."
-    },
-    {
-      "name": "activeStep",
-      "type": "number",
-      "required": true,
-      "description": "Zero-based index of the current step."
-    },
-    {
-      "name": "onStepClick",
-      "type": "(index: number) => void",
+      "name": "alternativeLabel",
+      "type": "boolean",
       "required": false,
-      "description": "Called when a reachable step is clicked (non-linear, or a completed/current step in a linear flow)."
+      "description": "If true and orientation is horizontal, positions the step label under the icon instead of beside it. Default false."
+    },
+    {
+      "name": "connector",
+      "type": "React.ReactElement",
+      "required": false,
+      "description": "Element placed between each step. Default: <StepConnector />."
+    },
+    {
+      "name": "elevation",
+      "type": "number",
+      "required": false,
+      "description": "Historical Paper-shaped prop Stepper's types still accept for backward compatibility — the real Stepper root renders as a plain 'div' in current MUI, not a Paper, so this typically has no visible effect."
+    },
+    {
+      "name": "square",
+      "type": "boolean",
+      "required": false,
+      "description": "Same historical-compatibility caveat as `elevation` above."
+    },
+    {
+      "name": "variant",
+      "type": "'elevation' | 'outlined'",
+      "required": false,
+      "description": "Same historical-compatibility caveat as `elevation` above."
+    },
+    {
+      "name": "component",
+      "type": "React.ElementType",
+      "required": false,
+      "description": "Overrides the root element type. Default 'div'."
+    },
+    {
+      "name": "sx",
+      "type": "SxProps<Theme>",
+      "required": false,
+      "description": "Standard MUI style-override escape hatch."
     }
   ],
   "doThis": [
     "Keep steps few and clearly named.",
-    "Validate before advancing in a linear flow.",
-    "Let users go back."
+    "Validate before advancing activeStep in a linear flow, and surface the error on the relevant Step via StepLabel's error prop.",
+    "Build your own Back/Next controls that drive activeStep — Stepper renders state, it doesn't navigate for you."
   ],
   "dontDoThis": [
-    "Don't use a stepper for unordered, peer views.",
-    "Don't bury errors — surface them on the relevant step.",
+    "Don't use a Stepper for unordered, peer views — use Tabs.",
+    "Don't invent a `steps` array prop or per-step 'error' state on Stepper/Step (as the old doc did) — compose real Step/StepLabel children and use StepLabel's own error prop.",
     "Don't create long, dozen-step flows; split the task."
   ],
   "accessibility": [
-    "Convey the current step and total (\"Step 2 of 3\") to assistive tech; the active step uses aria-current=\"step\".",
-    "Steps are keyboard reachable (where navigable) with visible focus.",
-    "Errors are announced on their step."
+    "Convey the current step and total (\"Step 2 of 3\") to assistive tech — the active Step's icon/label area exposes aria-current=\"step\" internally.",
+    "If steps are reachable via StepButton, they're real interactive elements with keyboard support and visible focus.",
+    "Set StepLabel's `error` prop (not colour alone) so an errored step is announced, and add visible error text near the step content."
   ],
   "related": [
     {
@@ -153,8 +204,8 @@
       "why": "Non-linear peer sections"
     },
     {
-      "name": "ProgressIndicator",
-      "why": "Indeterminate waiting, not step progress"
+      "name": "LinearProgress",
+      "why": "Indeterminate/determinate progress display, not discrete named steps"
     }
   ]
 }

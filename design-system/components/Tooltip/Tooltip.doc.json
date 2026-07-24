@@ -3,74 +3,78 @@
   "category": "Overlays and layering",
   "status": "stable",
   "aaReviewed": "2026-07-16",
-  "library": "Material Components Web (MDC) 14.0.0 — Cartrack-themed",
-  "source": "md2-cartrack-library/components/tooltips.html",
-  "description": "Tooltips reveal a short text label on hover or focus — naming an icon-only button, or showing a value that's been truncated in a dense table. They're especially valuable on desktop, where hover exists.",
+  "library": "Material UI (MUI) v9 — Cartrack-themed via @karoo-ui/core",
+  "source": "libs/shared/js/karoo-ui/core/src/lib/Tooltip/index.tsx (real fleet-web source, wraps @mui/material/Tooltip)",
+  "description": "Tooltips reveal a short text label on hover or focus — naming an icon-only button, or showing a value that's been truncated in a dense table. They're especially valuable on desktop, where hover exists. The karoo-ui wrapper defaults `arrow` to true per Cartrack's design guidelines (real MUI default is false); every other prop is untouched.",
   "keyRule": "Use a tooltip for brief, supplementary text — an icon's name, a truncated cell's full value. Never put essential information or actions only in a tooltip.",
   "variants": [
     {
       "name": "Plain",
-      "whenToUse": "A short label naming or clarifying the trigger."
+      "whenToUse": "A short `title` naming or clarifying the trigger `children`."
     },
     {
-      "name": "Truncation reveal",
-      "whenToUse": "Shows the full value when text is clipped in a cell/label."
+      "name": "Truncation reveal (usage pattern)",
+      "whenToUse": "Wrap a truncated/clipped text element as `children` and pass its full value as `title` — there is no dedicated variant, just this usage."
     }
   ],
   "anatomy": [
     {
-      "name": "Trigger",
-      "description": "the element being described (icon button, truncated text)."
+      "name": "children",
+      "description": "the single React element being described (icon button, truncated text) — must accept a ref and forward extra props."
     },
     {
-      "name": "Container",
-      "description": "the small dark surface."
+      "name": "Popper / tooltip surface",
+      "description": "the small dark floating surface, positioned via Popper (`placement` prop)."
     },
     {
-      "name": "Label",
-      "description": "concise text (ideally a few words)."
+      "name": "title",
+      "description": "concise text/node (ideally a few words) shown inside the surface."
+    },
+    {
+      "name": "arrow",
+      "description": "optional pointer connecting the surface to the trigger — defaulted to visible by the karoo-ui wrapper."
     }
   ],
   "behaviors": [
     {
       "name": "Trigger",
-      "description": "Appears on hover and on keyboard focus; dismisses on blur/mouse-out or Escape."
+      "description": "Appears on hover and on keyboard focus by default; dismisses on blur/mouse-out or Escape. Disable individually via `disableHoverListener` / `disableFocusListener` / `disableTouchListener`."
     },
     {
       "name": "Delay",
-      "description": "A short enter delay avoids tooltip noise as the pointer moves across a toolbar."
+      "description": "`enterDelay` (real MUI default 100ms) and `leaveDelay` (default 0ms) control show/hide timing; `enterNextDelay` shortens the delay for consecutive tooltips."
     },
     {
       "name": "Positioning",
-      "description": "Flips to stay within the viewport; never covers its own trigger."
+      "description": "`placement` (default 'bottom') flips to stay within the viewport via the underlying Popper; never covers its own trigger."
     }
   ],
   "states": [
     {
       "state": "Hidden",
-      "treatment": "Not rendered until triggered."
+      "treatment": "Not rendered until triggered (or controlled via `open`)."
     },
     {
       "state": "Shown",
-      "treatment": "Dark surface, light text, near the trigger."
+      "treatment": "Dark surface, light text, near the trigger, with an arrow by default (Cartrack override)."
     }
   ],
   "specs": [
     {
       "property": "Background",
-      "value": "Dark grey (~92% opacity), white text (passes AA)"
+      "value": "grey 700 @ ~92% opacity (MUI's real unmodified default), white text — passes AA"
     },
     {
       "property": "Text",
-      "value": "Roboto ~10–12px"
+      "value": "Roboto ~11px (theme.typography.pxToRem(11), which resolves to 11px given this app's 14px htmlFontSize override)"
     },
     {
       "property": "Padding / radius",
-      "value": "~6px / 4px"
+      "value": "~4px 8px / 4px (theme.shape.borderRadius) — MUI's built-in values"
     },
     {
       "property": "Enter delay",
-      "value": "~150–500ms"
+      "value": "100ms (real MUI default, not overridden by karoo-ui)"
     }
   ],
   "tokens": [
@@ -82,44 +86,100 @@
   ],
   "props": [
     {
-      "name": "variant",
-      "type": "'plain' | 'truncation'",
-      "required": false,
-      "description": "Plain = a short label naming/clarifying the trigger. Truncation reveal = shows the full value when text is clipped."
-    },
-    {
-      "name": "label",
-      "type": "string",
+      "name": "title",
+      "type": "React.ReactNode",
       "required": true,
-      "description": "Concise text (ideally a few words)."
+      "description": "Concise tooltip text (ideally a few words). Zero-length/undefined/null/false are never displayed."
     },
     {
       "name": "children",
       "type": "React.ReactElement",
       "required": true,
-      "description": "The trigger element being described (icon button, truncated text); cloned to receive aria-describedby."
+      "description": "The single trigger element being described; it must forward a ref and spread extra props (icon button, span wrapping truncated text, etc.)."
+    },
+    {
+      "name": "arrow",
+      "type": "boolean",
+      "required": false,
+      "description": "Shows a pointer arrow. Real MUI default is false; the karoo-ui wrapper defaults this to true."
+    },
+    {
+      "name": "placement",
+      "type": "'top' | 'bottom' | 'left' | 'right' | 'top-start' | 'top-end' | ...",
+      "required": false,
+      "description": "Popper placement. Default 'bottom'."
+    },
+    {
+      "name": "open",
+      "type": "boolean",
+      "required": false,
+      "description": "Controlled open state. Pair with onOpen/onClose."
+    },
+    {
+      "name": "onOpen",
+      "type": "(event) => void",
+      "required": false,
+      "description": "Callback fired when the tooltip requests to open."
+    },
+    {
+      "name": "onClose",
+      "type": "(event) => void",
+      "required": false,
+      "description": "Callback fired when the tooltip requests to close."
+    },
+    {
+      "name": "disableHoverListener",
+      "type": "boolean",
+      "required": false,
+      "description": "Do not respond to hover events. Default false."
+    },
+    {
+      "name": "disableFocusListener",
+      "type": "boolean",
+      "required": false,
+      "description": "Do not respond to focus-visible events. Default false."
+    },
+    {
+      "name": "disableInteractive",
+      "type": "boolean",
+      "required": false,
+      "description": "Closes when the pointer moves onto the tooltip surface before leaveDelay expires. Default false."
+    },
+    {
+      "name": "enterDelay",
+      "type": "number",
+      "required": false,
+      "description": "Milliseconds before showing. Default 100."
+    },
+    {
+      "name": "leaveDelay",
+      "type": "number",
+      "required": false,
+      "description": "Milliseconds before hiding. Default 0."
+    },
+    {
+      "name": "followCursor",
+      "type": "boolean",
+      "required": false,
+      "description": "Tooltip follows the cursor over the wrapped element. Default false."
     }
   ],
   "doThis": [
-    "Label every icon-only button with a tooltip.",
-    "Keep text to a few words.",
-    "Trigger on focus too, not just hover."
+    "Label every icon-only button with a tooltip (via IconButton + Tooltip).",
+    "Keep title text to a few words.",
+    "Rely on the default focus + hover triggers — don't disable both."
   ],
   "dontDoThis": [
     "Don't put actions or essential info only in a tooltip.",
-    "Don't write long paragraphs.",
-    "Don't rely on hover alone (touch/keyboard need an alternative)."
+    "Don't write long paragraphs in `title`.",
+    "Don't rely on hover alone (touch/keyboard need the default focus/touch listeners left enabled)."
   ],
   "accessibility": [
-    "Associate the tooltip with its trigger (e.g. aria-describedby).",
-    "Show on focus as well as hover, and allow Escape to dismiss.",
-    "The icon button still needs its own accessible name."
+    "Tooltip associates itself with its trigger via aria-describedby (or aria-labelledby if `describeChild` is false, the default) automatically.",
+    "Shows on focus as well as hover by default, and Escape dismisses it.",
+    "The trigger still needs its own accessible name if it's icon-only (e.g. aria-label on an IconButton) — the tooltip title alone isn't always sufficient for all assistive tech paths."
   ],
   "related": [
-    {
-      "name": "Snackbar",
-      "why": "Feedback after an action, not on hover"
-    },
     {
       "name": "Badge",
       "why": "Persistent status/counts on an icon"

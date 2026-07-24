@@ -1,0 +1,152 @@
+{
+  "name": "CircularProgress",
+  "category": "Loading",
+  "status": "stable",
+  "aaReviewed": "2026-07-24",
+  "library": "Material UI (MUI) v9 — Cartrack-themed via @karoo-ui/core",
+  "source": "libs/shared/js/karoo-ui/core/src/lib/CircularProgress/index.tsx (real fleet-web source)",
+  "description": "A compact, inline \"working\" spinner — used where a linear bar doesn't fit (inside a button, next to a small control, or as a self-contained loading indicator). Split out of the old repo's single umbrella \"ProgressIndicator\" component: the real library has two separate components, CircularProgress and LinearProgress, not one component with a type prop switching between them. karoo-ui's wrapper is a bare re-export of MUI's <CircularProgress> — no overrides.",
+  "keyRule": "Use CircularProgress for a compact/inline indicator (inside a button, a card, a small region). Use determinate when you know the percentage; indeterminate (the default) when you don't. For content loading into a known layout, prefer a skeleton over a spinner.",
+  "variants": [
+    {
+      "name": "variant=\"indeterminate\" (default)",
+      "whenToUse": "A small inline \"working\" spinner where duration is unknown."
+    },
+    {
+      "name": "variant=\"determinate\"",
+      "whenToUse": "A compact, known-percentage indicator — pair with `value` (0-100)."
+    }
+  ],
+  "anatomy": [
+    {
+      "name": "Track/arc",
+      "description": "the circular stroke; for determinate it fills proportionally to `value`, for indeterminate it animates continuously."
+    }
+  ],
+  "behaviors": [
+    {
+      "name": "Determinate vs indeterminate",
+      "description": "Switch to variant=\"determinate\" as soon as a real percentage is available via `value`; don't fake progress. Stays indeterminate (the default) otherwise."
+    },
+    {
+      "name": "Delay",
+      "description": "For fast operations, delay showing a spinner briefly to avoid a flicker — this is caller-side logic, not a CircularProgress prop."
+    },
+    {
+      "name": "Skeletons",
+      "description": "When loading into a known structure (a card, a row), a skeleton placeholder feels faster and less jarring than a spinner."
+    }
+  ],
+  "states": [
+    {
+      "state": "Indeterminate — Active",
+      "treatment": "Continuous rotate animation; disableShrink=false (default) also animates arc length."
+    },
+    {
+      "state": "Determinate — Active",
+      "treatment": "Arc length reflects `value`; no rotation animation."
+    },
+    {
+      "state": "Complete",
+      "treatment": "Caller hides the component, or briefly shows value=100 before dismissing — not a built-in state."
+    }
+  ],
+  "specs": [
+    {
+      "property": "Default size",
+      "value": "40px (MUI unoverridden default) — pass `size` (number = px, or a CSS length string) for other sizes."
+    },
+    {
+      "property": "Default thickness",
+      "value": "3.6 (MUI unoverridden default)."
+    },
+    {
+      "property": "Colour",
+      "value": "primary (semantic.color.brand.primary.main, #F47735) — color=\"primary\" is MUI's own default."
+    }
+  ],
+  "tokens": [
+    "semantic.color.brand.primary.main"
+  ],
+  "props": [
+    {
+      "name": "variant",
+      "type": "'determinate' | 'indeterminate'",
+      "required": false,
+      "default": "'indeterminate'",
+      "description": "Determinate shows a known percentage via `value`; indeterminate animates for unknown duration."
+    },
+    {
+      "name": "value",
+      "type": "number",
+      "required": false,
+      "default": "0",
+      "description": "0-100. Only meaningful when variant is 'determinate'."
+    },
+    {
+      "name": "size",
+      "type": "number | string",
+      "required": false,
+      "default": "40",
+      "description": "Numbers are px; strings must include a CSS unit (e.g. '3rem')."
+    },
+    {
+      "name": "thickness",
+      "type": "number",
+      "required": false,
+      "default": "3.6",
+      "description": "Thickness of the circular stroke."
+    },
+    {
+      "name": "color",
+      "type": "'primary' | 'secondary' | 'error' | 'info' | 'success' | 'warning' | 'inherit'",
+      "required": false,
+      "default": "'primary'",
+      "description": "Theme colour applied to the arc."
+    },
+    {
+      "name": "disableShrink",
+      "type": "boolean",
+      "required": false,
+      "default": "false",
+      "description": "Disables the shrink animation; only affects the 'indeterminate' variant."
+    },
+    {
+      "name": "enableTrackSlot",
+      "type": "boolean",
+      "required": false,
+      "default": "false",
+      "description": "Mounts a track circle slot behind the progress arc for a subtle background — `size`/`thickness` apply to both."
+    }
+  ],
+  "doThis": [
+    "Use determinate progress when you know the percentage.",
+    "Prefer skeletons for content loads into a known layout.",
+    "Delay spinners on fast (sub-second) operations to avoid flicker.",
+    "Give it an accessible label via aria-label or a visually adjacent label — CircularProgress itself renders no text."
+  ],
+  "dontDoThis": [
+    "Don't fake a percentage.",
+    "Don't block the whole screen for a small async action — scope the spinner to the region that's actually loading.",
+    "Don't reach for a `type` prop to pick circular vs linear — they're two separate components now; import LinearProgress directly for the bar shape."
+  ],
+  "accessibility": [
+    "Renders role=\"progressbar\" with aria-valuenow set automatically for determinate; indeterminate omits aria-valuenow per ARIA spec.",
+    "Give it an accessible label (aria-label or aria-labelledby) describing what's loading — MUI doesn't add one by default.",
+    "Don't rely on motion alone; pair with visible text where the loading state matters to the task."
+  ],
+  "related": [
+    {
+      "name": "LinearProgress",
+      "why": "The bar-shaped sibling — use for a region-width indicator instead of an inline spinner"
+    },
+    {
+      "name": "Snackbar",
+      "why": "Announce completion when the wait ends"
+    },
+    {
+      "name": "DataGrid",
+      "why": "Its `loading` prop renders its own overlay spinner rather than composing CircularProgress directly"
+    }
+  ]
+}

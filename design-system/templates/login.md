@@ -10,10 +10,10 @@ Centered Card (max-width 400px) on the app background > logo > form > primary ac
 
 - Card — the single centered surface (el2 shadow, 4px radius, 32px padding)
 - TextField — username/email and password (outlined variant, with visibility toggle on password); error state with helper text on failed auth
-- SelectionControl — "Remember me" checkbox
+- Checkbox — "Remember me"
 - Button — ONE contained primary action ("Sign in", primary-dark fill, full-width); "Forgot password?" is a text button, never a second contained button
 - Banner — auth-level messages above the form (expired session, maintenance window)
-- ProgressIndicator — indeterminate linear at the top of the card while authenticating; the button also enters its loading state
+- LinearProgress — indeterminate at the top of the card while authenticating; the button also enters its loading state
 - Snackbar — non-blocking confirmations ("Password reset email sent")
 
 ## Structure rules

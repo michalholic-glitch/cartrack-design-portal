@@ -1,0 +1,431 @@
+{
+  "name": "DataGrid",
+  "category": "Text and data display",
+  "status": "stable",
+  "aaReviewed": "2026-07-24",
+  "library": "MUI X (@mui/x-data-grid) — Cartrack-themed via @karoo-ui/core",
+  "source": "libs/shared/js/karoo-ui/core/src/lib/DataGrid/DataGrid.tsx (real fleet-web source)",
+  "licenseNote": "DataGrid is MUI X (@mui/x-data-grid). fleet-web uses the Premium/Pro tier in places, which requires a valid @mui/x-license key at runtime. Without a valid Cartrack license, DataGrid renders with watermarks/console errors outside the licensed environment.",
+  "description": "Data grids present sets of records across rows and columns — the primary way operators scan, sort, select, and act on fleet data (vehicles, trips, drivers, alerts). This replaces the old repo's invented 'DataTable' component: fleet-web's real tabular data uses MUI X's DataGrid (columns/rows/getRowId model, sort/filter models, GridApi), not a plain <table>/<tr>/<td> component. IMPORTANT — LICENSE: fleet-web's actual production wrapper (DataGridBase.tsx) is built on DataGridPremium from @mui/x-data-grid-premium, not the free community DataGrid documented as the base here. The Premium/Pro tiers (grouping, aggregation, Excel export, pivoting, row/column pinning beyond the free tier, tree data) require a valid @mui/x-license key at runtime — without it you get watermarks and console errors. This doc/tsx models the free-tier @mui/x-data-grid API, which is the common subset fleet-web's Premium grid extends; anything Premium-only is called out explicitly below.",
+  "keyRule": "Use DataGrid — not a hand-rolled <table> — for any sortable, filterable, selectable, or large dataset. Pass columns/rows/getRowId; let the grid own sorting/filtering/pagination state via its *Model/on*ModelChange prop pairs rather than re-deriving it yourself.",
+  "variants": [
+    {
+      "name": "With built-in toolbar (showToolbar)",
+      "whenToUse": "Almost always — gives quick-filter search, column visibility, filters, density, and export entry points for free. karoo-ui's real wrapper defaults showToolbar to true."
+    },
+    {
+      "name": "checkboxSelection",
+      "whenToUse": "When users perform bulk actions (assign, export, delete) on multiple records. Pair with rowSelectionModel/onRowSelectionModelChange."
+    },
+    {
+      "name": "pagination",
+      "whenToUse": "Any dataset beyond a single screen. Client-side by default (paginationMode='client'); set paginationMode='server' + rowCount for server-driven pagination."
+    },
+    {
+      "name": "density=\"compact\" | \"comfortable\" | \"standard\"",
+      "whenToUse": "compact for high-volume operator screens where maximizing visible rows matters; standard is the default."
+    },
+    {
+      "name": "getRowHeight={() => 'auto'}",
+      "whenToUse": "Rows containing wrapped/multi-line content that shouldn't be clipped to a fixed row height."
+    },
+    {
+      "name": "loading",
+      "whenToUse": "While a page of data is being fetched — renders a built-in overlay and disables interaction until it resolves."
+    },
+    {
+      "name": "Row actions column (GridActionsColDef)",
+      "whenToUse": "Secondary per-record actions behind a trailing ⋮ column using MUI X's actions column type + GridActionsCellItem. Never the record's primary action."
+    },
+    {
+      "name": "editMode=\"row\" | \"cell\"",
+      "whenToUse": "Inline editing — pair with processRowUpdate. Premium-tier features (grouping, aggregation, pivoting, Excel export, tree data) are NOT modeled here — see licenseNote."
+    }
+  ],
+  "anatomy": [
+    {
+      "name": "Toolbar",
+      "description": "built-in via showToolbar — quick filter, column/filter/density controls; replace entirely via slots.toolbar for a fully custom bar."
+    },
+    {
+      "name": "Column header",
+      "description": "one per GridColDef; sortable/filterable headers show the relevant affordances and expose aria-sort."
+    },
+    {
+      "name": "Selection column",
+      "description": "auto-added leading checkbox column when checkboxSelection is true; header checkbox selects/clears the current page (or all rows, if configured)."
+    },
+    {
+      "name": "Row",
+      "description": "one record, keyed by getRowId (or the row's own `id` field by default)."
+    },
+    {
+      "name": "Cell",
+      "description": "one value; rendered via the column's `type` (default column types right-align numbers) or a custom `renderCell`."
+    },
+    {
+      "name": "Footer / pagination",
+      "description": "row count + page controls when pagination is enabled; replace via slots.pagination or slots.footer."
+    },
+    {
+      "name": "No-rows / no-results overlay",
+      "description": "built-in empty states shown via slots.noRowsOverlay / slots.noResultsOverlay (the latter for zero filtered results)."
+    },
+    {
+      "name": "Loading overlay",
+      "description": "built-in overlay shown while `loading` is true; replace via slots.loadingOverlay."
+    }
+  ],
+  "behaviors": [
+    {
+      "name": "Sorting",
+      "description": "Controlled via `sortModel` + `onSortModelChange` (array of {field, sort}), or leave uncontrolled and let the grid manage its own state internally. `sortingMode` defaults to 'client'; set 'server' to sort server-side."
+    },
+    {
+      "name": "Filtering",
+      "description": "Controlled via `filterModel` + `onFilterModelChange`. `filterMode` defaults to 'client'; set 'server' to filter server-side. The built-in toolbar's quick filter is part of the same filterModel."
+    },
+    {
+      "name": "Row selection",
+      "description": "`checkboxSelection` adds the selection column; `rowSelectionModel` + `onRowSelectionModelChange` control which rows are selected (an object of shape { type: 'include' | 'exclude', ids: Set<GridRowId> } in this MUI X version — NOT a plain array, which was the pre-v6 API). `disableRowSelectionOnClick` stops row click from also toggling selection."
+    },
+    {
+      "name": "Pagination",
+      "description": "Controlled via `paginationModel` ({page, pageSize}) + `onPaginationModelChange`; `pageSizeOptions` configures the page-size picker. `paginationMode='server'` + `rowCount` enables server-driven pagination — fetch the page's slice in onPaginationModelChange and pass it as `rows`."
+    },
+    {
+      "name": "Row identity",
+      "description": "`getRowId` returns a stable unique id per row when the row objects don't have an `id` field; keep this function reference-stable across renders (memoize it) to avoid grid state resets."
+    },
+    {
+      "name": "Loading",
+      "description": "`loading` shows a built-in overlay (slots.loadingOverlay) and disables interaction while true — this is a different visual treatment than the old DataTable's 'linear bar under the toolbar'; compose a LinearProgress explicitly above the grid if that exact look is required."
+    },
+    {
+      "name": "Row/cell editing",
+      "description": "`editMode` ('cell' | 'row') plus `processRowUpdate` enables inline editing; validation and error handling are the caller's responsibility via processRowUpdate's rejection path."
+    }
+  ],
+  "deferred": [
+    {
+      "name": "Row grouping / tree data / aggregation / pivoting",
+      "why": "Premium-tier (@mui/x-data-grid-premium) features — real in fleet-web's production DataGridBase, but require a valid @mui/x-license key. Not modeled in this free-tier doc/tsx; see licenseNote."
+    },
+    {
+      "name": "Excel export",
+      "why": "Premium-tier feature (GridToolbarExport in fleet-web's Premium build). CSV export is available in the free tier via the built-in toolbar's export button (Community-tier limitation: CSV/print only, no Excel)."
+    },
+    {
+      "name": "Column pinning beyond the free tier's basic pinning",
+      "why": "Free-tier DataGrid does support left/right column pinning already — this entry only excludes Premium-specific pinning extensions, if any are added upstream."
+    }
+  ],
+  "states": [
+    {
+      "state": "Row — Enabled",
+      "treatment": "Surface background, 1px bottom divider."
+    },
+    {
+      "state": "Row — Hover",
+      "treatment": "4% on-surface overlay (MUI default), unless disableRowSelectionOnClick + no onRowClick, in which case fleet-web's real wrapper suppresses row hover entirely (not reproduced in this decoupled version — see DataGridBase.tsx)."
+    },
+    {
+      "state": "Row — Selected",
+      "treatment": "Neutral grey tint (rgb(91 91 91 / 13.5%), 20.5% on hover) — overrides MUI's default primary-tinted selection to avoid clashing with status-chip colours in dense fleet tables."
+    },
+    {
+      "state": "Header — Sortable / hover",
+      "treatment": "Sort icon fades in; cursor pointer."
+    },
+    {
+      "state": "Header — Sorted (active)",
+      "treatment": "Sort direction icon fully visible; aria-sort set."
+    },
+    {
+      "state": "Cell/header — focus",
+      "treatment": "Focus outline suppressed (outline: none) — fleet-web relies on the row/cell hover highlight instead of a focus ring here."
+    },
+    {
+      "state": "Grid — Loading",
+      "treatment": "Built-in loading overlay (slots.loadingOverlay); interactions disabled while `loading` is true."
+    },
+    {
+      "state": "Grid — Empty",
+      "treatment": "Built-in no-rows overlay (slots.noRowsOverlay); a separate no-results overlay shows when filters/quick-search return zero matches."
+    }
+  ],
+  "specs": [
+    {
+      "property": "Row height",
+      "value": "52px standard / density-dependent for compact/comfortable (MUI defaults, unoverridden)"
+    },
+    {
+      "property": "Cell text",
+      "value": "semantic.typography.scale.body2 (14px/400) — theme.ts pins MuiDataGrid.styleOverrides.root fontSize to 14px explicitly"
+    },
+    {
+      "property": "Row divider",
+      "value": "semantic.color.border.default (rgba(0,0,0,.12))"
+    },
+    {
+      "property": "Selected row background",
+      "value": "rgb(91 91 91 / 13.5%) — a real karoo-ui override, not a tokens.json value; flagged as a gap (no matching semantic token exists for this exact tint)"
+    },
+    {
+      "property": "Container",
+      "value": "Wrapped in a MUI Paper with flex/column layout, height:100%, overflow:hidden so the grid fills its container responsively"
+    },
+    {
+      "property": "Main viewport min-height guard",
+      "value": "130px on .MuiDataGrid-main — prevents a real MUI crash when the grid is resized to near-zero height"
+    }
+  ],
+  "tokens": [
+    "semantic.color.text.primary",
+    "semantic.color.text.secondary",
+    "semantic.color.border.default",
+    "semantic.color.surface.paper",
+    "semantic.typography.scale.body2"
+  ],
+  "props": [
+    {
+      "name": "columns",
+      "type": "GridColDef<R>[]",
+      "required": true,
+      "description": "Column definitions (field, headerName, type, width/flex, sortable, filterable, renderCell, valueGetter, etc.) — keep this array reference-stable between renders (define outside the component or memoize)."
+    },
+    {
+      "name": "rows",
+      "type": "GridRowsProp<R>",
+      "required": true,
+      "description": "Records to display. For server-side pagination this is just the current page's slice."
+    },
+    {
+      "name": "getRowId",
+      "type": "(row: R) => GridRowId",
+      "required": false,
+      "description": "Returns a stable unique id per row when rows don't have an `id` field. Keep the function reference stable to avoid state resets."
+    },
+    {
+      "name": "loading",
+      "type": "boolean",
+      "required": false,
+      "description": "Shows the built-in loading overlay and disables interaction while true."
+    },
+    {
+      "name": "checkboxSelection",
+      "type": "boolean",
+      "required": false,
+      "default": "false",
+      "description": "Adds a leading checkbox column for multi-row selection."
+    },
+    {
+      "name": "rowSelectionModel",
+      "type": "{ type: 'include' | 'exclude'; ids: Set<GridRowId> }",
+      "required": false,
+      "description": "Current selection, as an include/exclude id-set object (this MUI X version's model — not a plain id array, which was the older API)."
+    },
+    {
+      "name": "onRowSelectionModelChange",
+      "type": "(model: GridRowSelectionModel, details: GridCallbackDetails) => void",
+      "required": false,
+      "description": "Called when the selection changes (checkbox toggles, select-all, programmatic changes)."
+    },
+    {
+      "name": "disableRowSelectionOnClick",
+      "type": "boolean",
+      "required": false,
+      "default": "false",
+      "description": "Stops a row click from also toggling that row's selection."
+    },
+    {
+      "name": "sortModel",
+      "type": "GridSortModel",
+      "required": false,
+      "description": "Array of { field, sort: 'asc' | 'desc' | null }; omit to let the grid manage sort state internally."
+    },
+    {
+      "name": "onSortModelChange",
+      "type": "(model: GridSortModel, details: GridCallbackDetails) => void",
+      "required": false,
+      "description": "Called when the user changes sort via a column header."
+    },
+    {
+      "name": "sortingMode",
+      "type": "'client' | 'server'",
+      "required": false,
+      "default": "'client'",
+      "description": "Set 'server' to sort server-side; combine with onSortModelChange to refetch."
+    },
+    {
+      "name": "filterModel",
+      "type": "GridFilterModel",
+      "required": false,
+      "description": "Current filter items + logic operator + the toolbar's quickFilterValues."
+    },
+    {
+      "name": "onFilterModelChange",
+      "type": "(model: GridFilterModel, details: GridCallbackDetails) => void",
+      "required": false,
+      "description": "Called when filters (including the quick filter) change."
+    },
+    {
+      "name": "filterMode",
+      "type": "'client' | 'server'",
+      "required": false,
+      "default": "'client'",
+      "description": "Set 'server' to filter server-side."
+    },
+    {
+      "name": "pagination",
+      "type": "true",
+      "required": false,
+      "description": "Enables pagination (present in the type as a literal `true` — omit the prop entirely to disable pagination rather than passing false)."
+    },
+    {
+      "name": "paginationModel",
+      "type": "{ page: number; pageSize: number }",
+      "required": false,
+      "description": "Controlled pagination state."
+    },
+    {
+      "name": "onPaginationModelChange",
+      "type": "(model, details: GridCallbackDetails) => void",
+      "required": false,
+      "description": "Called on page/page-size change; for server-driven pagination, fetch the new slice here and pass it back as `rows`."
+    },
+    {
+      "name": "paginationMode",
+      "type": "'client' | 'server'",
+      "required": false,
+      "default": "'client'",
+      "description": "Set 'server' + provide `rowCount` for server-driven pagination."
+    },
+    {
+      "name": "rowCount",
+      "type": "number",
+      "required": false,
+      "description": "Total record count — required for accurate page controls when paginationMode is 'server' (rows.length only reflects the current page slice)."
+    },
+    {
+      "name": "pageSizeOptions",
+      "type": "ReadonlyArray<number | { value: number; label: string }>",
+      "required": false,
+      "description": "Options shown in the page-size selector."
+    },
+    {
+      "name": "density",
+      "type": "'compact' | 'standard' | 'comfortable'",
+      "required": false,
+      "default": "'standard'",
+      "description": "Row/header height preset; compact suits high-volume operator screens."
+    },
+    {
+      "name": "getRowHeight",
+      "type": "(params) => number | 'auto' | null",
+      "required": false,
+      "description": "Per-row height override; return 'auto' to size to content (e.g. wrapped multi-line cells)."
+    },
+    {
+      "name": "columnHeaderHeight",
+      "type": "number",
+      "required": false,
+      "description": "Header row height override."
+    },
+    {
+      "name": "autoHeight",
+      "type": "boolean",
+      "required": false,
+      "default": "false",
+      "description": "Sizes the grid's height to its content instead of filling the container."
+    },
+    {
+      "name": "showToolbar",
+      "type": "boolean",
+      "required": false,
+      "default": "true (karoo-ui override — this wrapper sets it explicitly)",
+      "description": "Shows the built-in toolbar (quick filter, columns, filters, density, export). Compose slots.toolbar for a fully custom bar instead."
+    },
+    {
+      "name": "slots",
+      "type": "Partial<GridSlotsComponent>",
+      "required": false,
+      "description": "Overridable component slots (toolbar, loadingOverlay, noRowsOverlay, noResultsOverlay, pagination, footer, etc.)."
+    },
+    {
+      "name": "slotProps",
+      "type": "GridSlotsComponentsProps",
+      "required": false,
+      "description": "Props forwarded to each slot component."
+    },
+    {
+      "name": "onRowClick",
+      "type": "GridEventListener<'rowClick'>",
+      "required": false,
+      "description": "Handler for row clicks; not fired from inside an actions-column button by convention."
+    },
+    {
+      "name": "editMode",
+      "type": "'cell' | 'row'",
+      "required": false,
+      "description": "Enables inline editing at the cell or row granularity."
+    },
+    {
+      "name": "processRowUpdate",
+      "type": "(newRow: R, oldRow: R) => R | Promise<R>",
+      "required": false,
+      "description": "Called after an inline edit commits; return the row to persist, or throw/reject to reject the edit."
+    },
+    {
+      "name": "apiRef",
+      "type": "RefObject<GridApiCommunity | null>",
+      "required": false,
+      "description": "Imperative API handle (from useGridApiRef()) for programmatic control — the MUI X convention in place of a plain DOM ref."
+    },
+    {
+      "name": "RootPaperProps",
+      "type": "PaperProps",
+      "required": false,
+      "description": "karoo-ui-specific: props forwarded to the wrapping <Paper> container (not a real @mui/x-data-grid prop) — this repo's DataGrid.tsx reproduces that same wrapping pattern."
+    }
+  ],
+  "doThis": [
+    "Use DataGrid (not a hand-rolled table) for any sortable, filterable, selectable, or large dataset.",
+    "Keep `columns` and `getRowId` reference-stable (define outside render or memoize).",
+    "Use the *Model/on*ModelChange prop pairs (sortModel, filterModel, paginationModel, rowSelectionModel) rather than re-deriving grid state yourself.",
+    "Set `rowCount` whenever paginationMode/sortingMode/filterMode is 'server' — rows.length alone under-reports the total.",
+    "Confirm a valid @mui/x-license key is configured before relying on any Premium-tier feature in a real deployment."
+  ],
+  "dontDoThis": [
+    "Don't pass a plain array to rowSelectionModel — this MUI X version expects the { type, ids } object shape.",
+    "Don't recreate `columns` on every render — it resets column widths/order.",
+    "Don't hand-roll export/column-visibility/density controls — the built-in toolbar (showToolbar) already provides them for free.",
+    "Don't assume Premium features (grouping, aggregation, Excel export, pivoting, tree data) work without a license key — see licenseNote.",
+    "Don't hard-code colours/sizes — use the theme tokens and these specs."
+  ],
+  "accessibility": [
+    "Column headers expose aria-sort on the active sort column.",
+    "The select-all checkbox announces its indeterminate state when selection is partial.",
+    "Rows and controls are keyboard navigable (arrow keys move the active cell); the built-in toolbar's controls are all real buttons/inputs.",
+    "`loading` sets an accessible busy state on the grid via the built-in overlay.",
+    "Status should never be colour-only within a cell — pair colour with a text value (e.g. a status Chip)."
+  ],
+  "related": [
+    {
+      "name": "DatePicker",
+      "why": "MUI X's date filter input inside the DataGrid's filter panel is a date picker field, same license family"
+    },
+    {
+      "name": "LinearProgress",
+      "why": "Compose above the grid for the classic 'bar under the toolbar' loading look instead of the grid's own loading overlay"
+    },
+    {
+      "name": "Menu",
+      "why": "Row-actions columns typically open a Menu of secondary per-row actions"
+    },
+    {
+      "name": "TextField",
+      "why": "The grid's quick-filter search box in the built-in toolbar is a TextField"
+    }
+  ]
+}

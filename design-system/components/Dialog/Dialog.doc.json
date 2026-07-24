@@ -2,15 +2,15 @@
   "name": "Dialog",
   "category": "Messaging",
   "status": "stable",
-  "aaReviewed": "2026-07-16",
-  "library": "Material Components Web (MDC) 14.0.0 — Cartrack-themed",
-  "source": "md2-cartrack-library/components/dialogs.html",
-  "description": "A dialog is a modal window for a focused task or decision that interrupts the operator on purpose — confirming a deletion, capturing a few fields, or surfacing something that needs a choice before continuing.",
-  "keyRule": "Use a dialog only when the task genuinely needs to interrupt. For routine detail, prefer a side sheet or a detail page. For transient confirmation, prefer a snackbar.",
+  "aaReviewed": "2026-07-24",
+  "library": "Material UI (MUI) v9 — Cartrack-themed via @karoo-ui/core",
+  "source": "libs/shared/js/karoo-ui/core/src/lib/Dialog/index.tsx (real fleet-web source, wraps @mui/material/Dialog)",
+  "description": "A dialog is a modal window for a focused task or decision that interrupts the operator on purpose — confirming a deletion, capturing a few fields, or surfacing something that needs a choice before continuing. Built from @mui/material/Dialog composed with DialogTitle/DialogContent/DialogActions, not a single all-in-one props API.",
+  "keyRule": "Use a dialog only when the task genuinely needs to interrupt. For routine detail, prefer a Drawer (temporary variant) or a detail page. For transient confirmation, prefer a Snackbar.",
   "variants": [
     {
       "name": "Alert / confirmation",
-      "whenToUse": "Confirm a consequential action (delete, discard)."
+      "whenToUse": "Confirm a consequential action (delete, discard). Use role=\"alertdialog\"."
     },
     {
       "name": "Form dialog",
@@ -18,39 +18,39 @@
     },
     {
       "name": "Full-screen (rare on desktop)",
-      "whenToUse": "A larger task that benefits from focus; usually a page is better."
+      "whenToUse": "A larger task that benefits from focus; usually a page is better. Set fullScreen."
     }
   ],
   "anatomy": [
     {
-      "name": "Scrim",
-      "description": "dimmed overlay that blocks the page behind."
+      "name": "Backdrop",
+      "description": "the dimmed scrim behind the dialog, rendered by the underlying Modal (MUI's real slot: `backdrop`)."
     },
     {
-      "name": "Container",
-      "description": "the dialog surface (4px radius, high elevation)."
+      "name": "Paper",
+      "description": "the dialog surface itself — MUI's real `paper` slot, a Paper component (4px radius, elevated)."
     },
     {
-      "name": "Title",
-      "description": "a short, specific question or task name."
+      "name": "DialogTitle",
+      "description": "a separate @mui/material component you place as the first child — a short, specific question or task name."
     },
     {
-      "name": "Content",
-      "description": "supporting text and/or fields."
+      "name": "DialogContent",
+      "description": "a separate @mui/material component wrapping supporting text and/or fields."
     },
     {
-      "name": "Actions",
-      "description": "confirm + dismiss, right-aligned; confirm last."
+      "name": "DialogActions",
+      "description": "a separate @mui/material component wrapping confirm + dismiss buttons, right-aligned; confirm last."
     }
   ],
   "behaviors": [
     {
       "name": "Modality",
-      "description": "The dialog traps focus and blocks the page; Escape and the scrim dismiss non-destructive dialogs."
+      "description": "The dialog traps focus and blocks the page (via the underlying Modal); Escape and a backdrop click call onClose for non-destructive dialogs — guard destructive/unsaved flows by checking the `reason` argument and ignoring backdropClick/escapeKeyDown."
     },
     {
       "name": "Action order",
-      "description": "Dismiss on the left, confirm on the right; destructive confirms use the error colour and clear labels (\"Remove\", not \"OK\")."
+      "description": "Dismiss on the left, confirm on the right inside DialogActions; destructive confirms use the error colour and clear labels (\"Remove\", not \"OK\") — this is layout/labelling convention you apply, not a Dialog prop."
     },
     {
       "name": "Keep it short",
@@ -60,37 +60,37 @@
   "states": [
     {
       "state": "Open",
-      "treatment": "Surface over scrim; focus trapped inside."
+      "treatment": "Paper surface over backdrop; focus trapped inside."
     },
     {
       "state": "Action hover/focus",
-      "treatment": "Button state layers; visible focus."
+      "treatment": "Button state layers on DialogActions' children; visible focus."
     },
     {
       "state": "Closing",
-      "treatment": "Returns focus to the trigger."
+      "treatment": "Fade transition out; returns focus to the trigger (an app-level concern — Dialog itself doesn't remember the trigger)."
     }
   ],
   "specs": [
     {
       "property": "Corner radius",
-      "value": "4px"
+      "value": "4px (semantic.radius.default, via theme.shape.borderRadius on the Paper slot)"
     },
     {
       "property": "Elevation",
-      "value": "High (overlay)"
+      "value": "MUI's real Paper default (elevation 24) — not overridden in theme.ts"
     },
     {
       "property": "Title",
-      "value": "Roboto ~20px / 500"
+      "value": "Roboto ~20px / 500 (DialogTitle's default heading, matches semantic.typography.scale.h6)"
     },
     {
       "property": "Width",
-      "value": "~320–560px; content scrolls if long"
+      "value": "maxWidth prop, default 'sm' (~600px breakpoint cap); set fullWidth to stretch to that cap, or maxWidth=false to disable capping"
     },
     {
       "property": "Destructive action",
-      "value": "error colour (#F44336)"
+      "value": "error colour (#F44336 / semantic.color.status.error.main) — applied to the confirm Button's color prop, not built into Dialog"
     }
   ],
   "tokens": [
@@ -101,87 +101,106 @@
   "props": [
     {
       "name": "open",
-      "type": "boolean",
+      "type": "true",
       "required": true,
-      "description": "Controls whether the dialog is rendered/open."
+      "description": "Narrowed from MUI's real `boolean` by the karoo-ui wrapper — app convention: a Dialog is only ever rendered while open; unmount it to close instead of passing open={false}."
     },
     {
-      "name": "title",
-      "type": "string",
-      "required": true,
-      "description": "Short, specific question or task name (e.g. \"Remove vehicle?\"), not a generic title."
-    },
-    {
-      "name": "content",
+      "name": "children",
       "type": "React.ReactNode",
-      "required": true,
-      "description": "Supporting text and/or fields."
-    },
-    {
-      "name": "confirmLabel",
-      "type": "string",
-      "required": true,
-      "description": "Right-aligned, rendered last. Verb-first label (e.g. \"Remove\"), not \"OK\"."
-    },
-    {
-      "name": "onConfirm",
-      "type": "() => void",
       "required": false,
-      "description": "Handler for the confirm action."
-    },
-    {
-      "name": "cancelLabel",
-      "type": "string",
-      "required": false,
-      "description": "Left-aligned dismiss action label."
-    },
-    {
-      "name": "onCancel",
-      "type": "() => void",
-      "required": false,
-      "description": "Handler for the cancel/dismiss action."
-    },
-    {
-      "name": "destructive",
-      "type": "boolean",
-      "required": false,
-      "description": "Destructive confirms use the error colour and disable scrim/Escape dismissal so an unsaved destructive action isn't lost silently."
+      "description": "Compose DialogTitle, DialogContent, and DialogActions as children — there is no separate title/content/confirmLabel prop API."
     },
     {
       "name": "onClose",
-      "type": "() => void",
+      "type": "(event: object, reason: 'escapeKeyDown' | 'backdropClick') => void",
       "required": false,
-      "description": "Called on Escape / scrim click for non-destructive dialogs. Defaults to onCancel."
+      "description": "Called on Escape or a backdrop click. Check `reason` to ignore backdrop/Escape dismissal for a destructive, unsaved action rather than closing silently."
+    },
+    {
+      "name": "maxWidth",
+      "type": "'xs' | 'sm' | 'md' | 'lg' | 'xl' | false",
+      "required": false,
+      "description": "Caps the dialog width at a breakpoint. Default 'sm'."
+    },
+    {
+      "name": "fullWidth",
+      "type": "boolean",
+      "required": false,
+      "description": "Stretches the dialog to the maxWidth cap. Default false."
+    },
+    {
+      "name": "fullScreen",
+      "type": "boolean",
+      "required": false,
+      "description": "Renders the dialog full-screen — the rare, desktop full-screen variant. Default false."
+    },
+    {
+      "name": "scroll",
+      "type": "'paper' | 'body'",
+      "required": false,
+      "description": "Where long content scrolls. Default 'paper' (DialogContent scrolls; the Paper stays fixed)."
+    },
+    {
+      "name": "role",
+      "type": "'dialog' | 'alertdialog'",
+      "required": false,
+      "description": "Use 'alertdialog' for the alert/confirmation variant. Default 'dialog'."
+    },
+    {
+      "name": "aria-labelledby",
+      "type": "string",
+      "required": false,
+      "description": "Should point at DialogTitle's id so the dialog's accessible name is the title."
+    },
+    {
+      "name": "aria-describedby",
+      "type": "string",
+      "required": false,
+      "description": "Should point at DialogContentText's id for the dialog's accessible description."
+    },
+    {
+      "name": "transitionDuration",
+      "type": "number | { appear?, enter?, exit? }",
+      "required": false,
+      "description": "Overrides the Fade transition's timing; the karoo-ui wrapper's default transition is always `in` regardless of this."
+    },
+    {
+      "name": "sx",
+      "type": "SxProps<Theme>",
+      "required": false,
+      "description": "Standard MUI system prop for one-off style overrides."
     }
   ],
   "doThis": [
-    "Use a specific title that states the decision.",
-    "Label actions with verbs (Remove/Save), not OK.",
-    "Trap focus and return it on close."
+    "Use a specific title in DialogTitle that states the decision.",
+    "Label DialogActions buttons with verbs (Remove/Save), not OK.",
+    "Set aria-labelledby/aria-describedby so assistive tech announces title and content."
   ],
   "dontDoThis": [
-    "Don't use a dialog for routine detail — use a side sheet/page.",
+    "Don't use a dialog for routine detail — use a Drawer (temporary) or a page.",
     "Don't stack dialogs.",
-    "Don't let the scrim dismiss a destructive, unsaved action silently."
+    "Don't let backdropClick/escapeKeyDown dismiss a destructive, unsaved action silently — check the onClose `reason`."
   ],
   "accessibility": [
-    "Use role=dialog with aria-modal and a labelled title.",
-    "Trap focus while open and restore it to the trigger on close.",
-    "Escape closes non-destructive dialogs.",
-    "Action buttons have clear, discernible names."
+    "MUI sets role=dialog (or alertdialog) with aria-modal=true automatically via the underlying Modal.",
+    "Set aria-labelledby to DialogTitle's id and aria-describedby to DialogContentText's id.",
+    "Focus is trapped while open and restored to the trigger on close by the underlying Modal/FocusTrap.",
+    "Escape closes non-destructive dialogs by default; guard destructive ones via the onClose reason.",
+    "Action buttons in DialogActions need clear, discernible names."
   ],
   "related": [
     {
-      "name": "SideSheet",
-      "why": "Complex forms that need page context stay in a sheet"
-    },
-    {
-      "name": "Banner",
-      "why": "Non-blocking page-level messages"
+      "name": "Drawer",
+      "why": "Complex forms or contextual detail that need page context stay in a temporary-variant Drawer"
     },
     {
       "name": "Snackbar",
       "why": "Post-action confirmation, no decision needed"
+    },
+    {
+      "name": "Menu",
+      "why": "Lighter-weight choice list that doesn't need to block the page"
     }
   ]
 }

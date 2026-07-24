@@ -1,0 +1,232 @@
+{
+  "name": "Checkbox",
+  "category": "Forms and inputs",
+  "status": "stable",
+  "aaReviewed": "2026-07-24",
+  "library": "Material UI (MUI) v9 — Cartrack-themed via @karoo-ui/core",
+  "source": "libs/shared/js/karoo-ui/core/src/lib/Checkbox/index.tsx (real fleet-web source, wraps @mui/material/Checkbox)",
+  "description": "Checkbox captures an independent multi-select choice — table row selection, opt-in lists, select-none/some/all groups. It's a bare control (no built-in label): pair it with @mui/material/FormControlLabel for a clickable label.",
+  "keyRule": "Use Checkbox for select none/some/all, applied whenever the surrounding form/table applies it (usually on submit, but a header 'select all' checkbox can apply immediately to a live selection). Don't use it for exactly-one-of-many (use Radio) or an instant on/off setting (use Switch).",
+  "correction": "One of three real components split out of the old MDC-modeled 'SelectionControl' umbrella, which documented Checkbox, Radio, and Switch behind a single fake `type` discriminator prop. The real library has three separate components with three separate, non-overlapping prop APIs — see Radio.doc.json and Switch.doc.json for the other two.",
+  "variants": [
+    {
+      "name": "Standalone checkbox",
+      "whenToUse": "A single independent yes/no choice in a form (e.g. \"I agree to terms\")."
+    },
+    {
+      "name": "List/table row checkbox",
+      "whenToUse": "Multi-select rows in a list or DataGrid; each row's Checkbox is independent of the others."
+    },
+    {
+      "name": "Header select-all checkbox (indeterminate)",
+      "whenToUse": "A parent checkbox that selects/clears an entire group and shows `indeterminate` when only some rows are checked."
+    }
+  ],
+  "anatomy": [
+    {
+      "name": "Root",
+      "description": "a ButtonBase-backed clickable area (renders as a button element) containing the visible icon and a visually-hidden native `<input type=\"checkbox\">`."
+    },
+    {
+      "name": "Icon (unchecked)",
+      "description": "default CheckBoxOutlineBlankIcon; override via the `icon` prop."
+    },
+    {
+      "name": "Checked icon",
+      "description": "default CheckBoxIcon; override via the `checkedIcon` prop."
+    },
+    {
+      "name": "Indeterminate icon",
+      "description": "default IndeterminateCheckBoxIcon (a dash), shown when `indeterminate` is true regardless of `checked`; override via `indeterminateIcon`."
+    },
+    {
+      "name": "Label (external)",
+      "description": "not part of Checkbox itself. Wrap in @mui/material/FormControlLabel (`<FormControlLabel control={<Checkbox />} label=\"...\" />`) to get a clickable label — the old SelectionControl's built-in `label` prop has no real equivalent on Checkbox."
+    }
+  ],
+  "behaviors": [
+    {
+      "name": "Controlled vs uncontrolled",
+      "description": "Use `checked`+`onChange` for a controlled checkbox (typical for table/list selection state you own), or `defaultChecked` for an uncontrolled one."
+    },
+    {
+      "name": "Indeterminate is display-only",
+      "description": "Setting `indeterminate` only changes the rendered icon and sets a `data-indeterminate` attribute — it does NOT set the native DOM `indeterminate` property (cross-browser inconsistency), and clicking an indeterminate checkbox does not automatically select/clear a group. The consumer (e.g. a table header) must compute `indeterminate`/`checked` from its own selection state and handle onChange to select/clear all rows itself."
+    },
+    {
+      "name": "Apply timing",
+      "description": "Not enforced by the component. A row-selection Checkbox usually applies its selection immediately to in-memory state; whether that selection is then submitted, exported, or bulk-actioned is a decision made by the surrounding UI, not Checkbox."
+    }
+  ],
+  "states": [
+    {
+      "state": "Unchecked",
+      "treatment": "Outline icon only."
+    },
+    {
+      "state": "Checked",
+      "treatment": "Primary-coloured filled icon (color=\"primary\" by default)."
+    },
+    {
+      "state": "Indeterminate",
+      "treatment": "Dash icon, independent of the underlying `checked` value."
+    },
+    {
+      "state": "Hover/focus",
+      "treatment": "ButtonBase ripple/state-layer around the icon; visible focus ring."
+    },
+    {
+      "state": "Disabled",
+      "treatment": "Theme disabled-action opacity; not focusable."
+    }
+  ],
+  "specs": [
+    {
+      "property": "Default size",
+      "value": "size=\"small\" — set at the theme level (theme.ts: MuiCheckbox.defaultProps.size), not by this wrapper. MUI's own default is \"medium\"; Cartrack's theme overrides it globally."
+    },
+    {
+      "property": "Icon size (approx.)",
+      "value": "medium ≈24px icon with a larger click/touch target via internal padding; small (Cartrack default) ≈20px icon with a smaller target — MUI internals, not tokenized."
+    },
+    {
+      "property": "Selected colour",
+      "value": "primary (#F47735) via the default color=\"primary\""
+    },
+    {
+      "property": "Label gap (via FormControlLabel)",
+      "value": "not Checkbox's own concern — FormControlLabel controls the gap between the control and its label."
+    }
+  ],
+  "tokens": [
+    "semantic.color.brand.primary.main"
+  ],
+  "props": [
+    {
+      "name": "checked",
+      "type": "boolean",
+      "required": false,
+      "description": "Controlled checked state."
+    },
+    {
+      "name": "defaultChecked",
+      "type": "boolean",
+      "required": false,
+      "description": "Uncontrolled initial checked state."
+    },
+    {
+      "name": "indeterminate",
+      "type": "boolean",
+      "required": false,
+      "description": "Shows the indeterminate (dash) icon regardless of `checked`. Display-only — does not set the native DOM indeterminate property or auto-manage a group; see 'Indeterminate is display-only' above."
+    },
+    {
+      "name": "indeterminateIcon",
+      "type": "React.ReactNode",
+      "required": false,
+      "description": "Icon shown when indeterminate. Default: IndeterminateCheckBoxIcon."
+    },
+    {
+      "name": "icon",
+      "type": "React.ReactNode",
+      "required": false,
+      "description": "Unchecked icon. Default: CheckBoxOutlineBlankIcon."
+    },
+    {
+      "name": "checkedIcon",
+      "type": "React.ReactNode",
+      "required": false,
+      "description": "Checked icon. Default: CheckBoxIcon."
+    },
+    {
+      "name": "onChange",
+      "type": "(event: React.ChangeEvent<HTMLInputElement>, checked: boolean) => void",
+      "required": false,
+      "description": "Fired when the checked state changes; `event.target.checked` also carries the new value."
+    },
+    {
+      "name": "color",
+      "type": "'primary' | 'secondary' | 'error' | 'info' | 'success' | 'warning' | 'default'",
+      "required": false,
+      "description": "Checked-state colour. Default 'primary'."
+    },
+    {
+      "name": "size",
+      "type": "'small' | 'medium' | 'large'",
+      "required": false,
+      "description": "Default 'medium' in stock MUI, overridden to 'small' fleet-wide by theme.ts."
+    },
+    {
+      "name": "disabled",
+      "type": "boolean",
+      "required": false,
+      "description": "Disables the control."
+    },
+    {
+      "name": "disableRipple",
+      "type": "boolean",
+      "required": false,
+      "description": "Disables the hover/press ripple. Default false."
+    },
+    {
+      "name": "required",
+      "type": "boolean",
+      "required": false,
+      "description": "Marks the underlying native input as required."
+    },
+    {
+      "name": "name",
+      "type": "string",
+      "required": false,
+      "description": "Name attribute of the native input."
+    },
+    {
+      "name": "value",
+      "type": "unknown",
+      "required": false,
+      "description": "Value attribute of the native input (cast to string by the DOM)."
+    },
+    {
+      "name": "id",
+      "type": "string",
+      "required": false,
+      "description": "id of the native input — pair with FormControlLabel's htmlFor, or set it directly for a manual <label>."
+    },
+    {
+      "name": "sx",
+      "type": "SxProps<Theme>",
+      "required": false,
+      "description": "Standard MUI style-override escape hatch."
+    }
+  ],
+  "doThis": [
+    "Use FormControlLabel to give every Checkbox a clickable label — there is no built-in label prop.",
+    "Compute `indeterminate` and the select-all `checked`/`onChange` yourself from the group's real selection state.",
+    "Make disabled state clear (theme's disabled opacity handles this automatically)."
+  ],
+  "dontDoThis": [
+    "Don't expect `indeterminate` to set the native DOM indeterminate property or auto-select a group — it's icon-only.",
+    "Don't use Checkbox for exactly-one-of-many (use Radio inside a RadioGroup).",
+    "Don't rely on colour alone to show selection — the icon shape itself (outline vs filled vs dash) already conveys state."
+  ],
+  "accessibility": [
+    "Renders a real native `<input type=\"checkbox\">` (visually hidden) so screen readers get correct semantics for free.",
+    "Always pair with FormControlLabel (or your own <label htmlFor>) so the label is announced and clickable.",
+    "Indeterminate state is exposed via `data-indeterminate` and the visual dash icon — assistive tech support for aria-checked=\"mixed\" varies, so also convey partial-selection count in visible text where it matters (e.g. \"3 of 10 selected\").",
+    "Focus is visible via the theme's focus ring."
+  ],
+  "related": [
+    {
+      "name": "Radio",
+      "why": "Exactly one choice from a small set — split from the same old SelectionControl umbrella"
+    },
+    {
+      "name": "Switch",
+      "why": "Instant on/off setting — split from the same old SelectionControl umbrella"
+    },
+    {
+      "name": "Chip",
+      "why": "Filter chips for transient filtering"
+    }
+  ]
+}

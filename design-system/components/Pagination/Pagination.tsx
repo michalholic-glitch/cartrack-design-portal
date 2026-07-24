@@ -1,149 +1,36 @@
-import React from 'react';
-
-export interface PaginationProps {
-  /** Current page, 1-indexed. */
-  page: number;
-  /** Rows shown per page. */
-  pageSize: number;
-  /** Total row count across all pages ("1–100 of 100,000"). */
-  totalItems: number;
-  /** Page-size choices offered in the rows-per-page control (e.g. 25/50/100). */
-  pageSizeOptions?: number[];
-  /**
-   * Table footer (range + prev/next) — default for data tables.
-   * Numbered pages — when operators jump around; good for moderate counts.
-   * Rows-per-page only — when the dataset fits a couple of pages.
-   */
-  variant?: 'table-footer' | 'numbered' | 'rows-per-page-only';
-  /** How many page-number buttons to show around the current page (numbered variant). */
-  siblingCount?: number;
-  onPageChange?: (page: number) => void;
-  onPageSizeChange?: (size: number) => void;
-  /** Optional extra class names to compose with the base `pgn` class. */
-  className?: string;
-}
-
-function buildPageList(page: number, pageCount: number, siblingCount: number): (number | '…')[] {
-  const pages: (number | '…')[] = [];
-  const start = Math.max(1, page - siblingCount);
-  const end = Math.min(pageCount, page + siblingCount);
-
-  if (start > 1) {
-    pages.push(1);
-    if (start > 2) pages.push('…');
-  }
-  for (let p = start; p <= end; p++) pages.push(p);
-  if (end < pageCount) {
-    if (end < pageCount - 1) pages.push('…');
-    pages.push(pageCount);
-  }
-  return pages;
-}
+import * as React from 'react';
+import MuiPagination, {
+  type PaginationProps as MuiPaginationProps,
+} from '@mui/material/Pagination';
 
 /**
- * Pagination — MD2 (MDC) Cartrack-themed.
+ * Pagination — Material UI (MUI) v9, Cartrack-themed via @karoo-ui/core.
+ * Real source: libs/shared/js/karoo-ui/core/src/lib/Pagination/index.tsx
  * Full spec: Pagination.doc.json
- *
- * NOTE: MDC Web has no standalone pagination component — pagination lives
- * inside the data table (rows-per-page + range + prev/next). The live
- * Cartrack library (md2-cartrack-library/components/pagination.html) builds
- * a small custom control using the `pgn` / `lbl` / `p` classes, which this
- * component mirrors.
+ * The real karoo-ui wrapper applies zero overrides — a straight
+ * `export { default as Pagination } from '@mui/material/Pagination'`. This
+ * file forwards every real prop through a local forwardRef wrapper for
+ * consistency with the rest of this folder.
+ * IMPORTANT: this is MUI's Pagination — page-number buttons + prev/next only.
+ * It does NOT include a rows-per-page select or a "1–100 of 100,000" range
+ * label; those belong to a different component (MUI's TablePagination, not
+ * currently one of karoo-ui's wrapped components) or a hand-built
+ * composition alongside this Pagination.
  * Tokens (tokens/tokens.json):
- * - color: semantic.color.text.secondary ("on-surface-medium" label text), semantic.color.interactive.primarySelected
- *   (current-page highlight, ~10% — same family as DataTable's selected-row token).
- * - type: semantic.typography.scale.caption (12px, low end of the spec's "12–14px" text range;
- *   14px is body2).
- * Not yet tokenized: ~32px control height and ~52px footer height have no matching tokens.
+ * - color: semantic.color.text.secondary — default (unselected) item text.
+ * - color: semantic.color.interactive.primarySelected — current-page tint,
+ *   only when color="primary" is passed (color defaults to "standard", which
+ *   uses text.primary / action.selected, not the brand tint).
+ * - type: semantic.typography.scale.caption is a reasonable size reference;
+ *   MUI's own PaginationItem text is closer to a 14px button-ish size by
+ *   default, not literally the caption token.
  */
-export function Pagination({
-  page,
-  pageSize,
-  totalItems,
-  pageSizeOptions = [25, 50, 100],
-  variant = 'table-footer',
-  siblingCount = 1,
-  onPageChange,
-  onPageSizeChange,
-  className,
-}: PaginationProps) {
-  const pageCount = Math.max(1, Math.ceil(totalItems / pageSize));
-  const start = totalItems === 0 ? 0 : (page - 1) * pageSize + 1;
-  const end = Math.min(page * pageSize, totalItems);
-  const atFirst = page <= 1;
-  const atLast = page >= pageCount;
+export type PaginationProps = MuiPaginationProps;
 
-  const goTo = (next: number) => {
-    const clamped = Math.min(Math.max(1, next), pageCount);
-    if (clamped !== page) onPageChange?.(clamped);
-  };
-
-  return (
-    <nav
-      className={['pgn', className].filter(Boolean).join(' ')}
-      aria-label="Pagination"
-    >
-      <span className="lbl">
-        Rows per page:{' '}
-        <select
-          aria-label="Rows per page"
-          value={pageSize}
-          onChange={(e) => onPageSizeChange?.(Number(e.target.value))}
-        >
-          {pageSizeOptions.map((size) => (
-            <option key={size} value={size}>
-              {size}
-            </option>
-          ))}
-        </select>
-      </span>
-
-      {variant !== 'rows-per-page-only' ? (
-        <>
-          <span className="lbl">
-            {start.toLocaleString()}–{end.toLocaleString()} of {totalItems.toLocaleString()}
-          </span>
-          <span
-            className="p"
-            role="button"
-            aria-disabled={atFirst}
-            aria-label="Previous page"
-            onClick={() => !atFirst && goTo(page - 1)}
-          >
-            ‹
-          </span>
-          {variant === 'numbered'
-            ? buildPageList(page, pageCount, siblingCount).map((p, idx) =>
-                p === '…' ? (
-                  <span className="p" key={`ellipsis-${idx}`} aria-hidden="true">
-                    …
-                  </span>
-                ) : (
-                  <span
-                    className={['p', p === page ? 'on' : null].filter(Boolean).join(' ')}
-                    key={p}
-                    role="button"
-                    aria-current={p === page ? 'page' : undefined}
-                    onClick={() => goTo(p)}
-                  >
-                    {p}
-                  </span>
-                )
-              )
-            : null}
-          <span
-            className="p"
-            role="button"
-            aria-disabled={atLast}
-            aria-label="Next page"
-            onClick={() => !atLast && goTo(page + 1)}
-          >
-            ›
-          </span>
-        </>
-      ) : null}
-    </nav>
-  );
-}
+export const Pagination = React.forwardRef<HTMLUListElement, PaginationProps>(
+  function Pagination(props, ref) {
+    return <MuiPagination ref={ref} {...props} />;
+  },
+);
 
 export default Pagination;

@@ -2,59 +2,55 @@
   "name": "ImageList",
   "category": "Images and icons",
   "status": "stable",
-  "aaReviewed": "2026-07-16",
-  "library": "Material Components Web (MDC) 14.0.0 — Cartrack-themed",
-  "source": "md2-cartrack-library/components/image-lists.html",
-  "description": "Image lists arrange images in a grid — vehicle photos, inspection snapshots, document scans, map thumbnails. They make a set of visuals scannable at a glance.",
-  "keyRule": "Use an image list when the visual is the content. If text matters more than the picture, a list or table with a small thumbnail is usually better.",
+  "aaReviewed": "2026-07-24",
+  "library": "Material UI (MUI) v9 — Cartrack-themed via @karoo-ui/core",
+  "source": "libs/shared/js/karoo-ui/core/src/lib/ImageList/index.tsx (real fleet-web source, wraps @mui/material/ImageList)",
+  "description": "Image lists arrange images in a grid — vehicle photos, inspection snapshots, document scans, map thumbnails. They make a set of visuals scannable at a glance. Built from @mui/material/ImageList as the grid container, composed with ImageListItem (and optionally ImageListItemBar) children.",
+  "keyRule": "Use an image list when the visual is the content. If text matters more than the picture, a List or DataGrid with a small thumbnail is usually better.",
   "variants": [
     {
       "name": "Standard",
-      "whenToUse": "Equal-size tiles in a uniform grid."
+      "whenToUse": "Equal-size tiles in a uniform grid. Real prop: variant=\"standard\" (default)."
     },
     {
-      "name": "Quilted / woven",
-      "whenToUse": "Emphasize some images with varied tile sizes."
+      "name": "Quilted / Woven",
+      "whenToUse": "Emphasize some images with varied tile sizes. Real props: variant=\"quilted\" / variant=\"woven\", combined with cols/rows on individual ImageListItem children."
     },
     {
       "name": "With text overlay",
-      "whenToUse": "When each image needs a short caption or action."
+      "whenToUse": "When each tile needs a short caption or action — add an ImageListItemBar inside the ImageListItem."
     },
     {
       "name": "Masonry",
-      "whenToUse": "Images of differing aspect ratios."
+      "whenToUse": "Images of differing aspect ratios. Real prop: variant=\"masonry\"."
     }
   ],
   "anatomy": [
     {
-      "name": "Grid",
-      "description": "the arrangement of tiles (equal or varied sizes)."
+      "name": "ImageList (this component)",
+      "description": "the grid container — sets cols, gap, rowHeight, and variant for its children."
     },
     {
-      "name": "Image tile",
-      "description": "one image, optionally clickable."
+      "name": "ImageListItem",
+      "description": "a separate @mui/material component — one tile, holding an <img> and optionally an ImageListItemBar."
     },
     {
-      "name": "Label overlay",
-      "description": "optional caption/title bar on a tile."
-    },
-    {
-      "name": "Action",
-      "description": "optional icon on a tile (e.g. favourite, info)."
+      "name": "ImageListItemBar",
+      "description": "a separate @mui/material component — an optional caption/title bar overlaid on a tile, with an optional leading/trailing action icon."
     }
   ],
   "behaviors": [
     {
       "name": "Activation",
-      "description": "A tile can open a larger view or detail; show hover/focus affordance."
+      "description": "Wrap an ImageListItem's contents in a button/link if a tile should open a larger view or detail; show hover/focus affordance yourself — this isn't automatic."
     },
     {
-      "name": "Responsive columns",
-      "description": "Column count adapts to width; tiles keep their aspect ratio."
+      "name": "Columns are fixed, not auto-responsive",
+      "description": "The real `cols` prop is a single fixed number. There is no built-in responsive behavior — vary `cols` yourself per breakpoint (e.g. with useMediaQuery) if you want the grid to adapt to container width."
     },
     {
       "name": "Loading",
-      "description": "Show placeholders while images load; lazy-load long grids."
+      "description": "Show placeholders while images load; lazy-load long grids (e.g. native `loading=\"lazy\"` on each <img>) — this is your responsibility, not built into ImageList/ImageListItem."
     }
   ],
   "states": [
@@ -64,77 +60,88 @@
     },
     {
       "state": "Hover/focus",
-      "treatment": "Overlay/scale affordance."
+      "treatment": "Overlay/scale affordance — apply via sx on ImageListItem/your wrapping button."
     },
     {
       "state": "Loading",
-      "treatment": "Placeholder/skeleton tile."
+      "treatment": "Placeholder/skeleton tile — compose with @mui/material/Skeleton."
     }
   ],
   "specs": [
     {
       "property": "Gap",
-      "value": "4–8px between tiles"
+      "value": "4px real default (the `gap` prop) — matches semantic.spacing.xs"
     },
     {
       "property": "Tile radius",
-      "value": "2–4px"
+      "value": "None by default — MUI applies no border-radius to ImageListItem/img; add one yourself if wanted"
     },
     {
       "property": "Overlay label",
-      "value": "Roboto 12–14px on a scrim"
+      "value": "ImageListItemBar's title/subtitle typography — size is up to you; semantic.typography.scale.caption (12px) is a reasonable default"
     },
     {
       "property": "Columns",
-      "value": "Responsive to container width"
+      "value": "Fixed via the `cols` prop (default 2) — not responsive by itself"
     }
   ],
   "tokens": [
     "semantic.spacing.xs",
-    "semantic.spacing.sm",
     "semantic.radius.default",
     "semantic.typography.scale.caption"
   ],
   "props": [
     {
-      "name": "items",
-      "type": "ImageListItemData[]",
+      "name": "children",
+      "type": "React.ReactNode",
       "required": true,
-      "description": "Tiles to render in the grid, each an image with meaningful alt text."
+      "description": "ImageListItem elements (each with meaningful alt text on its <img>)."
     },
     {
       "name": "cols",
       "type": "number",
       "required": false,
-      "description": "Column count for the standard/uniform grid; responsive column behavior adapts this to container width."
+      "description": "Column count for the grid. Default 2. Fixed, not responsive — vary it yourself per breakpoint."
     },
     {
-      "name": "maxWidth",
-      "type": "number | string",
+      "name": "gap",
+      "type": "number",
       "required": false,
-      "description": "Max width of the grid container."
+      "description": "Gap between items in px. Default 4."
     },
     {
-      "name": "className",
-      "type": "string",
+      "name": "rowHeight",
+      "type": "number | 'auto'",
       "required": false,
-      "description": "Optional extra class names to compose with the base mdc-image-list class."
+      "description": "Height of one row in px. Default 'auto'."
+    },
+    {
+      "name": "variant",
+      "type": "'masonry' | 'quilted' | 'standard' | 'woven'",
+      "required": false,
+      "description": "Standard = equal-size tiles. Masonry = differing aspect ratios. Quilted/Woven = varied tile sizes for emphasis. Default 'standard'."
+    },
+    {
+      "name": "sx",
+      "type": "SxProps<Theme>",
+      "required": false,
+      "description": "Standard MUI system prop for one-off style overrides."
     }
   ],
   "doThis": [
     "Use when the image is the primary content.",
-    "Keep gaps consistent.",
-    "Provide alt text and a larger view."
+    "Keep gaps consistent (default 4px, or your own via `gap`).",
+    "Provide alt text on every ImageListItem's <img>, and a way to reach a larger view."
   ],
   "dontDoThis": [
-    "Don't use an image list for text-heavy records.",
-    "Don't load hundreds of full-size images at once.",
-    "Don't put essential info only in an overlay that may be hard to read."
+    "Don't use an image list for text-heavy records — use a List or DataGrid.",
+    "Don't load hundreds of full-size images at once — lazy-load and consider pagination.",
+    "Don't put essential info only in an ImageListItemBar overlay that may be hard to read against a busy image."
   ],
   "accessibility": [
-    "Every image has meaningful alt text.",
-    "Clickable tiles are buttons/links with accessible names and visible focus.",
-    "Overlay text meets contrast against the scrim."
+    "Every ImageListItem's image has meaningful alt text.",
+    "Clickable tiles are wrapped in a real button/link with an accessible name and visible focus — ImageList/ImageListItem don't provide this themselves.",
+    "ImageListItemBar text meets contrast against its scrim (MUI's default scrim gradient is dark, so light text is generally safe; verify with custom colours)."
   ],
   "related": [
     {

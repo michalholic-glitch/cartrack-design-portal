@@ -1,0 +1,214 @@
+{
+  "name": "Drawer",
+  "category": "Navigation",
+  "status": "stable",
+  "aaReviewed": "2026-07-24",
+  "library": "Material UI (MUI) v9 — Cartrack-themed via @karoo-ui/core",
+  "source": "libs/shared/js/karoo-ui/core/src/lib/Drawer/index.tsx (real fleet-web source, wraps @mui/material/Drawer)",
+  "description": "This doc.json consolidates the two old design-system/components docs — NavigationDrawer and SideSheet — which were both confirmed to duplicate-map to one real component: MUI's Drawer. A Drawer is a surface anchored to an edge of the viewport. Docked (variant=\"permanent\"/\"persistent\") it reads as navigation or a persistent side panel that reflows the page; as an overlay (variant=\"temporary\", the MUI default) it reads as a modal side sheet — contextual detail, a filters panel, or a mobile nav overlay — sitting over a backdrop that traps focus. Both use cases are the same component with a different `variant`/`anchor`, not two components.",
+  "keyRule": "Pick `variant` by whether the page should reflow around the drawer (\"permanent\"/\"persistent\", docked) or the drawer should sit over the page and block it until dismissed (\"temporary\", overlay). Content is entirely your own children — Drawer has no built-in nav-items/header/footer props; compose List/ListItemButton for navigation, or a header Box + form/content + footer actions for a side sheet.",
+  "variants": [
+    {
+      "name": "Permanent (docked navigation drawer)",
+      "whenToUse": "Default desktop primary navigation — always visible alongside content. variant=\"permanent\". NOTE: fleet-web's real primary nav is a bespoke MainSideNavbar, not this Drawer — this variant documents a real, supported API shape for building nav-drawer UIs, it isn't currently how fleet-web's own main nav is implemented."
+    },
+    {
+      "name": "Persistent (toggleable docked drawer)",
+      "whenToUse": "A docked drawer the operator can show/hide without it overlaying content when open. variant=\"persistent\"."
+    },
+    {
+      "name": "Temporary (modal side sheet / overlay)",
+      "whenToUse": "Contextual detail beside a list (e.g. a selected vehicle's summary), an editing flow that should hold focus, or a mobile nav overlay. variant=\"temporary\" (the MUI default) — renders over a backdrop and traps focus like a Dialog."
+    },
+    {
+      "name": "Filters panel",
+      "whenToUse": "Hosts the advanced filters for a DataGrid — typically variant=\"temporary\" anchored right."
+    }
+  ],
+  "anatomy": [
+    {
+      "name": "Paper",
+      "description": "the drawer surface itself — MUI's real `paper` slot; holds whatever children you render."
+    },
+    {
+      "name": "Backdrop",
+      "description": "the dimmed scrim behind a temporary-variant drawer — MUI's real `backdrop` slot; not rendered for permanent/persistent."
+    },
+    {
+      "name": "Your header content",
+      "description": "not a built-in prop — compose a Box/Toolbar with a title + close IconButton as the first child if you need one (mirrors the old SideSheet's Header anatomy)."
+    },
+    {
+      "name": "Your nav/content",
+      "description": "for navigation use, a List of ListItemButton items (mirrors the old NavigationDrawer's Item/Section anatomy); for a side sheet, arbitrary detail, tabs, or a form."
+    },
+    {
+      "name": "Your footer content",
+      "description": "not a built-in prop — compose your own action row as the last child if the sheet's content needs footer actions."
+    }
+  ],
+  "behaviors": [
+    {
+      "name": "Docked vs overlay",
+      "description": "Permanent/persistent variants coexist with the page and reflow content around them (you're responsible for the layout reflow — Drawer doesn't do it for you); temporary sits over a backdrop and blocks the page until dismissed."
+    },
+    {
+      "name": "Selection (navigation use)",
+      "description": "If using Drawer for navigation, the current destination is a `selected` ListItemButton; selecting an item navigates and updates it — this is List/ListItemButton behavior, not Drawer's."
+    },
+    {
+      "name": "Open with context (side-sheet use)",
+      "description": "Selecting a record opens a temporary-variant Drawer with its detail; keep the underlying list visible and highlight the selection — an app-level pattern, not built into Drawer."
+    },
+    {
+      "name": "Dismiss",
+      "description": "onClose fires on Escape or a backdrop click (temporary variant only, via the underlying Modal); permanent/persistent variants have no backdrop/Escape dismissal — you provide your own close control."
+    },
+    {
+      "name": "Entrance animation",
+      "description": "The karoo-ui wrapper forces slotProps.transition.appear=true, so the Slide transition always animates in, even on first mount."
+    }
+  ],
+  "states": [
+    {
+      "state": "Item enabled (nav use)",
+      "treatment": "Medium-emphasis icon + label on a ListItemButton."
+    },
+    {
+      "state": "Item hover/focus (nav use)",
+      "treatment": "4% overlay (MUI's real action.hover)."
+    },
+    {
+      "state": "Item active/selected (nav use)",
+      "treatment": "Primary-tint background, primary-dark label/icon — pass `selected` to ListItemButton."
+    },
+    {
+      "state": "Open (temporary)",
+      "treatment": "Paper over backdrop; focus trapped inside via the underlying Modal."
+    },
+    {
+      "state": "Open (permanent/persistent)",
+      "treatment": "Docked; page content reflows to make room (your layout's responsibility)."
+    }
+  ],
+  "specs": [
+    {
+      "property": "Width",
+      "value": "No default — Drawer's Paper has no built-in width; set it via sx/PaperProps (e.g. ~240–256px for a nav drawer, ~320–400px for a side sheet, per prior usage)"
+    },
+    {
+      "property": "Elevation",
+      "value": "Real default `elevation` prop is 16, applied to the Paper — most visible on temporary/modal variants; docked variants typically read flush, bordered by semantic.color.border.default instead of a shadow"
+    },
+    {
+      "property": "Radius",
+      "value": "4px (semantic.radius.default) on the Paper, via theme.shape — not commonly used since drawers are usually edge-to-edge/full-height"
+    },
+    {
+      "property": "Header title (your own content)",
+      "value": "Roboto 16–20px / 500 is a reasonable choice (semantic.typography.scale.titleMedium or .h6) — not enforced by Drawer itself"
+    },
+    {
+      "property": "Content padding (your own content)",
+      "value": "16px (semantic.spacing.md) is a reasonable default"
+    }
+  ],
+  "tokens": [
+    "semantic.radius.default",
+    "semantic.color.interactive.primarySelected",
+    "semantic.color.border.default",
+    "semantic.spacing.md",
+    "semantic.typography.scale.subtitle2",
+    "semantic.typography.scale.titleMedium",
+    "semantic.radius.pill"
+  ],
+  "props": [
+    {
+      "name": "open",
+      "type": "true",
+      "required": true,
+      "description": "Narrowed from MUI's real `boolean` by the karoo-ui wrapper — app convention: a Drawer is only ever rendered while open; unmount it to close instead of passing open={false}."
+    },
+    {
+      "name": "variant",
+      "type": "'permanent' | 'persistent' | 'temporary'",
+      "required": false,
+      "description": "'permanent'/'persistent' = docked (reflows content, no backdrop). 'temporary' (default) = overlay with backdrop and focus trap, like a modal side sheet."
+    },
+    {
+      "name": "anchor",
+      "type": "'left' | 'top' | 'right' | 'bottom'",
+      "required": false,
+      "description": "Edge the drawer appears from. Default 'left' — a nav drawer is typically 'left', a side sheet typically 'right'."
+    },
+    {
+      "name": "children",
+      "type": "React.ReactNode",
+      "required": false,
+      "description": "Arbitrary content — a List for navigation, or a header/content/footer composition for a side sheet. There are no built-in sections/navItems/title/footer props."
+    },
+    {
+      "name": "onClose",
+      "type": "(event: object, reason: 'escapeKeyDown' | 'backdropClick') => void",
+      "required": false,
+      "description": "Called on Escape or a backdrop click — only fires for variant=\"temporary\" (routed through ModalProps to the underlying Modal)."
+    },
+    {
+      "name": "elevation",
+      "type": "number",
+      "required": false,
+      "description": "Elevation of the Paper. Default 16."
+    },
+    {
+      "name": "ModalProps",
+      "type": "Partial<ModalProps>",
+      "required": false,
+      "description": "Props applied to the underlying Modal when variant=\"temporary\" (e.g. to customize backdrop behavior)."
+    },
+    {
+      "name": "transitionDuration",
+      "type": "number | { appear?, enter?, exit? }",
+      "required": false,
+      "description": "Overrides the Slide transition's timing."
+    },
+    {
+      "name": "sx",
+      "type": "SxProps<Theme>",
+      "required": false,
+      "description": "Standard MUI system prop — typically used to set the Paper's width/height since Drawer has no width prop of its own."
+    }
+  ],
+  "doThis": [
+    "Pick variant by reflow-vs-overlay intent, not by copying a specific old NavigationDrawer/SideSheet prop shape.",
+    "For navigation use: group items by purpose in a List, keep the top level short, show one clear active (selected) destination, hide items the operator can't access.",
+    "For side-sheet use: keep the underlying list/context visible when possible, and give the sheet a clear close control.",
+    "Set the Paper's width explicitly via sx — there is no default width."
+  ],
+  "dontDoThis": [
+    "Don't make a navigation-use Drawer a flat dump of every feature — group by purpose.",
+    "Don't stuff a full multi-step task into a narrow temporary-variant drawer — use a page or Dialog instead.",
+    "Don't block the page with a temporary/modal Drawer for read-only detail if a persistent/docked one would keep context better.",
+    "Don't expect backdropClick/Escape to fire onClose on permanent/persistent variants — there's no backdrop; provide your own close affordance."
+  ],
+  "accessibility": [
+    "For variant=\"temporary\": MUI's underlying Modal supplies role=dialog/aria-modal, traps focus, and restores it to the trigger on close, same as Dialog.",
+    "For variant=\"permanent\"/\"persistent\": wrap navigation content in a <nav> landmark yourself (e.g. component=\"nav\" or a nav-role List) — Drawer doesn't add this for you.",
+    "The active navigation item should expose aria-current (via your own ListItemButton).",
+    "Any close control you compose needs its own accessible name.",
+    "Escape closes temporary/modal drawers by default; permanent/persistent drawers have no Escape/backdrop dismissal by design."
+  ],
+  "related": [
+    {
+      "name": "Dialog",
+      "why": "Blocking decisions that demand full attention, vs. a Drawer's context-preserving overlay"
+    },
+    {
+      "name": "List",
+      "why": "The typical children for navigation-style Drawer content"
+    },
+    {
+      "name": "Menu",
+      "why": "A lighter-weight, smaller temporary surface for a short list of choices"
+    }
+  ]
+}

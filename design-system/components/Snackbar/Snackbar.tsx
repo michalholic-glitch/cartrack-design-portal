@@ -1,58 +1,34 @@
-import React from 'react';
-
-export interface SnackbarProps {
-  /** Message only = simple confirmation. With action = one quick follow-up (Undo, View). Error toast = brief failure notice. */
-  variant?: 'message' | 'action' | 'error';
-  open: boolean;
-  /** One concise line of text, e.g. "Vehicle saved". */
-  message: string;
-  /** At most one action label, e.g. "Undo". */
-  actionLabel?: string;
-  onAction?: () => void;
-  onClose?: () => void;
-}
+import * as React from 'react';
+import MuiSnackbar, { type SnackbarProps as MuiSnackbarProps } from '@mui/material/Snackbar';
 
 /**
- * Snackbar — MD2 (MDC) Cartrack-themed.
+ * Snackbar — Material UI (MUI) v9, Cartrack-themed via @karoo-ui/core.
+ * Real source: libs/shared/js/karoo-ui/core/src/lib/Snackbar/index.tsx
  * Full spec: Snackbar.doc.json
- * Mirrors the mdc-snackbar class contract from md2-cartrack-library/components/snackbars.html.
+ * The real karoo-ui wrapper applies zero overrides — a straight
+ * `export { default as Snackbar } from '@mui/material/Snackbar'`. This file
+ * forwards every real prop through a local forwardRef wrapper for
+ * consistency with the rest of this folder. Compose the message + action via
+ * the `message`/`action` props (Snackbar's own default SnackbarContent), or
+ * fully replace it with `children` (e.g. a custom Alert).
  * Tokens (tokens/tokens.json):
- * - color: semantic.color.brand.primary.light (#FFA863 action colour — exact match).
- * - type: semantic.typography.scale.body2 (14px message text).
- * - color: semantic.color.surface.inverse / .onInverse (the #323232 dark surface + white text pair
- *   — added 2026-07-16 to close this exact gap, shared with Tooltip.tsx's dark background; this
- *   component's own literal spec value became the canonical inverse-surface token).
+ * - color: semantic.color.surface.inverse / semantic.color.surface.onInverse
+ *   — the dark container / light text (SnackbarContent's real default look).
+ * - color: semantic.color.brand.primary.light — a legible action-button
+ *   colour on the dark surface; an app convention applied via the `action`
+ *   button's own sx/color, not a Snackbar built-in.
+ * - type: semantic.typography.scale.body2 — the app-wide Typography default
+ *   the message text inherits.
+ * NOTE: `autoHideDuration` defaults to `null` (no auto-dismiss) — "auto-hides
+ *   after a few seconds" is opt-in per instance, not a Snackbar default.
  */
-export function Snackbar({ variant = 'message', open, message, actionLabel, onAction, onClose }: SnackbarProps) {
-  if (!open) return null;
+export type SnackbarProps = MuiSnackbarProps;
 
-  return (
-    <aside className={`mdc-snackbar mdc-snackbar--open${variant === 'error' ? ' mdc-snackbar--error' : ''}`}>
-      <div className="mdc-snackbar__surface" role="status" aria-relevant="additions">
-        <div className="mdc-snackbar__label" aria-atomic="false">
-          {message}
-        </div>
-        <div className="mdc-snackbar__actions" aria-atomic="true">
-          {actionLabel ? (
-            <button type="button" className="mdc-button mdc-snackbar__action" onClick={onAction}>
-              <div className="mdc-button__ripple" />
-              <span className="mdc-button__label">{actionLabel}</span>
-            </button>
-          ) : null}
-          {onClose ? (
-            <button
-              type="button"
-              className="mdc-icon-button mdc-snackbar__dismiss material-icons"
-              aria-label="Dismiss"
-              onClick={onClose}
-            >
-              close
-            </button>
-          ) : null}
-        </div>
-      </div>
-    </aside>
-  );
-}
+export const Snackbar = React.forwardRef<HTMLDivElement, SnackbarProps>(function Snackbar(
+  props,
+  ref,
+) {
+  return <MuiSnackbar ref={ref} {...props} />;
+});
 
 export default Snackbar;

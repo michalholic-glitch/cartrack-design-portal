@@ -2,103 +2,107 @@
   "name": "List",
   "category": "Text and data display",
   "status": "stable",
-  "aaReviewed": "2026-07-16",
-  "library": "Material Components Web (MDC) 14.0.0 — Cartrack-themed",
-  "source": "md2-cartrack-library/components/lists.html",
-  "description": "Lists present a vertical run of related records — drivers, notifications, recent vehicles. Each row pairs a primary line with optional supporting text, a leading avatar/icon, and trailing actions.",
-  "keyRule": "Use a list for simple, scannable records. The moment you need columns, sorting, selection, or pagination, switch to a data table.",
+  "aaReviewed": "2026-07-24",
+  "library": "Material UI (MUI) v9 — Cartrack-themed via @karoo-ui/core",
+  "source": "libs/shared/js/karoo-ui/core/src/lib/List/index.tsx (real fleet-web source, wraps @mui/material/List)",
+  "description": "Lists present a vertical run of related records — drivers, notifications, recent vehicles. Each row pairs a primary line with optional supporting text, a leading avatar/icon, and trailing actions. Built from @mui/material/List as the <ul> container, composed with ListItem/ListItemButton/ListItemText/ListItemIcon/ListItemAvatar children — List has no `items` prop.",
+  "keyRule": "Use a list for simple, scannable records. The moment you need columns, sorting, selection, or pagination, switch to a DataGrid.",
   "variants": [
     {
       "name": "Single-line",
-      "whenToUse": "Short records (names, options)."
+      "whenToUse": "Short records (names, options). ListItemText with only `primary` set."
     },
     {
       "name": "Two-line",
-      "whenToUse": "A title plus one supporting detail (most common)."
+      "whenToUse": "A title plus one supporting detail (most common). ListItemText with `primary` + `secondary`."
     },
     {
       "name": "Three-line",
-      "whenToUse": "Title plus two lines of context."
+      "whenToUse": "Title plus two lines of context — secondary content that wraps, or ListItemText's secondaryTypographyProps for multi-line text."
     },
     {
       "name": "With controls",
-      "whenToUse": "Leading checkbox (multi-select) or trailing switch/action."
+      "whenToUse": "Leading Checkbox (multi-select via ListItemIcon) or trailing Switch/action."
     }
   ],
   "anatomy": [
     {
-      "name": "List container",
-      "description": "holds the items; may be divided or grouped."
+      "name": "List container (this component)",
+      "description": "holds the items; may be divided (Divider) or grouped (ListSubheader)."
     },
     {
-      "name": "List item",
-      "description": "one record (a row target)."
+      "name": "ListItem / ListItemButton",
+      "description": "separate @mui/material components — one record. Use ListItemButton for a clickable/navigable row (it, not ListItem, carries hover/focus/selected states)."
     },
     {
-      "name": "Leading element",
-      "description": "avatar, icon, or checkbox."
+      "name": "ListItemIcon / ListItemAvatar",
+      "description": "separate @mui/material components — leading icon, checkbox, or avatar."
     },
     {
-      "name": "Primary & secondary text",
-      "description": "the title and supporting line."
+      "name": "ListItemText",
+      "description": "a separate @mui/material component rendering the primary and secondary text."
     },
     {
-      "name": "Trailing element",
-      "description": "a meta value, action, or overflow ⋮."
+      "name": "ListItemSecondaryAction",
+      "description": "a separate @mui/material component/pattern for a trailing meta value, action, or overflow ⋮."
     },
     {
-      "name": "Subheader / divider",
-      "description": "optional group label or separator."
+      "name": "ListSubheader / Divider",
+      "description": "separate @mui/material components for an optional group label or separator."
     }
   ],
   "behaviors": [
     {
       "name": "Activation",
-      "description": "A clickable row navigates or opens detail; show hover and focus so it reads as interactive."
+      "description": "Use ListItemButton (not a plain ListItem) for a clickable row that navigates or opens detail — it provides the real hover/focus/selected treatment."
     },
     {
       "name": "Selection",
-      "description": "For multi-select, use leading checkboxes (and consider whether a data table is the better tool)."
+      "description": "For multi-select, use a leading Checkbox inside ListItemIcon on each ListItemButton (and consider whether a DataGrid is the better tool)."
     },
     {
       "name": "Grouping",
-      "description": "Use subheaders + dividers to group long lists; avoid deep nesting."
+      "description": "Use ListSubheader + Divider to group long lists; avoid deep nesting."
+    },
+    {
+      "name": "Dense mode",
+      "description": "Set `dense` for compact vertical padding suited to keyboard/mouse-heavy UIs; it propagates to descendant list items via context."
     }
   ],
   "states": [
     {
       "state": "Enabled",
-      "treatment": "Default row."
+      "treatment": "Default row (on ListItemButton)."
     },
     {
       "state": "Hover/focus",
-      "treatment": "4% overlay."
+      "treatment": "4% overlay (MUI's real action.hover opacity) on ListItemButton."
     },
     {
       "state": "Selected",
-      "treatment": "Primary tint."
+      "treatment": "Primary tint — pass `selected` to ListItemButton."
     },
     {
       "state": "Disabled",
-      "treatment": "38% opacity."
+      "treatment": "38% opacity — pass `disabled` to ListItemButton."
     }
   ],
   "specs": [
     {
       "property": "Row height",
-      "value": "48px (1-line), 64px (2-line), 88px (3-line)"
+      "value": "Not an enforced token — MUI's ListItem/ListItemButton size to their content and padding (~8px vertical padding by default, less with `dense`); 48/64/88px are typical single/two/three-line outcomes, not fixed values"
     },
     {
       "property": "Primary text",
-      "value": "Roboto 14–16px / 400"
+      "value": "Inherits the app-wide default Typography variant (body2, 14px/400) unless ListItemText's primaryTypographyProps overrides it"
     },
     {
       "property": "Secondary text",
-      "value": "14px, on-surface-medium"
+      "value": "semantic.color.text.secondary, same 14px scale by default"
     },
     {
       "property": "Side padding",
-      "value": "16px; 16px gap to leading element"
+      "value": "16px (ListItem's real default padding); 16-ish gap to a leading ListItemIcon/ListItemAvatar via MUI's own spacing, not a semantic.spacing token directly"
     }
   ],
   "tokens": [
@@ -109,57 +113,69 @@
   ],
   "props": [
     {
-      "name": "items",
-      "type": "ListItemData[]",
-      "required": true,
-      "description": "The records rendered as list items, each a row target with primary/secondary text, leading and trailing elements."
+      "name": "children",
+      "type": "React.ReactNode",
+      "required": false,
+      "description": "ListItem/ListItemButton (and ListSubheader/Divider) elements — there is no `items` array prop; render the records yourself."
     },
     {
-      "name": "lines",
-      "type": "1 | 2 | 3",
+      "name": "dense",
+      "type": "boolean",
       "required": false,
-      "description": "Single-line, two-line, or three-line variant; two-line is the most common and is the default."
+      "description": "Compact vertical padding for the list and its descendant items (propagated via context). Default false."
+    },
+    {
+      "name": "disablePadding",
+      "type": "boolean",
+      "required": false,
+      "description": "Removes the list's vertical padding. Default false."
     },
     {
       "name": "subheader",
-      "type": "string",
+      "type": "React.ReactNode",
       "required": false,
-      "description": "Optional group label rendered above the list (Subheader / divider anatomy)."
+      "description": "Normally a ListSubheader element, rendered above the items."
     },
     {
-      "name": "className",
-      "type": "string",
+      "name": "component",
+      "type": "React.ElementType",
       "required": false,
-      "description": "Optional extra class names to compose with the base mdc-deprecated-list class."
+      "description": "Overrides the rendered root element/component. Default 'ul'."
+    },
+    {
+      "name": "sx",
+      "type": "SxProps<Theme>",
+      "required": false,
+      "description": "Standard MUI system prop for one-off style overrides."
     }
   ],
   "doThis": [
     "Keep the primary line scannable.",
-    "Use two-line items for record + context.",
-    "Switch to a data table when columns/sorting appear."
+    "Use ListItemText's primary + secondary for record + context.",
+    "Switch to a DataGrid when columns/sorting/pagination appear."
   ],
   "dontDoThis": [
     "Don't cram tabular data into a list.",
     "Don't nest lists deeply.",
-    "Don't hide the only action in a hover-only control without a focus path."
+    "Don't rely on a plain ListItem for a clickable row — use ListItemButton so focus/hover/selected states are correct."
   ],
   "accessibility": [
-    "Use real list semantics (ul/li or role=list).",
-    "Interactive rows are links/buttons with accessible names and visible focus.",
-    "Leading checkboxes are labelled by the item text."
+    "List renders a real <ul> by default (real list semantics).",
+    "Use ListItemButton (a real button-like element) for interactive rows so they have accessible names and visible focus automatically.",
+    "Leading checkboxes should be wired to their item's ListItemText via aria-labelledby or by wrapping both in the same ListItemButton's label."
   ],
   "related": [
     {
-      "name": "DataTable",
-      "why": "Multi-column comparison and sorting"
-    },
-    {
       "name": "Menu",
-      "why": "Action lists inside a temporary overlay"
+      "why": "Action lists inside a temporary overlay, not a persistent list"
     },
     {
       "name": "ImageList",
       "why": "Visual/media-led collections"
+    },
+    {
+      "name": "Drawer",
+      "why": "A List is the typical children of a navigation-style Drawer"
     }
   ]
 }

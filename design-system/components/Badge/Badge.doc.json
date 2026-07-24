@@ -3,82 +3,82 @@
   "category": "Labels",
   "status": "stable",
   "aaReviewed": "2026-07-16",
-  "library": "Material Components Web (MDC) 14.0.0 — Cartrack-themed",
-  "source": "md2-cartrack-library/components/badges.html",
+  "library": "Material UI (MUI) v9 — Cartrack-themed via @karoo-ui/core",
+  "source": "libs/shared/js/karoo-ui/core/src/lib/Badge/index.tsx (real fleet-web source, wraps @mui/material/Badge)",
   "description": "A badge is a small indicator placed on another element to show a count or status — the number of unread alerts on the notifications bell, or a dot marking a vehicle that needs attention.",
   "keyRule": "Use a badge to draw attention to a count or new state on an icon or item. Keep it glanceable — for detailed status use a status chip instead.",
   "variants": [
     {
-      "name": "Numeric",
-      "whenToUse": "Show a count (unread alerts, pending tasks)."
+      "name": "Standard (numeric)",
+      "whenToUse": "Show a count via `badgeContent` (unread alerts, pending tasks)."
     },
     {
       "name": "Dot",
-      "whenToUse": "Indicate \"new\"/attention without a number."
+      "whenToUse": "`variant=\"dot\"` — indicate \"new\"/attention without a number."
     },
     {
       "name": "Capped",
-      "whenToUse": "Large counts shown as \"99+\"."
+      "whenToUse": "Large counts automatically render as \"99+\" once `badgeContent` exceeds `max` (default 99)."
     }
   ],
   "anatomy": [
     {
       "name": "Host",
-      "description": "the icon/element the badge sits on."
+      "description": "the `children` — the icon/element the badge is anchored to."
     },
     {
       "name": "Badge",
-      "description": "the small count or dot indicator (usually top-right)."
+      "description": "the small count or dot indicator, positioned via `anchorOrigin` (default top-right)."
     },
     {
       "name": "Content",
-      "description": "a number, capped value (\"99+\"), or empty dot."
+      "description": "`badgeContent` — a number, auto-capped value (\"99+\"), or nothing (dot variant)."
     }
   ],
   "behaviors": [
     {
       "name": "Capping",
-      "description": "Cap large counts (e.g. 99+) so the badge stays small and readable."
+      "description": "`max` (default 99) caps large counts so the badge stays small and readable."
     },
     {
       "name": "Zero",
-      "description": "Hide the badge at zero unless \"0\" is meaningful."
+      "description": "Badge auto-hides when `badgeContent` is 0 unless `showZero` is true."
     },
     {
       "name": "Live updates",
-      "description": "When the count changes, update it promptly and announce it to assistive tech."
+      "description": "When the count changes, update it promptly; pair with a live region on the host if the change should be announced to assistive tech (Badge itself does not add one)."
     }
   ],
   "states": [
     {
       "state": "Visible",
-      "treatment": "Error-colour pill/dot on the host."
+      "treatment": "Default `color=\"default\"` (grey) pill/dot on the host; Cartrack usage commonly sets `color=\"error\"` for alert counts."
     },
     {
-      "state": "Empty (dot)",
-      "treatment": "Small filled dot, no number."
+      "state": "Dot",
+      "treatment": "Small filled 6px circle, no number (`variant=\"dot\"`)."
     },
     {
-      "state": "Hidden",
-      "treatment": "Removed at zero/none."
+      "state": "Invisible",
+      "treatment": "`invisible` prop or an auto-hidden zero count removes the badge from view (still rendered in the DOM, visually hidden)."
     }
   ],
   "specs": [
     {
-      "property": "Numeric badge",
-      "value": "~16–18px tall pill"
+      "property": "Standard badge",
+      "value": "20px min-width/height pill, border-radius 10px, 0/6px padding (MUI's built-in geometry, not theme-shape-derived)"
     },
     {
-      "property": "Dot",
-      "value": "~8px"
+      "property": "Dot badge",
+      "value": "6px circle, border-radius 3px"
     },
     {
       "property": "Colour",
-      "value": "error (#F44336) with white text (passes AA)"
+      "value": "`color=\"default\"` (grey) by default; `error` (#F44336) with white text is the common alert-count usage and passes AA"
     },
     {
       "property": "Text",
-      "value": "Roboto ~11–12px / 500"
+      "value": "Inherits surrounding font-size; no dedicated Badge typography variant. semantic.typography.scale.labelSmall (12px/500) is the closest named scale step visually, but is not a real MUI `variant`."
     }
   ],
   "tokens": [
@@ -95,43 +95,67 @@
       "description": "The host element (icon/button) the badge is anchored to."
     },
     {
-      "name": "hostLabel",
-      "type": "string",
-      "required": true,
-      "description": "Accessible label for the host, e.g. \"Notifications\"."
+      "name": "badgeContent",
+      "type": "React.ReactNode",
+      "required": false,
+      "description": "The content rendered within the badge (a number in most cases)."
     },
     {
-      "name": "count",
+      "name": "color",
+      "type": "'default' | 'primary' | 'secondary' | 'error' | 'info' | 'success' | 'warning'",
+      "required": false,
+      "description": "Badge colour. Default is 'default' (grey); Cartrack commonly uses 'error' for alert counts."
+    },
+    {
+      "name": "variant",
+      "type": "'standard' | 'dot'",
+      "required": false,
+      "description": "'standard' shows badgeContent; 'dot' renders a small dot with no number."
+    },
+    {
+      "name": "max",
       "type": "number",
       "required": false,
-      "description": "Numeric count; capped and rendered as \"99+\" above 99."
-    },
-    {
-      "name": "dot",
-      "type": "boolean",
-      "required": false,
-      "description": "Renders a dot badge (no number) instead of a numeric pill."
+      "description": "Max count to show before capping to \"{max}+\". Default 99."
     },
     {
       "name": "showZero",
       "type": "boolean",
       "required": false,
-      "description": "Show the badge even when count is 0. Default false — badge hides at zero."
+      "description": "Controls whether the badge is hidden when badgeContent is zero. Default false — badge hides at zero."
+    },
+    {
+      "name": "invisible",
+      "type": "boolean",
+      "required": false,
+      "description": "Forces the badge invisible regardless of content. Default false."
+    },
+    {
+      "name": "anchorOrigin",
+      "type": "{ vertical: 'top' | 'bottom'; horizontal: 'left' | 'right' }",
+      "required": false,
+      "description": "Where the badge sits relative to its host. Default { vertical: 'top', horizontal: 'right' }."
+    },
+    {
+      "name": "overlap",
+      "type": "'rectangular' | 'circular'",
+      "required": false,
+      "description": "Shape of the wrapped host, affects badge positioning math. Default 'rectangular'."
     }
   ],
   "doThis": [
-    "Cap large counts (99+).",
-    "Use a dot when a number isn't needed.",
-    "Announce count changes."
+    "Cap large counts (99+ is automatic via `max`).",
+    "Use `variant=\"dot\"` when a number isn't needed.",
+    "Give the host element (not the Badge) its own accessible name that reflects the count, e.g. aria-label=\"Notifications, 4 unread\"."
   ],
   "dontDoThis": [
-    "Don't put long text in a badge.",
-    "Don't show \"0\" unless it matters.",
-    "Don't rely on the badge alone to convey critical detail."
+    "Don't put long text in `badgeContent` — it's sized for a number or a dot.",
+    "Don't show \"0\" unless it matters (`showZero`).",
+    "Don't rely on the badge alone to convey a critical state — pair with text/colour elsewhere."
   ],
   "accessibility": [
-    "The host's accessible name includes the badge meaning (e.g. \"Notifications, 4 unread\").",
-    "Changes are announced via a live region.",
+    "Badge has no built-in accessible label — the host's accessible name should include the badge meaning (e.g. \"Notifications, 4 unread\").",
+    "There is no invented `hostLabel` prop; naming the host is the consumer's responsibility via aria-label/aria-labelledby on the host element.",
     "The dot/number is not the only signal of an important state."
   ],
   "related": [

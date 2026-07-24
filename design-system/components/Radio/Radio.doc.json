@@ -1,0 +1,210 @@
+{
+  "name": "Radio",
+  "category": "Forms and inputs",
+  "status": "stable",
+  "aaReviewed": "2026-07-24",
+  "library": "Material UI (MUI) v9 — Cartrack-themed via @karoo-ui/core",
+  "source": "libs/shared/js/karoo-ui/core/src/lib/Radio/index.tsx (real fleet-web source, wraps @mui/material/Radio)",
+  "description": "Radio picks exactly one choice from a small, mutually exclusive set. It's almost never used alone — it's meant to be composed inside @mui/material/RadioGroup (also a plain karoo-ui re-export, see lib/RadioGroup/index.tsx), which supplies `name`, `value`, and `onChange` to every descendant Radio via context so only one can ever be checked.",
+  "keyRule": "Use Radio (inside a RadioGroup) for one choice from a short set (2–5). Beyond ~5 options, use a select/menu instead. Don't use it for independent multi-select (use Checkbox) or an instant on/off setting (use Switch).",
+  "correction": "One of three real components split out of the old MDC-modeled 'SelectionControl' umbrella, which documented Checkbox, Radio, and Switch behind a single fake `type` discriminator prop and gave each a manual `name` prop for grouping. The real grouping mechanism is a dedicated pairing component, RadioGroup — not a shared string prop the developer has to keep in sync by hand.",
+  "variants": [
+    {
+      "name": "Grouped (RadioGroup) — the standard pattern",
+      "whenToUse": "Wrap a set of Radios in <RadioGroup name=\"...\" value={...} onChange={...}>, each Radio paired with FormControlLabel for its label. This is how mutual exclusivity is actually enforced."
+    },
+    {
+      "name": "Standalone Radio",
+      "whenToUse": "Rare — a single Radio outside a RadioGroup has no innate awareness of other options; you'd have to wire `checked`/`onChange`/shared `name` manually across each instance. Prefer RadioGroup even for a small manually-laid-out set."
+    }
+  ],
+  "anatomy": [
+    {
+      "name": "RadioGroup (real pairing component)",
+      "description": "the container that owns the group's value/name/onChange and provides them to descendant Radios via context; not part of Radio itself."
+    },
+    {
+      "name": "Root",
+      "description": "a ButtonBase-backed clickable area (renders as a button element) containing the visible icon and a visually-hidden native `<input type=\"radio\">`."
+    },
+    {
+      "name": "Icon (unchecked)",
+      "description": "default RadioButtonUnchecked icon; override via the `icon` prop."
+    },
+    {
+      "name": "Checked icon",
+      "description": "default RadioButtonChecked icon; override via `checkedIcon`."
+    },
+    {
+      "name": "Label (external)",
+      "description": "not part of Radio itself. Wrap each Radio in @mui/material/FormControlLabel for a clickable label — the old SelectionControl's built-in `label` prop has no real equivalent."
+    },
+    {
+      "name": "Group label (external)",
+      "description": "typically a FormLabel/FormControl wrapping the whole RadioGroup, giving the set an accessible group name."
+    }
+  ],
+  "behaviors": [
+    {
+      "name": "Group-driven selection",
+      "description": "RadioGroup clones its Radio children (via FormControlLabel's `control`) and injects `checked` (by comparing each Radio's `value` to the group's `value`), `name`, and `onChange`. This is what actually enforces 'only one active' — Radio itself has no exclusivity logic."
+    },
+    {
+      "name": "Controlled vs uncontrolled group",
+      "description": "RadioGroup takes `value`+`onChange` (controlled) or `defaultValue` (uncontrolled) at the group level, not per-Radio."
+    },
+    {
+      "name": "Apply timing",
+      "description": "Not enforced by the component. A radio group's selection usually applies when the surrounding form is submitted, but that's a decision made by the form, not Radio."
+    }
+  ],
+  "states": [
+    {
+      "state": "Unselected",
+      "treatment": "Outline circle icon."
+    },
+    {
+      "state": "Selected",
+      "treatment": "Primary-coloured filled circle icon (color=\"primary\" by default)."
+    },
+    {
+      "state": "Hover/focus",
+      "treatment": "ButtonBase ripple/state-layer around the icon; visible focus ring."
+    },
+    {
+      "state": "Disabled",
+      "treatment": "Theme disabled-action opacity; not focusable. Can be set per-Radio or via RadioGroup context on the whole group."
+    }
+  ],
+  "specs": [
+    {
+      "property": "Default size",
+      "value": "size=\"small\" — set at the theme level (theme.ts: MuiRadio.defaultProps.size), not by this wrapper. MUI's own default is \"medium\"."
+    },
+    {
+      "property": "Icon size (approx.)",
+      "value": "medium ≈24px icon with a larger click/touch target via internal padding; small (Cartrack default) ≈20px icon — MUI internals, not tokenized."
+    },
+    {
+      "property": "Selected colour",
+      "value": "primary (#F47735) via the default color=\"primary\""
+    },
+    {
+      "property": "Size options",
+      "value": "Radio only supports 'small' | 'medium' — unlike Checkbox/Switch, MUI Radio has no 'large' size."
+    }
+  ],
+  "tokens": [
+    "semantic.color.brand.primary.main"
+  ],
+  "props": [
+    {
+      "name": "checked",
+      "type": "boolean",
+      "required": false,
+      "description": "Controlled checked state. In practice usually supplied by RadioGroup, not set directly."
+    },
+    {
+      "name": "defaultChecked",
+      "type": "boolean",
+      "required": false,
+      "description": "Uncontrolled initial checked state (rare — RadioGroup's own defaultValue is the normal way to seed a group)."
+    },
+    {
+      "name": "icon",
+      "type": "React.ReactNode",
+      "required": false,
+      "description": "Unchecked icon. Default: RadioButtonUnchecked."
+    },
+    {
+      "name": "checkedIcon",
+      "type": "React.ReactNode",
+      "required": false,
+      "description": "Checked icon. Default: RadioButtonChecked."
+    },
+    {
+      "name": "onChange",
+      "type": "(event: React.ChangeEvent<HTMLInputElement>, checked: boolean) => void",
+      "required": false,
+      "description": "Fired when this Radio becomes checked. Usually supplied by RadioGroup rather than set per-Radio."
+    },
+    {
+      "name": "color",
+      "type": "'primary' | 'secondary' | 'error' | 'info' | 'success' | 'warning' | 'default'",
+      "required": false,
+      "description": "Checked-state colour. Default 'primary'."
+    },
+    {
+      "name": "size",
+      "type": "'small' | 'medium'",
+      "required": false,
+      "description": "Default 'medium' in stock MUI, overridden to 'small' fleet-wide by theme.ts."
+    },
+    {
+      "name": "disabled",
+      "type": "boolean",
+      "required": false,
+      "description": "Disables this control."
+    },
+    {
+      "name": "required",
+      "type": "boolean",
+      "required": false,
+      "description": "Marks the underlying native input as required."
+    },
+    {
+      "name": "name",
+      "type": "string",
+      "required": false,
+      "description": "Name attribute of the native input. Normally set once on RadioGroup and propagated to every Radio in the set, not per-Radio."
+    },
+    {
+      "name": "value",
+      "type": "unknown",
+      "required": false,
+      "description": "This Radio's value within the group — compared against RadioGroup's `value` to determine its checked state."
+    },
+    {
+      "name": "id",
+      "type": "string",
+      "required": false,
+      "description": "id of the native input — pair with FormControlLabel's htmlFor."
+    },
+    {
+      "name": "sx",
+      "type": "SxProps<Theme>",
+      "required": false,
+      "description": "Standard MUI style-override escape hatch."
+    }
+  ],
+  "doThis": [
+    "Wrap every set of Radios in a RadioGroup so mutual exclusivity is real, not manually simulated.",
+    "Use FormControlLabel to give every Radio a clickable label.",
+    "Give the whole group an accessible name (FormLabel above the RadioGroup, or aria-label/aria-labelledby)."
+  ],
+  "dontDoThis": [
+    "Don't use more than ~5 Radios — switch to a select/menu.",
+    "Don't wire `checked`/`onChange`/shared `name` manually across standalone Radios when RadioGroup already does this correctly.",
+    "Don't use a Switch where users expect a deliberate, submitted choice from options."
+  ],
+  "accessibility": [
+    "Renders a real native `<input type=\"radio\">` (visually hidden) so screen readers get correct semantics for free.",
+    "RadioGroup should be wrapped in a FormControl with a FormLabel (or use role=\"radiogroup\" + aria-label) so the set has an accessible group name.",
+    "Always pair each Radio with FormControlLabel (or your own <label htmlFor>) so its option text is announced and clickable.",
+    "Focus is visible via the theme's focus ring; arrow keys move selection within a native radio group as usual."
+  ],
+  "related": [
+    {
+      "name": "RadioGroup",
+      "why": "The real pairing component — manages shared name/value/onChange across a set of Radios so only one is selected; almost always used together"
+    },
+    {
+      "name": "Checkbox",
+      "why": "Independent multi-select — split from the same old SelectionControl umbrella"
+    },
+    {
+      "name": "Switch",
+      "why": "Instant on/off setting — split from the same old SelectionControl umbrella"
+    }
+  ]
+}

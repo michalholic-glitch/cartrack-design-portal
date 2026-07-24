@@ -4,16 +4,16 @@ One record in depth: identity at the top, related data grouped into tabbed or st
 
 ## Layout
 
-Page header (back arrow + record name + actions) > identity header (Card) > Tabs > tab content (Cards / DataTable / List)
+Page header (back arrow + record name + actions) > identity header (Card) > Tabs > tab content (Cards / DataGrid / List)
 
 ## Components used
 
 - Page header — the detail-header variant of the Page header pattern: a back-link (arrow + parent label, via Breadcrumbs) as the leading element, record name after it, page actions (edit, overflow ⋮) in ButtonsContainer.
 - Card — identity header: registration, status chip, key metrics (odometer, driver, last position); titleMedium (16px/500) for the card title
 - Tabs — section navigation: Overview, Trips, Maintenance, Alerts (Documents, Costs into overflow if >5)
-- DataTable — history-style tab content (trips, events), same rules as the table-page template
+- DataGrid — history-style tab content (trips, events), same rules as the table-page template
 - List — two-line list for grouped attributes and settings
-- ExpansionPanel — long secondary content inside a tab (e.g. specifications)
+- Accordion — long secondary content inside a tab (e.g. specifications)
 - Banner — record-level warnings at the top of content (e.g. "No signal for 3 days")
 - Dialog — destructive confirmations (delete/deactivate record)
 
@@ -22,7 +22,7 @@ Page header (back arrow + record name + actions) > identity header (Card) > Tabs
 - The identity header never scrolls away content the operator needs while reading tabs — keep it compact (max ~120px).
 - Tabs navigate within the record; the page-header back arrow returns to the collection (table page).
 - Status is shown once, in the identity header, as a status chip — not repeated per section.
-- Edit is a page action in the page header; per-field editing uses inline TextFields in a dedicated Edit mode or SideSheet.
+- Edit is a page action in the page header; per-field editing uses inline TextFields in a dedicated Edit mode or a Drawer-based side panel.
 
 ## Notes
 

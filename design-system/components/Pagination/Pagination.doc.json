@@ -2,87 +2,83 @@
   "name": "Pagination",
   "category": "Navigation",
   "status": "stable",
-  "aaReviewed": "2026-07-16",
-  "library": "Material Components Web (MDC) 14.0.0 — Cartrack-themed",
-  "source": "md2-cartrack-library/components/pagination.html",
-  "description": "Pagination breaks a large dataset into pages an operator can move through — the standard way to navigate the thousands of vehicles, trips, and alerts in the portal's data tables.",
-  "keyRule": "Desktop tables paginate — they don't infinite-scroll. For large or server-driven data, fetch one page at a time rather than loading everything.",
+  "aaReviewed": "2026-07-24",
+  "library": "Material UI (MUI) v9 — Cartrack-themed via @karoo-ui/core",
+  "source": "libs/shared/js/karoo-ui/core/src/lib/Pagination/index.tsx (real fleet-web source, wraps @mui/material/Pagination)",
+  "description": "Pagination breaks a large dataset into pages an operator can move through — page-number buttons plus previous/next, the standard way to navigate the thousands of vehicles, trips, and alerts in the portal's data grids. This component renders only the page controls; it does not render a rows-per-page select or a range label — those are a separate concern (compose your own, or use MUI's TablePagination, which karoo-ui does not currently wrap).",
+  "keyRule": "Desktop data grids paginate — they don't infinite-scroll. For large or server-driven data, fetch one page at a time rather than loading everything, and drive this Pagination's `page`/`count` from that server response.",
   "variants": [
     {
-      "name": "Table footer (range + prev/next)",
-      "whenToUse": "Default for data tables; compact, shows totals."
+      "name": "Text (default)",
+      "whenToUse": "variant=\"text\" (default) — flat page-number buttons."
     },
     {
-      "name": "Numbered pages",
-      "whenToUse": "When operators jump around (page 1, 2, 3…); good for moderate counts."
+      "name": "Outlined",
+      "whenToUse": "variant=\"outlined\" — bordered page-number buttons, slightly higher emphasis."
     },
     {
-      "name": "Rows-per-page only",
-      "whenToUse": "When the dataset fits a couple of pages."
+      "name": "Rounded shape",
+      "whenToUse": "shape=\"rounded\" for square-ish rounded buttons instead of the default circular ones."
     }
   ],
   "anatomy": [
     {
-      "name": "Rows-per-page",
-      "description": "a select for page size (e.g. 25/50/100)."
+      "name": "Previous / Next",
+      "description": "step one page at a time — PaginationItem type='previous'/'next', shown by default (hide with hidePrevButton/hideNextButton)."
     },
     {
-      "name": "Range label",
-      "description": "the visible window and total (\"1–100 of 100,000\")."
-    },
-    {
-      "name": "Previous / next",
-      "description": "step one page at a time."
+      "name": "First / Last",
+      "description": "optional jump-to-bounds buttons — enable with showFirstButton/showLastButton (both default false)."
     },
     {
       "name": "Page numbers",
-      "description": "optional direct jumps with the current page highlighted."
+      "description": "direct-jump buttons with the current page highlighted; siblingCount/boundaryCount control how many are shown around the current page and at the ends."
+    },
+    {
+      "name": "Ellipsis",
+      "description": "a non-interactive '…' item MUI renders automatically when there are more pages than siblingCount/boundaryCount can show."
     }
   ],
   "behaviors": [
     {
       "name": "Server vs client",
-      "description": "For small sets, paginate in the browser; for large/remote data, request each page from the server and show a loading state while fetching."
+      "description": "For small sets, page in the browser; for large/remote data, request each page from the server on `onChange` and show a loading state while fetching — this is app-level, not built into Pagination."
     },
     {
       "name": "Selection across pages",
-      "description": "When rows are selected, keep the selection as the operator pages (and make it clear how many are selected in total)."
+      "description": "If a data grid built around this Pagination supports row selection, keep the selection as the operator pages (and surface how many are selected in total) — a DataGrid-level concern."
     },
     {
       "name": "Resetting",
-      "description": "Changing filters or page size resets to page one; preserve sort."
+      "description": "Changing filters or page size should reset to page one; preserve sort — app-level state management around this Pagination's `page` prop."
     }
   ],
   "states": [
     {
       "state": "Page enabled",
-      "treatment": "Default text button."
+      "treatment": "Default text/outlined button."
     },
     {
       "state": "Current page",
-      "treatment": "Primary-tint highlight."
+      "treatment": "Filled with the active `color` (primary tint if color=\"primary\"; standard tint otherwise) — pass `page` to control it."
     },
     {
       "state": "Prev/next at bounds",
-      "treatment": "Disabled (38% opacity) at first/last page."
+      "treatment": "Automatically disabled (38% opacity) at the first/last page — MUI computes this from `page`/`count` for you."
     }
   ],
   "specs": [
     {
-      "property": "Control height",
-      "value": "~32px"
-    },
-    {
-      "property": "Footer height",
-      "value": "~52px"
+      "property": "Control size",
+      "value": "size prop: 'small' | 'medium' (default) | 'large' — each PaginationItem scales accordingly; no separate 'footer height' spec (that belongs to a rows-per-page/range composition, not this component)"
     },
     {
       "property": "Text",
-      "value": "Roboto 12–14px, on-surface-medium"
+      "value": "Default (unselected) item text uses semantic.color.text.secondary; PaginationItem's own font-size, not literally the caption token"
     },
     {
       "property": "Current page",
-      "value": "primary tint (~10%)"
+      "value": "color=\"standard\" (default) uses action.selected; color=\"primary\" uses semantic.color.interactive.primarySelected-equivalent tint (theme.palette.primary, alpha 0.08)"
     }
   ],
   "tokens": [
@@ -92,84 +88,122 @@
   ],
   "props": [
     {
+      "name": "count",
+      "type": "number",
+      "required": false,
+      "description": "Total number of pages. Default 1."
+    },
+    {
       "name": "page",
       "type": "number",
-      "required": true,
-      "description": "Current page, 1-indexed."
-    },
-    {
-      "name": "pageSize",
-      "type": "number",
-      "required": true,
-      "description": "Rows shown per page."
-    },
-    {
-      "name": "totalItems",
-      "type": "number",
-      "required": true,
-      "description": "Total row count across all pages, used to build the range label (\"1–100 of 100,000\")."
-    },
-    {
-      "name": "pageSizeOptions",
-      "type": "number[]",
       "required": false,
-      "description": "Page-size choices offered in the rows-per-page control (e.g. 25/50/100)."
+      "description": "Current page, 1-indexed. Default 1 (or use `defaultPage` for uncontrolled use)."
+    },
+    {
+      "name": "onChange",
+      "type": "(event: React.ChangeEvent<unknown>, page: number) => void",
+      "required": false,
+      "description": "Called when the operator moves to a different page (previous/next, first/last, or a numbered jump)."
+    },
+    {
+      "name": "color",
+      "type": "'primary' | 'secondary' | 'standard'",
+      "required": false,
+      "description": "The active/current-page colour. Default 'standard' — pass 'primary' to use the brand tint."
+    },
+    {
+      "name": "shape",
+      "type": "'circular' | 'rounded'",
+      "required": false,
+      "description": "Shape of each page item. Default 'circular'."
     },
     {
       "name": "variant",
-      "type": "'table-footer' | 'numbered' | 'rows-per-page-only'",
+      "type": "'text' | 'outlined'",
       "required": false,
-      "description": "Table footer (range + prev/next), Numbered pages, or Rows-per-page only, per the spec's Variants table."
+      "description": "Visual weight of each page item. Default 'text'."
+    },
+    {
+      "name": "size",
+      "type": "'small' | 'medium' | 'large'",
+      "required": false,
+      "description": "Size of the component. Default 'medium'."
     },
     {
       "name": "siblingCount",
       "type": "number",
       "required": false,
-      "description": "How many page-number buttons to show around the current page (numbered variant)."
+      "description": "How many page-number buttons to show on each side of the current page. Default 1."
     },
     {
-      "name": "onPageChange",
-      "type": "(page: number) => void",
+      "name": "boundaryCount",
+      "type": "number",
       "required": false,
-      "description": "Called when the operator moves to a different page (previous/next or a numbered jump)."
+      "description": "How many page-number buttons to show at the start/end. Default 1."
     },
     {
-      "name": "onPageSizeChange",
-      "type": "(size: number) => void",
+      "name": "hidePrevButton",
+      "type": "boolean",
       "required": false,
-      "description": "Called when the operator changes rows-per-page; should reset to page one per the Resetting behavior."
+      "description": "Hides the previous-page button. Default false."
     },
     {
-      "name": "className",
-      "type": "string",
+      "name": "hideNextButton",
+      "type": "boolean",
       "required": false,
-      "description": "Optional extra class names to compose with the base pgn class."
+      "description": "Hides the next-page button. Default false."
+    },
+    {
+      "name": "showFirstButton",
+      "type": "boolean",
+      "required": false,
+      "description": "Shows a jump-to-first-page button. Default false."
+    },
+    {
+      "name": "showLastButton",
+      "type": "boolean",
+      "required": false,
+      "description": "Shows a jump-to-last-page button. Default false."
+    },
+    {
+      "name": "disabled",
+      "type": "boolean",
+      "required": false,
+      "description": "Disables all items — e.g. while a page is loading."
+    },
+    {
+      "name": "getItemAriaLabel",
+      "type": "(type, page, selected) => string",
+      "required": false,
+      "description": "Customize each item's accessible label, important for screen reader users and localization."
+    },
+    {
+      "name": "sx",
+      "type": "SxProps<Theme>",
+      "required": false,
+      "description": "Standard MUI system prop for one-off style overrides."
     }
   ],
   "doThis": [
-    "Show the total and current range.",
-    "Offer sensible page sizes (25/50/100).",
-    "Fetch per page for large data."
+    "Pair this Pagination with your own total/range label and rows-per-page control if the data grid needs them — they're not built in.",
+    "Offer sensible page sizes (25/50/100) in whatever control drives `count`.",
+    "Fetch per page for large data, and disable the control while a page loads."
   ],
   "dontDoThis": [
-    "Don't infinite-scroll a desktop data table.",
+    "Don't infinite-scroll a desktop data grid.",
     "Don't lose selection or sort when paging.",
-    "Don't load 100k rows into the browser at once."
+    "Don't assume this component includes a rows-per-page/range label — that's a separate composition."
   ],
   "accessibility": [
-    "Pagination is a labelled navigation region.",
-    "The current page exposes aria-current, and prev/next convey their disabled state.",
-    "Page-size is a labelled select.",
-    "Controls are keyboard operable with visible focus."
+    "Pagination renders a labelled <nav> automatically (aria-label=\"pagination navigation\" by default).",
+    "The current page exposes aria-current, and prev/next/first/last convey their disabled state at the bounds automatically.",
+    "Use getItemAriaLabel to give each control a clear, localized accessible name.",
+    "All items are real buttons/links, keyboard operable with visible focus."
   ],
   "related": [
     {
-      "name": "DataTable",
-      "why": "Its host — pagination never appears alone"
-    },
-    {
-      "name": "ProgressIndicator",
-      "why": "Show a linear indicator while a page loads"
+      "name": "List",
+      "why": "One common host for paginated records instead of a data grid"
     }
   ]
 }

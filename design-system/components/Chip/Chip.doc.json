@@ -3,113 +3,102 @@
   "category": "Labels",
   "status": "stable",
   "aaReviewed": "2026-07-16",
-  "library": "Material Components Web (MDC) 14.0.0 — Cartrack-themed",
-  "source": "md2-cartrack-library/components/chips.html",
-  "description": "Chips are compact elements that represent an input, a filter, or a choice — a selected driver, an active filter on a vehicle list, a quick action. They pack a lot of interaction into a small footprint.",
-  "keyRule": "Use chips for selections and filters the operator manipulates. For read-only status (Active/Idle/Offline) use a status chip with a consistent colour mapping.",
+  "library": "Material UI (MUI) v9 — Cartrack-themed via @karoo-ui/core",
+  "source": "libs/shared/js/karoo-ui/core/src/lib/Chip/index.tsx (real fleet-web source, wraps @mui/material/Chip)",
+  "description": "Chips are compact elements that represent an input, a filter, or a choice — a selected driver, an active filter on a vehicle list, a quick action. They pack a lot of interaction into a small footprint. The karoo-ui wrapper applies no default-prop overrides itself; the app-wide `size=\"small\"` default comes from the shared theme's MuiChip defaultProps, not this component.",
+  "keyRule": "Use chips for selections and filters the operator manipulates. For read-only status (Active/Idle/Offline) map the tone with `color`/`sx` from the statusChip tokens — real MUI Chip has no native `status` variant.",
   "variants": [
     {
-      "name": "Input chip",
-      "whenToUse": "Represents a discrete entered value (selected drivers, tags) — usually removable."
+      "name": "Filled",
+      "whenToUse": "`variant=\"filled\"` (real MUI default) — the standard solid chip."
     },
     {
-      "name": "Filter chip",
-      "whenToUse": "Toggles a filter on a list; shows a selected state."
+      "name": "Outlined",
+      "whenToUse": "`variant=\"outlined\"` — flatter treatment, border only."
     },
     {
-      "name": "Choice chip",
-      "whenToUse": "Single selection from a small inline set."
+      "name": "Clickable / deletable",
+      "whenToUse": "Add `onClick` (clickable, shows a hover/press ripple) and/or `onDelete` (adds a trailing delete icon) to turn a static label into an interactive filter/input chip. There is no dedicated input/filter/choice/action prop — these are usage patterns built from the same Chip API."
     },
     {
-      "name": "Action chip",
-      "whenToUse": "Triggers a contextual action."
-    },
-    {
-      "name": "Status chip (read-only)",
-      "whenToUse": "Conveys record status with the consistent colour mapping."
+      "name": "Status (read-only, usage pattern)",
+      "whenToUse": "Map record status (Active=success, Idle=warning, Offline=error) to `color`/`sx` using the statusChip tokens; keep it non-interactive (no onClick/onDelete)."
     }
   ],
   "anatomy": [
     {
       "name": "Container",
-      "description": "pill-shaped surface; filled or outlined."
+      "description": "pill-shaped surface (16px radius); filled or outlined."
     },
     {
-      "name": "Label",
+      "name": "label",
       "description": "the value or option text."
     },
     {
-      "name": "Leading icon / avatar",
-      "description": "optional (e.g. a driver avatar)."
+      "name": "icon / avatar",
+      "description": "optional leading `icon` or `avatar` element (e.g. a driver avatar)."
     },
     {
-      "name": "Trailing action",
-      "description": "optional remove (×) or dropdown affordance."
-    },
-    {
-      "name": "Selected state",
-      "description": "check/tint indicating the chip is on."
+      "name": "deleteIcon",
+      "description": "optional trailing remove control, shown automatically when `onDelete` is set."
     }
   ],
   "behaviors": [
     {
-      "name": "Selection & removal",
-      "description": "Filter/choice chips toggle on click; input chips can be removed via the trailing × or Backspace when focused."
+      "name": "Clickable vs static",
+      "description": "Passing `onClick` (or `clickable`) makes the chip focusable and shows press/hover feedback; without it, Chip renders as a static, non-interactive label."
+    },
+    {
+      "name": "Removal",
+      "description": "Setting `onDelete` shows a trailing delete icon; clicking it fires the callback (Backspace/Delete also work when the chip is focused)."
+    },
+    {
+      "name": "Selection (usage pattern)",
+      "description": "There is no built-in `selected` prop — filter/choice behaviour is built by the consumer toggling `color`/`variant` in response to local or controlled state."
     },
     {
       "name": "Overflow",
-      "description": "When many chips are present, wrap to multiple lines or provide a \"+N more\" affordance."
-    },
-    {
-      "name": "Status mapping",
-      "description": "Status chips map state to colour consistently (Active=success, Idle=warning, Offline=error) and always keep the text label."
+      "description": "When many chips are present, wrap them in a flex container that wraps to multiple lines, or provide a \"+N more\" affordance yourself — Chip has no built-in overflow handling."
     }
   ],
   "states": [
     {
       "state": "Enabled",
-      "treatment": "Filled grey or outlined."
+      "treatment": "Filled grey (color=\"default\") or outlined."
     },
     {
-      "state": "Hover/focus",
-      "treatment": "State-layer overlay."
-    },
-    {
-      "state": "Selected",
-      "treatment": "Primary tint + check."
+      "state": "Hover/focus (clickable)",
+      "treatment": "State-layer overlay, only when `onClick`/`clickable` is set."
     },
     {
       "state": "Disabled",
-      "treatment": "38% opacity."
+      "treatment": "38% opacity (`disabled` prop)."
     }
   ],
   "specs": [
     {
       "property": "Height",
-      "value": "32px"
+      "value": "24px (size=\"small\" — the app-wide theme default); 32px (size=\"medium\", real MUI default)"
     },
     {
       "property": "Corner radius",
-      "value": "16px (pill)"
+      "value": "16px pill (semantic.radius.chip — MUI's own Chip default, not theme.shape's 4px)"
     },
     {
       "property": "Label",
-      "value": "Roboto 14px / 400 (status chip 12px / 500)"
+      "value": "Roboto 13px/400 (small) or 14px/400 (medium); status-chip usage commonly steps down to 12px/500 (semantic.typography.scale.labelSmall) via sx"
     },
     {
       "property": "Padding",
-      "value": "12px sides; 8px gap to icons"
+      "value": "~8-12px sides depending on size; MUI's built-in spacing, not separately tokenized"
     },
     {
-      "property": "Selected tint",
-      "value": "primary at ~10%"
+      "property": "Status tint (usage pattern)",
+      "value": "50-tone background + 900-tone text per status colour (semantic.color.statusChip.*) — applied via sx, not a native variant"
     }
   ],
   "tokens": [
     "semantic.radius.chip",
-    "semantic.spacing.sm",
-    "semantic.color.interactive.primarySelected",
-    "semantic.typography.scale.body2",
     "semantic.typography.scale.labelSmall",
     "semantic.color.statusChip.success.background",
     "semantic.color.statusChip.success.text",
@@ -122,57 +111,75 @@
   "props": [
     {
       "name": "label",
-      "type": "string",
-      "required": true,
+      "type": "React.ReactNode",
+      "required": false,
       "description": "The value or option text. Keep labels short."
     },
     {
       "name": "variant",
-      "type": "'input' | 'filter' | 'choice' | 'action' | 'status'",
+      "type": "'filled' | 'outlined'",
       "required": false,
-      "description": "Chip category per the spec's Variants table."
+      "description": "Real MUI default is 'filled'."
     },
     {
-      "name": "selected",
-      "type": "boolean",
+      "name": "color",
+      "type": "'default' | 'primary' | 'secondary' | 'error' | 'info' | 'success' | 'warning'",
       "required": false,
-      "description": "Toggled/selected state for filter and choice chips."
+      "description": "Default 'default' (grey). Drives the status-mapping usage pattern."
     },
     {
-      "name": "status",
-      "type": "'success' | 'warning' | 'error'",
+      "name": "size",
+      "type": "'small' | 'medium'",
       "required": false,
-      "description": "Status colour mapping — only meaningful when variant=\"status\" (Active=success, Idle=warning, Offline=error)."
+      "description": "Real MUI default is 'medium'; the shared Cartrack theme sets the app-wide default to 'small' via MuiChip defaultProps."
     },
     {
-      "name": "removable",
-      "type": "boolean",
+      "name": "icon",
+      "type": "React.ReactElement",
       "required": false,
-      "description": "Shows a trailing remove (×) control — typically used on input chips."
+      "description": "Optional leading icon element."
     },
     {
-      "name": "onRemove",
-      "type": "() => void",
+      "name": "avatar",
+      "type": "React.ReactElement",
       "required": false,
-      "description": "Handler for the trailing remove control."
+      "description": "Optional leading avatar element (mutually exclusive with icon in practice)."
+    },
+    {
+      "name": "onDelete",
+      "type": "(event) => void",
+      "required": false,
+      "description": "If set, shows a trailing delete icon and fires this on click/Backspace/Delete."
+    },
+    {
+      "name": "deleteIcon",
+      "type": "React.ReactElement",
+      "required": false,
+      "description": "Overrides the default delete icon. Only shown when onDelete is set."
     },
     {
       "name": "onClick",
-      "type": "() => void",
+      "type": "(event) => void",
       "required": false,
-      "description": "Click handler for interactive chip variants."
+      "description": "Makes the chip clickable with hover/press feedback."
+    },
+    {
+      "name": "clickable",
+      "type": "boolean",
+      "required": false,
+      "description": "Forces the clickable visual treatment even without onClick, or suppresses it even with onClick."
     },
     {
       "name": "disabled",
       "type": "boolean",
       "required": false,
-      "description": "Disables the chip (renders at 38% opacity per spec)."
+      "description": "Disables the chip (renders at 38% opacity). Default false."
     }
   ],
   "doThis": [
     "Use chips for filters/selections the user controls.",
-    "Keep status chips read-only with consistent colours + labels.",
-    "Make removable chips clearly removable."
+    "Keep status chips read-only with consistent colour + text mapping (never colour alone).",
+    "Make removable chips clearly removable via onDelete, not a custom close button."
   ],
   "dontDoThis": [
     "Don't use a chip as a primary button.",
@@ -180,10 +187,10 @@
     "Don't cram long text into a chip — keep labels short."
   ],
   "accessibility": [
-    "Interactive chips are focusable with clear roles.",
-    "Selected state is exposed (e.g. aria-pressed) and removal is keyboard-operable.",
+    "Clickable chips are focusable with a clear role; MUI handles this automatically once onClick/clickable is set.",
+    "Removal via onDelete is keyboard-operable (Backspace/Delete when focused).",
     "Status chips include text, never colour alone.",
-    "Targets meet minimum size."
+    "Touch/click targets meet minimum size — avoid overriding size down below 24px."
   ],
   "related": [
     {
@@ -193,10 +200,6 @@
     {
       "name": "Badge",
       "why": "Pure counts with no label"
-    },
-    {
-      "name": "SelectionControl",
-      "why": "Persistent on/off settings"
     }
   ]
 }
