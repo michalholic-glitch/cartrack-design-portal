@@ -95,7 +95,11 @@
     "semantic.color.status.error",
     "semantic.color.status.info",
     "semantic.typography.scale.body2",
-    "semantic.spacing.md"
+    "semantic.spacing.md",
+    "semantic.color.status.info.tint",
+    "semantic.color.status.warning.tint",
+    "semantic.color.status.error.tint",
+    "semantic.color.status.success.tint"
   ],
   "props": [
     {

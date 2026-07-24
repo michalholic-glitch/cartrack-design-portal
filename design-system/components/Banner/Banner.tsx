@@ -18,8 +18,9 @@ export interface BannerProps {
  * Full spec: Banner.doc.json
  * Mirrors the mdc-banner class contract from md2-cartrack-library/components/banners.html.
  * Tokens (tokens/tokens.json):
- * - color: semantic.color.status.{success,warning,error,info} — use .light for the tinted
- *   background per severity, .onStatus (or a sufficiently dark text colour) for AA-passing message text.
+ * - color: semantic.color.status.{success,warning,error,info}.tint — the 50-tone surface fill
+ *   per severity (bound via [data-severity] CSS); message text stays semantic.color.text.primary,
+ *   which passes AA on all four tints.
  * - type: semantic.typography.scale.body2 (14px/400 message text).
  * - spacing: semantic.spacing.md (~16px padding; spec's 14px lower bound has no exact token).
  */

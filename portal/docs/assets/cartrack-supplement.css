@@ -187,6 +187,14 @@ div.mdc-data-table__header-row--selected button:hover {
   color: #B71C1C;                             /* semantic.color.statusChip.error.text */
 }
 
+/* Banner severity tints — Banner.tsx exposes data-severity; MDC banners have
+   no severity concept, so the Cartrack mapping binds here
+   (semantic.color.status.*.tint = 50-tone fills). */
+.mdc-banner[data-severity="info"]    { background-color: #E3F2FD; } /* semantic.color.status.info.tint */
+.mdc-banner[data-severity="warning"] { background-color: #FFF3E0; } /* semantic.color.status.warning.tint */
+.mdc-banner[data-severity="error"]   { background-color: #FFEBEE; } /* semantic.color.status.error.tint */
+.mdc-banner[data-severity="success"] { background-color: #E8F5E9; } /* semantic.color.status.success.tint */
+
 /* Banner (JS-less layout): let the text wrapper take the row's free width —
    MDC leaves it non-growing and reserves a 90px right margin for its
    mobile close affordance, which squeezes the message to a sliver. The

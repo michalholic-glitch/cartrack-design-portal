@@ -1759,8 +1759,10 @@ def body_component(c):
         info = (f'<div class="vinfo"><b>{esc(vname)}</b>'
                 f'<p>{esc(v.get("whenToUse",""))}</p>{snippet}</div>')
         if is_live and vname in live_labels:
+            # info ABOVE the tile: stacked full-width rows otherwise read as the
+            # demo belonging to the previous variant's heading
             tile = f'<div class="live-demo vtile-live" data-live-demo="{esc(name)}" data-demo="{esc(vname)}"></div>'
-            vrows += f'<div class="vrow" style="grid-template-columns:1fr">{tile}{info}</div>'
+            vrows += f'<div class="vrow" style="grid-template-columns:1fr">{info}{tile}</div>'
             continue
         frag = demo_for_variant(s, vname, i)
         tile = f'<div class="demo-embed vtile">{frag}</div>' if frag else ""
