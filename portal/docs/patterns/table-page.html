@@ -359,7 +359,7 @@
 <li>Page header — page title, global search, ONE contained primary action (e.g. &quot;Add vehicle&quot;), overflow menu — the list-header variant of the Page header pattern (Title + ButtonsContainer), plus a search field.</li>
 <li><a href="../components/chip.html">Chip</a> — filter chips in a single row below the bar; selected state uses the 8% primary overlay</li>
 <li><a href="../components/data-grid.html">DataGrid</a> — the main content; row height 52px, header sticky on scroll</li>
-<li><a href="../components/chip.html">Chip</a> (status) — status values inside cells use small status chips (12px/500 labelSmall), never plain coloured text</li>
+<li><a href="../components/chip.html">Chip</a> (status) — status values inside cells use small status chips (12px/500, <code>semantic.typography.scale.labelSmall</code> — a token scale, render via <code>sx</code>/<code>caption</code>, not a registered MUI variant), never plain coloured text</li>
 <li><a href="../components/pagination.html">Pagination</a> — always present below the table; never render more than 50 rows unpaginated</li>
 <li>Contextual page header — swaps in when rows are selected: count + bulk actions</li>
 <li><a href="../components/menu.html">Menu</a> — per-row overflow actions (⋮), destructive actions in error colour with confirmation Dialog</li>
