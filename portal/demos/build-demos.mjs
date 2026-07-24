@@ -47,7 +47,9 @@ const manifest = execFileSync('node', [tmp], { encoding: 'utf-8' });
 fs.writeFileSync(path.join(assets, 'demos-manifest.json'), manifest);
 fs.rmSync(tmp);
 
-// 3. supplement css
-fs.copyFileSync(path.join(here, 'cartrack-supplement.css'), path.join(assets, 'cartrack-supplement.css'));
+// 3. supplement css + self-hosted fonts it references
+for (const f of ['cartrack-supplement.css', 'material-icons.woff2', 'roboto-var.woff2']) {
+  fs.copyFileSync(path.join(here, f), path.join(assets, f));
+}
 
 console.log('live demos built:', Object.entries(JSON.parse(manifest)).map(([k, v]) => `${k}(${v.length})`).join(', '));
