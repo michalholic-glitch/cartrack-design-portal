@@ -31,10 +31,22 @@ export function Banner({
   primaryActionLabel,
   onPrimaryAction,
 }: BannerProps) {
+  // MDC's banner foundation (JS) toggles mdc-banner--open and animates an
+  // explicit height at runtime; the base class is display:none/height:0. This
+  // repo ships no MDC JS and visibility is the parent's job (render = open),
+  // so the open state is set statically and height derives from content.
   return (
-    <div className="mdc-banner" role="banner" data-severity={severity}>
+    <div
+      className="mdc-banner mdc-banner--open"
+      style={{ height: 'auto' }}
+      role="banner"
+      data-severity={severity}
+    >
       <div
         className="mdc-banner__content"
+        // In-flow (MDC's absolute positioning is for its JS height animation),
+        // so the open banner's height derives from its content.
+        style={{ position: 'relative' }}
         role="alertdialog"
         aria-live={severity === 'error' ? 'assertive' : 'polite'}
       >

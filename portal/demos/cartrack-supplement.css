@@ -187,6 +187,16 @@ div.mdc-data-table__header-row--selected button:hover {
   color: #B71C1C;                             /* semantic.color.statusChip.error.text */
 }
 
+/* Banner (JS-less layout): let the text wrapper take the row's free width —
+   MDC leaves it non-growing and reserves a 90px right margin for its
+   mobile close affordance, which squeezes the message to a sliver. The
+   240px flex-basis wraps the actions onto their own row when space is tight
+   instead of crushing the message word-by-word. */
+.mdc-banner .mdc-banner__content { flex-wrap: wrap; }
+.mdc-banner__graphic-text-wrapper { flex: 1 1 240px; min-width: 0; }
+.mdc-banner .mdc-banner__text { margin-right: 16px; } /* semantic.spacing.md */
+.mdc-banner .mdc-banner__actions { margin-left: auto; }
+
 /* Range slider: the two native inputs overlap full-size (Slider.tsx stretches
    them for JS-less interaction) — limit pointer events to the thumbs so the
    upper input doesn't swallow drags meant for the lower one. */
