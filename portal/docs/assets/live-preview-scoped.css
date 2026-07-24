@@ -197,7 +197,7 @@
 .live-demo .st.on .n{background:var(--primary)}
 .live-demo .st.done .n{background:var(--primary)}
 .live-demo .st.on{color:var(--on-surface);font-weight:500}
-.live-demo .st .bar{width:36px;height:1px;background:var(--divider)}
+.live-demo .stepper2 .bar{width:36px;height:1px;background:var(--divider)}
 .live-demo .dt{width:100%;background:var(--surface);border:1px solid var(--divider);border-radius:4px;overflow:hidden}
 .live-demo .dt table{width:100%;border-collapse:collapse;font-size:.84rem}
 .live-demo .dt th{text-align:left;padding:12px 16px;color:var(--on-surface-med);font-weight:500;border-bottom:1px solid var(--divider);white-space:nowrap}

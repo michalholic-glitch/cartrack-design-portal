@@ -58,6 +58,13 @@ export function TextField({
   const isFilled = variant === 'filled';
   const hasError = Boolean(error);
 
+  // MDC's text-field foundation (JS) toggles the label-float and focus classes at
+  // runtime; without them the label sits over the typed value. This repo ships no
+  // MDC JS, so the component derives them from its own state (same JS-less pattern
+  // as Slider/Banner/ProgressIndicator).
+  const [focused, setFocused] = React.useState(false);
+  const floating = focused || Boolean(value);
+
   const fieldClass = [
     'mdc-text-field',
     isFilled ? 'mdc-text-field--filled' : 'mdc-text-field--outlined',
@@ -66,9 +73,13 @@ export function TextField({
     trailingIcon ? 'mdc-text-field--with-trailing-icon' : '',
     disabled ? 'mdc-text-field--disabled' : '',
     hasError ? 'mdc-text-field--invalid' : '',
+    focused ? 'mdc-text-field--focused' : '',
+    floating ? 'mdc-text-field--label-floating' : '',
   ]
     .filter(Boolean)
     .join(' ');
+
+  const floatingLabelClass = `mdc-floating-label${floating ? ' mdc-floating-label--float-above' : ''}`;
 
   const inputProps = {
     className: 'mdc-text-field__input',
@@ -80,6 +91,8 @@ export function TextField({
     disabled,
     readOnly,
     onChange: (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => onChange?.(e.target.value),
+    onFocus: () => setFocused(true),
+    onBlur: () => setFocused(false),
   };
 
   return (
@@ -91,14 +104,14 @@ export function TextField({
         ) : null}
 
         {isFilled ? (
-          <span className="mdc-floating-label" id={labelId}>
+          <span className={floatingLabelClass} id={labelId}>
             {label}
           </span>
         ) : (
-          <span className="mdc-notched-outline">
+          <span className={`mdc-notched-outline${floating ? ' mdc-notched-outline--notched' : ''}`}>
             <span className="mdc-notched-outline__leading" />
             <span className="mdc-notched-outline__notch">
-              <span className="mdc-floating-label" id={labelId}>
+              <span className={floatingLabelClass} id={labelId}>
                 {label}
               </span>
             </span>

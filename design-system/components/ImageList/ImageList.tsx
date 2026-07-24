@@ -59,14 +59,21 @@ export function ImageList({ items, cols = 3, maxWidth = 360, className }: ImageL
       {items.map((item) => {
         const tile = (
           <div className="mdc-image-list__image-aspect-container">
+            {/* MDC contract: the image absolutely fills the square aspect container.
+                Inline width/height here previously fought that reserve, leaving dead
+                space below every tile equal to the unused aspect height. */}
             {item.loading ? (
-              <div className="mdc-image-list__image" style={{ width: tileWidth, height: 80 }} aria-hidden="true" />
+              <div
+                className="mdc-image-list__image"
+                style={{ background: 'rgba(0, 0, 0, 0.12)' /* semantic.color.border.default */ }}
+                aria-hidden="true"
+              />
             ) : (
               <img
                 className="mdc-image-list__image"
                 src={item.src}
                 alt={item.alt}
-                style={{ height: 80, borderRadius: 2, objectFit: 'cover' }}
+                style={{ borderRadius: 2, objectFit: 'cover' }}
               />
             )}
             {item.label ? (

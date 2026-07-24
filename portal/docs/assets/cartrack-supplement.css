@@ -212,6 +212,57 @@ div.mdc-data-table__header-row--selected button:hover {
 .mdc-slider--range .mdc-slider__input::-webkit-slider-thumb { pointer-events: auto; }
 .mdc-slider--range .mdc-slider__input::-moz-range-thumb { pointer-events: auto; }
 
+/* --- 2026-07-24 systematic-audit fixes ------------------------------------ */
+
+/* Checkbox/radio boxes: the compiled bundle lacks MDC's explicit sizing rules,
+   so the boxes collapsed and labels overlapped the (absolutely positioned)
+   control graphic. 18/20px content boxes restore the 40px touch square. */
+.mdc-checkbox { display: inline-block; position: relative; width: 18px; height: 18px; box-sizing: content-box; line-height: 0; flex: 0 0 auto; }
+.mdc-radio { display: inline-block; position: relative; width: 20px; height: 20px; box-sizing: content-box; padding: 10px; flex: 0 0 auto; }
+.mdc-form-field > label { padding-left: 4px; cursor: pointer; } /* primitive.spacing.1 */
+
+/* Snackbar: MDC JS normally positions the surface; the CSS-only container is a
+   full-viewport flex box that centers it. Anchor bottom-center per spec. */
+.mdc-snackbar { align-items: flex-end; padding-bottom: 24px; } /* semantic.spacing.lg */
+
+/* Button loading spinner: Button.tsx renders a bare mdc-circular-progress span
+   (no MDC SVG anatomy) — draw it as a small CSS ring. */
+.mdc-button__icon.mdc-circular-progress {
+  width: 14px; height: 14px;
+  border: 2px solid currentColor;
+  border-right-color: transparent;
+  border-radius: 50%;
+  display: inline-block;
+  animation: ct-btn-spin 0.8s linear infinite;
+}
+@keyframes ct-btn-spin { to { transform: rotate(360deg); } }
+
+/* Picker: range interior + preset chips (Picker.tsx classes with no styling
+   anywhere — 'on' endpoints come from the preview stylesheet, these don't). */
+.picker .grid .in-range { background: rgba(244, 119, 53, 0.08); color: #BB4800; } /* semantic.color.interactive.primarySelected / brand.primary.dark */
+.picker .presets { display: flex; gap: 8px; padding: 8px 12px; }                  /* semantic.spacing.sm/md */
+.picker .presets .p {
+  font: 500 12px "Roboto", sans-serif;          /* semantic.typography.scale.labelSmall */
+  padding: 4px 10px;
+  border: 1px solid rgba(0, 0, 0, 0.23);
+  border-radius: 14px;
+  background: #FFFFFF;                           /* semantic.color.surface.paper */
+  color: rgba(0, 0, 0, 0.6);                     /* semantic.color.text.secondary */
+  cursor: pointer;
+}
+.picker .presets .p:hover { background: rgba(244, 119, 53, 0.08); color: #BB4800; }
+
+/* Live-demo isolation: the portal styles bare h5 as grey uppercase section
+   headings, which leaked into PageHeader's real <h5> title. Restore the
+   component's typography inside live mounts. */
+.live-demo h5 {
+  font: 400 24px/1.35 "Roboto", "Helvetica", "Arial", sans-serif; /* semantic.typography.scale.h5 */
+  color: rgba(0, 0, 0, 0.87);                                     /* semantic.color.text.primary */
+  text-transform: none;
+  letter-spacing: normal;
+  margin: 0;
+}
+
 /* Utility class NavigationDrawer emits that MDC 14 doesn't ship */
 .mdc-visually-hidden {
   position: absolute; width: 1px; height: 1px; margin: -1px;
