@@ -187,6 +187,13 @@ div.mdc-data-table__header-row--selected button:hover {
   color: #B71C1C;                             /* semantic.color.statusChip.error.text */
 }
 
+/* Range slider: the two native inputs overlap full-size (Slider.tsx stretches
+   them for JS-less interaction) — limit pointer events to the thumbs so the
+   upper input doesn't swallow drags meant for the lower one. */
+.mdc-slider--range .mdc-slider__input { pointer-events: none !important; }
+.mdc-slider--range .mdc-slider__input::-webkit-slider-thumb { pointer-events: auto; }
+.mdc-slider--range .mdc-slider__input::-moz-range-thumb { pointer-events: auto; }
+
 /* Utility class NavigationDrawer emits that MDC 14 doesn't ship */
 .mdc-visually-hidden {
   position: absolute; width: 1px; height: 1px; margin: -1px;
